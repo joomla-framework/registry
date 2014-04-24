@@ -11,7 +11,7 @@ define('_JEXEC', 1);
 define('JPATH_ROOT', __DIR__);
 
 // Load the Joomla! Framework
-require_once realpath('../vendor/autoload.php');
+require_once realpath(__DIR__ . '/../vendor/autoload.php');
 
 /**
  * Keychain Manager
