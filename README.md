@@ -194,12 +194,12 @@ This will use the private key in the file `private.key` and output a new public 
 
 ## Installation via Composer
 
-Add `"joomla/keychain": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/keychain": "~2.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/keychain": "~1.0"
+		"joomla/keychain": "~2.0"
 	}
 }
 ```
@@ -207,5 +207,5 @@ Add `"joomla/keychain": "~1.0"` to the require block in your composer.json and t
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/keychain "~1.0"
+composer require joomla/keychain "~2.0"
 ```
