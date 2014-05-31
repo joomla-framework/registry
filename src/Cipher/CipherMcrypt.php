@@ -6,14 +6,15 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Joomla\Crypt;
-
+namespace Joomla\Crypt\Cipher;
+use Joomla\Crypt\CipherInterface;
+use Joomla\Crypt\Key;
 /**
  * Cipher class for mcrypt algorithm encryption, decryption and key generation.
  *
  * @since  1.0
  */
-abstract class Cipher_Mcrypt implements CipherInterface
+abstract class CipherMcrypt implements CipherInterface
 {
 	/**
 	 * @var    integer  The mcrypt cipher constant.

@@ -7,7 +7,7 @@
 namespace Joomla\Crypt\Tests;
 
 use Joomla\Crypt\Key;
-use Joomla\Crypt\Cipher_Rijndael256;
+use Joomla\Crypt\Cipher\CipherRijndael256;
 
 /**
  * Test class for JCryptCipherRijndael256.
@@ -39,7 +39,7 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 			$this->markTestSkipped('The mcrypt extension must be available for this test to run.');
 		}
 
-		$this->cipher = new Cipher_Rijndael256;
+		$this->cipher = new CipherRijndael256;
 
 		// Build the key for testing.
 		$this->key = new Key('rijndael256');

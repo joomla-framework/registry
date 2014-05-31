@@ -5,13 +5,17 @@
     "keywords": ["joomla", "framework", "crypt"],
     "homepage": "https://github.com/joomla-framework/crypt",
     "license": "GPL-2.0+",
+    "require-dev": {
+        "joomla/test": "~1.0"
+    },
     "require": {
         "php": ">=5.3.10"
     },
     "target-dir": "Joomla/Crypt",
     "autoload": {
-    	"psr-0": {
-    		"Joomla\\Crypt": ""
+        "psr-4": {
+            "Joomla\\Crypt\\": "src/",
+            "Joomla\\Crypt\\Test\\": "Test/"
     	}
     }
 }

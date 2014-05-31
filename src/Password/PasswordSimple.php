@@ -16,7 +16,7 @@ use Joomla\Crypt\PasswordInterface;
  *
  * @since  1.0
  */
-class Simple implements PasswordInterface
+class PasswordSimple implements PasswordInterface
 {
 	/**
 	 * @var    integer  The cost parameter for hashing algorithms.

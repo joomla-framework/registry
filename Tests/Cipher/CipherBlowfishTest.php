@@ -7,7 +7,7 @@
 namespace Joomla\Crypt\Tests;
 
 use Joomla\Crypt\Key;
-use Joomla\Crypt\Cipher_Blowfish;
+use Joomla\Crypt\Cipher\CipherBlowfish;
 
 /**
  * Test class for JCryptCipherBlowfish.
@@ -39,7 +39,7 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 			$this->markTestSkipped('The mcrypt extension must be available for this test to run.');
 		}
 
-		$this->cipher = new Cipher_Blowfish;
+		$this->cipher = new CipherBlowfish;
 
 		// Build the key for testing.
 		$this->key = new Key('blowfish');

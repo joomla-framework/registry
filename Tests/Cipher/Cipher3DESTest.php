@@ -7,7 +7,7 @@
 namespace Joomla\Crypt\Tests;
 
 use Joomla\Crypt\Key;
-use Joomla\Crypt\Cipher_3DES;
+use Joomla\Crypt\Cipher\Cipher3DES;
 
 /**
  * Test class for JCryptCipher3DES.
@@ -39,7 +39,7 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 			$this->markTestSkipped('The mcrypt extension must be available for this test to run.');
 		}
 
-		$this->cipher = new Cipher_3DES;
+		$this->cipher = new Cipher3DES;
 
 		// Build the key for testing.
 		$this->key = new Key('3des');

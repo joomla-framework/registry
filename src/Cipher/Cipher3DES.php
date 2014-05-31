@@ -6,14 +6,14 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Joomla\Crypt;
+namespace Joomla\Crypt\Cipher;
 
 /**
  * Cipher class for Triple DES encryption, decryption and key generation.
  *
  * @since  1.0
  */
-class Cipher_3DES extends Cipher_Mcrypt
+class Cipher3DES extends CipherMcrypt
 {
 	/**
 	 * @var    integer  The mcrypt cipher constant.

@@ -7,7 +7,7 @@
 namespace Joomla\Crypt\Tests;
 
 use Joomla\Crypt\Key;
-use Joomla\Crypt\Cipher_Simple;
+use Joomla\Crypt\Cipher\CipherSimple;
 
 /**
  * Test class for JCryptCipherSimple.
@@ -33,7 +33,7 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$this->cipher = new Cipher_Simple;
+		$this->cipher = new CipherSimple;
 
 		$this->key = new Key('simple');
 		$this->key->private = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUgkVF4mLxAUf80ZJPAJHXHoac';
