@@ -313,7 +313,7 @@ class Registry implements \JsonSerializable, \ArrayAccess
 		$name = strtolower(preg_replace('/[^A-Z0-9_]/i', '', $type));
 
 		// If we don't get given a namespace use the Joomla Registry Format one
-		if (!strpos($name, '\\');)
+		if (!strpos($name, '\\'))
 		{
 			$className = 'Joomla\\Registry\\Format\\' . ucfirst($name);
 		}
