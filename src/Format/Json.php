@@ -8,8 +8,6 @@
 
 namespace Joomla\Registry\Format;
 
-use Joomla\Registry\Registry;
-use Joomla\Registry\AbstractRegistryFormat;
 use Joomla\Registry\RegistryFormatInterface;
 
 /**
