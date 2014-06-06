@@ -103,7 +103,38 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 		$decrypted = $this->cipher->decrypt($encrypted, $this->key);
 
 		// Assert that the decrypted values are the same as the expected ones.
-		$this->assertEquals($data, $decrypted);
+		$this->assertEquals(
+			$data,
+			$decrypted
+		);
+	}
+
+	/**
+	 * Tests JCryptCipherBlowfish->decrypt()
+	 *
+	 * @return  void
+	 *
+	 * @covers Joomla\Crypt\Cipher\CipherBlowfish::decrypt
+	 * @expectedException InvalidArgumentException
+	 * @since   1.0
+	 */
+	public function testDecryptInvalidKeyType()
+	{
+		$key = new Key('simple');
+		$this->key->private = 'foo';
+		$this->key->public = 'bar';
+
+		$file = '5.txt';
+		$expected = 'The quick brown fox jumps over the lazy dog.';
+
+		$encrypted = file_get_contents(__DIR__ . '/stubs/encrypted/blowfish/' . $file);
+		$decrypted = $this->cipher->decrypt($encrypted, $key);
+
+		// Assert that the decrypted values are the same as the expected ones.
+		$this->assertEquals(
+			$data,
+			$decrypted
+		);
 	}
 
 	/**
@@ -122,10 +153,49 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 		$encrypted = $this->cipher->encrypt($data, $this->key);
 
 		// Assert that the encrypted value is not the same as the clear text value.
-		$this->assertNotEquals($data, $encrypted);
+		$this->assertNotEquals(
+			$data,
+			$encrypted
+		);
 
 		// Assert that the encrypted values are the same as the expected ones.
-		$this->assertStringEqualsFile(__DIR__ . '/stubs/encrypted/blowfish/' . $file, $encrypted);
+		$this->assertStringEqualsFile(
+			__DIR__ . '/stubs/encrypted/blowfish/' . $file,
+			$encrypted
+		);
+	}
+
+	/**
+	 * Tests JCryptCipherBlowfish->encrypt()
+	 *
+	 * @return  void
+	 *
+	 * @covers Joomla\Crypt\Cipher\CipherBlowfish::encrypt
+	 * @expectedException InvalidArgumentException
+	 * @since   1.0
+	 */
+	public function testEncryptInvalidKeyType()
+	{
+		$key = new Key('simple');
+		$this->key->private = 'foo';
+		$this->key->public = 'bar';
+
+		$file = '5.txt';
+		$data = 'The quick brown fox jumps over the lazy dog.';
+
+		$encrypted = $this->cipher->encrypt($data, $key);
+
+		// Assert that the encrypted value is not the same as the clear text value.
+		$this->assertNotEquals(
+			$data,
+			$encrypted
+		);
+
+		// Assert that the encrypted values are the same as the expected ones.
+		$this->assertStringEqualsFile(
+			__DIR__ . '/stubs/encrypted/blowfish/' . $file,
+			$encrypted
+		);
 	}
 
 	/**
@@ -140,12 +210,22 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 		$key = $this->cipher->generateKey();
 
 		// Assert that the key is the correct type.
-		$this->assertInstanceOf('Joomla\\Crypt\\Key', $key);
+		$this->assertInstanceOf(
+			'Joomla\\Crypt\\Key',
+			$key
+		);
 
 		// Assert that the private key is 56 bytes long.
-		$this->assertEquals(56, strlen($key->private));
+		$this->assertEquals(
+			56,
+			strlen($key->private)
+		);
 
 		// Assert the key is of the correct type.
-		$this->assertAttributeEquals('blowfish', 'type', $key);
+		$this->assertAttributeEquals(
+			'blowfish',
+			'type',
+			$key
+		);
 	}
 }

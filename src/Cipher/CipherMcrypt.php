@@ -7,8 +7,10 @@
  */
 
 namespace Joomla\Crypt\Cipher;
+
 use Joomla\Crypt\CipherInterface;
 use Joomla\Crypt\Key;
+
 /**
  * Cipher class for mcrypt algorithm encryption, decryption and key generation.
  *

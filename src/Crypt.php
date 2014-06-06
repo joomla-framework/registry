@@ -39,11 +39,11 @@ class Crypt
 	 */
 	public function __construct(CipherInterface $cipher = null, Key $key = null)
 	{
-		// Set the encryption key[/pair)].
-		$this->key = $key;
-
 		// Set the encryption cipher.
 		$this->cipher = isset($cipher) ? $cipher : new CipherSimple;
+
+		// Set the encryption key[/pair)].
+		$this->key = isset($key) ? $key : $this->generateKey();
 	}
 
 	/**
@@ -130,6 +130,21 @@ class Crypt
 			}
 		}
 
+		return self::genRandomBytesCustom($length, $sslStr);
+	}
+
+	/**
+	 * Generate random bytes using custom algorithm.
+	 *
+	 * @param   integer  $length  		   Length of the random data to generate
+	 * @param   string   $initalRandomStr  Any random string to increase entropy
+	 *
+	 * @return  string  Random binary data
+	 *
+	 * @since   1.0
+	 */
+	public static function genRandomBytesCustom($length = 16, $initalRandomStr = null)
+	{
 		/*
 		 * Collect any entropy available in the system along with a number
 		 * of time measurements of operating system randomness.
@@ -158,11 +173,12 @@ class Crypt
 		{
 			$bytes = ($total > $shaHashLength)? $shaHashLength : $total;
 			$total -= $bytes;
+			$initalRandomStr = $initalRandomStr ? $initalRandomStr : '';
 			/*
 			 * Collect any entropy available from the PHP system and filesystem.
 			 * If we have ssl data that isn't strong, we use it once.
 			 */
-			$entropy = rand() . uniqid(mt_rand(), true) . $sslStr;
+			$entropy = rand() . uniqid(mt_rand(), true) . $initalRandomStr;
 			$entropy .= implode('', @fstat(fopen(__FILE__, 'r')));
 			$entropy .= memory_get_usage();
 			$sslStr = '';

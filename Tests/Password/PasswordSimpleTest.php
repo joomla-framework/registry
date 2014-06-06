@@ -28,14 +28,19 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 		return array(
 			'Blowfish' => array('password', PasswordInterface::BLOWFISH, 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$10$ABCDEFGHIJKLMNOPQRSTUOiAi7OcdE4zRCh6NcGWusEcNPtq6/w8.'),
+
 			'Blowfish2' => array('password', '$2a$', 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$10$ABCDEFGHIJKLMNOPQRSTUOiAi7OcdE4zRCh6NcGWusEcNPtq6/w8.'),
+
 			'MD5' => array('password', PasswordInterface::MD5, 'ABCDEFGHIJKL',
 				'$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1'),
+
 			'Joomla' => array('password', PasswordInterface::JOOMLA, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456',
 				'883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456'),
+
 			'Blowfish_5' => array('password', PasswordInterface::BLOWFISH, 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$05$ABCDEFGHIJKLMNOPQRSTUOvv7EU5o68GAoLxyfugvULZR70IIMZqW', 5),
+
 			'default' => array('password', null, 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$05$ABCDEFGHIJKLMNOPQRSTUOvv7EU5o68GAoLxyfugvULZR70IIMZqW', 5)
 		);
@@ -76,7 +81,9 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCreateException($password, $type, $salt, $expected, $cost)
 	{
-		$hasher = $this->getMock('Joomla\\Crypt\\Password\\PasswordSimple', array('getSalt'));
+		$hasher = $this->getMock('Joomla\\Crypt\\Password\\PasswordSimple', 
+			array('getSalt')
+		);
 		$hasher->setCost($cost);
 
 		$hasher->expects($this->any())
@@ -107,7 +114,8 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testCreate($password, $type, $salt, $expected, $cost = 10)
 	{
-		$hasher = $this->getMock('Joomla\\Crypt\\Password\\PasswordSimple', array('getSalt'));
+		$hasher = $this->getMock('Joomla\\Crypt\\Password\\PasswordSimple',
+			array('getSalt'));
 
 		$hasher->setCost($cost);
 
@@ -136,7 +144,8 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 			'MD5 Valid' => array('password', '$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1', true),
 			'MD5 Invalid' => array('passw0rd', '$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1', false),
 			'Joomla Valid' => array('password', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', true),
-			'Joomla Invalid' => array('passw0rd', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', false)
+			'Joomla Invalid' => array('passw0rd', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', false),
+			'Invalid' => array('passw0rd', 'foo bar', false)
 		);
 	}
 
@@ -156,7 +165,10 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	{
 		$hasher = new PasswordSimple;
 
-		$this->assertEquals($hasher->verify($password, $hash), $expectation);
+		$this->assertEquals(
+			$hasher->verify($password, $hash),
+			$expectation
+		);
 	}
 
 	/**
@@ -219,6 +231,41 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 		$this->assertThat(
 			$test->getDefaultType(),
 			$this->equalTo($expectation)
+		);
+	}
+
+	/**
+	 * Tests the getDefaultType method.
+	 *
+	 * @covers        Joomla\Crypt\Password\PasswordSimple::getSalt
+	 *
+	 * @return void
+	 *
+	 * @since   1.0
+	 */
+	public function testGetSalt()
+	{
+		// We're just testing wether the value has the expected length.
+		// We obviously can't test the result since it's random.
+
+		$password = new PasswordSimple;
+
+		$salt16 = TestHelper::invoke($password, 'getSalt', 16);
+		$this->assertEquals(
+			strlen($salt16),
+			16
+		);
+
+		$salt8 = TestHelper::invoke($password, 'getSalt', 8);
+		$this->assertEquals(
+			strlen($salt8),
+			8
+		);
+
+		$salt17 = TestHelper::invoke($password, 'getSalt', 17);
+		$this->assertEquals(
+			strlen($salt17),
+			17
 		);
 	}
 }
