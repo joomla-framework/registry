@@ -15,7 +15,7 @@
     "autoload": {
         "psr-4": {
             "Joomla\\Crypt\\": "src/",
-            "Joomla\\Crypt\\Test\\": "Test/"
+            "Joomla\\Crypt\\Test\\": "Tests/"
     	}
     }
 }
