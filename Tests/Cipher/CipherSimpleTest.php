@@ -59,6 +59,8 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 * Test...
 	 *
 	 * @return array
+	 * 
+	 * @since  __VERSION_NO__
 	 */
 	public function dataForEncrypt()
 	{
@@ -88,6 +90,9 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
+	 * @covers  Joomla\Crypt\Cipher\CipherSimple::decrypt
+	 * @covers Joomla\Crypt\Cipher\CipherSimple::_hexToInt
+	 * @covers Joomla\Crypt\Cipher\CipherSimple::_hexToIntArray
 	 * @dataProvider dataForEncrypt
 	 * @since   1.0
 	 */
@@ -140,6 +145,8 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
+	 * @covers Joomla\Crypt\Cipher\CipherSimple::encrypt
+	 * @covers Joomla\Crypt\Cipher\CipherSimple::_intToHex
 	 * @dataProvider dataForEncrypt
 	 * @since   1.0
 	 */
@@ -196,6 +203,8 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
+	 * @covers Joomla\Crypt\Cipher\CipherSimple::generateKey
+	 * @covers Joomla\Crypt\Cipher\CipherSimple::_getRandomKey
 	 * @since   1.0
 	 */
 	public function testGenerateKey()

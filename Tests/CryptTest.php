@@ -26,6 +26,8 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * This method is called before a test is executed.
 	 *
 	 * @return void
+	 * 
+	 * @since  __VERSION_NO__
 	 */
 	protected function setUp()
 	{
@@ -43,21 +45,22 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test __construct()
 	 *
-	 * @covers  Joomla\Crypt\Crypt::__construct()
-	 *
 	 * @return  void
+	 * 
+	 * @covers  Joomla\Crypt\Crypt::__construct()
+	 * @since  __VERSION_NO__
 	 */
 	public function test__construct()
 	{
 		$this->assertAttributeInstanceOf(
-			'Joomla\\Crypt\\CipherInterface', 
-			'cipher', 
+			'Joomla\\Crypt\\CipherInterface',
+			'cipher',
 			$this->object
 		);
 
 		$this->assertAttributeInstanceOf(
-			'Joomla\\Crypt\\Key', 
-			'key', 
+			'Joomla\\Crypt\\Key',
+			'key',
 			$this->object
 		);
 	}
@@ -66,6 +69,8 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * Test...
 	 *
 	 * @return array
+	 * 
+	 * @since  __VERSION_NO__
 	 */
 	public function dataForEncrypt()
 	{
@@ -93,10 +98,11 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
 	 *
-	 * @covers Joomla\Crypt\Crypt::decrypt
-	 *
-	 * @dataProvider dataForEncrypt
 	 * @return void
+	 * 
+	 * @covers Joomla\Crypt\Crypt::decrypt
+	 * @dataProvider dataForEncrypt
+	 * @since  __VERSION_NO__
 	 */
 	public function testDecrypt($file, $data)
 	{
@@ -105,7 +111,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 
 		// Assert that the decrypted values are the same as the expected ones.
 		$this->assertEquals(
-			$data, 
+			$data,
 			$decrypted
 		);
 	}
@@ -117,12 +123,10 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $data  @todo
 	 *
 	 * @return  void
-	 *
-	 * @dataProvider dataForEncrypt
-	 *
+	 * 
 	 * @covers Joomla\Crypt\Crypt::encrypt
-	 *
-	 * @return void
+	 * @dataProvider dataForEncrypt
+	 * @since  __VERSION_NO__
 	 */
 	public function testEncrypt($file, $data)
 	{
@@ -141,9 +145,10 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @covers Joomla\Crypt\Crypt::generateKey
-	 *
 	 * @return void
+	 * 
+	 * @covers Joomla\Crypt\Crypt::generateKey
+	 * @since  __VERSION_NO__
 	 */
 	public function testGenerateKey()
 	{
@@ -158,9 +163,10 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @covers Joomla\Crypt\Crypt::setKey
-	 *
 	 * @return void
+	 * 
+	 * @covers Joomla\Crypt\Crypt::setKey
+	 * @since  __VERSION_NO__
 	 */
 	public function testSetKey()
 	{
@@ -178,9 +184,10 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @covers Joomla\Crypt\Crypt::genRandomBytes
-	 *
 	 * @return void
+	 * 
+	 * @covers Joomla\Crypt\Crypt::genRandomBytes
+	 * @since  __VERSION_NO__
 	 */
 	public function testGenRandomBytes()
 	{
@@ -209,9 +216,10 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @covers Joomla\Crypt\Crypt::genRandomBytesCustom
-	 *
 	 * @return void
+	 * 
+	 * @covers Joomla\Crypt\Crypt::genRandomBytesCustom
+	 * @since  __VERSION_NO__
 	 */
 	public function testGenRandomBytesCustom()
 	{

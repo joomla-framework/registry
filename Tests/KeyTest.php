@@ -18,9 +18,10 @@ class KeyTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test __construct()
 	 *
-	 * @covers  Joomla\Crypt\Key::__construct()
-	 *
 	 * @return  void
+	 *
+	 * @covers  Joomla\Crypt\Key::__construct()
+	 * @since  __VERSION_NO__
 	 */
 	public function test__construct()
 	{
@@ -68,15 +69,20 @@ class KeyTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test __get()
 	 *
-	 * @covers  Joomla\Crypt\Key::__get()
-	 *
 	 * @return  void
 	 *
+	 * @covers  Joomla\Crypt\Key::__get()
 	 * @expectedException PHPUnit_Framework_Error
+	 * @since  __VERSION_NO__
 	 */
 	public function test__get()
 	{
 		$key = new Key('simple');
+
+		$this->assertEquals(
+			$key->type,
+			'simple'
+		);
 
 		// Throws PHP error which is tested by expected exception.
 		$this->assertEquals(

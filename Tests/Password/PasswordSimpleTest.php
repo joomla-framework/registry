@@ -21,6 +21,8 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * Data provider for testCreate method.
 	 *
 	 * @return array
+	 * 
+	 * @since  __VERSION_NO__
 	 */
 	public function createData()
 	{
@@ -69,19 +71,16 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @param   string   $expected  The expected result
 	 * @param   integer  $cost      The cost value
 	 *
-	 * @covers  Joomla\Crypt\Password\PasswordSimple::create
-	 *
-	 * @expectedException  InvalidArgumentException
-	 *
 	 * @return void
 	 *
+	 * @covers  Joomla\Crypt\Password\PasswordSimple::create
 	 * @dataProvider  createExceptionData
-	 *
+	 * @expectedException  InvalidArgumentException
 	 * @since  1.0
 	 */
 	public function testCreateException($password, $type, $salt, $expected, $cost)
 	{
-		$hasher = $this->getMock('Joomla\\Crypt\\Password\\PasswordSimple', 
+		$hasher = $this->getMock('Joomla\\Crypt\\Password\\PasswordSimple',
 			array('getSalt')
 		);
 		$hasher->setCost($cost);
@@ -108,14 +107,15 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return        void
 	 *
+	 * @covers  Joomla\Crypt\Password\PasswordSimple::create
 	 * @dataProvider  createData
-	 *
 	 * @since   1.0
 	 */
 	public function testCreate($password, $type, $salt, $expected, $cost = 10)
 	{
 		$hasher = $this->getMock('Joomla\\Crypt\\Password\\PasswordSimple',
-			array('getSalt'));
+			array('getSalt')
+		);
 
 		$hasher->setCost($cost);
 
@@ -131,9 +131,33 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the Joomla\Crypt\Password\PasswordSimple::setCost method.
+	 *
+	 * @return        void
+	 *
+	 * @covers  Joomla\Crypt\Password\PasswordSimple::setCost
+	 * @since   1.0
+	 */
+	public function testSetCost()
+	{
+		$hasher = new PasswordSimple;
+
+		$this->assertNull(
+			$hasher->setCost(10)
+		);
+
+		$this->assertEquals(
+			10,
+			TestHelper::getValue($hasher, 'cost')
+		);
+	}
+
+	/**
 	 * Data Provider for testVerify.
 	 *
 	 * @return array
+	 * 
+	 * @since  __VERSION_NO__
 	 */
 	public function verifyData()
 	{
@@ -156,10 +180,11 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $hash         The hash
 	 * @param   string  $expectation  The expected result
 	 *
+	 * @return void
+	 * 
 	 * @covers        Joomla\Crypt\Password\PasswordSimple::verify
 	 * @dataProvider  verifyData
-	 *
-	 * @return void
+	 * @since  __VERSION_NO__
 	 */
 	public function testVerify($password, $hash, $expectation)
 	{
@@ -193,11 +218,10 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $type         The proposed default type
 	 * @param   string  $expectation  The expected value of $this->defaultType
 	 *
-	 * @covers        Joomla\Crypt\Password\PasswordSimple::setDefaultType
-	 * @dataProvider  defaultTypeData
-	 *
 	 * @return void
 	 *
+	 * @covers        Joomla\Crypt\Password\PasswordSimple::setDefaultType
+	 * @dataProvider  defaultTypeData
 	 * @since   1.0
 	 */
 	public function testSetDefaultType($type, $expectation)
@@ -216,11 +240,10 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $type         The proposed default type
 	 * @param   string  $expectation  The expected value of $this->defaultType
 	 *
-	 * @covers        Joomla\Crypt\Password\PasswordSimple::getDefaultType
-	 * @dataProvider  defaultTypeData
-	 *
 	 * @return void
 	 *
+	 * @covers        Joomla\Crypt\Password\PasswordSimple::getDefaultType
+	 * @dataProvider  defaultTypeData
 	 * @since   1.0
 	 */
 	public function testGetDefaultType($type, $expectation)
@@ -237,10 +260,9 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Tests the getDefaultType method.
 	 *
-	 * @covers        Joomla\Crypt\Password\PasswordSimple::getSalt
-	 *
 	 * @return void
 	 *
+	 * @covers        Joomla\Crypt\Password\PasswordSimple::getSalt
 	 * @since   1.0
 	 */
 	public function testGetSalt()

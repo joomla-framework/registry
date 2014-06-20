@@ -136,7 +136,7 @@ class Crypt
 	/**
 	 * Generate random bytes using custom algorithm.
 	 *
-	 * @param   integer  $length  		   Length of the random data to generate
+	 * @param   integer  $length           Length of the random data to generate
 	 * @param   string   $initalRandomStr  Any random string to increase entropy
 	 *
 	 * @return  string  Random binary data
