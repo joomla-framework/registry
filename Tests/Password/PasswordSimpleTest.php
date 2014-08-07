@@ -21,7 +21,7 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * Data provider for testCreate method.
 	 *
 	 * @return array
-	 * 
+	 *
 	 * @since  __VERSION_NO__
 	 */
 	public function createData()
@@ -156,7 +156,7 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * Data Provider for testVerify.
 	 *
 	 * @return array
-	 * 
+	 *
 	 * @since  __VERSION_NO__
 	 */
 	public function verifyData()
@@ -181,7 +181,7 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $expectation  The expected result
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @covers        Joomla\Crypt\Password\PasswordSimple::verify
 	 * @dataProvider  verifyData
 	 * @since  __VERSION_NO__
@@ -191,8 +191,8 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 		$hasher = new PasswordSimple;
 
 		$this->assertEquals(
-			$hasher->verify($password, $hash),
-			$expectation
+			$expectation,
+			$hasher->verify($password, $hash)
 		);
 	}
 
@@ -228,9 +228,9 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	{
 		$test = new PasswordSimple;
 		$test->setDefaultType($type);
-		$this->assertThat(
-			TestHelper::getValue($test, 'defaultType'),
-			$this->equalTo($expectation)
+		$this->assertEquals(
+			$expectation,
+			TestHelper::getValue($test, 'defaultType')
 		);
 	}
 
@@ -251,9 +251,9 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 		$test = new PasswordSimple;
 		$test->setDefaultType($type);
 
-		$this->assertThat(
-			$test->getDefaultType(),
-			$this->equalTo($expectation)
+		$this->assertEquals(
+			$expectation,
+			$test->getDefaultType()
 		);
 	}
 
@@ -274,20 +274,20 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 
 		$salt16 = TestHelper::invoke($password, 'getSalt', 16);
 		$this->assertEquals(
-			strlen($salt16),
-			16
+			16,
+			strlen($salt16)
 		);
 
 		$salt8 = TestHelper::invoke($password, 'getSalt', 8);
 		$this->assertEquals(
-			strlen($salt8),
-			8
+			8,
+			strlen($salt8)
 		);
 
 		$salt17 = TestHelper::invoke($password, 'getSalt', 17);
 		$this->assertEquals(
-			strlen($salt17),
-			17
+			17,
+			strlen($salt17)
 		);
 	}
 }

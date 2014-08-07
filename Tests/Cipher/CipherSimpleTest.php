@@ -59,7 +59,7 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 * Test...
 	 *
 	 * @return array
-	 * 
+	 *
 	 * @since  __VERSION_NO__
 	 */
 	public function dataForEncrypt()
@@ -90,11 +90,11 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Joomla\Crypt\Cipher\CipherSimple::decrypt
-	 * @covers Joomla\Crypt\Cipher\CipherSimple::_hexToInt
-	 * @covers Joomla\Crypt\Cipher\CipherSimple::_hexToIntArray
-	 * @dataProvider dataForEncrypt
-	 * @since   1.0
+	 * @covers        Joomla\Crypt\Cipher\CipherSimple::decrypt
+	 * @covers        Joomla\Crypt\Cipher\CipherSimple::_hexToInt
+	 * @covers        Joomla\Crypt\Cipher\CipherSimple::_hexToIntArray
+	 * @dataProvider  dataForEncrypt
+	 * @since         1.0
 	 */
 	public function testDecrypt($file, $data)
 	{
@@ -113,9 +113,9 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherSimple::decrypt
-	 * @expectedException InvalidArgumentException
-	 * @since   1.0
+	 * @covers             Joomla\Crypt\Cipher\CipherSimple::decrypt
+	 * @expectedException  InvalidArgumentException
+	 * @since              1.0
 	 */
 	public function testDecryptInvalidKeyType()
 	{
@@ -145,10 +145,10 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherSimple::encrypt
-	 * @covers Joomla\Crypt\Cipher\CipherSimple::_intToHex
-	 * @dataProvider dataForEncrypt
-	 * @since   1.0
+	 * @covers        Joomla\Crypt\Cipher\CipherSimple::encrypt
+	 * @covers        Joomla\Crypt\Cipher\CipherSimple::_intToHex
+	 * @dataProvider  dataForEncrypt
+	 * @since         1.0
 	 */
 	public function testEncrypt($file, $data)
 	{
@@ -169,9 +169,9 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherSimple::encrypt
-	 * @expectedException InvalidArgumentException
-	 * @since   1.0
+	 * @covers             Joomla\Crypt\Cipher\CipherSimple::encrypt
+	 * @expectedException  InvalidArgumentException
+	 * @since              1.0
 	 */
 	public function testEncryptInvalidKeyType()
 	{
@@ -203,8 +203,8 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherSimple::generateKey
-	 * @covers Joomla\Crypt\Cipher\CipherSimple::_getRandomKey
+	 * @covers  Joomla\Crypt\Cipher\CipherSimple::generateKey
+	 * @covers  Joomla\Crypt\Cipher\CipherSimple::_getRandomKey
 	 * @since   1.0
 	 */
 	public function testGenerateKey()

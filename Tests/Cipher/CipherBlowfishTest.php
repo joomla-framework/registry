@@ -65,7 +65,7 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	 * Test...
 	 *
 	 * @return array
-	 * 
+	 *
 	 * @since  __VERSION_NO__
 	 */
 	public function data()
@@ -96,9 +96,9 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherMcrypt::decrypt
-	 * @covers Joomla\Crypt\Cipher\CipherBlowfish::decrypt
-	 * @dataProvider data
+	 * @covers        Joomla\Crypt\Cipher\CipherMcrypt::decrypt
+	 * @covers        Joomla\Crypt\Cipher\CipherBlowfish::decrypt
+	 * @dataProvider  data
 	 * @since   1.0
 	 */
 	public function testDecrypt($file, $data)
@@ -118,8 +118,8 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherBlowfish::decrypt
-	 * @expectedException InvalidArgumentException
+	 * @covers             Joomla\Crypt\Cipher\CipherBlowfish::decrypt
+	 * @expectedException  InvalidArgumentException
 	 * @since   1.0
 	 */
 	public function testDecryptInvalidKeyType()
@@ -149,9 +149,9 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherMcrypt::encrypt
-	 * @covers Joomla\Crypt\Cipher\CipherBlowfish::encrypt
-	 * @dataProvider data
+	 * @covers        Joomla\Crypt\Cipher\CipherMcrypt::encrypt
+	 * @covers        Joomla\Crypt\Cipher\CipherBlowfish::encrypt
+	 * @dataProvider  data
 	 * @since   1.0
 	 */
 	public function testEncrypt($file, $data)
@@ -176,9 +176,9 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherBlowfish::encrypt
-	 * @expectedException InvalidArgumentException
-	 * @since   1.0
+	 * @covers             Joomla\Crypt\Cipher\CipherBlowfish::encrypt
+	 * @expectedException  InvalidArgumentException
+	 * @since              1.0
 	 */
 	public function testEncryptInvalidKeyType()
 	{
@@ -209,8 +209,8 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherMcrypt::generateKey
-	 * @covers Joomla\Crypt\Cipher\CipherMcrypt::PBKDF2
+	 * @covers  Joomla\Crypt\Cipher\CipherMcrypt::generateKey
+	 * @covers  Joomla\Crypt\Cipher\CipherMcrypt::PBKDF2
 	 * @since   1.0
 	 */
 	public function testGenerateKey()

@@ -28,40 +28,38 @@ class KeyTest extends \PHPUnit_Framework_TestCase
 		$key = new Key('simple');
 
 		$this->assertEquals(
-			$key->type,
 			'simple',
+			$key->type,
 			'Line:' . __LINE__ . ' type of key should be assgined correctly.'
 		);
 
-		$this->assertEquals(
+		$this->assertNull(
 			$key->private,
-			null,
 			'Line:' . __LINE__ . ' private key should be null if none given.'
 		);
 
-		$this->assertEquals(
+		$this->assertNull(
 			$key->public,
-			null,
 			'Line:' . __LINE__ . ' public key should be null if none given.'
 		);
 
 		$key = new Key('simple', 'foo', 'bar');
 
 		$this->assertEquals(
-			$key->type,
 			'simple',
+			$key->type,
 			'Line:' . __LINE__ . ' type of key should be assgined correctly.'
 		);
 
 		$this->assertEquals(
-			$key->private,
 			'foo',
+			$key->private,
 			'Line:' . __LINE__ . ' public key should be assgined correctly.'
 		);
 
 		$this->assertEquals(
-			$key->public,
 			'bar',
+			$key->public,
 			'Line:' . __LINE__ . ' public key should be assgined correctly.'
 		);
 	}
@@ -80,14 +78,14 @@ class KeyTest extends \PHPUnit_Framework_TestCase
 		$key = new Key('simple');
 
 		$this->assertEquals(
-			$key->type,
-			'simple'
+			'simple',
+			$key->type
 		);
 
 		// Throws PHP error which is tested by expected exception.
 		$this->assertEquals(
-			$key->foobar,
-			''
+			'',
+			$key->foobar
 		);
 	}
 }

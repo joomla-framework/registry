@@ -26,7 +26,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * This method is called before a test is executed.
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @since  __VERSION_NO__
 	 */
 	protected function setUp()
@@ -46,7 +46,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * Test __construct()
 	 *
 	 * @return  void
-	 * 
+	 *
 	 * @covers  Joomla\Crypt\Crypt::__construct()
 	 * @since  __VERSION_NO__
 	 */
@@ -69,7 +69,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * Test...
 	 *
 	 * @return array
-	 * 
+	 *
 	 * @since  __VERSION_NO__
 	 */
 	public function dataForEncrypt()
@@ -99,7 +99,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $data  @todo
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @covers Joomla\Crypt\Crypt::decrypt
 	 * @dataProvider dataForEncrypt
 	 * @since  __VERSION_NO__
@@ -123,7 +123,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $data  @todo
 	 *
 	 * @return  void
-	 * 
+	 *
 	 * @covers Joomla\Crypt\Crypt::encrypt
 	 * @dataProvider dataForEncrypt
 	 * @since  __VERSION_NO__
@@ -139,14 +139,17 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 		);
 
 		// Assert that the encrypted values are the same as the expected ones.
-		$this->assertStringEqualsFile(__DIR__ . '/Cipher/stubs/encrypted/simple/' . $file, $encrypted);
+		$this->assertStringEqualsFile(
+			__DIR__ . '/Cipher/stubs/encrypted/simple/' . $file,
+			$encrypted
+		);
 	}
 
 	/**
 	 * Test...
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @covers Joomla\Crypt\Crypt::generateKey
 	 * @since  __VERSION_NO__
 	 */
@@ -164,7 +167,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * Test...
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @covers Joomla\Crypt\Crypt::setKey
 	 * @since  __VERSION_NO__
 	 */
@@ -185,7 +188,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * Test...
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @covers Joomla\Crypt\Crypt::genRandomBytes
 	 * @since  __VERSION_NO__
 	 */
@@ -196,20 +199,20 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 
 		$randomBytes16 = Crypt::genRandomBytes();
 		$this->assertEquals(
-			strlen($randomBytes16),
-			16
+			16,
+			strlen($randomBytes16)
 		);
 
 		$randomBytes8 = Crypt::genRandomBytes(8);
 		$this->assertEquals(
-			strlen($randomBytes8),
-			8
+			8,
+			strlen($randomBytes8)
 		);
 
 		$randomBytes17 = Crypt::genRandomBytes(17);
 		$this->assertEquals(
-			strlen($randomBytes17),
-			17
+			17,
+			strlen($randomBytes17)
 		);
 	}
 
@@ -217,7 +220,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * Test...
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @covers Joomla\Crypt\Crypt::genRandomBytesCustom
 	 * @since  __VERSION_NO__
 	 */
@@ -228,20 +231,20 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 
 		$randomBytes16 = Crypt::genRandomBytesCustom();
 		$this->assertEquals(
-			strlen($randomBytes16),
-			16
+			16,
+			strlen($randomBytes16)
 		);
 
 		$randomBytes8 = Crypt::genRandomBytesCustom(8);
 		$this->assertEquals(
-			strlen($randomBytes8),
-			8
+			8,
+			strlen($randomBytes8)
 		);
 
 		$randomBytes17 = Crypt::genRandomBytesCustom(17);
 		$this->assertEquals(
-			strlen($randomBytes17),
-			17
+			17,
+			strlen($randomBytes17)
 		);
 	}
 }

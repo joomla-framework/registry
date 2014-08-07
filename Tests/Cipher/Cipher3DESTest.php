@@ -65,7 +65,7 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	 * Test...
 	 *
 	 * @return array
-	 * 
+	 *
 	 * @since  __VERSION_NO__
 	 */
 	public function data()
@@ -96,10 +96,10 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherMcrypt::decrypt
-	 * @covers Joomla\Crypt\Cipher\Cipher3DES::decrypt
-	 * @dataProvider data
-	 * @since   1.0
+	 * @covers        Joomla\Crypt\Cipher\CipherMcrypt::decrypt
+	 * @covers        Joomla\Crypt\Cipher\Cipher3DES::decrypt
+	 * @dataProvider  data
+	 * @since         1.0
 	 */
 	public function testDecrypt($file, $data)
 	{
@@ -118,9 +118,9 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\Cipher3DES::decrypt
-	 * @expectedException InvalidArgumentException
-	 * @since   1.0
+	 * @covers             Joomla\Crypt\Cipher\Cipher3DES::decrypt
+	 * @expectedException  InvalidArgumentException
+	 * @since              1.0
 	 */
 	public function testDecryptInvalidKeyType()
 	{
@@ -149,10 +149,10 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\CipherMcrypt::encrypt
-	 * @covers Joomla\Crypt\Cipher\Cipher3DES::encrypt
-	 * @dataProvider data
-	 * @since   1.0
+	 * @covers        Joomla\Crypt\Cipher\CipherMcrypt::encrypt
+	 * @covers        Joomla\Crypt\Cipher\Cipher3DES::encrypt
+	 * @dataProvider  data
+	 * @since         1.0
 	 */
 	public function testEncrypt($file, $data)
 	{
@@ -176,9 +176,9 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\Cipher3DES::encrypt
-	 * @expectedException InvalidArgumentException
-	 * @since   1.0
+	 * @covers             Joomla\Crypt\Cipher\Cipher3DES::encrypt
+	 * @expectedException  InvalidArgumentException
+	 * @since              1.0
 	 */
 	public function testEncryptInvalidKeyType()
 	{
@@ -209,8 +209,8 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Cipher\Cipher3DES::generateKey
-	 * @covers Joomla\Crypt\Cipher\CipherMcrypt::PBKDF2
+	 * @covers  Joomla\Crypt\Cipher\Cipher3DES::generateKey
+	 * @covers  Joomla\Crypt\Cipher\CipherMcrypt::PBKDF2
 	 * @since   1.0
 	 */
 	public function testGenerateKey()
