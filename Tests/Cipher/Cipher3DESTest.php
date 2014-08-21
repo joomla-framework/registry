@@ -10,14 +10,14 @@ use Joomla\Crypt\Key;
 use Joomla\Crypt\Cipher\Cipher3DES;
 
 /**
- * Test class for JCryptCipher3DES.
+ * Test class for \Joomla\Crypt\Cipher\Cipher3DES.
  *
  * @since  1.0
  */
 class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var    JCryptCipher3DES
+	 * @var    Cipher3DES
 	 * @since  1.0
 	 */
 	private $cipher;
@@ -64,9 +64,9 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @return array
+	 * @return  array
 	 *
-	 * @since  __VERSION_NO__
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function data()
 	{
@@ -89,7 +89,7 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipher3DES->decrypt()
+	 * Tests \Joomla\Crypt\Cipher\Cipher3DES->decrypt()
 	 *
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
@@ -114,13 +114,13 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipher3DES->decrypt()
+	 * Tests \Joomla\Crypt\Cipher\Cipher3DES->decrypt()
 	 *
 	 * @return  void
 	 *
 	 * @covers             Joomla\Crypt\Cipher\Cipher3DES::decrypt
-	 * @expectedException  InvalidArgumentException
-	 * @since              1.0
+	 * @expectedException  \InvalidArgumentException
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testDecryptInvalidKeyType()
 	{
@@ -142,7 +142,7 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipher3DES->encrypt()
+	 * Tests \Joomla\Crypt\Cipher\Cipher3DES->encrypt()
 	 *
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
@@ -172,13 +172,13 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipher3DES->encrypt()
+	 * Tests \Joomla\Crypt\Cipher\Cipher3DES->encrypt()
 	 *
 	 * @return  void
 	 *
 	 * @covers             Joomla\Crypt\Cipher\Cipher3DES::encrypt
-	 * @expectedException  InvalidArgumentException
-	 * @since              1.0
+	 * @expectedException  \InvalidArgumentException
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testEncryptInvalidKeyType()
 	{
@@ -205,7 +205,7 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipher3DES->generateKey()
+	 * Tests \Joomla\Crypt\Cipher\Cipher3DES->generateKey()
 	 *
 	 * @return  void
 	 *

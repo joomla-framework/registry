@@ -10,14 +10,14 @@ use Joomla\Crypt\Key;
 use Joomla\Crypt\Cipher\CipherBlowfish;
 
 /**
- * Test class for JCryptCipherBlowfish.
+ * Test class for \Joomla\Crypt\Cipher\CipherBlowfish.
  *
  * @since  1.0
  */
 class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var    JCryptCipherBlowfish
+	 * @var    CipherBlowfish
 	 * @since  1.0
 	 */
 	private $cipher;
@@ -64,9 +64,9 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @return array
+	 * @return  array
 	 *
-	 * @since  __VERSION_NO__
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function data()
 	{
@@ -89,7 +89,7 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherBlowfish->decrypt()
+	 * Tests \Joomla\Crypt\Cipher\CipherBlowfish->decrypt()
 	 *
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
@@ -114,13 +114,13 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherBlowfish->decrypt()
+	 * Tests \Joomla\Crypt\Cipher\CipherBlowfish->decrypt()
 	 *
 	 * @return  void
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherBlowfish::decrypt
-	 * @expectedException  InvalidArgumentException
-	 * @since   1.0
+	 * @expectedException  \InvalidArgumentException
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testDecryptInvalidKeyType()
 	{
@@ -142,7 +142,7 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherBlowfish->encrypt()
+	 * Tests \Joomla\Crypt\Cipher\CipherBlowfish->encrypt()
 	 *
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
@@ -172,13 +172,13 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherBlowfish->encrypt()
+	 * Tests \Joomla\Crypt\Cipher\CipherBlowfish->encrypt()
 	 *
 	 * @return  void
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherBlowfish::encrypt
-	 * @expectedException  InvalidArgumentException
-	 * @since              1.0
+	 * @expectedException  \InvalidArgumentException
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testEncryptInvalidKeyType()
 	{
@@ -205,7 +205,7 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherBlowfish->generateKey()
+	 * Tests \Joomla\Crypt\Cipher\CipherBlowfish->generateKey()
 	 *
 	 * @return  void
 	 *

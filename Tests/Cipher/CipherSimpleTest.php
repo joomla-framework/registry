@@ -10,14 +10,14 @@ use Joomla\Crypt\Key;
 use Joomla\Crypt\Cipher\CipherSimple;
 
 /**
- * Test class for JCryptCipherSimple.
+ * Test class for \Joomla\Crypt\Cipher\CipherSimple.
  *
  * @since  1.0
  */
 class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var    JCryptCipherSimple
+	 * @var    CipherSimple
 	 * @since  1.0
 	 */
 	private $cipher;
@@ -58,9 +58,9 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @return array
+	 * @return  array
 	 *
-	 * @since  __VERSION_NO__
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function dataForEncrypt()
 	{
@@ -83,7 +83,7 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherSimple->decrypt()
+	 * Tests CipherSimple->decrypt()
 	 *
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
@@ -109,13 +109,13 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherSimple->decrypt()
+	 * Tests CipherSimple->decrypt()
 	 *
 	 * @return  void
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherSimple::decrypt
-	 * @expectedException  InvalidArgumentException
-	 * @since              1.0
+	 * @expectedException  \InvalidArgumentException
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testDecryptInvalidKeyType()
 	{
@@ -138,7 +138,7 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherSimple->encrypt()
+	 * Tests CipherSimple->encrypt()
 	 *
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
@@ -165,13 +165,13 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherSimple->encrypt()
+	 * Tests CipherSimple->encrypt()
 	 *
 	 * @return  void
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherSimple::encrypt
-	 * @expectedException  InvalidArgumentException
-	 * @since              1.0
+	 * @expectedException  \InvalidArgumentException
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testEncryptInvalidKeyType()
 	{
@@ -199,7 +199,7 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherSimple->generateKey()
+	 * Tests CipherSimple->generateKey()
 	 *
 	 * @return  void
 	 *

@@ -9,7 +9,7 @@ namespace Joomla\Crypt\Tests;
 use Joomla\Crypt\Key;
 
 /**
- * Test class for JCrypt.
+ * Test class for \Joomla\Crypt\Key.
  *
  * @since  1.0
  */
@@ -21,7 +21,7 @@ class KeyTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Key::__construct()
-	 * @since  __VERSION_NO__
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function test__construct()
 	{
@@ -70,8 +70,8 @@ class KeyTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Key::__get()
-	 * @expectedException PHPUnit_Framework_Error
-	 * @since  __VERSION_NO__
+	 * @expectedException  PHPUnit_Framework_Error
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function test__get()
 	{

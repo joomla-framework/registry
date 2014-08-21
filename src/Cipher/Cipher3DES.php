@@ -30,7 +30,7 @@ class Cipher3DES extends CipherMcrypt
 	protected $mode = MCRYPT_MODE_CBC;
 
 	/**
-	 * @var    string  The JCrypt key type for validation.
+	 * @var    string  The Crypt key type for validation.
 	 * @since  1.0
 	 */
 	protected $keyType = '3des';

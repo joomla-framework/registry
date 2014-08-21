@@ -10,14 +10,15 @@ use Joomla\Crypt\Crypt;
 use Joomla\Crypt\Key;
 
 /**
- * Test class for JCrypt.
+ * Test class for \Joomla\Crypt\Crypt.
  *
  * @since  1.0
  */
 class CryptTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var Joomla\Crypt\Crypt
+	 * @var    Crypt
+	 * @since  1.0
 	 */
 	protected $object;
 
@@ -25,9 +26,9 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
-	 * @return void
+	 * @return  void
 	 *
-	 * @since  __VERSION_NO__
+	 * @since   __DEPLOY_VERSION__
 	 */
 	protected function setUp()
 	{
@@ -48,7 +49,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Crypt::__construct()
-	 * @since  __VERSION_NO__
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function test__construct()
 	{
@@ -68,9 +69,9 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @return array
+	 * @return  array
 	 *
-	 * @since  __VERSION_NO__
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function dataForEncrypt()
 	{
@@ -98,11 +99,11 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
 	 *
-	 * @return void
+	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Crypt::decrypt
+	 * @covers  Joomla\Crypt\Crypt::decrypt
 	 * @dataProvider dataForEncrypt
-	 * @since  __VERSION_NO__
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testDecrypt($file, $data)
 	{
@@ -124,9 +125,9 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Crypt::encrypt
-	 * @dataProvider dataForEncrypt
-	 * @since  __VERSION_NO__
+	 * @covers  Joomla\Crypt\Crypt::encrypt
+	 * @dataProvider  dataForEncrypt
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testEncrypt($file, $data)
 	{
@@ -148,10 +149,10 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @return void
+	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Crypt::generateKey
-	 * @since  __VERSION_NO__
+	 * @covers  Joomla\Crypt\Crypt::generateKey
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testGenerateKey()
 	{
@@ -166,10 +167,10 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @return void
+	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Crypt::setKey
-	 * @since  __VERSION_NO__
+	 * @covers  Joomla\Crypt\Crypt::setKey
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testSetKey()
 	{
@@ -187,10 +188,10 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @return void
+	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Crypt::genRandomBytes
-	 * @since  __VERSION_NO__
+	 * @covers  Joomla\Crypt\Crypt::genRandomBytes
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testGenRandomBytes()
 	{
@@ -219,10 +220,10 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @return void
+	 * @return  void
 	 *
-	 * @covers Joomla\Crypt\Crypt::genRandomBytesCustom
-	 * @since  __VERSION_NO__
+	 * @covers  Joomla\Crypt\Crypt::genRandomBytesCustom
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testGenRandomBytesCustom()
 	{

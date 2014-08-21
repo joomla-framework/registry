@@ -17,7 +17,7 @@ use Joomla\Crypt\Cipher\CipherRijndael256;
 class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var    Joomala\Crypt\CipherRijndael256
+	 * @var    CipherRijndael256
 	 * @since  1.0
 	 */
 	private $cipher;
@@ -64,7 +64,9 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test...
 	 *
-	 * @return array
+	 * @return  array
+	 *
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function data()
 	{
@@ -87,7 +89,7 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests CryptCipherRijndael256::decrypt()
+	 * Tests CipherRijndael256::decrypt()
 	 *
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
@@ -112,13 +114,13 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests CryptCipherRijndael256->decrypt()
+	 * Tests CipherRijndael256->decrypt()
 	 *
 	 * @return  void
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherRijndael256::decrypt
-	 * @expectedException  InvalidArgumentException
-	 * @since              1.0
+	 * @expectedException  \InvalidArgumentException
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testDecryptInvalidKeyType()
 	{
@@ -140,7 +142,7 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherRijndael256Test->encrypt()
+	 * Tests CipherRijndael256Test->encrypt()
 	 *
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
@@ -167,13 +169,13 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherRijndael256Test->encrypt()
+	 * Tests CipherRijndael256Test->encrypt()
 	 *
 	 * @return  void
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherRijndael256::encrypt
-	 * @expectedException  InvalidArgumentException
-	 * @since              1.0
+	 * @expectedException  \InvalidArgumentException
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testEncryptInvalidKeyType()
 	{
@@ -200,7 +202,7 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherRijndael256Test->generateKey()
+	 * Tests CipherRijndael256Test->generateKey()
 	 *
 	 * @return  void
 	 *

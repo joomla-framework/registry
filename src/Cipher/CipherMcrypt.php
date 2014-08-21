@@ -33,7 +33,7 @@ abstract class CipherMcrypt implements CipherInterface
 	protected $mode;
 
 	/**
-	 * @var    string  The JCrypt key type for validation.
+	 * @var    string  The Crypt key type for validation.
 	 * @since  1.0
 	 */
 	protected $keyType;
