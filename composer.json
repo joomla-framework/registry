@@ -11,11 +11,19 @@
     "require": {
         "php": ">=5.3.10"
     },
-    "target-dir": "Joomla/Crypt",
     "autoload": {
         "psr-4": {
-            "Joomla\\Crypt\\": "src/",
+            "Joomla\\Crypt\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Joomla\\Crypt\\Test\\": "Tests/"
-    	}
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0-dev"
+        }
     }
 }
