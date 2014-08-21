@@ -12,6 +12,7 @@ namespace Joomla\Registry;
  * Abstract Format for Registry
  *
  * @since  1.0
+ * @deprecated  2.0  You should implement the RegistryFormatInterface in Formats
  */
 abstract class AbstractRegistryFormat
 {
@@ -30,6 +31,7 @@ abstract class AbstractRegistryFormat
 	 * @return  AbstractRegistryFormat  Registry format handler
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use Registry->getFormat($type) instead
 	 * @throws  \InvalidArgumentException
 	 */
 	public static function getInstance($type)

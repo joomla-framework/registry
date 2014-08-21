@@ -34,6 +34,14 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	protected static $instances = array();
 
 	/**
+	 * Registry Format instances container.
+	 *
+	 * @var    array
+	 * @since  1.0
+	 */
+	protected static $formatInstances = array();
+
+	/**
 	 * Constructor
 	 *
 	 * @param   mixed  $data  The data to bind to the new Registry object.
@@ -289,12 +297,95 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	public function loadString($data, $format = 'JSON', $options = array())
 	{
 		// Load a string into the given namespace [or default namespace if not given]
-		$handler = AbstractRegistryFormat::getInstance($format);
+		$handler = $this->getFormat($format);
 
 		$obj = $handler->stringToObject($data, $options);
 		$this->loadObject($obj);
 
 		return $this;
+	}
+
+	/**
+	 * Get a Registry Format
+	 *
+	 * @param   string  $type  The name of the format to get
+	 *
+	 * @return  null
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 * @throws  \InvalidArgumentException
+	 */
+	public function registerFormat($type, $namespace = null)
+	{
+		// Sanitize format type.
+		$name = strtolower(preg_replace('/[^A-Z0-9_]/i', '', $type));
+
+		// If we already have an instance of the class bail
+		if (!empty(self::$formatInstances[$name]))
+		{
+			return;
+		}
+
+		// If we don't get given a namespace use the Joomla Registry Format one
+		if (!$namespace)
+		{
+			$namespace = 'Joomla\\Registry\\Format\\';
+		}
+
+		$className = $namespace . ucfirst($name);
+
+		if (class_exists($className))
+		{
+			$class = new $className;
+
+			if (!$class instanceof RegistryFormatInterface)
+			{
+				throw new \InvalidArgumentException(sprintf('Class name %s does not implement RegistryFormatInterface', $class));
+			}
+
+			// We have a valid class so add it to the instances
+			self::$formatInstances[$name] = $class;
+
+			return;
+		}
+
+		throw new \InvalidArgumentException(sprintf('Argument %s produced an invalid class name: %s', $name, $class));
+	}
+
+	/**
+	 * Get a Registry Format
+	 *
+	 * @param   string  $type  The name of the format to get
+	 *
+	 * @return  RegistryFormatInterface  Return the format requested.
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 * @throws  \BadMethodCallException
+	 */
+	public function getFormat($type)
+	{
+		// Sanitize format type.
+		$name = strtolower(preg_replace('/[^A-Z0-9_]/i', '', $type));
+
+		// If we have a registered format instance return it
+		if (!empty(self::$formatInstances[$name]))
+		{
+			return self::$formatInstances[$name];
+		}
+
+		// If we don't have an instance try and set one
+		try
+		{
+			$this->registerFormat($name);
+		}
+		catch (\InvalidArgumentException $e)
+		{
+			// No format has been set and no format can be found so throw an exception
+			throw new \BadMethodCallException($e-getMessage());
+		}
+
+		// If we could set the format then return it
+		return self::$formatInstances[$name];
 	}
 
 	/**
