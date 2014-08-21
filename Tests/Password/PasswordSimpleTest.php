@@ -7,7 +7,7 @@
 namespace Joomla\Crypt\Tests;
 
 use Joomla\Crypt\PasswordInterface;
-use Joomla\Crypt\Password\Simple;
+use Joomla\Crypt\Password\PasswordSimple;
 use Joomla\Test\TestHelper;
 
 /**
@@ -21,6 +21,8 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * Data provider for testCreate method.
 	 *
 	 * @return array
+	 *
+	 * @since  __VERSION_NO__
 	 */
 	public function createData()
 	{
@@ -28,14 +30,19 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 		return array(
 			'Blowfish' => array('password', PasswordInterface::BLOWFISH, 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$10$ABCDEFGHIJKLMNOPQRSTUOiAi7OcdE4zRCh6NcGWusEcNPtq6/w8.'),
+
 			'Blowfish2' => array('password', '$2a$', 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$10$ABCDEFGHIJKLMNOPQRSTUOiAi7OcdE4zRCh6NcGWusEcNPtq6/w8.'),
+
 			'MD5' => array('password', PasswordInterface::MD5, 'ABCDEFGHIJKL',
 				'$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1'),
+
 			'Joomla' => array('password', PasswordInterface::JOOMLA, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456',
 				'883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456'),
+
 			'Blowfish_5' => array('password', PasswordInterface::BLOWFISH, 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$05$ABCDEFGHIJKLMNOPQRSTUOvv7EU5o68GAoLxyfugvULZR70IIMZqW', 5),
+
 			'default' => array('password', null, 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$05$ABCDEFGHIJKLMNOPQRSTUOvv7EU5o68GAoLxyfugvULZR70IIMZqW', 5)
 		);
@@ -64,19 +71,18 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @param   string   $expected  The expected result
 	 * @param   integer  $cost      The cost value
 	 *
-	 * @covers  Joomla\Crypt\Password\Simple::create
-	 *
-	 * @expectedException  InvalidArgumentException
-	 *
 	 * @return void
 	 *
+	 * @covers  Joomla\Crypt\Password\PasswordSimple::create
 	 * @dataProvider  createExceptionData
-	 *
+	 * @expectedException  InvalidArgumentException
 	 * @since  1.0
 	 */
 	public function testCreateException($password, $type, $salt, $expected, $cost)
 	{
-		$hasher = $this->getMock('Joomla\\Crypt\\Password\\Simple', array('getSalt'));
+		$hasher = $this->getMock('Joomla\\Crypt\\Password\\PasswordSimple',
+			array('getSalt')
+		);
 		$hasher->setCost($cost);
 
 		$hasher->expects($this->any())
@@ -91,7 +97,7 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Crypt\Password\Simple::Create method.
+	 * Tests the Joomla\Crypt\Password\PasswordSimple::Create method.
 	 *
 	 * @param   string   $password  The password to create
 	 * @param   string   $type      The type of hash
@@ -101,13 +107,15 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return        void
 	 *
+	 * @covers  Joomla\Crypt\Password\PasswordSimple::create
 	 * @dataProvider  createData
-	 *
 	 * @since   1.0
 	 */
 	public function testCreate($password, $type, $salt, $expected, $cost = 10)
 	{
-		$hasher = $this->getMock('Joomla\\Crypt\\Password\\Simple', array('getSalt'));
+		$hasher = $this->getMock('Joomla\\Crypt\\Password\\PasswordSimple',
+			array('getSalt')
+		);
 
 		$hasher->setCost($cost);
 
@@ -123,9 +131,33 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the Joomla\Crypt\Password\PasswordSimple::setCost method.
+	 *
+	 * @return        void
+	 *
+	 * @covers  Joomla\Crypt\Password\PasswordSimple::setCost
+	 * @since   1.0
+	 */
+	public function testSetCost()
+	{
+		$hasher = new PasswordSimple;
+
+		$this->assertNull(
+			$hasher->setCost(10)
+		);
+
+		$this->assertEquals(
+			10,
+			TestHelper::getValue($hasher, 'cost')
+		);
+	}
+
+	/**
 	 * Data Provider for testVerify.
 	 *
 	 * @return array
+	 *
+	 * @since  __VERSION_NO__
 	 */
 	public function verifyData()
 	{
@@ -136,7 +168,8 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 			'MD5 Valid' => array('password', '$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1', true),
 			'MD5 Invalid' => array('passw0rd', '$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1', false),
 			'Joomla Valid' => array('password', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', true),
-			'Joomla Invalid' => array('passw0rd', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', false)
+			'Joomla Invalid' => array('passw0rd', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', false),
+			'Invalid' => array('passw0rd', 'foo bar', false)
 		);
 	}
 
@@ -147,16 +180,20 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $hash         The hash
 	 * @param   string  $expectation  The expected result
 	 *
-	 * @covers        Joomla\Crypt\Password\Simple::verify
-	 * @dataProvider  verifyData
-	 *
 	 * @return void
+	 *
+	 * @covers        Joomla\Crypt\Password\PasswordSimple::verify
+	 * @dataProvider  verifyData
+	 * @since  __VERSION_NO__
 	 */
 	public function testVerify($password, $hash, $expectation)
 	{
-		$hasher = new Simple;
+		$hasher = new PasswordSimple;
 
-		$this->assertEquals($hasher->verify($password, $hash), $expectation);
+		$this->assertEquals(
+			$expectation,
+			$hasher->verify($password, $hash)
+		);
 	}
 
 	/**
@@ -181,20 +218,19 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $type         The proposed default type
 	 * @param   string  $expectation  The expected value of $this->defaultType
 	 *
-	 * @covers        Joomla\Crypt\Password\Simple::setDefaultType
-	 * @dataProvider  defaultTypeData
-	 *
 	 * @return void
 	 *
+	 * @covers        Joomla\Crypt\Password\PasswordSimple::setDefaultType
+	 * @dataProvider  defaultTypeData
 	 * @since   1.0
 	 */
 	public function testSetDefaultType($type, $expectation)
 	{
-		$test = new Simple;
+		$test = new PasswordSimple;
 		$test->setDefaultType($type);
-		$this->assertThat(
-			TestHelper::getValue($test, 'defaultType'),
-			$this->equalTo($expectation)
+		$this->assertEquals(
+			$expectation,
+			TestHelper::getValue($test, 'defaultType')
 		);
 	}
 
@@ -204,21 +240,54 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @param   string  $type         The proposed default type
 	 * @param   string  $expectation  The expected value of $this->defaultType
 	 *
-	 * @covers        Joomla\Crypt\Password\Simple::getDefaultType
-	 * @dataProvider  defaultTypeData
-	 *
 	 * @return void
 	 *
+	 * @covers        Joomla\Crypt\Password\PasswordSimple::getDefaultType
+	 * @dataProvider  defaultTypeData
 	 * @since   1.0
 	 */
 	public function testGetDefaultType($type, $expectation)
 	{
-		$test = new Simple;
+		$test = new PasswordSimple;
 		$test->setDefaultType($type);
 
-		$this->assertThat(
-			$test->getDefaultType(),
-			$this->equalTo($expectation)
+		$this->assertEquals(
+			$expectation,
+			$test->getDefaultType()
+		);
+	}
+
+	/**
+	 * Tests the getDefaultType method.
+	 *
+	 * @return void
+	 *
+	 * @covers        Joomla\Crypt\Password\PasswordSimple::getSalt
+	 * @since   1.0
+	 */
+	public function testGetSalt()
+	{
+		// We're just testing wether the value has the expected length.
+		// We obviously can't test the result since it's random.
+
+		$password = new PasswordSimple;
+
+		$salt16 = TestHelper::invoke($password, 'getSalt', 16);
+		$this->assertEquals(
+			16,
+			strlen($salt16)
+		);
+
+		$salt8 = TestHelper::invoke($password, 'getSalt', 8);
+		$this->assertEquals(
+			8,
+			strlen($salt8)
+		);
+
+		$salt17 = TestHelper::invoke($password, 'getSalt', 17);
+		$this->assertEquals(
+			17,
+			strlen($salt17)
 		);
 	}
 }

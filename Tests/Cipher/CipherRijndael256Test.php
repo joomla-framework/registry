@@ -7,17 +7,17 @@
 namespace Joomla\Crypt\Tests;
 
 use Joomla\Crypt\Key;
-use Joomla\Crypt\Cipher_Rijndael256;
+use Joomla\Crypt\Cipher\CipherRijndael256;
 
 /**
- * Test class for JCryptCipherRijndael256.
+ * Test class for Joomala\Crypt\CipherRijndael256.
  *
  * @since  1.0
  */
 class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var    JCryptCipherRijndael256
+	 * @var    Joomala\Crypt\CipherRijndael256
 	 * @since  1.0
 	 */
 	private $cipher;
@@ -39,7 +39,7 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 			$this->markTestSkipped('The mcrypt extension must be available for this test to run.');
 		}
 
-		$this->cipher = new Cipher_Rijndael256;
+		$this->cipher = new CipherRijndael256;
 
 		// Build the key for testing.
 		$this->key = new Key('rijndael256');
@@ -87,15 +87,17 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests JCryptCipherRijndael256Test->decrypt()
+	 * Tests CryptCipherRijndael256::decrypt()
 	 *
 	 * @param   string  $file  @todo
 	 * @param   string  $data  @todo
 	 *
 	 * @return  void
 	 *
-	 * @dataProvider data
-	 * @since   1.0
+	 * @covers        Joomla\Crypt\Cipher\CipherMcrypt::decrypt
+	 * @covers        Joomla\Crypt\Cipher\CipherRijndael256::decrypt
+	 * @dataProvider  data
+	 * @since         1.0
 	 */
 	public function testDecrypt($file, $data)
 	{
@@ -103,7 +105,38 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 		$decrypted = $this->cipher->decrypt($encrypted, $this->key);
 
 		// Assert that the decrypted values are the same as the expected ones.
-		$this->assertEquals($data, $decrypted);
+		$this->assertEquals(
+			$data,
+			$decrypted
+		);
+	}
+
+	/**
+	 * Tests CryptCipherRijndael256->decrypt()
+	 *
+	 * @return  void
+	 *
+	 * @covers             Joomla\Crypt\Cipher\CipherRijndael256::decrypt
+	 * @expectedException  InvalidArgumentException
+	 * @since              1.0
+	 */
+	public function testDecryptInvalidKeyType()
+	{
+		$key = new Key('simple');
+		$this->key->private = 'foo';
+		$this->key->public = 'bar';
+
+		$file = '5.txt';
+		$expected = 'The quick brown fox jumps over the lazy dog.';
+
+		$encrypted = file_get_contents(__DIR__ . '/stubs/encrypted/rijndael256/' . $file);
+		$decrypted = $this->cipher->decrypt($encrypted, $key);
+
+		// Assert that the decrypted values are the same as the expected ones.
+		$this->assertEquals(
+			$data,
+			$decrypted
+		);
 	}
 
 	/**
@@ -114,8 +147,10 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @dataProvider data
-	 * @since   1.0
+	 * @covers        Joomla\Crypt\Cipher\CipherMcrypt::encrypt
+	 * @covers        Joomla\Crypt\Cipher\CipherRijndael256::encrypt
+	 * @dataProvider  data
+	 * @since         1.0
 	 */
 	public function testEncrypt($file, $data)
 	{
@@ -125,7 +160,43 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 		$this->assertNotEquals($data, $encrypted);
 
 		// Assert that the encrypted values are the same as the expected ones.
-		$this->assertStringEqualsFile(__DIR__ . '/stubs/encrypted/rijndael256/' . $file, $encrypted);
+		$this->assertStringEqualsFile(
+			__DIR__ . '/stubs/encrypted/rijndael256/' . $file,
+			$encrypted
+		);
+	}
+
+	/**
+	 * Tests JCryptCipherRijndael256Test->encrypt()
+	 *
+	 * @return  void
+	 *
+	 * @covers             Joomla\Crypt\Cipher\CipherRijndael256::encrypt
+	 * @expectedException  InvalidArgumentException
+	 * @since              1.0
+	 */
+	public function testEncryptInvalidKeyType()
+	{
+		$key = new Key('simple');
+		$this->key->private = 'foo';
+		$this->key->public = 'bar';
+
+		$file = '5.txt';
+		$data = 'The quick brown fox jumps over the lazy dog.';
+
+		$encrypted = $this->cipher->encrypt($data, $key);
+
+		// Assert that the encrypted value is not the same as the clear text value.
+		$this->assertNotEquals(
+			$data,
+			$encrypted
+		);
+
+		// Assert that the encrypted values are the same as the expected ones.
+		$this->assertStringEqualsFile(
+			__DIR__ . '/stubs/encrypted/rijndael256/' . $file,
+			$encrypted
+		);
 	}
 
 	/**
@@ -133,6 +204,8 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
+	 * @covers  Joomla\Crypt\Cipher\CipherMcrypt::generateKey
+	 * @covers  Joomla\Crypt\Cipher\CipherMcrypt::PBKDF2
 	 * @since   1.0
 	 */
 	public function testGenerateKey()
@@ -140,12 +213,22 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 		$key = $this->cipher->generateKey();
 
 		// Assert that the key is the correct type.
-		$this->assertInstanceOf('Joomla\\Crypt\\Key', $key);
+		$this->assertInstanceOf(
+			'Joomla\\Crypt\\Key',
+			$key
+		);
 
 		// Assert that the private key is 32 bytes long.
-		$this->assertEquals(32, strlen($key->private));
+		$this->assertEquals(
+			32,
+			strlen($key->private)
+		);
 
 		// Assert the key is of the correct type.
-		$this->assertAttributeEquals('rijndael256', 'type', $key);
+		$this->assertAttributeEquals(
+			'rijndael256',
+			'type',
+			$key
+		);
 	}
 }

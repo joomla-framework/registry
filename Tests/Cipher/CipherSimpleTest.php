@@ -7,7 +7,7 @@
 namespace Joomla\Crypt\Tests;
 
 use Joomla\Crypt\Key;
-use Joomla\Crypt\Cipher_Simple;
+use Joomla\Crypt\Cipher\CipherSimple;
 
 /**
  * Test class for JCryptCipherSimple.
@@ -33,7 +33,7 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$this->cipher = new Cipher_Simple;
+		$this->cipher = new CipherSimple;
 
 		$this->key = new Key('simple');
 		$this->key->private = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUgkVF4mLxAUf80ZJPAJHXHoac';
@@ -59,6 +59,8 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 * Test...
 	 *
 	 * @return array
+	 *
+	 * @since  __VERSION_NO__
 	 */
 	public function dataForEncrypt()
 	{
@@ -88,8 +90,11 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @dataProvider dataForEncrypt
-	 * @since   1.0
+	 * @covers        Joomla\Crypt\Cipher\CipherSimple::decrypt
+	 * @covers        Joomla\Crypt\Cipher\CipherSimple::_hexToInt
+	 * @covers        Joomla\Crypt\Cipher\CipherSimple::_hexToIntArray
+	 * @dataProvider  dataForEncrypt
+	 * @since         1.0
 	 */
 	public function testDecrypt($file, $data)
 	{
@@ -97,7 +102,39 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 		$decrypted = $this->cipher->decrypt($encrypted, $this->key);
 
 		// Assert that the decrypted values are the same as the expected ones.
-		$this->assertEquals($data, $decrypted);
+		$this->assertEquals(
+			$data,
+			$decrypted
+		);
+	}
+
+	/**
+	 * Tests JCryptCipherSimple->decrypt()
+	 *
+	 * @return  void
+	 *
+	 * @covers             Joomla\Crypt\Cipher\CipherSimple::decrypt
+	 * @expectedException  InvalidArgumentException
+	 * @since              1.0
+	 */
+	public function testDecryptInvalidKeyType()
+	{
+		// Build the key for testing.
+		$key = new Key('3des');
+		$this->key->private = file_get_contents(__DIR__ . '/stubs/encrypted/3des/key.priv');
+		$this->key->public = file_get_contents(__DIR__ . '/stubs/encrypted/3des/key.pub');
+
+		$file = '5.txt';
+		$expected = 'The quick brown fox jumps over the lazy dog.';
+
+		$encrypted = file_get_contents(__DIR__ . '/stubs/encrypted/simple/' . $file);
+		$decrypted = $this->cipher->decrypt($encrypted, $key);
+
+		// Assert that the decrypted values are the same as the expected ones.
+		$this->assertEquals(
+			$data,
+			$decrypted
+		);
 	}
 
 	/**
@@ -108,8 +145,10 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @dataProvider dataForEncrypt
-	 * @since   1.0
+	 * @covers        Joomla\Crypt\Cipher\CipherSimple::encrypt
+	 * @covers        Joomla\Crypt\Cipher\CipherSimple::_intToHex
+	 * @dataProvider  dataForEncrypt
+	 * @since         1.0
 	 */
 	public function testEncrypt($file, $data)
 	{
@@ -119,7 +158,44 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 		$this->assertNotEquals($data, $encrypted);
 
 		// Assert that the encrypted values are the same as the expected ones.
-		$this->assertStringEqualsFile(__DIR__ . '/stubs/encrypted/simple/' . $file, $encrypted);
+		$this->assertStringEqualsFile(
+			__DIR__ . '/stubs/encrypted/simple/' . $file,
+			$encrypted
+		);
+	}
+
+	/**
+	 * Tests JCryptCipherSimple->encrypt()
+	 *
+	 * @return  void
+	 *
+	 * @covers             Joomla\Crypt\Cipher\CipherSimple::encrypt
+	 * @expectedException  InvalidArgumentException
+	 * @since              1.0
+	 */
+	public function testEncryptInvalidKeyType()
+	{
+		// Build the key for testing.
+		$key = new Key('3des');
+		$this->key->private = file_get_contents(__DIR__ . '/stubs/encrypted/3des/key.priv');
+		$this->key->public = file_get_contents(__DIR__ . '/stubs/encrypted/3des/key.pub');
+
+		$file = '5.txt';
+		$data = 'The quick brown fox jumps over the lazy dog.';
+
+		$encrypted = $this->cipher->encrypt($data, $key);
+
+		// Assert that the encrypted value is not the same as the clear text value.
+		$this->assertNotEquals(
+			$data,
+			$encrypted
+		);
+
+		// Assert that the encrypted values are the same as the expected ones.
+		$this->assertStringEqualsFile(
+			__DIR__ . '/stubs/encrypted/simple/' . $file,
+			$encrypted
+		);
 	}
 
 	/**
@@ -127,6 +203,8 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
+	 * @covers  Joomla\Crypt\Cipher\CipherSimple::generateKey
+	 * @covers  Joomla\Crypt\Cipher\CipherSimple::_getRandomKey
 	 * @since   1.0
 	 */
 	public function testGenerateKey()
@@ -134,12 +212,22 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 		$key = $this->cipher->generateKey();
 
 		// Assert that the key is the correct type.
-		$this->assertInstanceOf('Joomla\\Crypt\\Key', $key);
+		$this->assertInstanceOf(
+			'Joomla\\Crypt\\Key',
+			$key
+		);
 
 		// Assert the public and private keys are the same.
-		$this->assertEquals($key->public, $key->private);
+		$this->assertEquals(
+			$key->public,
+			$key->private
+		);
 
 		// Assert the key is of the correct type.
-		$this->assertAttributeEquals('simple', 'type', $key);
+		$this->assertAttributeEquals(
+			'simple',
+			'type',
+			$key
+		);
 	}
 }

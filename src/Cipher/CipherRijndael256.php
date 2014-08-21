@@ -6,21 +6,21 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Joomla\Crypt;
+namespace Joomla\Crypt\Cipher;
 
 /**
- * Cipher class for Blowfish encryption, decryption and key generation.
+ * Cipher class for Rijndael 256 encryption, decryption and key generation.
  *
  * @since  1.0
  */
-class Cipher_Blowfish extends Cipher_Mcrypt
+class CipherRijndael256 extends CipherMcrypt
 {
 	/**
 	 * @var    integer  The mcrypt cipher constant.
 	 * @see    http://www.php.net/manual/en/mcrypt.ciphers.php
 	 * @since  1.0
 	 */
-	protected $type = MCRYPT_BLOWFISH;
+	protected $type = MCRYPT_RIJNDAEL_256;
 
 	/**
 	 * @var    integer  The mcrypt block cipher mode.
@@ -33,5 +33,5 @@ class Cipher_Blowfish extends Cipher_Mcrypt
 	 * @var    string  The JCrypt key type for validation.
 	 * @since  1.0
 	 */
-	protected $keyType = 'blowfish';
+	protected $keyType = 'rijndael256';
 }
