@@ -9,7 +9,6 @@
 namespace Joomla\Registry\Format;
 
 use Joomla\Registry\AbstractRegistryFormat;
-use Joomla\String\String;
 
 /**
  * JSON format handler for Registry.
@@ -30,7 +29,7 @@ class Json extends AbstractRegistryFormat
 	 */
 	public function objectToString($object, $options = array())
 	{
-		return String::unicode_to_utf8(json_encode($object));
+		return json_encode($object);
 	}
 
 	/**
