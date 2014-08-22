@@ -289,12 +289,53 @@ class Registry implements \JsonSerializable, \ArrayAccess
 	public function loadString($data, $format = 'JSON', $options = array())
 	{
 		// Load a string into the given namespace [or default namespace if not given]
-		$handler = AbstractRegistryFormat::getInstance($format);
+		$handler = $this->getFormat($format);
 
 		$obj = $handler->stringToObject($data, $options);
 		$this->loadObject($obj);
 
 		return $this;
+	}
+
+	/**
+	 * Get a Registry Format
+	 *
+	 * @param   string  $type  The name of the format to get
+	 *
+	 * @return  RegistryFormatInterface  Return the format requested.
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 * @throws  \InvalidArgumentException
+	 */
+	public function getFormat($type)
+	{
+		// Sanitize format type.
+		$name = strtolower(preg_replace('/[^A-Z0-9_]/i', '', $type));
+
+		// If we don't get given a namespace use the Joomla Registry Format one
+		if (!strpos($name, '\\'))
+		{
+			$className = 'Joomla\\Registry\\Format\\' . ucfirst($name);
+		}
+		else
+		{
+			$className = $type;
+		}
+
+		if (class_exists($className))
+		{
+			$class = new $className;
+
+			if (!$class instanceof RegistryFormatInterface)
+			{
+				throw new \InvalidArgumentException(sprintf('Class name %s does not implement RegistryFormatInterface', $class));
+			}
+
+			// We have a valid class so return the instance of it
+			return $class;
+		}
+
+		throw new \InvalidArgumentException(sprintf('Argument %s produced an invalid class name: %s', $name, $class));
 	}
 
 	/**
