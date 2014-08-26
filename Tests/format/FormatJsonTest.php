@@ -53,7 +53,74 @@ class JRegistryFormatJSONTest extends \PHPUnit_Framework_TestCase
 			$this->equalTo($string)
 		);
 	}
-
+  /**
+   * Test the Json::objectToString method with different options.
+   *
+   * @return  void
+   *
+   * @since   1.0
+   */
+  public function testObjectToStringOptions()
+  {
+    $class = AbstractRegistryFormat::getInstance('JSON');
+        
+    $object1 = new \stdClass;
+    $object1->specialchars = '<a href="http://example.com/?test1=10&test2=20" target=\'_blank\'>Anchor</a>';
+    $string1 = "{\"specialchars\":\"\u003Ca href=\u0022http:\/\/example.com\/?test1=10\u0026test2=20\u0022 target=\u0027_blank\u0027\u003EAnchor\u003C\/a\u003E\"}";
+    
+    $object2 = new \stdClass;
+    $object2->array = array(1, 2, 3);
+    $string2 = "{\"array\":{\"0\":1,\"1\":2,\"2\":3}}";
+    
+    $object3 = new \stdClass;
+    $object3->utf8 = 'Строка в кириллице';
+    $string3 = "{\"utf8\":\"\u0421\u0442\u0440\u043e\u043a\u0430 \u0432 \u043a\u0438\u0440\u0438\u043b\u043b\u0438\u0446\u0435\"}";
+    
+    $object4 = new \stdClass;
+    $object4->integer = "123456";    
+    $string4 = "{\"integer\":123456}";
+    
+    $object5 = new \stdClass;
+    $object5->pretty = array("key"=>"value"); 
+    $string5 = "{\n    \"pretty\": {\n        \"key\": \"value\"\n    }\n}";
+    
+    $object6 = new \stdClass;
+    $object6->slashes = "host/test\\value"; 
+    $string6 = "{\"slashes\":\"host/test\\\\value\"}";
+    
+    $this->assertThat(
+      $class->objectToString($object1, array('hex_tag'=>true, 'hex_amp'=>true, 'hex_apos'=>true, 'hex_quot'=>true)),
+      $this->equalTo($string1),
+      'Line:' . __LINE__ . ' Special characters should be converted to unicode sequences.'
+    );
+    $this->assertThat(
+      $class->objectToString($object2, array('force_object'=>true)),
+      $this->equalTo($string2),
+      'Line:' . __LINE__ . ' Arrays should be saved as objects.'
+    );
+    $this->assertThat(
+      $class->objectToString($object3, array('unescaped_unicode'=>false)),
+      $this->equalTo($string3),
+      'Line:' . __LINE__ . ' Unicode characters should be saved as unicode sequences.'
+    );
+    $this->assertThat(
+      $class->objectToString($object4, array('numeric_check'=>true)),
+      $this->equalTo($string4),
+      'Line:' . __LINE__ . ' Strings containing numbers should be saved as numbers.'
+    );
+    $this->assertThat(
+      $class->objectToString($object5, array('pretty_print'=>true)),
+      $this->equalTo($string5),
+      'Line:' . __LINE__ . ' JSON should be idented and spaced.'
+    );
+    $this->assertThat(
+      $class->objectToString($object6, array('unescaped_slashes'=>true)),
+      $this->equalTo($string6),
+      'Line:' . __LINE__ . ' Slashes should not be escaped.'
+    );
+    
+  }
+  
 	/**
 	 * Test the Json::stringToObject method.
 	 *
