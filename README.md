@@ -21,25 +21,37 @@ The `PasswordInterface` interface defines the following constants for use with i
 
 ### Classes
 
-#### `Password\Simple`
+#### `Password\PasswordSimple`
 
 ##### Usage
 
-In addition to the interface `PasswordInterface` there is also a basic implementation provided which provides for use with the most common password schemes. This if found in the `Password\Simple` class.
+In addition to the interface `PasswordInterface` there is also a basic implementation provided which provides for use with the most common password schemes. This if found in the `Password\PasswordSimple` class.
 
 Aside from the two methods create and verify methods, this implementation also adds an additional method called setCost. This method is used to set a cost parameter for methods that support workload factors. It takes an integer cost factor as a parameter.
 
 `Password\Simple` provides support for bcrypt, MD5 and the traditional Joomla! CMS hashing scheme. The hash format can be specified during hash creation by using the constants `PasswordInterface::BLOWFISH`, `PasswordInterface::MD5`, `PasswordInterface::JOOMLA`, and `PasswordInterface::PBKDF`. An appropriate salt will be automatically generated when required.
 
+## Changes From 1.x
+
+The package has been refactored from 1.x to 2.0 to be PSR-4 compliant, and in doing so required renaming of several classes.  Below is a table of renamed classes.
+
+| Old Name                           | New Name                                 |
+| ---------                          | -----                                    |
+| `\Joomla\Crypt\Cipher_3DES`        | `\Joomla\Crypt\Cipher\Cipher3DES`        |
+| `\Joomla\Crypt\Cipher_Blowfish`    | `\Joomla\Crypt\Cipher\CipherBlowfish`    |
+| `\Joomla\Crypt\Cipher_Mcrypt`      | `\Joomla\Crypt\Cipher\CipherMcrypt`      |
+| `\Joomla\Crypt\Cipher_Rijndael256` | `\Joomla\Crypt\Cipher\CipherRijndael256` |
+| `\Joomla\Crypt\Cipher_Simple`      | `\Joomla\Crypt\Cipher\CipherSimple`      |
+| `\Joomla\Crypt\Password\Simple`    | `\Joomla\Crypt\Password\PasswordSimple`  |
 
 ## Installation via Composer
 
-Add `"joomla/crypt": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/crypt": "2.0.*@dev"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/crypt": "~1.0"
+		"joomla/crypt": "2.0.*@dev"
 	}
 }
 ```
@@ -47,5 +59,5 @@ Add `"joomla/crypt": "~1.0"` to the require block in your composer.json and then
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/crypt "~1.0"
+composer require joomla/crypt "2.0.*@dev"
 ```
