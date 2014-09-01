@@ -3,12 +3,9 @@
 /**
  * Part of the Joomla Framework Keychain Package
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
-
-define('_JEXEC', 1);
-define('JPATH_ROOT', __DIR__);
 
 // Load the Joomla! Framework
 require_once realpath(__DIR__ . '/../vendor/autoload.php');
@@ -16,8 +13,7 @@ require_once realpath(__DIR__ . '/../vendor/autoload.php');
 /**
  * Keychain Manager
  *
- * @package  Joomla.Platform
- * @since    1.0
+ * @since  1.0
  */
 class KeychainManager extends \Joomla\Application\AbstractCliApplication
 {
