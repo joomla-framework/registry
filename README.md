@@ -323,12 +323,12 @@ You can provide customised implementations these methods by creating the followi
 
 ## Installation via Composer
 
-Add `"joomla/input": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/input": "2.0.*@dev"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/input": "~1.0"
+		"joomla/input": "2.0.*@dev"
 	}
 }
 ```
@@ -336,5 +336,5 @@ Add `"joomla/input": "~1.0"` to the require block in your composer.json and then
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/input "~1.0"
+composer require joomla/input "2.0.*@dev"
 ```
