@@ -4,12 +4,13 @@
     "description": "Joomla Keychain Package",
     "keywords": ["joomla", "framework", "keychain"],
     "homepage": "https://github.com/joomla-framework/keychain",
-    "license": "GPL-2.0+",
+    "license": "LGPL-2.1+",
     "require": {
         "php": ">=5.3.10",
         "joomla/registry": "~1.0"
     },
     "require-dev": {
+        "joomla/application": "~1.0",
         "phpunit/phpunit": "4.*",
         "squizlabs/php_codesniffer": "1.*"
     },
@@ -19,9 +20,12 @@
             "Joomla\\Keychain\\Tests\\": "Tests/"
         }
     },
+    "suggest": {
+        "joomla/application": "Application is required to run `bin/keychain`."
+    },
     "extra": {
         "branch-alias": {
-	        "dev-2.0-dev": "2.0-dev"
+            "dev-2.0-dev": "2.0-dev"
         }
     },
     "bin": ["bin/keychain"]

@@ -11,7 +11,7 @@ define('_JEXEC', 1);
 define('JPATH_ROOT', __DIR__);
 
 // Load the Joomla! Framework
-require_once realpath('../vendor/autoload.php');
+require_once realpath(__DIR__ . '/../vendor/autoload.php');
 
 /**
  * Keychain Manager
@@ -235,7 +235,7 @@ class KeychainManager extends \Joomla\Application\AbstractCliApplication
 			$this->close(1);
 		}
 		$this->updated = true;
-		$this->keychain->setValue($this->input->args[1], $this->input->args[2]);
+		$this->keychain->set($this->input->args[1], $this->input->args[2]);
 	}
 
 	/**
