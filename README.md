@@ -135,12 +135,12 @@ You will now be able translate strings in your twig file using:
 
 ## Installation via Composer
 
-Add `"joomla/language": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/language": "2.0.*@dev"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/language": "~1.0"
+		"joomla/language": "2.0.*@dev"
 	}
 }
 ```
@@ -148,5 +148,5 @@ Add `"joomla/language": "~1.0"` to the require block in your composer.json and t
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/language "~1.0"
+composer require joomla/language "2.0.*@dev"
 ```
