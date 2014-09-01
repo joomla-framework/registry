@@ -56,12 +56,12 @@ $archive->extract('archive.zip', 'destination');
 
 ## Installation via Composer
 
-Add `"joomla/archive": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/archive": "2.0.*@dev"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/archive": "~1.0"
+		"joomla/archive": "2.0.*@dev"
 	}
 }
 ```
@@ -69,5 +69,5 @@ Add `"joomla/archive": "~1.0"` to the require block in your composer.json and th
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/archive "~1.0"
+composer require joomla/archive "2.0.*@dev"
 ```
