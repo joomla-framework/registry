@@ -27,20 +27,12 @@ class Cookie extends Input
 	 */
 	public function __construct(array $source = null, array $options = array())
 	{
-		if (isset($options['filter']))
+		if (is_null($source))
 		{
-			$this->filter = $options['filter'];
-		}
-		else
-		{
-			$this->filter = new Filter\InputFilter;
+			$source = & $_COOKIE;
 		}
 
-		// Set the data source.
-		$this->data = & $_COOKIE;
-
-		// Set the options for the class.
-		$this->options = $options;
+		parent::__construct($source, $options);
 	}
 
 	/**

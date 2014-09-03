@@ -44,20 +44,13 @@ class Cli extends Input
 	 */
 	public function __construct(array $source = null, array $options = array())
 	{
-		if (isset($options['filter']))
-		{
-			$this->filter = $options['filter'];
-		}
-		else
-		{
-			$this->filter = new Filter\InputFilter;
-		}
-
 		// Get the command line options
-		$this->parseArguments();
+		if (is_null($source))
+		{
+			$source = $this->parseArguments();
+		}
 
-		// Set the options for the class.
-		$this->options = $options;
+		parent::__construct($source, $options);
 	}
 
 	/**
@@ -127,7 +120,7 @@ class Cli extends Input
 	 *
 	 * Not supported: -abc c-value
 	 *
-	 * @return  void
+	 * @return  array  Array containing the input arguments
 	 *
 	 * @since   1.0
 	 */
@@ -213,6 +206,6 @@ class Cli extends Input
 			}
 		}
 
-		$this->data = $out;
+		return $out;
 	}
 }

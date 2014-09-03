@@ -36,15 +36,6 @@ class Json extends Input
 	 */
 	public function __construct(array $source = null, array $options = array())
 	{
-		if (isset($options['filter']))
-		{
-			$this->filter = $options['filter'];
-		}
-		else
-		{
-			$this->filter = new Filter\InputFilter;
-		}
-
 		if (is_null($source))
 		{
 			$this->raw = file_get_contents('php://input');
@@ -56,20 +47,15 @@ class Json extends Input
 				$this->raw = $GLOBALS['HTTP_RAW_POST_DATA'];
 			}
 
-			$this->data = json_decode($this->raw, true);
+			$source = json_decode($this->raw, true);
 
-			if (!is_array($this->data))
+			if (!is_array($source))
 			{
-				$this->data = array();
+				$source = array();
 			}
 		}
-		else
-		{
-			$this->data = $source;
-		}
 
-		// Set the options for the class.
-		$this->options = $options;
+		parent::__construct($source, $options);
 	}
 
 	/**
