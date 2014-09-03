@@ -319,7 +319,13 @@ You can provide customised implementations these methods by creating the followi
 * `mockInputSet`
 * `mockInputGetRaw`
 
+## Changes From 1.x
 
+The following changes have been made to the `Input` package since 1.x.
+
+### Input\Cli
+
+The `parseArguments` method of `Input\Cli` previously directly set the `$data` class variable.  In 2.0, it returns the results to the caller (typically the class constructor).
 
 ## Installation via Composer
 
