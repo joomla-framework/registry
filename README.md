@@ -323,6 +323,10 @@ You can provide customised implementations these methods by creating the followi
 
 The following changes have been made to the `Input` package since 1.x.
 
+### Pass By Reference
+
+`Input`, `Input\Cookie`, and `Input\Files` all use the source superglobal by reference in 1.x.  In 2.0, the reference is removed.
+
 ### Input\Cli
 
 The `parseArguments` method of `Input\Cli` previously directly set the `$data` class variable.  In 2.0, it returns the results to the caller (typically the class constructor).
