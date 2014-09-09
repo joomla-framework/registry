@@ -38,7 +38,7 @@ class Files extends Input
 	{
 		if (is_null($source))
 		{
-			$source = & $_FILES;
+			$source = $_FILES;
 		}
 
 		parent::__construct($source, $options);
