@@ -29,7 +29,7 @@ class Cookie extends Input
 	{
 		if (is_null($source))
 		{
-			$source = & $_COOKIE;
+			$source = $_COOKIE;
 		}
 
 		parent::__construct($source, $options);
