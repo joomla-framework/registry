@@ -186,6 +186,24 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the behavior of the \Countable interface implementation
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::count
+	 * @since   1.3.0
+	 */
+	public function testCountable()
+	{
+		$a = new Registry;
+		$a->set('foo1', 'testtoarray1');
+		$a->set('foo2', 'testtoarray2');
+		$a->set('config.foo3', 'testtoarray3');
+
+		$this->assertEquals(3, count($a), 'count() should correctly count the number of data elements.');
+	}
+
+	/**
 	 * Test the Joomla\Registry\Registry::exists method.
 	 *
 	 * @return  void
@@ -282,6 +300,20 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 			$this->logicalNot($this->identicalTo($c)),
 			'Line: ' . __LINE__ . '.'
 		);
+	}
+
+	/**
+	 * Tests the Joomla\Registry\Registry::getIterator method.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::getIterator
+	 * @since   1.3.0
+	 */
+	public function testGetIterator()
+	{
+		$a = new Registry;
+		$this->assertInstanceOf('ArrayIterator', $a->getIterator());
 	}
 
 	/**
@@ -579,7 +611,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Registry\Registry::extract
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.2.0
 	 */
 	public function testExtract()
 	{
@@ -788,5 +820,28 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 			),
 			'Line: ' . __LINE__ . '.'
 		);
+	}
+
+	/**
+	 * Test flatten.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::flatten
+	 * @since   1.3.0
+	 */
+	public function testFlatten()
+	{
+		$a = new Registry;
+		$a->set('flower.sunflower', 'light');
+		$a->set('flower.sakura', 'samurai');
+
+		$flatted = $a->flatten();
+
+		$this->assertEquals($flatted['flower.sunflower'], 'light');
+
+		$flatted = $a->flatten('/');
+
+		$this->assertEquals($flatted['flower/sakura'], 'samurai');
 	}
 }
