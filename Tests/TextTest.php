@@ -4,254 +4,327 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+namespace Joomla\Language\Tests;
+
+use Joomla\Filesystem\Folder;
 use Joomla\Language\Text;
 use Joomla\Language\Language;
 use Joomla\Test\TestHelper;
 
 /**
  * Test class for \Joomla\Language\Text.
- *
- * @since  1.0
  */
-class TextTest extends PHPUnit_Framework_TestCase
+class TextTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var    Joomla\Language\Text
-	 * @since  1.0
+	 * @var  Text
 	 */
 	protected $object;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	protected function setUp()
 	{
 		parent::setUp();
 
-		$this->object = new Text(new Language('en-GB'));
+		$path = JPATH_ROOT . '/language';
+
+		if (is_dir($path))
+		{
+			Folder::delete($path);
+		}
+
+		Folder::copy(__DIR__ . '/data/language', $path);
+
+		$language = new Language('en-GB');
+		$language->load();
+		$this->object = new Text($language);
 	}
 
 	/**
-	 * Test...
-	 *
-	 * @covers Joomla\Language\Text::getLanguage
-	 *
-	 * @return  void
-	 *
-	 * @since   1.1.2
+	 * Tears down the fixture, for example, closes a network connection.
+	 * This method is called after a test is executed.
 	 */
-	public function testGetLanguage()
+	protected function tearDown()
+	{
+		Folder::delete(JPATH_ROOT . '/language');
+
+		parent::tearDown();
+	}
+
+	/**
+	 * @testdox  Verify that Text is instantiated correctly
+	 *
+	 * @covers   Joomla\Language\Text::__construct
+	 */
+	public function testVerifyThatTextIsInstantiatedCorrectly()
+	{
+		$this->assertInstanceOf('Joomla\\Language\\Text', new Text(new Language()));
+	}
+
+	/**
+	 * @testdox  Verify that Text::getLanguage() returns an instance of Language
+	 *
+	 * @covers   Joomla\Language\Text::getLanguage
+	 */
+	public function testVerifyThatGetLanguageReturnsALanguageInstance()
 	{
 		$this->assertInstanceOf('Joomla\\Language\\Language', $this->object->getLanguage());
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Verify that Text::getLanguage() returns an instance of Language
 	 *
-	 * @covers Joomla\Language\Text::setLanguage
-	 *
-	 * @return  void
-	 *
-	 * @since   1.1.2
+	 * @covers   Joomla\Language\Text::setLanguage
 	 */
-	public function testSetLanguage()
+	public function testVerifyThatSetLanguageReturnsSelf()
 	{
-		$this->assertInstanceOf(
-			'Joomla\\Language\\Language',
-			TestHelper::getValue($this->object, 'language')
+		$this->assertSame($this->object, $this->object->setLanguage(new Language('de-DE')));
+	}
+
+	/**
+	 * @testdox  Verify that Text::_() proxies to Text::translate()
+	 *
+	 * @covers   Joomla\Language\Text::_
+	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Text::translate
+	 */
+	public function testUnderscoreMethodProxiesToTranslate()
+	{
+		$this->assertEmpty($this->object->_(''));
+	}
+
+	/**
+	 * @testdox  Verify that Text::translate() returns an empty string when one is input
+	 *
+	 * @covers   Joomla\Language\Text::translate
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testTranslateReturnsEmptyStringWhenGivenAnEmptyString()
+	{
+		$this->assertEmpty($this->object->translate(''));
+	}
+
+	/**
+	 * @testdox  Verify that Text::translate() returns the correct string for a key
+	 *
+	 * @covers   Joomla\Language\Text::translate
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testTranslateReturnsTheCorrectStringForAKey()
+	{
+		$this->assertSame('Bar', $this->object->translate('Bar'));
+	}
+
+	/**
+	 * @testdox  Verify that Text::translate() returns a JavaScript safe string
+	 *
+	 * @covers   Joomla\Language\Text::translate
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testTranslateReturnsAJavascriptSafeKey()
+	{
+		$this->assertSame('foobar\\\'s', $this->object->translate('foobar\'s', array('jsSafe' => true)));
+	}
+
+	/**
+	 * @testdox  Verify that Text::translate() returns the original string when storing to the JavaScript store
+	 *
+	 * @covers   Joomla\Language\Text::translate
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testTranslateReturnsTheOriginalStringWhenStoringToJavascriptStore()
+	{
+		$this->assertSame('foobar\'s', $this->object->translate('foobar\'s', array('jsSafe' => true), true, true));
+	}
+
+	/**
+	 * @testdox  Verify that Text::translate() returns the translated string when the input params are overridden
+	 *
+	 * @covers   Joomla\Language\Text::translate
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testTranslateReturnsTheTranslatedStringWhenTheInputParamsAreOverridden()
+	{
+		$this->assertSame(
+			'foobar\'s',
+			$this->object->translate('foobar\'s', array('script' => false, 'interpretBackSlashes' => false), true, true)
 		);
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Verify that Text::alt() returns the correct string for a key with no alt
 	 *
-	 * @covers Joomla\Language\Text::_
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Language\Text::alt
+	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Text::translate
 	 */
-	public function test_()
+	public function testAltReturnsTheCorrectStringForAKey()
 	{
-		$string = "fooobar's";
-		$output = $this->object->_($string);
-
-		$this->assertEquals($string, $output);
-
-		$nStrings = count(TestHelper::getValue($this->object, 'strings'));
-		$options = array('jsSafe' => true);
-		$output = $this->object->_($string, $options);
-
-		$this->assertEquals("fooobar\\'s", $output);
-		$this->assertEquals(
-			$nStrings,
-			count(TestHelper::getValue($this->object, 'strings'))
-		);
-
-		$nStrings = count(TestHelper::getValue($this->object, 'strings'));
-		$options = array('script' => true);
-		$output = $this->object->_($string, $options);
-
-		$this->assertEquals("fooobar's", $output);
-		$this->assertEquals(
-			$nStrings + 1,
-			count(TestHelper::getValue($this->object, 'strings'))
-		);
-
-		$string = 'foo\\\\bar';
-		$key = strtoupper($string);
-		$output = $this->object->_($string, array('interpretBackSlashes' => true));
-
-		$this->assertEquals('foo\\bar', $output);
+		$this->assertSame('Bar', $this->object->alt('FOO', ''));
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Verify that Text::alt() returns the correct string for a key with an alt
 	 *
-	 * @covers  Joomla\Language\Text::alt
-	 * @todo    Implement testAlt().
-	 *
-	 * @return  void
+	 * @covers   Joomla\Language\Text::alt
+	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Text::translate
 	 */
-	public function testAlt()
+	public function testAltReturnsTheCorrectStringForAKeyWithAlt()
 	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$this->assertSame('Car', $this->object->alt('FOO', 'GOO'));
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Verify that Text::plural() returns the input key when no plural key is found
 	 *
-	 * @covers  Joomla\Language\Text::plural
-	 *
-	 * @return  void
-	 *
-	 * @since   1.1.2
+	 * @covers   Joomla\Language\Text::plural
+	 * @uses     Joomla\Language\Language::_
 	 */
-	public function testPlural()
+	public function testPluralReturnsInputKeyWhenNoParamsPassed()
 	{
-		$string = "bar's";
-
-		// @todo change it to Text::plural($string);
-		$output = $this->object->plural($string, 0);
-
-		$this->assertEquals($string, $output);
-
-		$nStrings = count(TestHelper::getValue($this->object, 'strings'));
-		$options = array('jsSafe' => true);
-		$output = $this->object->plural($string, 0, $options);
-
-		$this->assertEquals("bar\\'s", $output);
-		$this->assertCount(
-			$nStrings,
-			TestHelper::getValue($this->object, 'strings')
-		);
+		$this->assertSame('BAR', $this->object->plural('BAR', 0));
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Verify that Text::plural() returns the translated string when the pluralised key is found
 	 *
-	 * @covers  Joomla\Language\Text::sprintf
-	 *
-	 * @return  void
-	 *
-	 * @since   1.1.2
+	 * @covers   Joomla\Language\Text::plural
+	 * @uses     Joomla\Language\Language::_
 	 */
-	public function testSprintf()
+	public function testPluralReturnsTranslatedStringWhenPluralisedKeyFound()
 	{
-		$string = "foobar's";
-		$output = $this->object->sprintf($string);
-
-		$this->assertEquals($string, $output);
-
-		$nStrings = count(TestHelper::getValue($this->object, 'strings'));
-		$options = array('jsSafe' => true);
-		$output = $this->object->sprintf($string, $options);
-
-		$this->assertEquals("foobar\\'s", $output);
-		$this->assertCount(
-			$nStrings,
-			TestHelper::getValue($this->object, 'strings')
-		);
-
-		$nStrings = count(TestHelper::getValue($this->object, 'strings'));
-		$options = array('script' => true);
-		$output = $this->object->sprintf($string, $options);
-
-		$this->assertEquals("foobar's", $output);
-		$this->assertCount(
-			$nStrings + 1,
-			TestHelper::getValue($this->object, 'strings')
-		);
+		$this->assertSame('3 Bars', $this->object->plural('BAR', 3));
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Verify that Text::plural() returns the key when the 'script' key is passed
 	 *
-	 * @covers  Joomla\Language\Text::printf
-	 *
-	 * @return  void
-	 *
-	 * @since   1.1.2
+	 * @covers   Joomla\Language\Text::plural
+	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Text::script
 	 */
-	public function testPrintf()
+	public function testPluralReturnsTheKeyWhenTheScriptKeyIsPassed()
 	{
-		$string = "foobar";
+		$this->assertSame('BAR_MORE', $this->object->plural('BAR', 3, array('script' => true)));
+	}
+
+	/**
+	 * @testdox  Verify that Text::sprintf() returns the input key when no key is found
+	 *
+	 * @covers   Joomla\Language\Text::sprintf
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testSprintfReturnsEmptyStringWhenKeyNotFound()
+	{
+		$this->assertSame('BAR_NONE', $this->object->sprintf('BAR_NONE', 0));
+	}
+
+	/**
+	 * @testdox  Verify that Text::sprintf() returns the translated string when the specified key is found
+	 *
+	 * @covers   Joomla\Language\Text::sprintf
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testSprintfReturnsTranslatedStringWhenKeyFound()
+	{
+		$this->assertSame('I have 3 cars!', $this->object->sprintf('MANY_CARS', 3));
+	}
+
+	/**
+	 * @testdox  Verify that Text::sprintf() returns the key when the 'script' key is passed
+	 *
+	 * @covers   Joomla\Language\Text::sprintf
+	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Text::script
+	 */
+	public function testSprintfReturnsTheKeyWhenTheScriptKeyIsPassed()
+	{
+		$this->assertSame('MANY_CARS', $this->object->sprintf('MANY_CARS', 3, array('script' => true)));
+	}
+
+	/**
+	 * @testdox  Verify that Text::printf() returns the input key when no key is found
+	 *
+	 * @covers   Joomla\Language\Text::printf
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testPrintfReturnsEmptyStringWhenKeyNotFound()
+	{
 		ob_start();
-		$len = $this->object->printf($string);
-		$output = ob_get_contents();
-		ob_end_clean();
+		$this->object->printf('BAR_NONE', 0);
+		$return = ob_get_clean();
 
-		$this->assertEquals($string, $output);
-		$this->assertEquals(strlen($string), $len);
-
-		$options = array('jsSafe' => false);
-		ob_start();
-		$len = $this->object->printf($string, $options);
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		$this->assertEquals($string, $output);
-		$this->assertEquals(strlen($string), $len);
+		$this->assertSame('BAR_NONE', $return);
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Verify that Text::printf() returns the translated string when the specified key is found
 	 *
-	 * @covers  Joomla\Language\Text::script
-	 *
-	 * @return  void
-	 *
-	 * @since   1.1.2
+	 * @covers   Joomla\Language\Text::printf
+	 * @uses     Joomla\Language\Language::_
 	 */
-	public function testScript()
+	public function testPrintfReturnsTranslatedStringWhenKeyFound()
 	{
-		$string = 'foobar';
-		$key = strtoupper($string);
-		$strings = $this->object->script($string);
+		ob_start();
+		$this->object->printf('MANY_CARS', 3);
+		$return = ob_get_clean();
 
-		$this->assertArrayHasKey($key, $strings);
-		$this->assertEquals($string, $strings[$key]);
+		$this->assertSame('I have 3 cars!', $return);
+	}
 
-		$string = 'foo\\\\bar';
-		$key = strtoupper($string);
-		$strings = $this->object->script($string, array('interpretBackSlashes' => true));
+	/**
+	 * @testdox  Verify that Text::printf() returns the key when the 'script' key is passed
+	 *
+	 * @covers   Joomla\Language\Text::printf
+	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Text::script
+	 */
+	public function testPrintfReturnsTheTranslatedStringWhenTheScriptKeyIsPassed()
+	{
+		ob_start();
+		$this->object->printf('MANY_CARS', 3, array('script' => true));
+		$return = ob_get_clean();
 
-		$this->assertArrayHasKey($key, $strings);
-		$this->assertEquals('foo\\bar', $strings[$key]);
+		$this->assertSame('I have 3 cars!', $return);
+	}
 
-		$string = "foo\\bar's";
-		$key = strtoupper($string);
-		$strings = $this->object->script($string, array('jsSafe' => true));
+	/**
+	 * @testdox  Verify that Text::script() returns the JavaScript store by default
+	 *
+	 * @covers   Joomla\Language\Text::script
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testScriptReturnsTheJavascriptStoreByDefault()
+	{
+		$this->assertSame(array(), $this->object->script());
+	}
 
-		$this->assertArrayHasKey($key, $strings);
-		$this->assertEquals("foo\\\\bar\\'s", $strings[$key]);
+	/**
+	 * @testdox  Verify that Text::script() returns the JavaScript store with the translated string
+	 *
+	 * @covers   Joomla\Language\Text::script
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testScriptReturnsTheJavascriptStoreWithTheTranslatedString()
+	{
+		$this->assertSame(array('FOO' => 'Bar'), $this->object->script('FOO'));
+	}
+
+	/**
+	 * @testdox  Verify that Text::script() returns the JavaScript store with the JavaScript safe translated string
+	 *
+	 * @covers   Joomla\Language\Text::script
+	 * @uses     Joomla\Language\Language::_
+	 */
+	public function testScriptReturnsTheJavascriptStoreWithTheJavascriptSafeTranslatedString()
+	{
+		$this->assertSame(
+			array('FOOBAR\'S' => 'foobar\\\'s'),
+			$this->object->script('foobar\'s', array('jsSafe' => true, 'interpretBackSlashes' => false))
+		);
 	}
 }
