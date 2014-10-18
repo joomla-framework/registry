@@ -190,60 +190,48 @@ class Text
 		$args = func_get_args();
 		$count = count($args);
 
-		if ($count > 1)
+		// Try the key from the language plural potential suffixes
+		$found = false;
+		$suffixes = $lang->getPluralSuffixes((int) $n);
+		array_unshift($suffixes, (int) $n);
+
+		foreach ($suffixes as $suffix)
 		{
-			// Try the key from the language plural potential suffixes
-			$found = false;
-			$suffixes = $lang->getPluralSuffixes((int) $n);
-			array_unshift($suffixes, (int) $n);
+			$key = $string . '_' . $suffix;
 
-			foreach ($suffixes as $suffix)
+			if ($lang->hasKey($key))
 			{
-				$key = $string . '_' . $suffix;
-
-				if ($lang->hasKey($key))
-				{
-					$found = true;
-					break;
-				}
+				$found = true;
+				break;
 			}
-
-			if (!$found)
-			{
-				// Not found so revert to the original.
-				$key = $string;
-			}
-
-			if (is_array($args[$count - 1]))
-			{
-				$args[0] = $lang->_(
-					$key, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
-					array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
-				);
-
-				if (array_key_exists('script', $args[$count - 1]) && $args[$count - 1]['script'])
-				{
-					$this->strings[$key] = call_user_func_array('sprintf', $args);
-
-					return $key;
-				}
-			}
-			else
-			{
-				$args[0] = $lang->_($key);
-			}
-
-			return call_user_func_array('sprintf', $args);
-		}
-		elseif ($count > 0)
-		{
-			// Default to the normal sprintf handling.
-			$args[0] = $lang->_($string);
-
-			return call_user_func_array('sprintf', $args);
 		}
 
-		return '';
+		if (!$found)
+		{
+			// Not found so revert to the original.
+			$key = $string;
+		}
+
+		if (is_array($args[$count - 1]))
+		{
+			$args[0] = $lang->_(
+				$key, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
+				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
+			);
+
+			if (array_key_exists('script', $args[$count - 1]) && $args[$count - 1]['script'])
+			{
+				$this->strings[$key] = call_user_func_array('sprintf', $args);
+
+				return $key;
+			}
+		}
+		else
+		{
+			$args[0] = $lang->_($key);
+		}
+
+		return call_user_func_array('sprintf', $args);
 	}
 
 	/**
@@ -272,29 +260,26 @@ class Text
 		$args = func_get_args();
 		$count = count($args);
 
-		if ($count > 0)
+		if (is_array($args[$count - 1]))
 		{
-			if (is_array($args[$count - 1]))
+			$args[0] = $lang->_(
+				$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
+				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
+			);
+
+			if (array_key_exists('script', $args[$count - 1]) && $args[$count - 1]['script'])
 			{
-				$args[0] = $lang->_(
-					$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
-					array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
-				);
+				$this->strings[$string] = call_user_func_array('sprintf', $args);
 
-				if (array_key_exists('script', $args[$count - 1]) && $args[$count - 1]['script'])
-				{
-					$this->strings[$string] = call_user_func_array('sprintf', $args);
-
-					return $string;
-				}
+				return $string;
 			}
-			else
-			{
-				$args[0] = $lang->_($string);
-			}
-
-			return call_user_func_array('sprintf', $args);
 		}
+		else
+		{
+			$args[0] = $lang->_($string);
+		}
+
+		return call_user_func_array('sprintf', $args);
 	}
 
 	/**
@@ -323,36 +308,33 @@ class Text
 		$args = func_get_args();
 		$count = count($args);
 
-		if ($count > 0)
+		if (is_array($args[$count - 1]))
 		{
-			if (is_array($args[$count - 1]))
-			{
-				$args[0] = $lang->_(
-					$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
-					array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
-				);
-			}
-			else
-			{
-				$args[0] = $lang->_($string);
-			}
-
-			return call_user_func_array('printf', $args);
+			$args[0] = $lang->_(
+				$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
+				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
+			);
 		}
+		else
+		{
+			$args[0] = $lang->_($string);
+		}
+
+		return call_user_func_array('printf', $args);
 	}
 
 	/**
 	 * Translate a string into the current language and stores it in the JavaScript language store.
 	 *
 	 * @param   string   $string                The Text key.
-	 * @param   boolean  $jsSafe                Ensure the output is JavaScript safe.
+	 * @param   array    $jsSafe                Ensure the output is JavaScript safe.
 	 * @param   boolean  $interpretBackSlashes  Interpret \t and \n.
 	 *
 	 * @return  array
 	 *
 	 * @since   1.0
 	 */
-	public function script($string = null, $jsSafe = false, $interpretBackSlashes = true)
+	public function script($string = null, $jsSafe = array(), $interpretBackSlashes = true)
 	{
 		// Add the string to the array if not null.
 		if ($string !== null)
