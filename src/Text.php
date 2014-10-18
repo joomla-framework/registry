@@ -58,7 +58,7 @@ class Text
 	/**
 	 * Set the Language object
 	 *
-	 * @param   Language  $lang  Language instance
+	 * @param   Language  $language  Language instance
 	 *
 	 * @return  $this
 	 *
