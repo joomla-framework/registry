@@ -33,7 +33,7 @@ class TextTest extends PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$this->object = new Text;
+		$this->object = new Text(new Language('en-GB'));
 	}
 
 	/**
@@ -47,10 +47,7 @@ class TextTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetLanguage()
 	{
-		$this->assertInstanceOf(
-			'Joomla\\Language\\Language',
-			Text::getLanguage()
-		);
+		$this->assertInstanceOf('Joomla\\Language\\Language', $this->object->getLanguage());
 	}
 
 	/**
@@ -64,17 +61,9 @@ class TextTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testSetLanguage()
 	{
-		$lang = Language::getInstance();
-		Text::setLanguage($lang);
-
 		$this->assertInstanceOf(
 			'Joomla\\Language\\Language',
-			TestHelper::getValue($this->object, 'lang')
-		);
-
-		$this->assertEquals(
-			$lang,
-			TestHelper::getValue($this->object, 'lang')
+			TestHelper::getValue($this->object, 'language')
 		);
 	}
 
@@ -90,13 +79,13 @@ class TextTest extends PHPUnit_Framework_TestCase
 	public function test_()
 	{
 		$string = "fooobar's";
-		$output = Text::_($string);
+		$output = $this->object->_($string);
 
 		$this->assertEquals($string, $output);
 
 		$nStrings = count(TestHelper::getValue($this->object, 'strings'));
 		$options = array('jsSafe' => true);
-		$output = Text::_($string, $options);
+		$output = $this->object->_($string, $options);
 
 		$this->assertEquals("fooobar\\'s", $output);
 		$this->assertEquals(
@@ -106,7 +95,7 @@ class TextTest extends PHPUnit_Framework_TestCase
 
 		$nStrings = count(TestHelper::getValue($this->object, 'strings'));
 		$options = array('script' => true);
-		$output = Text::_($string, $options);
+		$output = $this->object->_($string, $options);
 
 		$this->assertEquals("fooobar's", $output);
 		$this->assertEquals(
@@ -116,7 +105,7 @@ class TextTest extends PHPUnit_Framework_TestCase
 
 		$string = 'foo\\\\bar';
 		$key = strtoupper($string);
-		$output = Text::_($string, array('interpretBackSlashes' => true));
+		$output = $this->object->_($string, array('interpretBackSlashes' => true));
 
 		$this->assertEquals('foo\\bar', $output);
 	}
@@ -151,13 +140,13 @@ class TextTest extends PHPUnit_Framework_TestCase
 		$string = "bar's";
 
 		// @todo change it to Text::plural($string);
-		$output = Text::plural($string, 0);
+		$output = $this->object->plural($string, 0);
 
 		$this->assertEquals($string, $output);
 
 		$nStrings = count(TestHelper::getValue($this->object, 'strings'));
 		$options = array('jsSafe' => true);
-		$output = Text::plural($string, 0, $options);
+		$output = $this->object->plural($string, 0, $options);
 
 		$this->assertEquals("bar\\'s", $output);
 		$this->assertCount(
@@ -178,13 +167,13 @@ class TextTest extends PHPUnit_Framework_TestCase
 	public function testSprintf()
 	{
 		$string = "foobar's";
-		$output = Text::sprintf($string);
+		$output = $this->object->sprintf($string);
 
 		$this->assertEquals($string, $output);
 
 		$nStrings = count(TestHelper::getValue($this->object, 'strings'));
 		$options = array('jsSafe' => true);
-		$output = Text::sprintf($string, $options);
+		$output = $this->object->sprintf($string, $options);
 
 		$this->assertEquals("foobar\\'s", $output);
 		$this->assertCount(
@@ -194,7 +183,7 @@ class TextTest extends PHPUnit_Framework_TestCase
 
 		$nStrings = count(TestHelper::getValue($this->object, 'strings'));
 		$options = array('script' => true);
-		$output = Text::sprintf($string, $options);
+		$output = $this->object->sprintf($string, $options);
 
 		$this->assertEquals("foobar's", $output);
 		$this->assertCount(
@@ -216,7 +205,7 @@ class TextTest extends PHPUnit_Framework_TestCase
 	{
 		$string = "foobar";
 		ob_start();
-		$len = Text::printf($string);
+		$len = $this->object->printf($string);
 		$output = ob_get_contents();
 		ob_end_clean();
 
@@ -225,7 +214,7 @@ class TextTest extends PHPUnit_Framework_TestCase
 
 		$options = array('jsSafe' => false);
 		ob_start();
-		$len = Text::printf($string, $options);
+		$len = $this->object->printf($string, $options);
 		$output = ob_get_contents();
 		ob_end_clean();
 
@@ -246,21 +235,21 @@ class TextTest extends PHPUnit_Framework_TestCase
 	{
 		$string = 'foobar';
 		$key = strtoupper($string);
-		$strings = Text::script($string);
+		$strings = $this->object->script($string);
 
 		$this->assertArrayHasKey($key, $strings);
 		$this->assertEquals($string, $strings[$key]);
 
 		$string = 'foo\\\\bar';
 		$key = strtoupper($string);
-		$strings = Text::script($string, array('interpretBackSlashes' => true));
+		$strings = $this->object->script($string, array('interpretBackSlashes' => true));
 
 		$this->assertArrayHasKey($key, $strings);
 		$this->assertEquals('foo\\bar', $strings[$key]);
 
 		$string = "foo\\bar's";
 		$key = strtoupper($string);
-		$strings = Text::script($string, array('jsSafe' => true));
+		$strings = $this->object->script($string, array('jsSafe' => true));
 
 		$this->assertArrayHasKey($key, $strings);
 		$this->assertEquals("foo\\\\bar\\'s", $strings[$key]);

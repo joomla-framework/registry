@@ -16,12 +16,12 @@ namespace Joomla\Language;
 class Text
 {
 	/**
-	 * javascript strings
+	 * JavaScript strings
 	 *
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected static $strings = array();
+	protected $strings = array();
 
 	/**
 	 * Language instance
@@ -29,59 +29,84 @@ class Text
 	 * @var    Language
 	 * @since  1.0
 	 */
-	protected static $lang;
+	private $language;
 
 	/**
-	 * Get Text Language
+	 * Constructor
 	 *
-	 * @return  Language
+	 * @param   Language  $language  Language instance to use in translations
+	 *
+	 * @since   __DEPLOY_VERSION__
 	 */
-	public static function getLanguage()
+	public function __construct(Language $language)
 	{
-		if (is_null(static::$lang))
-		{
-			static::$lang = Language::getInstance();
-		}
-
-		return static::$lang;
+		$this->setLanguage($language);
 	}
 
 	/**
-	 * Set Text languge
+	 * Retrieve the current Language instance
+	 *
+	 * @return  Language
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function getLanguage()
+	{
+		return $this->language;
+	}
+
+	/**
+	 * Set the Language object
 	 *
 	 * @param   Language  $lang  Language instance
 	 *
-	 * @return  void
+	 * @return  $this
+	 *
+	 * @since   __DEPLOY_VERSION__
 	 */
-	public static function setLanguage(Language $lang)
+	public function setLanguage(Language $language)
 	{
-		static::$lang = $lang;
+		$this->language = $language;
 
-		return;
+		return $this;
 	}
 
 	/**
 	 * Translates a string into the current language.
-	 *
-	 * Examples:
-	 * <script>alert(Joomla.JText._('<?php echo JText::_("JDEFAULT", array("script"=>true));?>'));</script>
-	 * will generate an alert message containing 'Default'
-	 * <?php echo JText::_("JDEFAULT");?> it will generate a 'Default' string
 	 *
 	 * @param   string   $string                The string to translate.
 	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
 	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
 	 * @param   boolean  $script                To indicate that the string will be push in the javascript language store
 	 *
-	 * @return  string  The translated string or the key is $script is true
+	 * @return  string  The translated string or the key if $script is true
 	 *
+	 * @see     Text::translate()
 	 * @since   1.0
+	 * @deprecated  3.0  Use translate instead
 	 */
-	public static function _($string, $jsSafe = false, $interpretBackSlashes = true, $script = false)
+	public function _($string, $jsSafe = false, $interpretBackSlashes = true, $script = false)
 	{
-		$lang = static::getLanguage();
+		return $this->translate($string, $jsSafe, $interpretBackSlashes, $script);
+	}
 
-		if (is_array($jsSafe))
+	/**
+	 * Translates a string into the current language.
+	 *
+	 * @param   string   $string                The string to translate.
+	 * @param   array    $jsSafe                Array containing data to make the string safe for JavaScript output
+	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
+	 * @param   boolean  $script                To indicate that the string will be push in the javascript language store
+	 *
+	 * @return  string  The translated string or the key if $script is true
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function translate($string, $jsSafe = array(), $interpretBackSlashes = true, $script = false)
+	{
+		$lang = $this->getLanguage();
+
+		if (!empty($jsSafe))
 		{
 			if (array_key_exists('interpretBackSlashes', $jsSafe))
 			{
@@ -105,22 +130,16 @@ class Text
 
 		if ($script)
 		{
-			self::$strings[$string] = $lang->_($string, $jsSafe, $interpretBackSlashes);
+			$this->strings[$string] = $lang->_($string, $jsSafe, $interpretBackSlashes);
 
 			return $string;
 		}
-		else
-		{
-			return $lang->_($string, $jsSafe, $interpretBackSlashes);
-		}
+
+		return $lang->_($string, $jsSafe, $interpretBackSlashes);
 	}
 
 	/**
 	 * Translates a string into the current language.
-	 *
-	 * Examples:
-	 * <?php echo JText::alt("JALL","language");?> it will generate a 'All' string in English but a "Toutes" string in French
-	 * <?php echo JText::alt("JALL","module");?> it will generate a 'All' string in English but a "Tous" string in French
 	 *
 	 * @param   string   $string                The string to translate.
 	 * @param   string   $alt                   The alternate option for global string
@@ -132,24 +151,20 @@ class Text
 	 *
 	 * @since   1.0
 	 */
-	public static function alt($string, $alt, $jsSafe = false, $interpretBackSlashes = true, $script = false)
+	public function alt($string, $alt, $jsSafe = false, $interpretBackSlashes = true, $script = false)
 	{
-		$lang = static::getLanguage();
+		$lang = $this->getLanguage();
 
 		if ($lang->hasKey($string . '_' . $alt))
 		{
-			return self::_($string . '_' . $alt, $jsSafe, $interpretBackSlashes, $script);
+			return $this->translate($string . '_' . $alt, $jsSafe, $interpretBackSlashes, $script);
 		}
-		else
-		{
-			return self::_($string, $jsSafe, $interpretBackSlashes, $script);
-		}
+
+		return $this->translate($string, $jsSafe, $interpretBackSlashes, $script);
 	}
 
 	/**
-	 * Like JText::sprintf but tries to pluralise the string.
-	 *
-	 * Note that this method can take a mixed number of arguments as for the sprintf function.
+	 * Pluralises a string in the current language
 	 *
 	 * The last argument can take an array of options:
 	 *
@@ -161,21 +176,17 @@ class Text
 	 * interpretBackSlashes is a boolean to interpret backslashes \\->\, \n->new line, \t->tabulation.
 	 * script is a boolean to indicate that the string will be push in the javascript language store.
 	 *
-	 * Examples:
-	 * <script>alert(Joomla.JText._('<?php echo JText::plural("COM_PLUGINS_N_ITEMS_UNPUBLISHED", 1, array("script"=>true));?>'));</script>
-	 * will generate an alert message containing '1 plugin successfully disabled'
-	 * <?php echo JText::plural("COM_PLUGINS_N_ITEMS_UNPUBLISHED", 1);?> it will generate a '1 plugin successfully disabled' string
-	 *
 	 * @param   string   $string  The format string.
 	 * @param   integer  $n       The number of items
 	 *
 	 * @return  string  The translated strings or the key if 'script' is true in the array of options
 	 *
+	 * @note    This method can take a mixed number of arguments for the sprintf function
 	 * @since   1.0
 	 */
-	public static function plural($string, $n)
+	public function plural($string, $n)
 	{
-		$lang = static::getLanguage();
+		$lang = $this->getLanguage();
 		$args = func_get_args();
 		$count = count($args);
 
@@ -212,7 +223,7 @@ class Text
 
 				if (array_key_exists('script', $args[$count - 1]) && $args[$count - 1]['script'])
 				{
-					self::$strings[$key] = call_user_func_array('sprintf', $args);
+					$this->strings[$key] = call_user_func_array('sprintf', $args);
 
 					return $key;
 				}
@@ -238,8 +249,6 @@ class Text
 	/**
 	 * Passes a string thru a sprintf.
 	 *
-	 * Note that this method can take a mixed number of arguments as for the sprintf function.
-	 *
 	 * The last argument can take an array of options:
 	 *
 	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean, 'script'=>boolean)
@@ -252,13 +261,14 @@ class Text
 	 *
 	 * @param   string  $string  The format string.
 	 *
-	 * @return  string  The translated strings or the key if 'script' is true in the array of options.
+	 * @return  string|null  The translated strings or the key if 'script' is true in the array of options.
 	 *
+	 * @note    This method can take a mixed number of arguments for the sprintf function
 	 * @since   1.0
 	 */
-	public static function sprintf($string)
+	public function sprintf($string)
 	{
-		$lang = static::getLanguage();
+		$lang = $this->getLanguage();
 		$args = func_get_args();
 		$count = count($args);
 
@@ -273,7 +283,7 @@ class Text
 
 				if (array_key_exists('script', $args[$count - 1]) && $args[$count - 1]['script'])
 				{
-					self::$strings[$string] = call_user_func_array('sprintf', $args);
+					$this->strings[$string] = call_user_func_array('sprintf', $args);
 
 					return $string;
 				}
@@ -290,17 +300,26 @@ class Text
 	/**
 	 * Passes a string thru an printf.
 	 *
-	 * Note that this method can take a mixed number of arguments as for the sprintf function.
+	 * The last argument can take an array of options:
+	 *
+	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean, 'script'=>boolean)
+	 *
+	 * where:
+	 *
+	 * jsSafe is a boolean to generate a javascript safe strings.
+	 * interpretBackSlashes is a boolean to interpret backslashes \\->\, \n->new line, \t->tabulation.
+	 * script is a boolean to indicate that the string will be push in the javascript language store.
 	 *
 	 * @param   string  $string  The format string.
 	 *
-	 * @return  mixed
+	 * @return  string|null  The translated strings or the key if 'script' is true in the array of options.
 	 *
+	 * @note    This method can take a mixed number of arguments for the printf function
 	 * @since   1.0
 	 */
-	public static function printf($string)
+	public function printf($string)
 	{
-		$lang = static::getLanguage();
+		$lang = $this->getLanguage();
 		$args = func_get_args();
 		$count = count($args);
 
@@ -325,15 +344,15 @@ class Text
 	/**
 	 * Translate a string into the current language and stores it in the JavaScript language store.
 	 *
-	 * @param   string   $string                The JText key.
+	 * @param   string   $string                The Text key.
 	 * @param   boolean  $jsSafe                Ensure the output is JavaScript safe.
 	 * @param   boolean  $interpretBackSlashes  Interpret \t and \n.
 	 *
-	 * @return  string
+	 * @return  array
 	 *
 	 * @since   1.0
 	 */
-	public static function script($string = null, $jsSafe = false, $interpretBackSlashes = true)
+	public function script($string = null, $jsSafe = false, $interpretBackSlashes = true)
 	{
 		// Add the string to the array if not null.
 		if ($string !== null)
@@ -356,9 +375,9 @@ class Text
 			}
 
 			// Normalize the key and translate the string.
-			self::$strings[strtoupper($string)] = static::getLanguage()->_($string, $jsSafe, $interpretBackSlashes);
+			$this->strings[strtoupper($string)] = $this->getLanguage()->_($string, $jsSafe, $interpretBackSlashes);
 		}
 
-		return self::$strings;
+		return $this->strings;
 	}
 }
