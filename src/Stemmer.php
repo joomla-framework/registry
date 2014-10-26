@@ -26,9 +26,9 @@ abstract class Stemmer
 	protected $cache = array();
 
 	/**
-	 * JLanguageStemmer instances.
+	 * Container with active Stemmer instances.
 	 *
-	 * @var    array
+	 * @var    Stemmer[]
 	 * @since  1.0
 	 */
 	protected static $instances = array();
@@ -38,7 +38,7 @@ abstract class Stemmer
 	 *
 	 * @param   string  $adapter  The type of stemmer to load.
 	 *
-	 * @return  Stemmer  A JLanguageStemmer instance.
+	 * @return  Stemmer
 	 *
 	 * @since   1.0
 	 * @throws  RuntimeException on invalid stemmer.

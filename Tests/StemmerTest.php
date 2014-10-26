@@ -4,59 +4,46 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+namespace Joomla\Language\Tests;
+
 use Joomla\Language\Stemmer;
 
 /**
- * Test class for JLanguageStemmer.
- *
- * @since  1.0
+ * Test class for \Joomla\Language\Stemmer.
  */
-class JLanguageStemmerTest extends PHPUnit_Framework_TestCase
+class StemmerTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var Joomla\Language\Stemmer
-	 */
-	protected $object;
-
-	/**
-	 * Test...
+	 * @testdox  Verify getInstance() returns an instance of the correct object
 	 *
-	 * @covers  Joomla\Language\Stemmer::getInstance
-	 *
-	 * @return void
+	 * @covers   Joomla\Language\Stemmer::getInstance
 	 */
-	public function testGetInstance()
+	public function testGetInstanceReturnsAnInstanceOfTheCorrectObject()
 	{
-		$instance = Stemmer::getInstance('porteren');
-
-		$this->assertInstanceof(
-			'Joomla\Language\Stemmer',
-			$instance
-		);
-
-		$this->assertInstanceof(
-			'Joomla\Language\Stemmer\Porteren',
-			$instance
-		);
-
-		$instance2 = Stemmer::getInstance('porteren');
-
-		$this->assertSame(
-			$instance,
-			$instance2
-		);
+		$this->assertInstanceOf('\\Joomla\\Language\\Stemmer\\Porteren', Stemmer::getInstance('porteren'));
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Verify getInstance() returns the cached object
+	 *
+	 * @covers   Joomla\Language\Stemmer::getInstance
+	 */
+	public function testGetInstanceReturnsTheCachedObject()
+	{
+		$firstInstance  = Stemmer::getInstance('porteren');
+		$cachedInstance = Stemmer::getInstance('porteren');
+
+		$this->assertSame($firstInstance, $cachedInstance);
+	}
+
+	/**
+	 * @testdox  Verify getInstance() returns an instance of the correct object
 	 *
 	 * @covers             Joomla\Language\Stemmer::getInstance
-	 * @expectedException  RuntimeException
-	 *
-	 * @return void
+	 * @expectedException  \RuntimeException
 	 */
-	public function testGetInstanceException()
+	public function testGetInstanceThrowsAnExceptionIfTheObjectDoesNotExist()
 	{
-		$instance = Stemmer::getInstance('unexisting');
+		Stemmer::getInstance('unexisting');
 	}
 }
