@@ -4,12 +4,14 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+namespace Joomla\Language\Tests;
+
 use Joomla\Language\Transliterate;
 
 /**
  * Test class for Transliterate.
  */
-class TransliterateTest extends PHPUnit_Framework_TestCase
+class TransliterateTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @var  Transliterate
@@ -34,7 +36,7 @@ class TransliterateTest extends PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 */
-	public function testData()
+	public function dataProvider()
 	{
 		return array(
 			array('Weiß', 'Weiss', 0),
@@ -62,7 +64,7 @@ class TransliterateTest extends PHPUnit_Framework_TestCase
 	 * @param   integer  $case    Optionally specify upper or lower case. Default to 0 (both).
 	 *
 	 * @covers        Joomla\Language\Transliterate::utf8_latin_to_ascii
-	 * @dataProvider  testData
+	 * @dataProvider  dataProvider
 	 */
 	public function testVerifyAUTF8StringIsTransliteratedCorrectly($word, $result, $case)
 	{

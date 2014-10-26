@@ -36,7 +36,7 @@ class PorterenTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 */
-	public function testData()
+	public function dataStemProvider()
 	{
 		return array(
 			array('Car', 'Car', 'en'),
@@ -160,7 +160,7 @@ class PorterenTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Joomla\Language\Stemmer\Porteren::stem
 	 * @covers        Joomla\Language\Stemmer\Porteren::<!public>
-	 * @dataProvider  testData
+	 * @dataProvider  dataStemProvider
 	 */
 	public function testTheCorrectStemIsReturnedFromAGivenString($token, $result, $lang)
 	{
