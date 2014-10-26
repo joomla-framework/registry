@@ -25,7 +25,7 @@ class Language
 	/**
 	 * Language instance container
 	 *
-	 * @var    array
+	 * @var    Language[]
 	 * @since  1.0
 	 */
 	protected static $languages = array();
@@ -183,27 +183,34 @@ class Language
 	protected $helper;
 
 	/**
+	 * The base path to the language folder
+	 *
+	 * @var    string
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $basePath;
+
+	/**
 	 * Constructor activating the default information of the language.
 	 *
+	 * @param   string   $path   The base path to the language folder
 	 * @param   string   $lang   The language
 	 * @param   boolean  $debug  Indicates if language debugging is enabled.
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($lang = null, $debug = false)
+	public function __construct($path, $lang = null, $debug = false)
 	{
-		$this->strings = array();
-		$this->helper  = new LanguageHelper;
+		$this->basePath = $path;
+		$this->strings  = array();
+		$this->helper   = new LanguageHelper;
 
-		if ($lang == null)
-		{
-			$lang = $this->default;
-		}
+		$lang = ($lang == null) ? $this->default : $lang;
 
 		$this->setLanguage($lang);
 		$this->setDebug($debug);
 
-		$filename = JPATH_ROOT . "/language/overrides/$lang.override.ini";
+		$filename = $this->basePath . "/language/overrides/$lang.override.ini";
 
 		if (file_exists($filename) && $contents = $this->parse($filename))
 		{
@@ -221,7 +228,7 @@ class Language
 		$class = str_replace('-', '_', $lang . 'Localise');
 		$paths = array();
 
-		$basePath = self::getLanguagePath(JPATH_ROOT);
+		$basePath = $this->helper->getLanguagePath($this->basePath);
 
 		$paths[0] = $basePath . "/language/overrides/$lang.localise.php";
 		$paths[1] = $basePath . "/language/$lang/$lang.localise.php";
@@ -286,6 +293,7 @@ class Language
 	/**
 	 * Returns a language object.
 	 *
+	 * @param   string   $path   The base path to the language folder
 	 * @param   string   $lang   The language to use.
 	 * @param   boolean  $debug  The debug mode.
 	 *
@@ -293,11 +301,11 @@ class Language
 	 *
 	 * @since   1.0
 	 */
-	public static function getInstance($lang = null, $debug = false)
+	public static function getInstance($path, $lang = null, $debug = false)
 	{
 		if (!isset(self::$languages[$lang . $debug]))
 		{
-			$language = new self($lang, $debug);
+			$language = new self($path, $lang, $debug);
 
 			self::$languages[$lang . $debug] = $language;
 
@@ -717,7 +725,7 @@ class Language
 	 * @since   1.0
 	 * @deprecated  3.0  Use LanguageHelper::exists() instead
 	 */
-	public static function exists($lang, $basePath = JPATH_ROOT)
+	public static function exists($lang, $basePath = '')
 	{
 		$helper = new LanguageHelper;
 
@@ -737,14 +745,12 @@ class Language
 	 *
 	 * @since   1.0
 	 */
-	public function load($extension = 'joomla', $basePath = JPATH_ROOT, $lang = null, $reload = false, $default = true)
+	public function load($extension = 'joomla', $basePath = '', $lang = null, $reload = false, $default = true)
 	{
-		if (!$lang)
-		{
-			$lang = $this->lang;
-		}
+		$lang     = !$lang ? $this->lang : $lang;
+		$basePath = empty($basePath) ? $this->basePath : $basePath;
 
-		$path = self::getLanguagePath($basePath, $lang);
+		$path = $this->helper->getLanguagePath($basePath, $lang);
 
 		$internal = $extension == 'joomla' || $extension == '';
 		$filename = $internal ? $lang : $lang . '.' . $extension;
@@ -767,7 +773,7 @@ class Language
 				$oldFilename = $filename;
 
 				// Check the standard file name
-				$path = self::getLanguagePath($basePath, $this->default);
+				$path = $this->helper->getLanguagePath($basePath, $this->default);
 				$filename = $internal ? $this->default : $this->default . '.' . $extension;
 				$filename = "$path/$filename.ini";
 
@@ -1182,7 +1188,7 @@ class Language
 	 * @since   1.0
 	 * @deprecated  3.0  Use LanguageHelper::getKnownLanguages() instead
 	 */
-	public static function getKnownLanguages($basePath = JPATH_ROOT)
+	public static function getKnownLanguages($basePath = '')
 	{
 		$helper = new LanguageHelper;
 
@@ -1201,7 +1207,7 @@ class Language
 	 * @since   1.0
 	 * @deprecated  3.0  Use LanguageHelper::getLanguagePath() instead
 	 */
-	public static function getLanguagePath($basePath = JPATH_ROOT, $language = null)
+	public static function getLanguagePath($basePath = '', $language = null)
 	{
 		$helper = new LanguageHelper;
 
