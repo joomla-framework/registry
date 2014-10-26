@@ -434,7 +434,8 @@ class Language
 			return call_user_func($this->transliterator, $string);
 		}
 
-		$string = Transliterate::utf8_latin_to_ascii($string);
+		$transliterate = new Transliterate;
+		$string = $transliterate->utf8_latin_to_ascii($string);
 		$string = String::strtolower($string);
 
 		return $string;
