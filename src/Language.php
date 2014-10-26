@@ -175,6 +175,14 @@ class Language
 	protected $searchDisplayedCharactersNumberCallback = null;
 
 	/**
+	 * LanguageHelper object
+	 *
+	 * @var    LanguageHelper
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $helper;
+
+	/**
 	 * Constructor activating the default information of the language.
 	 *
 	 * @param   string   $lang   The language
@@ -185,6 +193,7 @@ class Language
 	public function __construct($lang = null, $debug = false)
 	{
 		$this->strings = array();
+		$this->helper  = new LanguageHelper;
 
 		if ($lang == null)
 		{
@@ -704,30 +713,15 @@ class Language
 	 *
 	 * @return  boolean  True if the language exists.
 	 *
+	 * @see     LanguageHelper::exists()
 	 * @since   1.0
+	 * @deprecated  3.0  Use LanguageHelper::exists() instead
 	 */
 	public static function exists($lang, $basePath = JPATH_ROOT)
 	{
-		static $paths = array();
+		$helper = new LanguageHelper;
 
-		// Return false if no language was specified
-		if (!$lang)
-		{
-			return false;
-		}
-
-		$path = $basePath . '/language/' . $lang;
-
-		// Return previous check results if it exists
-		if (isset($paths[$path]))
-		{
-			return $paths[$path];
-		}
-
-		// Check if the language exists
-		$paths[$path] = is_dir($path);
-
-		return $paths[$path];
+		return $helper->exists($lang, $basePath);
 	}
 
 	/**
@@ -1162,29 +1156,19 @@ class Language
 	 * Returns a associative array holding the metadata.
 	 *
 	 * @param   string  $lang  The name of the language.
+	 * @param   string  $path  The filepath to the language folder.
 	 *
 	 * @return  mixed  If $lang exists return key/value pair with the language metadata, otherwise return NULL.
 	 *
+	 * @see     LanguageHelper::getMetadata()
 	 * @since   1.0
+	 * @deprecated  3.0  Use LanguageHelper::getMetadata() instead
 	 */
-	public static function getMetadata($lang)
+	public static function getMetadata($lang, $basePath)
 	{
-		$path = self::getLanguagePath(JPATH_ROOT, $lang);
-		$file = $lang . '.xml';
+		$helper = new LanguageHelper;
 
-		$result = null;
-
-		if (is_file("$path/$file"))
-		{
-			$result = self::parseXMLLanguageFile("$path/$file");
-		}
-
-		if (empty($result))
-		{
-			return null;
-		}
-
-		return $result;
+		return $helper->getMetadata($lang, $basePath);
 	}
 
 	/**
@@ -1194,14 +1178,15 @@ class Language
 	 *
 	 * @return  array  key/value pair with the language file and real name.
 	 *
+	 * @see     LanguageHelper::getKnownLanguages()
 	 * @since   1.0
+	 * @deprecated  3.0  Use LanguageHelper::getKnownLanguages() instead
 	 */
 	public static function getKnownLanguages($basePath = JPATH_ROOT)
 	{
-		$dir = self::getLanguagePath($basePath);
-		$knownLanguages = self::parseLanguageFiles($dir);
+		$helper = new LanguageHelper;
 
-		return $knownLanguages;
+		return $helper->getKnownLanguages($basePath);
 	}
 
 	/**
@@ -1212,18 +1197,15 @@ class Language
 	 *
 	 * @return  string  language related path or null.
 	 *
+	 * @see     LanguageHelper::getLanguagePath()
 	 * @since   1.0
+	 * @deprecated  3.0  Use LanguageHelper::getLanguagePath() instead
 	 */
 	public static function getLanguagePath($basePath = JPATH_ROOT, $language = null)
 	{
-		$dir = $basePath . '/language';
+		$helper = new LanguageHelper;
 
-		if (!empty($language))
-		{
-			$dir .= '/' . $language;
-		}
-
-		return $dir;
+		return $helper->getLanguagePath($basePath, $language);
 	}
 
 	/**
@@ -1303,42 +1285,15 @@ class Language
 	 *
 	 * @return  array  Array holding the found languages as filename => real name pairs.
 	 *
+	 * @see     LanguageHelper::parseLanguageFiles()
 	 * @since   1.0
+	 * @deprecated  3.0  Use LanguageHelper::parseLanguageFiles() instead
 	 */
 	public static function parseLanguageFiles($dir = null)
 	{
-		$languages = array();
+		$helper = new LanguageHelper;
 
-		$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
-
-		foreach ($iterator as $file)
-		{
-			$langs    = array();
-			$fileName = $file->getFilename();
-
-			if (!$file->isFile() || !preg_match("/^([-_A-Za-z]*)\.xml$/", $fileName))
-			{
-				continue;
-			}
-
-			try
-			{
-				$metadata = self::parseXMLLanguageFile($file->getRealPath());
-
-				if ($metadata)
-				{
-					$lang = str_replace('.xml', '', $fileName);
-					$langs[$lang] = $metadata;
-				}
-
-				$languages = array_merge($languages, $langs);
-			}
-			catch (\RuntimeException $e)
-			{
-			}
-		}
-
-		return $languages;
+		return $helper->parseLanguageFiles($dir);
 	}
 
 	/**
@@ -1348,37 +1303,14 @@ class Language
 	 *
 	 * @return  array  Array holding the found metadata as a key => value pair.
 	 *
+	 * @see     LanguageHelper::parseXMLLanguageFile()
 	 * @since   1.0
-	 * @throws  \RuntimeException
+	 * @deprecated  3.0  Use LanguageHelper::parseXMLLanguageFile() instead
 	 */
 	public static function parseXMLLanguageFile($path)
 	{
-		if (!is_readable($path))
-		{
-			throw new \RuntimeException('File not found or not readable');
-		}
+		$helper = new LanguageHelper;
 
-		// Try to load the file
-		$xml = simplexml_load_file($path);
-
-		if (!$xml)
-		{
-			return null;
-		}
-
-		// Check that it's a metadata file
-		if ((string) $xml->getName() != 'metafile')
-		{
-			return null;
-		}
-
-		$metadata = array();
-
-		foreach ($xml->metadata->children() as $child)
-		{
-			$metadata[$child->getName()] = (string) $child;
-		}
-
-		return $metadata;
+		return $helper->parseXMLLanguageFile($path);
 	}
 }
