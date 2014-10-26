@@ -317,9 +317,29 @@ class Language
 	 *
 	 * @return  string  The translation of the string
 	 *
+	 * @see     Language::translate()
 	 * @since   1.0
+	 * @deprecated  3.0  Use translate instead
 	 */
 	public function _($string, $jsSafe = false, $interpretBackSlashes = true)
+	{
+		return $this->translate($string, $jsSafe, $interpretBackSlashes);
+	}
+
+	/**
+	 * Translate function, mimics the php gettext (alias _) function.
+	 *
+	 * The function checks if $jsSafe is true, then if $interpretBackslashes is true.
+	 *
+	 * @param   string   $string                The string to translate
+	 * @param   boolean  $jsSafe                Make the result javascript safe
+	 * @param   boolean  $interpretBackSlashes  Interpret \t and \n
+	 *
+	 * @return  string  The translation of the string
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function translate($string, $jsSafe = false, $interpretBackSlashes = true)
 	{
 		// Detect empty string
 		if ($string == '')
