@@ -233,8 +233,8 @@ class Language
 
 		$basePath = $this->helper->getLanguagePath($this->basePath);
 
-		$paths[0] = $basePath . "/language/overrides/$lang.localise.php";
-		$paths[1] = $basePath . "/language/$lang/$lang.localise.php";
+		$paths[0] = $basePath . "/overrides/$lang.localise.php";
+		$paths[1] = $basePath . "/$lang/$lang.localise.php";
 
 		ksort($paths);
 		$path = reset($paths);

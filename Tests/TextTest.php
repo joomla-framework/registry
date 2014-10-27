@@ -49,6 +49,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text is instantiated correctly
 	 *
 	 * @covers   Joomla\Language\Text::__construct
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testVerifyThatTextIsInstantiatedCorrectly()
 	{
@@ -59,6 +62,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::getLanguage() returns an instance of Language
 	 *
 	 * @covers   Joomla\Language\Text::getLanguage
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testVerifyThatGetLanguageReturnsALanguageInstance()
 	{
@@ -69,6 +75,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::getLanguage() returns an instance of Language
 	 *
 	 * @covers   Joomla\Language\Text::setLanguage
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testVerifyThatSetLanguageReturnsSelf()
 	{
@@ -79,8 +88,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::_() proxies to Text::translate()
 	 *
 	 * @covers   Joomla\Language\Text::_
-	 * @uses     Joomla\Language\Language::_
-	 * @uses     Joomla\Language\Text::translate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testUnderscoreMethodProxiesToTranslate()
 	{
@@ -91,7 +101,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::translate() returns an empty string when one is input
 	 *
 	 * @covers   Joomla\Language\Text::translate
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testTranslateReturnsEmptyStringWhenGivenAnEmptyString()
 	{
@@ -102,7 +114,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::translate() returns the correct string for a key
 	 *
 	 * @covers   Joomla\Language\Text::translate
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testTranslateReturnsTheCorrectStringForAKey()
 	{
@@ -113,7 +127,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::translate() returns a JavaScript safe string
 	 *
 	 * @covers   Joomla\Language\Text::translate
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testTranslateReturnsAJavascriptSafeKey()
 	{
@@ -124,7 +140,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::translate() returns the original string when storing to the JavaScript store
 	 *
 	 * @covers   Joomla\Language\Text::translate
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testTranslateReturnsTheOriginalStringWhenStoringToJavascriptStore()
 	{
@@ -135,7 +153,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::translate() returns the translated string when the input params are overridden
 	 *
 	 * @covers   Joomla\Language\Text::translate
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testTranslateReturnsTheTranslatedStringWhenTheInputParamsAreOverridden()
 	{
@@ -149,8 +169,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::alt() returns the correct string for a key with no alt
 	 *
 	 * @covers   Joomla\Language\Text::alt
-	 * @uses     Joomla\Language\Language::_
-	 * @uses     Joomla\Language\Text::translate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testAltReturnsTheCorrectStringForAKey()
 	{
@@ -161,8 +182,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::alt() returns the correct string for a key with an alt
 	 *
 	 * @covers   Joomla\Language\Text::alt
-	 * @uses     Joomla\Language\Language::_
-	 * @uses     Joomla\Language\Text::translate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testAltReturnsTheCorrectStringForAKeyWithAlt()
 	{
@@ -173,7 +195,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::plural() returns the input key when no plural key is found
 	 *
 	 * @covers   Joomla\Language\Text::plural
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testPluralReturnsInputKeyWhenNoParamsPassed()
 	{
@@ -184,7 +208,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::plural() returns the translated string when the pluralised key is found
 	 *
 	 * @covers   Joomla\Language\Text::plural
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testPluralReturnsTranslatedStringWhenPluralisedKeyFound()
 	{
@@ -195,8 +221,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::plural() returns the key when the 'script' key is passed
 	 *
 	 * @covers   Joomla\Language\Text::plural
-	 * @uses     Joomla\Language\Language::_
-	 * @uses     Joomla\Language\Text::script
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testPluralReturnsTheKeyWhenTheScriptKeyIsPassed()
 	{
@@ -207,7 +234,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::sprintf() returns the input key when no key is found
 	 *
 	 * @covers   Joomla\Language\Text::sprintf
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testSprintfReturnsEmptyStringWhenKeyNotFound()
 	{
@@ -218,7 +247,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::sprintf() returns the translated string when the specified key is found
 	 *
 	 * @covers   Joomla\Language\Text::sprintf
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testSprintfReturnsTranslatedStringWhenKeyFound()
 	{
@@ -229,8 +260,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::sprintf() returns the key when the 'script' key is passed
 	 *
 	 * @covers   Joomla\Language\Text::sprintf
-	 * @uses     Joomla\Language\Language::_
-	 * @uses     Joomla\Language\Text::script
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testSprintfReturnsTheKeyWhenTheScriptKeyIsPassed()
 	{
@@ -241,7 +273,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::printf() returns the input key when no key is found
 	 *
 	 * @covers   Joomla\Language\Text::printf
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testPrintfReturnsEmptyStringWhenKeyNotFound()
 	{
@@ -256,7 +290,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::printf() returns the translated string when the specified key is found
 	 *
 	 * @covers   Joomla\Language\Text::printf
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testPrintfReturnsTranslatedStringWhenKeyFound()
 	{
@@ -271,8 +307,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::printf() returns the key when the 'script' key is passed
 	 *
 	 * @covers   Joomla\Language\Text::printf
-	 * @uses     Joomla\Language\Language::_
-	 * @uses     Joomla\Language\Text::script
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testPrintfReturnsTheTranslatedStringWhenTheScriptKeyIsPassed()
 	{
@@ -287,7 +324,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::script() returns the JavaScript store by default
 	 *
 	 * @covers   Joomla\Language\Text::script
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testScriptReturnsTheJavascriptStoreByDefault()
 	{
@@ -298,7 +337,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::script() returns the JavaScript store with the translated string
 	 *
 	 * @covers   Joomla\Language\Text::script
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testScriptReturnsTheJavascriptStoreWithTheTranslatedString()
 	{
@@ -309,7 +350,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Text::script() returns the JavaScript store with the JavaScript safe translated string
 	 *
 	 * @covers   Joomla\Language\Text::script
-	 * @uses     Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
 	 */
 	public function testScriptReturnsTheJavascriptStoreWithTheJavascriptSafeTranslatedString()
 	{

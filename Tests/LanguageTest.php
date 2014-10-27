@@ -102,19 +102,19 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testTransliterateReturnsAString()
 	{
-		$this->assertSame('asi', $this->object->transliterate('Así'));
+		$this->assertSame('Así', $this->object->transliterate('Así'));
 	}
 
 	/**
-	 * @testdox  Verify that Language::getTransliterator() default returns null
+	 * @testdox  Verify that Language::getTransliterator() default returns an array
 	 *
 	 * @covers   Joomla\Language\Language::getTransliterator
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetTransliteratorDefaultReturnsNull()
+	public function testGetTransliteratorDefaultReturnsAnArray()
 	{
-		$this->assertNull($this->object->getTransliterator());
+		$this->assertInternalType('array', $this->object->getTransliterator());
 	}
 
 	/**
@@ -126,7 +126,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetTransliteratorDefaultReturnsThePreviousCallback()
 	{
-		$this->assertNull($this->object->setTransliterator('print'));
+		$this->assertInternalType('array', $this->object->setTransliterator('print'));
 	}
 
 	/**
@@ -142,15 +142,15 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getPluralSuffixesCallback() default returns null
+	 * @testdox  Verify that Language::getPluralSuffixesCallback() default returns an array
 	 *
 	 * @covers   Joomla\Language\Language::getPluralSuffixesCallback
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetPluralSuffixesCallbackDefaultReturnsNull()
+	public function testGetPluralSuffixesCallbackDefaultReturnsAnArray()
 	{
-		$this->assertNull($this->object->getPluralSuffixesCallback());
+		$this->assertInternalType('array', $this->object->getPluralSuffixesCallback());
 	}
 
 	/**
@@ -162,7 +162,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetPluralSuffixesCallbackDefaultReturnsThePreviousCallback()
 	{
-		$this->assertNull($this->object->setPluralSuffixesCallback('print'));
+		$this->assertInternalType('array', $this->object->setPluralSuffixesCallback('print'));
 	}
 
 	/**
@@ -178,15 +178,15 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getIgnoredSearchWordsCallback() default returns null
+	 * @testdox  Verify that Language::getIgnoredSearchWordsCallback() default returns an array
 	 *
 	 * @covers   Joomla\Language\Language::getIgnoredSearchWordsCallback
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetIgnoredSearchWordsCallbackDefaultReturnsNull()
+	public function testGetIgnoredSearchWordsCallbackDefaultReturnsAnArray()
 	{
-		$this->assertNull($this->object->getIgnoredSearchWordsCallback());
+		$this->assertInternalType('array', $this->object->getIgnoredSearchWordsCallback());
 	}
 
 	/**
@@ -198,7 +198,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetIgnoredSearchWordsCallbackDefaultReturnsThePreviousCallback()
 	{
-		$this->assertNull($this->object->setIgnoredSearchWordsCallback('print'));
+		$this->assertInternalType('array', $this->object->setIgnoredSearchWordsCallback('print'));
 	}
 
 	/**
@@ -214,15 +214,15 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getLowerLimitSearchWordCallback() default returns null
+	 * @testdox  Verify that Language::getLowerLimitSearchWordCallback() default returns an array
 	 *
 	 * @covers   Joomla\Language\Language::getLowerLimitSearchWordCallback
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetLowerLimitSearchWordCallbackDefaultReturnsNull()
+	public function testGetLowerLimitSearchWordCallbackDefaultReturnsAnArray()
 	{
-		$this->assertNull($this->object->getLowerLimitSearchWordCallback());
+		$this->assertInternalType('array', $this->object->getLowerLimitSearchWordCallback());
 	}
 
 	/**
@@ -234,7 +234,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetLowerLimitSearchWordCallbackDefaultReturnsThePreviousCallback()
 	{
-		$this->assertNull($this->object->setLowerLimitSearchWordCallback('print'));
+		$this->assertInternalType('array', $this->object->setLowerLimitSearchWordCallback('print'));
 	}
 
 	/**
@@ -250,15 +250,15 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getUpperLimitSearchWordCallback() default returns null
+	 * @testdox  Verify that Language::getUpperLimitSearchWordCallback() default returns an array
 	 *
 	 * @covers   Joomla\Language\Language::getUpperLimitSearchWordCallback
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetUpperLimitSearchWordCallbackDefaultReturnsNull()
+	public function testGetUpperLimitSearchWordCallbackDefaultReturnsAnArray()
 	{
-		$this->assertNull($this->object->getUpperLimitSearchWordCallback());
+		$this->assertInternalType('array', $this->object->getUpperLimitSearchWordCallback());
 	}
 
 	/**
@@ -270,7 +270,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetUpperLimitSearchWordCallbackDefaultReturnsThePreviousCallback()
 	{
-		$this->assertNull($this->object->setUpperLimitSearchWordCallback('print'));
+		$this->assertInternalType('array', $this->object->setUpperLimitSearchWordCallback('print'));
 	}
 
 	/**
@@ -286,15 +286,15 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getSearchDisplayedCharactersNumberCallback() default returns null
+	 * @testdox  Verify that Language::getSearchDisplayedCharactersNumberCallback() default returns an array
 	 *
 	 * @covers   Joomla\Language\Language::getSearchDisplayedCharactersNumberCallback
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetSearchDisplayedCharactersNumberCallbackDefaultReturnsNull()
+	public function testGetSearchDisplayedCharactersNumberCallbackDefaultReturnsAnArray()
 	{
-		$this->assertNull($this->object->getSearchDisplayedCharactersNumberCallback());
+		$this->assertInternalType('array', $this->object->getSearchDisplayedCharactersNumberCallback());
 	}
 
 	/**
@@ -306,7 +306,7 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetSearchDisplayedCharactersNumberCallbackDefaultReturnsThePreviousCallback()
 	{
-		$this->assertNull($this->object->setSearchDisplayedCharactersNumberCallback('print'));
+		$this->assertInternalType('array', $this->object->setSearchDisplayedCharactersNumberCallback('print'));
 	}
 
 	/**

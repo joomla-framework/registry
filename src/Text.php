@@ -130,12 +130,12 @@ class Text
 
 		if ($script)
 		{
-			$this->strings[$string] = $lang->_($string, $jsSafe, $interpretBackSlashes);
+			$this->strings[$string] = $lang->translate($string, $jsSafe, $interpretBackSlashes);
 
 			return $string;
 		}
 
-		return $lang->_($string, $jsSafe, $interpretBackSlashes);
+		return $lang->translate($string, $jsSafe, $interpretBackSlashes);
 	}
 
 	/**
@@ -214,7 +214,7 @@ class Text
 
 		if (is_array($args[$count - 1]))
 		{
-			$args[0] = $lang->_(
+			$args[0] = $lang->translate(
 				$key, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
 				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
 			);
@@ -228,7 +228,7 @@ class Text
 		}
 		else
 		{
-			$args[0] = $lang->_($key);
+			$args[0] = $lang->translate($key);
 		}
 
 		return call_user_func_array('sprintf', $args);
@@ -262,7 +262,7 @@ class Text
 
 		if (is_array($args[$count - 1]))
 		{
-			$args[0] = $lang->_(
+			$args[0] = $lang->translate(
 				$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
 				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
 			);
@@ -276,7 +276,7 @@ class Text
 		}
 		else
 		{
-			$args[0] = $lang->_($string);
+			$args[0] = $lang->translate($string);
 		}
 
 		return call_user_func_array('sprintf', $args);
@@ -310,14 +310,14 @@ class Text
 
 		if (is_array($args[$count - 1]))
 		{
-			$args[0] = $lang->_(
+			$args[0] = $lang->translate(
 				$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
 				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
 			);
 		}
 		else
 		{
-			$args[0] = $lang->_($string);
+			$args[0] = $lang->translate($string);
 		}
 
 		return call_user_func_array('printf', $args);
@@ -357,7 +357,7 @@ class Text
 			}
 
 			// Normalize the key and translate the string.
-			$this->strings[strtoupper($string)] = $this->getLanguage()->_($string, $jsSafe, $interpretBackSlashes);
+			$this->strings[strtoupper($string)] = $this->getLanguage()->translate($string, $jsSafe, $interpretBackSlashes);
 		}
 
 		return $this->strings;
