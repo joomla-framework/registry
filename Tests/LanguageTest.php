@@ -4,7 +4,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-require_once __DIR__ . '/data/language/en-GB/en-GB.localise.php';
+namespace Joomla\Language\Tests;
 
 use Joomla\Language\Language;
 use Joomla\Filesystem\Folder;
@@ -12,128 +12,646 @@ use Joomla\Test\TestHelper;
 
 /**
  * Test class for Joomla\Language\Language.
- *
- * @since  1.0
  */
-class LanguageTest extends PHPUnit_Framework_TestCase
+class LanguageTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test language object
 	 *
-	 * @var    Joomla\Language\Language
-	 * @since  1.0
+	 * @var  Language
 	 */
 	protected $object;
+
+	/**
+	 * Path to language folder used for testing
+	 *
+	 * @var  string
+	 */
+	private $testPath;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	protected function setUp()
 	{
 		parent::setUp();
 
-		$path = JPATH_ROOT . '/language';
-
-		if (is_dir($path))
-		{
-			Folder::delete($path);
-		}
-
-		Folder::copy(__DIR__ . '/data/language', $path);
-
-		$this->object = new Language;
+		$this->testPath = __DIR__ . '/data';
+		$this->object   = new Language($this->testPath);
 	}
 
 	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
+	 * @testdox  Verify that Language is instantiated correctly
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Language\Language::__construct
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	protected function tearDown()
+	public function testVerifyThatLanguageIsInstantiatedCorrectly()
 	{
-		Folder::delete(JPATH_ROOT . '/language');
-
-		parent::tearDown();
+		$this->assertInstanceOf('Joomla\\Language\\Language', new Language($this->testPath));
 	}
 
 	/**
-	 * Tests retrieving an instance of the Language object
+	 * @testdox  Verify that getInstance() returns a Language object
 	 *
-	 * @covers  Joomla\Language\Language::getInstance
-	 * @covers  Joomla\Language\Language::getLanguage
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Language\Language::getInstance
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetInstanceAndLanguage()
+	public function testVerifyGetInstanceReturnsALanguageObject()
 	{
-		$instance = Language::getInstance(null);
-		$this->assertInstanceOf('Joomla\Language\Language', $instance);
-
-		$this->assertEquals(
-			TestHelper::getValue($instance, 'default'),
-			$instance->getLanguage(),
-			'Asserts that getInstance when called with a null language returns the default language.  Line: ' . __LINE__
-		);
-
-		$instance = Language::getInstance('es-ES');
-
-		$this->assertEquals(
-			'es-ES',
-			$instance->getLanguage(),
-			'Asserts that getInstance when called with a specific language returns that language.  Line: ' . __LINE__
-		);
+		$this->assertInstanceOf('\\Joomla\\Language\\Language', Language::getInstance($this->testPath));
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Verify that Language::_() proxies to Language::translate()
 	 *
-	 * @covers  Joomla\Language\Language::__construct
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Language\Language::_
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testConstruct()
+	public function testUnderscoreMethodProxiesToTranslate()
 	{
-		// @codingStandardsIgnoreStart
-		// @todo check the instanciating new classes without brackets sniff
-		$instance = new Language(null, true);
-		// @codingStandardsIgnoreEnd
+		$this->assertEmpty($this->object->_(''));
+	}
 
-		$this->assertInstanceOf('Joomla\Language\Language', $instance);
-		$this->assertTrue($instance->getDebug());
+	/**
+	 * @testdox  Verify that Language::translate() returns an empty string when one is input
+	 *
+	 * @covers   Joomla\Language\Language::translate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testTranslateReturnsEmptyStringWhenGivenAnEmptyString()
+	{
+		$this->assertEmpty($this->object->translate(''));
+	}
 
-		// @codingStandardsIgnoreStart
-		// @todo check the instanciating new classes without brackets sniff
-		$instance = new Language(null, false);
-		// @codingStandardsIgnoreEnd
+	/**
+	 * @testdox  Verify that Language::transliterate() returns a string
+	 *
+	 * @covers   Joomla\Language\Language::transliterate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Transliterate
+	 * @uses     Joomla\String\String
+	 */
+	public function testTransliterateReturnsAString()
+	{
+		$this->assertSame('asi', $this->object->transliterate('Así'));
+	}
 
-		$this->assertInstanceOf('Joomla\Language\Language', $instance);
-		$this->assertFalse($instance->getDebug());
+	/**
+	 * @testdox  Verify that Language::getTransliterator() default returns null
+	 *
+	 * @covers   Joomla\Language\Language::getTransliterator
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetTransliteratorDefaultReturnsNull()
+	{
+		$this->assertNull($this->object->getTransliterator());
+	}
 
-		$override = TestHelper::getValue($instance, 'override');
-		$this->assertArrayHasKey('OVER', $override);
-		$this->assertEquals('Ride', $override['OVER']);
+	/**
+	 * @testdox  Verify that Language::setTransliterator() default returns the previous callback
+	 *
+	 * @covers   Joomla\Language\Language::setTransliterator
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testSetTransliteratorDefaultReturnsThePreviousCallback()
+	{
+		$this->assertNull($this->object->setTransliterator('print'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getPluralSuffixes() returns an array
+	 *
+	 * @covers   Joomla\Language\Language::getPluralSuffixes
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetPluralSuffixesReturnsAnArray()
+	{
+		$this->assertInternalType('array', $this->object->getPluralSuffixes(1));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getPluralSuffixesCallback() default returns null
+	 *
+	 * @covers   Joomla\Language\Language::getPluralSuffixesCallback
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetPluralSuffixesCallbackDefaultReturnsNull()
+	{
+		$this->assertNull($this->object->getPluralSuffixesCallback());
+	}
+
+	/**
+	 * @testdox  Verify that Language::setPluralSuffixesCallback() default returns the previous callback
+	 *
+	 * @covers   Joomla\Language\Language::setPluralSuffixesCallback
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testSetPluralSuffixesCallbackDefaultReturnsThePreviousCallback()
+	{
+		$this->assertNull($this->object->setPluralSuffixesCallback('print'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getIgnoredSearchWords() returns an array
+	 *
+	 * @covers   Joomla\Language\Language::getIgnoredSearchWords
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetIgnoredSearchWordsReturnsAnArray()
+	{
+		$this->assertInternalType('array', $this->object->getIgnoredSearchWords());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getIgnoredSearchWordsCallback() default returns null
+	 *
+	 * @covers   Joomla\Language\Language::getIgnoredSearchWordsCallback
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetIgnoredSearchWordsCallbackDefaultReturnsNull()
+	{
+		$this->assertNull($this->object->getIgnoredSearchWordsCallback());
+	}
+
+	/**
+	 * @testdox  Verify that Language::setIgnoredSearchWordsCallback() default returns the previous callback
+	 *
+	 * @covers   Joomla\Language\Language::setIgnoredSearchWordsCallback
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testSetIgnoredSearchWordsCallbackDefaultReturnsThePreviousCallback()
+	{
+		$this->assertNull($this->object->setIgnoredSearchWordsCallback('print'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getLowerLimitSearchWord() returns an integer
+	 *
+	 * @covers   Joomla\Language\Language::getLowerLimitSearchWord
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetLowerLimitSearchWordReturnsAnInteger()
+	{
+		$this->assertInternalType('integer', $this->object->getLowerLimitSearchWord());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getLowerLimitSearchWordCallback() default returns null
+	 *
+	 * @covers   Joomla\Language\Language::getLowerLimitSearchWordCallback
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetLowerLimitSearchWordCallbackDefaultReturnsNull()
+	{
+		$this->assertNull($this->object->getLowerLimitSearchWordCallback());
+	}
+
+	/**
+	 * @testdox  Verify that Language::setLowerLimitSearchWordCallback() default returns the previous callback
+	 *
+	 * @covers   Joomla\Language\Language::setLowerLimitSearchWordCallback
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testSetLowerLimitSearchWordCallbackDefaultReturnsThePreviousCallback()
+	{
+		$this->assertNull($this->object->setLowerLimitSearchWordCallback('print'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getUpperLimitSearchWord() returns an integer
+	 *
+	 * @covers   Joomla\Language\Language::getUpperLimitSearchWord
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetUpperLimitSearchWordReturnsAnInteger()
+	{
+		$this->assertInternalType('integer', $this->object->getUpperLimitSearchWord());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getUpperLimitSearchWordCallback() default returns null
+	 *
+	 * @covers   Joomla\Language\Language::getUpperLimitSearchWordCallback
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetUpperLimitSearchWordCallbackDefaultReturnsNull()
+	{
+		$this->assertNull($this->object->getUpperLimitSearchWordCallback());
+	}
+
+	/**
+	 * @testdox  Verify that Language::setUpperLimitSearchWordCallback() default returns the previous callback
+	 *
+	 * @covers   Joomla\Language\Language::setUpperLimitSearchWordCallback
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testSetUpperLimitSearchWordCallbackDefaultReturnsThePreviousCallback()
+	{
+		$this->assertNull($this->object->setUpperLimitSearchWordCallback('print'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getSearchDisplayedCharactersNumber() returns an integer
+	 *
+	 * @covers   Joomla\Language\Language::getSearchDisplayedCharactersNumber
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetSearchDisplayedCharactersNumberReturnsAnInteger()
+	{
+		$this->assertInternalType('integer', $this->object->getSearchDisplayedCharactersNumber());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getSearchDisplayedCharactersNumberCallback() default returns null
+	 *
+	 * @covers   Joomla\Language\Language::getSearchDisplayedCharactersNumberCallback
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetSearchDisplayedCharactersNumberCallbackDefaultReturnsNull()
+	{
+		$this->assertNull($this->object->getSearchDisplayedCharactersNumberCallback());
+	}
+
+	/**
+	 * @testdox  Verify that Language::setSearchDisplayedCharactersNumberCallback() default returns the previous callback
+	 *
+	 * @covers   Joomla\Language\Language::setSearchDisplayedCharactersNumberCallback
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testSetSearchDisplayedCharactersNumberCallbackDefaultReturnsThePreviousCallback()
+	{
+		$this->assertNull($this->object->setSearchDisplayedCharactersNumberCallback('print'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::exists() proxies to LanguageHelper::exists()
+	 *
+	 * @covers   Joomla\Language\Language::exists
+	 * @covers   Joomla\Language\LanguageHelper::exists
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @deprecated
+	 */
+	public function testVerifyExistsProxiesToLanguageHelper()
+	{
+		$this->assertTrue($this->object->exists('en-GB', $this->testPath));
+	}
+
+	/**
+	 * @testdox  Verify that Language::load() successfully loads the main language file
+	 *
+	 * @covers   Joomla\Language\Language::load
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyLoadSuccessfullyLoadsTheMainLanguageFile()
+	{
+		$this->assertTrue($this->object->load());
+	}
+
+	/**
+	 * @testdox  Verify that Language::load() successfully loads a language file
+	 *
+	 * @covers   Joomla\Language\Language::loadLanguage
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyLoadLanguageSuccessfullyLoadsALanguageFile()
+	{
+		$this->assertTrue(TestHelper::invoke($this->object, 'loadLanguage', $this->testPath . '/good.ini'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::parse() successfully parses a language file
+	 *
+	 * @covers   Joomla\Language\Language::parse
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyParseSuccessfullyParsesALanguageFile()
+	{
+		$this->assertNotEmpty(TestHelper::invoke($this->object, 'parse', $this->testPath . '/good.ini'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::get() returns the correct metadata
+	 *
+	 * @covers   Joomla\Language\Language::get
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetReturnsTheCorrectMetadata()
+	{
+		$this->assertEquals('en-GB', $this->object->get('tag'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getCallerInfo() returns an array
+	 *
+	 * @covers   Joomla\Language\Language::getCallerInfo
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyGetCallerInfoReturnsAnArray()
+	{
+		$this->assertInternalType('array', TestHelper::invoke($this->object, 'getCallerInfo'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getName() returns the correct metadata
+	 *
+	 * @covers   Joomla\Language\Language::getName
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetNameReturnsTheCorrectMetadata()
+	{
+		$this->assertSame('English (United Kingdom)', $this->object->getName());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getPaths() default returns an array
+	 *
+	 * @covers   Joomla\Language\Language::getPaths
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetPathsDefaultReturnsAnArray()
+	{
+		$this->assertInternalType('array', $this->object->getPaths());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getErrorFiles() default returns an array
+	 *
+	 * @covers   Joomla\Language\Language::getErrorFiles
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetErrorFilesDefaultReturnsAnArray()
+	{
+		$this->assertInternalType('array', $this->object->getErrorFiles());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getTag() returns the correct metadata
+	 *
+	 * @covers   Joomla\Language\Language::getTag
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetTagReturnsTheCorrectMetadata()
+	{
+		$this->assertSame('en-GB', $this->object->getTag());
+	}
+
+	/**
+	 * @testdox  Verify that Language::isRTL() default returns false
+	 *
+	 * @covers   Joomla\Language\Language::isRTL
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatIsRTLDefaultReturnsFalse()
+	{
+		$this->assertFalse($this->object->isRTL());
+	}
+
+	/**
+	 * @testdox  Verify that Language::setDebug() returns the previous debug state
+	 *
+	 * @covers   Joomla\Language\Language::setDebug
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatSetDebugReturnsThePreviousDebugState()
+	{
+		$this->assertFalse($this->object->setDebug(true));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getDebug() default returns false
+	 *
+	 * @covers   Joomla\Language\Language::getDebug
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetDebugDefaultReturnsFalse()
+	{
+		$this->assertFalse($this->object->getDebug());
+	}
+
+	/**
+	 * @testdox  Verify that Language::setDefault() returns the previous default language
+	 *
+	 * @covers   Joomla\Language\Language::setDefault
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatSetDefaultReturnsThePreviousDefaultLanguage()
+	{
+		$this->assertSame('en-GB', $this->object->setDefault('de-DE'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getDefault() default returns 'en-GB'
+	 *
+	 * @covers   Joomla\Language\Language::getDefault
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyTheDefaultReturnForGetDefault()
+	{
+		$this->assertSame('en-GB', $this->object->getDefault());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getOrphans() default returns an array
+	 *
+	 * @covers   Joomla\Language\Language::getOrphans
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetOrphansDefaultReturnsAnArray()
+	{
+		$this->assertInternalType('array', $this->object->getOrphans());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getUsed() default returns an array
+	 *
+	 * @covers   Joomla\Language\Language::getUsed
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetUsedDefaultReturnsAnArray()
+	{
+		$this->assertInternalType('array', $this->object->getUsed());
+	}
+
+	/**
+	 * @testdox  Verify that Language::hasKey() returns false for a non-existing language key
+	 *
+	 * @covers   Joomla\Language\Language::hasKey
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatHasKeyReturnsFalseForANonExistingLanguageKey()
+	{
+		$this->assertFalse($this->object->hasKey('com_admin.key'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getMetadata() proxies to LanguageHelper::getMetadata()
+	 *
+	 * @covers   Joomla\Language\Language::getMetadata
+	 * @covers   Joomla\Language\LanguageHelper::getMetadata
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @deprecated
+	 */
+	public function testVerifyGetMetadataProxiesToLanguageHelper()
+	{
+		$this->assertInternalType('array', $this->object->getMetadata('en-GB', $this->testPath));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getKnownLanguages() proxies to LanguageHelper::getKnownLanguages()
+	 *
+	 * @covers   Joomla\Language\Language::getKnownLanguages
+	 * @covers   Joomla\Language\LanguageHelper::getKnownLanguages
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @deprecated
+	 */
+	public function testVerifyGetKnownLanguagesProxiesToLanguageHelper()
+	{
+		$this->assertArrayHasKey('en-GB', $this->object->getKnownLanguages($this->testPath));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getLanguagePath() proxies to LanguageHelper::getLanguagePath()
+	 *
+	 * @covers   Joomla\Language\Language::getLanguagePath
+	 * @covers   Joomla\Language\LanguageHelper::getLanguagePath
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @deprecated
+	 */
+	public function testVerifyGetLanguagePathProxiesToLanguageHelper()
+	{
+		$this->assertSame($this->testPath . '/language', $this->object->getLanguagePath($this->testPath));
+	}
+
+	/**
+	 * @testdox  Verify that Language::setLanguage() returns the previous default language
+	 *
+	 * @covers   Joomla\Language\Language::setLanguage
+	 * @uses     Joomla\Language\LanguageHelper::getMetadata
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatSetLanguageReturnsThePreviousLanguage()
+	{
+		$this->assertSame('en-GB', $this->object->setLanguage('de-DE'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getLanguage() default returns 'en-GB'
+	 *
+	 * @covers   Joomla\Language\Language::getLanguage
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyTheDefaultReturnForGetLanguage()
+	{
+		$this->assertSame('en-GB', $this->object->getLanguage());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getLocale() default returns an array
+	 *
+	 * @covers   Joomla\Language\Language::getLocale
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyTheDefaultReturnForGetLocale()
+	{
+		$this->assertInternalType('array', $this->object->getLocale());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getFirstDay() default returns an array
+	 *
+	 * @covers   Joomla\Language\Language::getFirstDay
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyTheDefaultReturnForGetFirstDay()
+	{
+		$this->assertSame(0, $this->object->getFirstDay());
+	}
+
+	/**
+	 * @testdox  Verify that Language::parseLanguageFiles() proxies to LanguageHelper::parseLanguageFiles()
+	 *
+	 * @covers   Joomla\Language\Language::parseLanguageFiles
+	 * @covers   Joomla\Language\LanguageHelper::parseLanguageFiles
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @deprecated
+	 */
+	public function testVerifyParseLanguageFilesProxiesToLanguageHelper()
+	{
+		$this->assertInternalType('array', $this->object->parseLanguageFiles($this->testPath));
+	}
+
+	/**
+	 * @testdox  Verify that Language::parseXMLLanguageFile() proxies to LanguageHelper::parseXMLLanguageFile()
+	 *
+	 * @covers   Joomla\Language\Language::parseXMLLanguageFile
+	 * @covers   Joomla\Language\LanguageHelper::parseXMLLanguageFile
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @deprecated
+	 */
+	public function testVerifyParseXMLLanguageFileProxiesToLanguageHelper()
+	{
+		$this->assertInternalType('array', $this->object->parseXMLLanguageFile($this->testPath . '/language/en-GB/en-GB.xml'));
 	}
 
 	/**
 	 * Tests the _ method
 	 *
 	 * @covers  Joomla\Language\Language::_
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
 	 */
 	public function test_()
 	{
@@ -205,10 +723,8 @@ class LanguageTest extends PHPUnit_Framework_TestCase
 	 * Tests the _ method with strings loaded and debug enabled
 	 *
 	 * @covers  Joomla\Language\Language::_
-	 *
-	 * @return  void
-	 *
-	 * @since   1.1.2
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
 	 */
 	public function test_WithLoadedStringsAndDebug()
 	{
@@ -253,1441 +769,5 @@ class LanguageTest extends PHPUnit_Framework_TestCase
 			'DELET\\ED',
 			TestHelper::getValue($this->object, 'orphans')
 		);
-	}
-
-	/**
-	 * Tests the transliterate function
-	 *
-	 * @covers  Joomla\Language\Language::transliterate
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testTransliterate()
-	{
-		$string1 = 'Así';
-		$string2 = 'EÑE';
-
-		// Don't use loaded transliterator for this test.
-		TestHelper::setValue($this->object, 'transliterator', null);
-
-		$this->assertEquals(
-			'asi',
-			$this->object->transliterate($string1),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			'Asi',
-			$this->object->transliterate($string1),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			'Así',
-			$this->object->transliterate($string1),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertEquals(
-			'ene',
-			$this->object->transliterate($string2),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			'ENE',
-			$this->object->transliterate($string2),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			'EÑE',
-			$this->object->transliterate($string2),
-			'Line: ' . __LINE__
-		);
-
-		TestHelper::setValue(
-			$this->object,
-			'transliterator',
-			function ($string)
-			{
-				return str_replace(
-					array('a', 'c', 'e', 'g'),
-					array('b', 'd', 'f', 'h'),
-					$string
-				);
-			}
-		);
-
-		$this->assertEquals(
-			'bbddffhh',
-			$this->object->transliterate('abcdefgh'),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Tests the getTransliterator function
-	 *
-	 * @covers  Joomla\Language\Language::getTransliterator
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetTransliterator()
-	{
-		$lang = new Language('');
-
-		$this->assertEquals(
-			array('en_GBLocalise', 'transliterate'),
-			$lang->getTransliterator()
-		);
-	}
-
-	/**
-	 * Tests the setTransliterator function
-	 *
-	 * @covers  Joomla\Language\Language::setTransliterator
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testSetTransliterator()
-	{
-		$function1 = 'phpinfo';
-		$function2 = 'print';
-		$lang = new Language('');
-
-		// Set sets new function and return old.
-		$this->assertEquals(
-			array('en_GBLocalise', 'transliterate'),
-			$lang->setTransliterator($function1)
-		);
-
-		$get = $lang->getTransliterator();
-		$this->assertEquals(
-			$function1,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		// Note: set -> $function2: set returns $function1 and get retuns $function2
-		$set = $lang->setTransliterator($function2);
-		$this->assertEquals(
-			$function1,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertEquals(
-			$function2,
-			$lang->getTransliterator(),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function1,
-			$lang->getTransliterator(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Tests the getPluralSuffixes method
-	 *
-	 * @covers  Joomla\Language\Language::getPluralSuffixes
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetPluralSuffixes()
-	{
-		$this->assertEquals(
-			array('0'),
-			$this->object->getPluralSuffixes(0),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertEquals(
-			array('1'),
-			$this->object->getPluralSuffixes(1),
-			'Line: ' . __LINE__
-		);
-
-		TestHelper::setValue($this->object, 'pluralSuffixesCallback', null);
-		$this->assertEquals(
-			array(100),
-			$this->object->getPluralSuffixes(100),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getPluralSuffixesCallback
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetPluralSuffixesCallback()
-	{
-		$lang = new Language('');
-
-		$this->assertTrue(
-			is_callable($lang->getPluralSuffixesCallback())
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::setPluralSuffixesCallback
-	 * @covers  Joomla\Language\Language::getPluralSuffixesCallback
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testSetPluralSuffixesCallback()
-	{
-		$function1 = 'phpinfo';
-		$function2 = 'print';
-		$lang = new Language('');
-
-		$this->assertTrue(
-			is_callable($lang->getPluralSuffixesCallback())
-		);
-
-		$this->assertTrue(
-			is_callable($lang->setPluralSuffixesCallback($function1))
-		);
-
-		$get = $lang->getPluralSuffixesCallback();
-		$this->assertEquals(
-			$function1,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		// Note: set -> $function2: set returns $function1 and get retuns $function2
-		$set = $lang->setPluralSuffixesCallback($function2);
-		$this->assertEquals(
-			$function1,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertEquals(
-			$function2,
-			$lang->getPluralSuffixesCallback(),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function1,
-			$lang->getPluralSuffixesCallback(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getIgnoredSearchWords
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetIgnoredSearchWords()
-	{
-		$lang = new Language('');
-
-		$this->assertEquals(
-			array('and', 'in', 'on'),
-			$lang->getIgnoredSearchWords(),
-			'Line: ' . __LINE__
-		);
-
-		TestHelper::setValue($lang, 'ignoredSearchWordsCallback', null);
-		$this->assertEmpty(
-			$lang->getIgnoredSearchWords(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getIgnoredSearchWordsCallback
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetIgnoredSearchWordsCallback()
-	{
-		$lang = new Language('');
-
-		$this->assertTrue(
-			is_callable($lang->getIgnoredSearchWordsCallback())
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::setIgnoredSearchWordsCallback
-	 * @covers  Joomla\Language\Language::getIgnoredSearchWordsCallback
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testSetIgnoredSearchWordsCallback()
-	{
-		$function1 = 'phpinfo';
-		$function2 = 'print';
-		$lang = new Language('');
-
-		$this->assertTrue(
-			is_callable($lang->getIgnoredSearchWordsCallback())
-		);
-
-		// Note: set -> $funtion1: set returns NULL and get returns $function1
-		$this->assertTrue(
-			is_callable($lang->setIgnoredSearchWordsCallback($function1))
-		);
-
-		$get = $lang->getIgnoredSearchWordsCallback();
-		$this->assertEquals(
-			$function1,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		// Note: set -> $function2: set returns $function1 and get retuns $function2
-		$set = $lang->setIgnoredSearchWordsCallback($function2);
-		$this->assertEquals(
-			$function1,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertEquals(
-			$function2,
-			$lang->getIgnoredSearchWordsCallback(),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function1,
-			$lang->getIgnoredSearchWordsCallback(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getLowerLimitSearchWord
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetLowerLimitSearchWord()
-	{
-		$lang = new Language('');
-
-		$this->assertEquals(
-			3,
-			$lang->getLowerLimitSearchWord(),
-			'Line: ' . __LINE__
-		);
-
-		TestHelper::setValue($lang, 'lowerLimitSearchWordCallback', null);
-		$this->assertEquals(
-			3,
-			$lang->getLowerLimitSearchWord(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getLowerLimitSearchWordCallback
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetLowerLimitSearchWordCallback()
-	{
-		$lang = new Language('');
-
-		$this->assertTrue(
-			is_callable($lang->getLowerLimitSearchWordCallback())
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::setLowerLimitSearchWordCallback
-	 * @covers  Joomla\Language\Language::getLowerLimitSearchWordCallback
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testSetLowerLimitSearchWordCallback()
-	{
-		$function1 = 'phpinfo';
-		$function2 = 'print';
-		$lang = new Language('');
-
-		$this->assertTrue(
-			is_callable($lang->getLowerLimitSearchWordCallback())
-		);
-
-		// Note: set -> $funtion1: set returns NULL and get returns $function1
-		$this->assertTrue(
-			is_callable($lang->setLowerLimitSearchWordCallback($function1))
-		);
-
-		$get = $lang->getLowerLimitSearchWordCallback();
-		$this->assertEquals(
-			$function1,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		// Note: set -> $function2: set returns $function1 and get retuns $function2
-		$set = $lang->setLowerLimitSearchWordCallback($function2);
-		$this->assertEquals(
-			$function1,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertEquals(
-			$function2,
-			$lang->getLowerLimitSearchWordCallback(),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function1,
-			$lang->getLowerLimitSearchWordCallback(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getUpperLimitSearchWord
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetUpperLimitSearchWord()
-	{
-		$lang = new Language('');
-
-		$this->assertEquals(
-			20,
-			$lang->getUpperLimitSearchWord(),
-			'Line: ' . __LINE__
-		);
-
-		TestHelper::setValue($lang, 'upperLimitSearchWordCallback', null);
-		$this->assertEquals(
-			20,
-			$lang->getUpperLimitSearchWord(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getUpperLimitSearchWordCallback
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetUpperLimitSearchWordCallback()
-	{
-		$lang = new Language('');
-
-		$this->assertTrue(
-			is_callable($lang->getUpperLimitSearchWordCallback())
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::setUpperLimitSearchWordCallback
-	 * @covers  Joomla\Language\Language::getUpperLimitSearchWordCallback
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testSetUpperLimitSearchWordCallback()
-	{
-		$function1 = 'phpinfo';
-		$function2 = 'print';
-		$lang = new Language('');
-
-		$this->assertTrue(
-			is_callable($lang->getUpperLimitSearchWordCallback())
-		);
-
-		// Note: set -> $funtion1: set returns NULL and get returns $function1
-		$this->assertTrue(
-			is_callable($lang->setUpperLimitSearchWordCallback($function1))
-		);
-
-		$get = $lang->getUpperLimitSearchWordCallback();
-		$this->assertEquals(
-			$function1,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		// Note: set -> $function2: set returns $function1 and get retuns $function2
-		$set = $lang->setUpperLimitSearchWordCallback($function2);
-		$this->assertEquals(
-			$function1,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertEquals(
-			$function2,
-			$lang->getUpperLimitSearchWordCallback(),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function1,
-			$lang->getUpperLimitSearchWordCallback(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getSearchDisplayedCharactersNumber
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetSearchDisplayedCharactersNumber()
-	{
-		$lang = new Language('');
-
-		$this->assertEquals(
-			200,
-			$lang->getSearchDisplayedCharactersNumber(),
-			'Line: ' . __LINE__
-		);
-
-		TestHelper::setValue($lang, 'searchDisplayedCharactersNumberCallback', null);
-		$this->assertEquals(
-			200,
-			$lang->getSearchDisplayedCharactersNumber(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getSearchDisplayedCharactersNumberCallback
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetSearchDisplayedCharactersNumberCallback()
-	{
-		$lang = new Language('');
-
-		$this->assertTrue(
-			is_callable($lang->getSearchDisplayedCharactersNumberCallback())
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::setSearchDisplayedCharactersNumberCallback
-	 * @covers  Joomla\Language\Language::getSearchDisplayedCharactersNumberCallback
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testSetSearchDisplayedCharactersNumberCallback()
-	{
-		$function1 = 'phpinfo';
-		$function2 = 'print';
-		$lang = new Language('');
-
-		$this->assertTrue(
-			is_callable($lang->getSearchDisplayedCharactersNumberCallback())
-		);
-
-		// Note: set -> $funtion1: set returns NULL and get returns $function1
-		$this->assertTrue(
-			is_callable($lang->setSearchDisplayedCharactersNumberCallback($function1))
-		);
-
-		$get = $lang->getSearchDisplayedCharactersNumberCallback();
-		$this->assertEquals(
-			$function1,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$get,
-			'Line: ' . __LINE__
-		);
-
-		// Note: set -> $function2: set returns $function1 and get retuns $function2
-		$set = $lang->setSearchDisplayedCharactersNumberCallback($function2);
-		$this->assertEquals(
-			$function1,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function2,
-			$set,
-			'Line: ' . __LINE__
-		);
-
-		$this->assertEquals(
-			$function2,
-			$lang->getSearchDisplayedCharactersNumberCallback(),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertNotEquals(
-			$function1,
-			$lang->getSearchDisplayedCharactersNumberCallback(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::exists
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testExists()
-	{
-		$this->assertFalse(
-			$this->object->exists(null)
-		);
-
-		$basePath = __DIR__ . '/data';
-
-		$this->assertTrue(
-			$this->object->exists('en-GB', $basePath)
-		);
-
-		$this->assertFalse(
-			$this->object->exists('es-ES', $basePath)
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::load
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testLoad()
-	{
-		TestHelper::setValue($this->object, 'paths', array());
-
-		$this->assertTrue($this->object->load());
-
-		$filename = JPATH_ROOT . '/language/en-GB/en-GB.ini';
-		$paths = TestHelper::getValue($this->object, 'paths');
-		$this->assertArrayHasKey('joomla', $paths);
-		$this->assertArrayHasKey(
-			$filename,
-			$paths['joomla']
-		);
-		$this->assertTrue($paths['joomla'][$filename]);
-
-		// Loading non-existent language should load default language.
-		TestHelper::setValue($this->object, 'paths', array());
-
-		$this->assertTrue($this->object->load('joomla', JPATH_ROOT, 'es-ES'));
-
-		$paths = TestHelper::getValue($this->object, 'paths');
-		$this->assertArrayHasKey('joomla', $paths);
-		$this->assertArrayHasKey(
-			$filename,
-			$paths['joomla']
-		);
-		$this->assertTrue($paths['joomla'][$filename]);
-
-		// Don't reload if language file is already laoded.
-		$this->assertTrue($this->object->load());
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::loadLanguage
-	 *
-	 * @return  void
-	 *
-	 * @since   1.1.2
-	 */
-	public function testLoadLanguage()
-	{
-		$ob = $this->object;
-
-		TestHelper::setValue($ob, 'counter', 1);
-		TestHelper::setValue($ob, 'strings', array('bar' => 'foo'));
-		TestHelper::setValue($ob, 'override', array('FOO' => 'OOF'));
-
-		$filename = __DIR__ . '/data/good.ini';
-		$result = TestHelper::invoke($ob, 'loadLanguage', $filename);
-
-		$this->assertTrue($result);
-		$this->assertEquals(
-			2,
-			TestHelper::getValue($ob, 'counter')
-		);
-
-		$strings = TestHelper::getValue($ob, 'strings');
-		$this->assertArrayHasKey('bar', $strings);
-		$this->assertEquals('foo', $strings['bar']);
-		$this->assertEquals('OOF', $strings['FOO']);
-
-		$paths = TestHelper::getValue($ob, 'paths');
-		$this->assertArrayHasKey($filename, $paths['unknown']);
-		$this->assertTrue($paths['unknown'][$filename]);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::parse
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testParse()
-	{
-		$strings = TestHelper::invoke($this->object, 'parse', __DIR__ . '/data/good.ini');
-
-		$this->assertNotEmpty(
-			$strings,
-			'Line: ' . __LINE__ . ' good ini file should load properly.'
-		);
-
-		$this->assertEquals(
-			$strings,
-			array('FOO' => 'Bar'),
-			'Line: ' . __LINE__ . ' test that the strings were parsed correctly.'
-		);
-
-		$strings = TestHelper::invoke($this->object, 'parse', __DIR__ . '/data/bad.ini');
-
-		$this->assertEmpty(
-			$strings,
-			'Line: ' . __LINE__ . ' bad ini file should not load properly.'
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::get
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGet()
-	{
-		$this->assertNull(
-			$this->object->get('noExist')
-		);
-
-		$this->assertEquals(
-			'abc',
-			$this->object->get('noExist', 'abc')
-		);
-
-		// Note: property = tag, returns en-GB (default language)
-		$this->assertEquals(
-			'en-GB',
-			$this->object->get('tag')
-		);
-
-		// Note: property = name, returns English (United Kingdom) (default language)
-		$this->assertEquals(
-			'English (United Kingdom)',
-			$this->object->get('name')
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getCallerInfo
-	 *
-	 * @return  void
-	 *
-	 * @since   1.1.2
-	 */
-	public function testGetCallerInfo()
-	{
-		$info = TestHelper::invoke($this->object, 'getCallerInfo');
-
-		$this->assertArrayHasKey('function', $info);
-		$this->assertArrayHasKey('class', $info);
-		$this->assertArrayHasKey('step', $info);
-		$this->assertArrayHasKey('file', $info);
-		$this->assertArrayHasKey('line', $info);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getName
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetName()
-	{
-		$this->assertEquals(
-			'English (United Kingdom)',
-			$this->object->getName()
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getPaths
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetPaths()
-	{
-		// Non-existent extension, retuns NULL
-		$this->assertNull(
-			$this->object->getPaths('')
-		);
-
-		$paths = array('f' => 'foo', 'bar');
-		TestHelper::setValue($this->object, 'paths', $paths);
-
-		$this->assertEquals(
-			$paths,
-			$this->object->getPaths()
-		);
-
-		$this->assertEquals(
-			'foo',
-			$this->object->getPaths('f')
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getErrorFiles
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetErrorFiles()
-	{
-		TestHelper::setValue($this->object, 'errorfiles', array('foo', 'bar'));
-		$this->assertEquals(
-			array('foo', 'bar'),
-			$this->object->getErrorFiles()
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getTag
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetTag()
-	{
-		$this->assertEquals(
-			'en-GB',
-			$this->object->getTag()
-		);
-
-		TestHelper::setValue($this->object, 'metadata', array('tag' => 'foobar'));
-		$this->assertEquals(
-			'foobar',
-			$this->object->getTag()
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::isRTL
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testIsRTL()
-	{
-		$this->assertFalse(
-			$this->object->isRTL()
-		);
-
-		TestHelper::setValue($this->object, 'metadata', array('rtl' => true));
-		$this->assertTrue(
-			$this->object->isRTL()
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::setDebug
-	 * @covers  Joomla\Language\Language::getDebug
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetSetDebug()
-	{
-		$current = $this->object->getDebug();
-		$this->assertEquals(
-			$current,
-			$this->object->setDebug(true),
-			'Line: ' . __LINE__
-		);
-
-		$this->object->setDebug(false);
-		$this->assertFalse(
-			$this->object->getDebug(),
-			'Line: ' . __LINE__
-		);
-
-		$this->object->setDebug(true);
-		$this->assertTrue(
-			$this->object->getDebug(),
-			'Line: ' . __LINE__
-		);
-
-		$this->object->setDebug(0);
-		$this->assertFalse(
-			$this->object->getDebug(),
-			'Line: ' . __LINE__
-		);
-
-		$this->object->setDebug(1);
-		$this->assertTrue(
-			$this->object->getDebug(),
-			'Line: ' . __LINE__
-		);
-
-		$this->object->setDebug('');
-		$this->assertFalse(
-			$this->object->getDebug(),
-			'Line: ' . __LINE__
-		);
-
-		$this->object->setDebug('test');
-		$this->assertTrue(
-			$this->object->getDebug(),
-			'Line: ' . __LINE__
-		);
-
-		$this->object->setDebug('0');
-		$this->assertFalse(
-			$this->object->getDebug(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getDefault
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetDefault()
-	{
-		$this->assertEquals(
-			'en-GB',
-			$this->object->getDefault(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::setDefault
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testSetDefault()
-	{
-		$this->object->setDefault('de-DE');
-		$this->assertEquals(
-			'de-DE',
-			$this->object->getDefault(),
-			'Line: ' . __LINE__
-		);
-		$this->object->setDefault('en-GB');
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getOrphans
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetOrphans()
-	{
-		$this->assertEmpty(
-			$this->object->getOrphans(),
-			'Line: ' . __LINE__
-		);
-
-		TestHelper::setValue(
-			$this->object,
-			'orphans',
-			array('COM_ADMIN.KEY' => array('caller info'))
-		);
-		$this->assertEquals(
-			array('COM_ADMIN.KEY' => array('caller info')),
-			$this->object->getOrphans(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getUsed
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetUsed()
-	{
-		$this->assertEmpty(
-			$this->object->getUsed(),
-			'Line: ' . __LINE__
-		);
-
-		TestHelper::setValue(
-			$this->object,
-			'used',
-			array('COM_ADMIN.KEY' => array('caller info'))
-		);
-		$this->assertEquals(
-			array('COM_ADMIN.KEY' => array('caller info')),
-			$this->object->getUsed(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::hasKey
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testHasKey()
-	{
-		// Key doesn't exist, returns false
-		$this->assertFalse(
-			$this->object->hasKey('com_admin.key')
-		);
-
-		TestHelper::setValue($this->object, 'strings', array('COM_ADMIN.KEY' => 'A key'));
-		$this->assertTrue(
-			$this->object->hasKey('com_admin.key')
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getMetadata
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetMetadata()
-	{
-		// Language doesn't exist, retun NULL
-		$this->assertNull(
-		     TestHelper::invoke($this->object, 'getMetadata', 'es-ES')
-		);
-
-		$localeString = 'en_GB.utf8, en_GB.UTF-8, en_GB, eng_GB, en, english, english-uk, uk, gbr, britain, england, great britain, ' .
-			'uk, united kingdom, united-kingdom';
-
-		// In this case, returns array with default language
-		// - same operation of get method with metadata property
-		$options = array(
-			'name' => 'English (United Kingdom)',
-			'tag' => 'en-GB',
-			'rtl' => '0',
-			'locale' => $localeString,
-			'firstDay' => '0'
-		);
-
-		// Language exists, returns array with values
-		$this->assertEquals(
-			$options,
-			TestHelper::invoke($this->object, 'getMetadata', 'en-GB')
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getKnownLanguages
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetKnownLanguages()
-	{
-		// This method returns a list of known languages
-		$basePath = __DIR__ . '/data';
-
-		$localeString = 'en_GB.utf8, en_GB.UTF-8, en_GB, eng_GB, en, english, english-uk, uk, gbr, britain, england, great britain,' .
-			' uk, united kingdom, united-kingdom';
-
-		$option1 = array(
-			'name' => 'English (United Kingdom)',
-			'tag' => 'en-GB',
-			'rtl' => '0',
-			'locale' => $localeString,
-			'firstDay' => '0'
-		);
-		$listCompareEqual1 = array(
-			'en-GB' => $option1,
-		);
-
-		$list = Language::getKnownLanguages($basePath);
-		$this->assertEquals(
-			$listCompareEqual1,
-			$list,
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getLanguagePath
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetLanguagePath()
-	{
-		$basePath = 'test';
-
-		// $language = null, returns language directory
-		$this->assertEquals(
-			'test/language',
-			Language::getLanguagePath($basePath, null),
-			'Line: ' . __LINE__
-		);
-
-		// $language = value (en-GB, for example), returns en-GB language directory
-		$this->assertEquals(
-			'test/language/en-GB',
-			Language::getLanguagePath($basePath, 'en-GB'),
-			'Line: ' . __LINE__
-		);
-
-		// With no argument JPATH_ROOT should be returned
-		$this->assertEquals(
-			JPATH_ROOT . '/language',
-			Language::getLanguagePath(),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::setLanguage
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testSetLanguage()
-	{
-		$this->assertEquals(
-			'en-GB',
-			$this->object->setLanguage('es-ES'),
-			'Line: ' . __LINE__
-		);
-
-		$this->assertEquals(
-			'es-ES',
-			$this->object->setLanguage('en-GB'),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getLocale
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetLocale()
-	{
-		TestHelper::setValue($this->object, 'metadata', array('locale' => null));
-		$this->assertFalse($this->object->getLocale());
-
-		TestHelper::setValue($this->object, 'locale', null);
-		TestHelper::setValue($this->object, 'metadata', array('locale' => 'en_GB, en, english'));
-		$this->assertEquals(
-			array('en_GB', 'en', 'english'),
-			$this->object->getLocale()
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::getFirstDay
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testGetFirstDay()
-	{
-		TestHelper::setValue($this->object, 'metadata', array('firstDay' => null));
-		$this->assertEquals(0, $this->object->getFirstDay());
-
-		TestHelper::setValue($this->object, 'metadata', array('firstDay' => 1));
-		$this->assertEquals(1, $this->object->getFirstDay());
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::parseLanguageFiles
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testParseLanguageFiles()
-	{
-		$dir = __DIR__ . '/data/language';
-		$option = array(
-			'name' => 'English (United Kingdom)',
-			'tag' => 'en-GB',
-			'rtl' => '0',
-			'locale' => 'en_GB.utf8, en_GB.UTF-8, en_GB, eng_GB, en, english, english-uk, uk, gbr, britain, england,' .
-				' great britain, uk, united kingdom, united-kingdom',
-			'firstDay' => '0'
-		);
-		$expected = array(
-			'en-GB' => $option
-		);
-
-		$result = Joomla\Language\Language::parseLanguageFiles($dir);
-
-		$this->assertEquals(
-			$expected,
-			$result,
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::parseXMLLanguageFile
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testParseXMLLanguageFile()
-	{
-		$option = array(
-			'name' => 'English (United Kingdom)',
-			'tag' => 'en-GB',
-			'rtl' => '0',
-			'locale' => 'en_GB.utf8, en_GB.UTF-8, en_GB, eng_GB, en, english, english-uk, uk, gbr, britain, england, great britain,' .
-				' uk, united kingdom, united-kingdom',
-			'firstDay' => '0'
-		);
-		$path = __DIR__ . '/data/language/en-GB/en-GB.xml';
-
-		$this->assertEquals(
-			$option,
-			Language::parseXMLLanguageFile($path),
-			'Line: ' . __LINE__
-		);
-
-		$path2 = __DIR__ . '/data/language/es-ES/es-ES.xml';
-		$this->assertEquals(
-			$option,
-			Language::parseXMLLanguageFile($path),
-			'Line: ' . __LINE__
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @covers  Joomla\Language\Language::parseXMLLanguageFile
-	 * @expectedException  RuntimeException
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testParseXMLLanguageFileException()
-	{
-		$path = __DIR__ . '/data/language/es-ES/es-ES.xml';
-
-		Language::parseXMLLanguageFile($path);
 	}
 }

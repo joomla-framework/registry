@@ -13,7 +13,10 @@ use Joomla\String\String;
 /**
  * Allows for quoting in language .ini files.
  */
+// @codeCoverageIgnoreStart
 define('_QQ_', '"');
+
+// @codeCoverageIgnoreEnd
 
 /**
  * Languages/translation handler class
@@ -1242,7 +1245,7 @@ class Language
 	{
 		$previous = $this->lang;
 		$this->lang = $lang;
-		$this->metadata = $this->getMetadata($this->lang);
+		$this->metadata = $this->helper->getMetadata($this->lang, $this->basePath);
 
 		return $previous;
 	}

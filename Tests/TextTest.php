@@ -17,9 +17,18 @@ use Joomla\Test\TestHelper;
 class TextTest extends \PHPUnit_Framework_TestCase
 {
 	/**
+	 * Test Text object
+	 *
 	 * @var  Text
 	 */
 	protected $object;
+
+	/**
+	 * Path to language folder used for testing
+	 *
+	 * @var  string
+	 */
+	private $testPath;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -29,29 +38,11 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$path = JPATH_ROOT . '/language';
+		$this->testPath = __DIR__ . '/data';
 
-		if (is_dir($path))
-		{
-			Folder::delete($path);
-		}
-
-		Folder::copy(__DIR__ . '/data/language', $path);
-
-		$language = new Language('en-GB');
+		$language = new Language($this->testPath, 'en-GB');
 		$language->load();
 		$this->object = new Text($language);
-	}
-
-	/**
-	 * Tears down the fixture, for example, closes a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown()
-	{
-		Folder::delete(JPATH_ROOT . '/language');
-
-		parent::tearDown();
 	}
 
 	/**
@@ -61,7 +52,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testVerifyThatTextIsInstantiatedCorrectly()
 	{
-		$this->assertInstanceOf('Joomla\\Language\\Text', new Text(new Language()));
+		$this->assertInstanceOf('Joomla\\Language\\Text', new Text(new Language($this->testPath)));
 	}
 
 	/**
@@ -81,7 +72,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testVerifyThatSetLanguageReturnsSelf()
 	{
-		$this->assertSame($this->object, $this->object->setLanguage(new Language('de-DE')));
+		$this->assertSame($this->object, $this->object->setLanguage(new Language($this->testPath, 'de-DE')));
 	}
 
 	/**
