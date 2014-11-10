@@ -289,12 +289,12 @@ $registry->loadString('<data><value name="foo" type="string">bar</value></data>,
 
 ## Installation via Composer
 
-Add `"joomla/registry": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/registry": "2.0.*@dev"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/registry": "~1.0"
+		"joomla/registry": "2.0.*@dev"
 	}
 }
 ```
@@ -302,5 +302,5 @@ Add `"joomla/registry": "~1.0"` to the require block in your composer.json and t
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/registry "~1.0"
+composer require joomla/registry "2.0.*@dev"
 ```
