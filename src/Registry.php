@@ -9,6 +9,8 @@
 namespace Joomla\Registry;
 
 use Joomla\Utilities\ArrayHelper;
+use Joomla\Utilities\AbstractLoaderFormat;
+use Joomla\Utilities\Loader;
 
 /**
  * Registry class
@@ -309,14 +311,44 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * Load the public variables of the object into the default namespace.
 	 *
 	 * @param   object  $object  The object holding the publics to load
+	 * @param   string  $path    Registry Path (e.g. joomla.content.showauthor)
 	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
 	 * @since   1.0
 	 */
-	public function loadObject($object)
+	public function loadObject($object, $path = '', $separator = null)
 	{
-		$this->bindData($this->data, $object);
+		if (empty($path))
+		{
+			$this->bindData($this->data, $object);
+		}
+		else
+		{
+			if (!empty($separator))
+			{
+				$oldSeparator = $this->separator;
+				$this->separator = $separator;
+			}
+
+			$target = $this->get($path, new \stdClass);
+			if (is_array($target))
+			{
+				$target = (object) $target;
+			}
+			elseif (!is_object($target))
+			{
+				//If target is not an array or object then rewrite the value
+				$target = new \stdClass();
+			}
+			$this->bindData($target, $object);
+			$this->set($path, $target);
+
+			if (!empty($separator))
+			{
+				$this->separator = $oldSeparator;
+			}
+		}
 
 		return $this;
 	}
@@ -325,6 +357,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * Load the contents of a file into the registry
 	 *
 	 * @param   string  $file     Path to file to load
+	 * @param   string  $path     Registry Path (e.g. joomla.content.showauthor)
 	 * @param   string  $format   Format of the file [optional: defaults to JSON]
 	 * @param   array   $options  Options used by the formatter
 	 *
@@ -332,17 +365,26 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   1.0
 	 */
-	public function loadFile($file, $format = 'JSON', $options = array())
+	public function loadFile($file, $path = '', $format = 'JSON', $options = array())
 	{
 		$data = file_get_contents($file);
 
-		return $this->loadString($data, $format, $options);
+		return $this->loadString($data, $path, $format, $options);
+	}
+
+	public function fromLoader(Loader $loader, $format = null, $options = array())
+	{
+		foreach ($loader->getAllObjects(null, $format, $options) as $file)
+		{
+			$this->loadObject($file[1], $file[0], DIRECTORY_SEPARATOR);
+		}
 	}
 
 	/**
 	 * Load a string into the registry
 	 *
 	 * @param   string  $data     String to load into the registry
+	 * @param   string  $path     Registry Path (e.g. joomla.content.showauthor)
 	 * @param   string  $format   Format of the string
 	 * @param   array   $options  Options used by the formatter
 	 *
@@ -350,13 +392,14 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   1.0
 	 */
-	public function loadString($data, $format = 'JSON', $options = array())
+	public function loadString($data, $path = '', $format = 'JSON', $options = array())
 	{
 		// Load a string into the given namespace [or default namespace if not given]
-		$handler = AbstractRegistryFormat::getInstance($format);
+		$handler = AbstractLoaderFormat::getInstance($format);
 
 		$obj = $handler->stringToObject($data, $options);
-		$this->loadObject($obj);
+
+		$this->loadObject($obj, $path);
 
 		return $this;
 	}
@@ -371,8 +414,13 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   1.0
 	 */
-	public function merge(Registry $source, $recursive = false)
+	public function merge($source, $recursive = false)
 	{
+		if (!$source instanceof Registry)
+		{
+			return false;
+		}
+
 		$this->bindData($this->data, $source->toArray(), $recursive, false);
 
 		return $this;
@@ -629,7 +677,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	public function toString($format = 'JSON', $options = array())
 	{
 		// Return a namespace in a given format
-		$handler = AbstractRegistryFormat::getInstance($format);
+		$handler = AbstractLoaderFormat::getInstance($format);
 
 		return $handler->objectToString($this->data, $options);
 	}

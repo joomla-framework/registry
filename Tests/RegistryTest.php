@@ -405,7 +405,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		);
 
 		// INI.
-		$result = $registry->loadFile(__DIR__ . '/Stubs/jregistry.ini', 'ini');
+		$result = $registry->loadFile(__DIR__ . '/Stubs/jregistry.ini', '', 'ini');
 
 		// Test getting a known value.
 		$this->assertThat(
@@ -415,7 +415,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		);
 
 		// INI + section.
-		$result = $registry->loadFile(__DIR__ . '/Stubs/jregistry.ini', 'ini', array('processSections' => true));
+		$result = $registry->loadFile(__DIR__ . '/Stubs/jregistry.ini', '', 'ini', array('processSections' => true));
 
 		// Checking result is self that we can chaining
 		$this->assertEquals($result, $registry, '$result should be $registry self that support chaining');
@@ -441,7 +441,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	public function testLoadString()
 	{
 		$registry = new Registry;
-		$result = $registry->loadString('foo="testloadini1"', 'INI');
+		$result = $registry->loadString('foo="testloadini1"', '', 'INI');
 
 		// Test getting a known value.
 		$this->assertThat(
@@ -450,7 +450,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 			'Line: ' . __LINE__ . '.'
 		);
 
-		$result = $registry->loadString("[section]\nfoo=\"testloadini2\"", 'INI');
+		$result = $registry->loadString("[section]\nfoo=\"testloadini2\"", '', 'INI');
 
 		// Test getting a known value.
 		$this->assertThat(
@@ -459,11 +459,11 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 			'Line: ' . __LINE__ . '.'
 		);
 
-		$result = $registry->loadString("[section]\nfoo=\"testloadini3\"", 'INI', array('processSections' => true));
+		$result = $registry->loadString("[section]\nfoo=\"testloadini3\"", 'testpath', 'INI', array('processSections' => true));
 
 		// Test getting a known value after processing sections.
 		$this->assertThat(
-			$registry->get('section.foo'),
+			$registry->get('testpath.section.foo'),
 			$this->equalTo('testloadini3'),
 			'Line: ' . __LINE__ . '.'
 		);
