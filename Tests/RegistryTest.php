@@ -344,6 +344,43 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test the Joomla\Registry\Registry::loadArray method with flattened arrays
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::loadArray
+	 * @since   1.0
+	 */
+	public function testLoadFlattenedArray()
+	{
+		$array = array(
+			'foo.bar'  => 1,
+			'foo.test' => 2,
+			'bar'      => 3
+		);
+		$registry = new Registry;
+		$registry->loadArray($array, true);
+
+		$this->assertThat(
+			$registry->get('foo.bar'),
+			$this->equalTo(1),
+			'Line: ' . __LINE__ . '.'
+		);
+
+		$this->assertThat(
+			$registry->get('foo.test'),
+			$this->equalTo(2),
+			'Line: ' . __LINE__ . '.'
+		);
+
+		$this->assertThat(
+			$registry->get('bar'),
+			$this->equalTo(3),
+			'Line: ' . __LINE__ . '.'
+		);
+	}
+
+	/**
 	 * Test the Joomla\Registry\Registry::loadFile method.
 	 *
 	 * @return  void
@@ -368,7 +405,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		);
 
 		// INI.
-		$result = $registry->loadFile(__DIR__ . '/Stubs/jregistry.ini', 'ini');
+		$result = $registry->loadFile(__DIR__ . '/Stubs/jregistry.ini', '', 'ini');
 
 		// Test getting a known value.
 		$this->assertThat(
@@ -378,7 +415,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		);
 
 		// INI + section.
-		$result = $registry->loadFile(__DIR__ . '/Stubs/jregistry.ini', 'ini', array('processSections' => true));
+		$result = $registry->loadFile(__DIR__ . '/Stubs/jregistry.ini', '', 'ini', array('processSections' => true));
 
 		// Checking result is self that we can chaining
 		$this->assertEquals($result, $registry, '$result should be $registry self that support chaining');
@@ -404,7 +441,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	public function testLoadString()
 	{
 		$registry = new Registry;
-		$result = $registry->loadString('foo="testloadini1"', 'INI');
+		$result = $registry->loadString('foo="testloadini1"', '', 'INI');
 
 		// Test getting a known value.
 		$this->assertThat(
@@ -413,7 +450,7 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 			'Line: ' . __LINE__ . '.'
 		);
 
-		$result = $registry->loadString("[section]\nfoo=\"testloadini2\"", 'INI');
+		$result = $registry->loadString("[section]\nfoo=\"testloadini2\"", '', 'INI');
 
 		// Test getting a known value.
 		$this->assertThat(
@@ -422,11 +459,11 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 			'Line: ' . __LINE__ . '.'
 		);
 
-		$result = $registry->loadString("[section]\nfoo=\"testloadini3\"", 'INI', array('processSections' => true));
+		$result = $registry->loadString("[section]\nfoo=\"testloadini3\"", 'testpath', 'INI', array('processSections' => true));
 
 		// Test getting a known value after processing sections.
 		$this->assertThat(
-			$registry->get('section.foo'),
+			$registry->get('testpath.section.foo'),
 			$this->equalTo('testloadini3'),
 			'Line: ' . __LINE__ . '.'
 		);
@@ -726,12 +763,86 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	{
 		$a = new Registry;
 		$a->set('foo', 'testsetvalue1');
+		$a->set('bar/foo', 'testsetvalue3', '/');
 
 		$this->assertThat(
 			$a->set('foo', 'testsetvalue2'),
 			$this->equalTo('testsetvalue2'),
 			'Line: ' . __LINE__ . '.'
 		);
+
+		$this->assertThat(
+			$a->set('bar/foo', 'testsetvalue4'),
+			$this->equalTo('testsetvalue4'),
+			'Line: ' . __LINE__ . '.'
+		);
+	}
+
+	/**
+	 * Test the Joomla\Registry\Registry::append method.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Registry\Registry::append
+	 * @since   1.0
+	 */
+	public function testAppend()
+	{
+		$a = new Registry;
+		$a->set('foo', array('var1', 'var2', 'var3'));
+		$a->append('foo', 'var4');
+
+		$this->assertThat(
+			$a->get('foo.3'),
+			$this->equalTo('var4'),
+			'Line: ' . __LINE__ . '.'
+		);
+
+		$b = $a->get('foo');
+		$this->assertTrue(is_array($b));
+
+		$b[] = 'var5';
+		$this->assertNull($a->get('foo.4'));
+	}
+
+	/**
+	 * Test the registry set for unassociative arrays
+	 *
+	 * @return  void
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function testUnassocArrays()
+	{
+		$a = new Registry;
+		$a->loadArray(
+			array(
+				'assoc' => array(
+					'foo' => 'bar'
+				),
+				'unassoc' => array(
+					'baz', 'baz2', 'baz3'
+				),
+				'mixed' => array(
+					'var', 'var2', 'key' => 'var3'
+				)
+			)
+		);
+
+		$a->set('assoc.foo2', 'bar2');
+		$this->assertEquals('bar2', $a->get('assoc.foo2'));
+
+		$a->set('mixed.key2', 'var4');
+		$this->assertEquals('var4', $a->get('mixed.key2'));
+
+		$a->set('mixed.2', 'var5');
+		$this->assertEquals('var5', $a->get('mixed.2'));
+		$this->assertEquals('var2', $a->get('mixed.1'));
+
+		$a->set('unassoc.3', 'baz4');
+		$this->assertEquals('baz4', $a->get('unassoc.3'));
+
+		$this->assertTrue(is_array($a->get('unassoc')), 'Un-associative array should remain after write');
 	}
 
 	/**
@@ -843,5 +954,24 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		$flatted = $a->flatten('/');
 
 		$this->assertEquals($flatted['flower/sakura'], 'samurai');
+	}
+
+	/**
+	 * Test separator operations
+	 *
+	 * @return  void
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function testSeparator()
+	{
+		$a = new Registry;
+		$a->separator = '\\';
+		$a->set('Foo\\Bar', 'test1');
+		$a->separator = '/';
+		$a->set('Foo/Baz', 'test2');
+
+		$this->assertEquals($a->get('Foo/Bar'), 'test1');
+		$this->assertEquals($a->get('Foo/Baz'), 'test2');
 	}
 }

@@ -2,3 +2,7 @@ vendor/
 composer.phar
 composer.lock
 phpunit.xml
+
+.settings
+.project
+.buildpath
