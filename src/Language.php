@@ -213,7 +213,9 @@ class Language
 		$this->setLanguage($lang);
 		$this->setDebug($debug);
 
-		$filename = $this->basePath . "/language/overrides/$lang.override.ini";
+		$basePath = $this->helper->getLanguagePath($this->basePath);
+
+		$filename = $basePath . "/overrides/$lang.override.ini";
 
 		if (file_exists($filename) && $contents = $this->parse($filename))
 		{
