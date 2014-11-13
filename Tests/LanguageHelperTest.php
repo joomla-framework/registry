@@ -45,6 +45,7 @@ class LanguageHelperTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that LanguageHelper::exists() locates the language directory
 	 *
 	 * @covers   Joomla\Language\LanguageHelper::exists
+	 * @uses     Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyExistsLocatesTheLanguageDirectory()
 	{
@@ -66,6 +67,7 @@ class LanguageHelperTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that LanguageHelper::getMetadata() returns null if metadata does not exist
 	 *
 	 * @covers   Joomla\Language\LanguageHelper::getMetadata
+	 * @uses     Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyGetMetadataReturnsNullIfMetadataDoesNotExist()
 	{
@@ -119,6 +121,7 @@ class LanguageHelperTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Language::parseXMLLanguageFile() returns null if the top XML tag is not metafile
 	 *
 	 * @covers   Joomla\Language\LanguageHelper::parseXMLLanguageFile
+	 * @uses     Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyParseXMLLanguageFileReturnsNullIfTheTopXMLTagIsNotMetafile()
 	{
@@ -129,6 +132,7 @@ class LanguageHelperTest extends \PHPUnit_Framework_TestCase
 	 * @testdox  Verify that Language::parseXMLLanguageFile() throws an exception if the file is not found
 	 *
 	 * @covers             Joomla\Language\LanguageHelper::parseXMLLanguageFile
+	 * @uses               Joomla\Language\LanguageHelper
 	 * @expectedException  \RuntimeException
 	 */
 	public function testVerifyParseXMLLanguageFileThrowsAnExceptionIfTheFileIsNotFound()
