@@ -29,13 +29,7 @@ class LanguageHelper
 	 */
 	public function exists($lang, $basePath)
 	{
-		// Return false if no language or path was specified
-		if (!$lang || !$basePath)
-		{
-			return false;
-		}
-
-		return is_dir($basePath . '/language/' . $lang);
+		return is_dir($this->getLanguagePath($basePath, $lang));
 	}
 
 	/**
