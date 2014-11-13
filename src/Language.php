@@ -1165,8 +1165,8 @@ class Language
 	/**
 	 * Returns a associative array holding the metadata.
 	 *
-	 * @param   string  $lang  The name of the language.
-	 * @param   string  $path  The filepath to the language folder.
+	 * @param   string  $lang      The name of the language.
+	 * @param   string  $basePath  The filepath to the language folder.
 	 *
 	 * @return  mixed  If $lang exists return key/value pair with the language metadata, otherwise return NULL.
 	 *

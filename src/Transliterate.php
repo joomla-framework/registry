@@ -242,7 +242,6 @@ class Transliterate
 		'Œ' => 'Oe'
 	);
 
-
 	/**
 	 * Returns strings transliterated from UTF-8 to Latin
 	 *
