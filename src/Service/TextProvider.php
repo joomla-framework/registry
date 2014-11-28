@@ -35,7 +35,10 @@ class TextProvider implements ServiceProviderInterface
 			'Joomla\\Language\\Text',
 			function () use ($container)
 			{
-				return $container->buildObject('\\Joomla\\Language\\Text');
+				/** @var \Joomla\Language\Language $language */
+				$language = $container->get('Joomla\\Language\\Language');
+
+				return new Text($language);
 			}, true
 		);
 	}
