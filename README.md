@@ -137,13 +137,17 @@ You will now be able translate strings in your twig file using:
 
 The following changes have been made to the `Language` package since 1.x.
 
-### Text class methods non-static
+### Class methods non-static
 
-The `Text` class has been refactored to follow an object oriented approach instead of static methods.  Instantiating the class requires a `Language` instance to be injected.
+The `Language` and `Text` classes have been refactored to follow an object oriented approach instead of static methods.  Instantiating the `Text` class requires a `Language` instance to be injected.
 
-### Text::_ deprecated
+### Language requires base path to be defined
 
-The `_` method in `Text` has been deprecated in favor of `translate`.
+In 1.x, applications were required to define a `JPATH_ROOT` constant for the base path to search for languages in.  In 2.x, you are required to pass the base path as the first parameter in the `Language` constructor (and getInstance() method).
+
+### Language::_ and Text::_ deprecated
+
+The `_` method in `Language` and `Text` has been deprecated in favor of `translate`.
 
 ## Installation via Composer
 
