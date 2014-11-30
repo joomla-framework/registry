@@ -490,10 +490,8 @@ class Language
 		{
 			return call_user_func($this->pluralSuffixesCallback, $count);
 		}
-		else
-		{
-			return array((string) $count);
-		}
+
+		return array((string) $count);
 	}
 
 	/**
@@ -538,10 +536,8 @@ class Language
 		{
 			return call_user_func($this->ignoredSearchWordsCallback);
 		}
-		else
-		{
-			return array();
-		}
+
+		return array();
 	}
 
 	/**
@@ -586,10 +582,8 @@ class Language
 		{
 			return call_user_func($this->lowerLimitSearchWordCallback);
 		}
-		else
-		{
-			return 3;
-		}
+
+		return 3;
 	}
 
 	/**
@@ -634,10 +628,8 @@ class Language
 		{
 			return call_user_func($this->upperLimitSearchWordCallback);
 		}
-		else
-		{
-			return 20;
-		}
+
+		return 20;
 	}
 
 	/**
@@ -682,10 +674,8 @@ class Language
 		{
 			return call_user_func($this->searchDisplayedCharactersNumberCallback);
 		}
-		else
-		{
-			return 200;
-		}
+
+		return 200;
 	}
 
 	/**
@@ -765,29 +755,27 @@ class Language
 		if (isset($this->paths[$extension][$filename]) && !$reload)
 		{
 			// This file has already been tested for loading.
-			$result = $this->paths[$extension][$filename];
+			return $this->paths[$extension][$filename];
 		}
-		else
+
+		// Load the language file
+		$result = $this->loadLanguage($filename, $extension);
+
+		// Check whether there was a problem with loading the file
+		if ($result === false && $default)
 		{
-			// Load the language file
-			$result = $this->loadLanguage($filename, $extension);
+			// No strings, so either file doesn't exist or the file is invalid
+			$oldFilename = $filename;
 
-			// Check whether there was a problem with loading the file
-			if ($result === false && $default)
+			// Check the standard file name
+			$path = $this->helper->getLanguagePath($basePath, $this->default);
+			$filename = $internal ? $this->default : $this->default . '.' . $extension;
+			$filename = "$path/$filename.ini";
+
+			// If the one we tried is different than the new name, try again
+			if ($oldFilename != $filename)
 			{
-				// No strings, so either file doesn't exist or the file is invalid
-				$oldFilename = $filename;
-
-				// Check the standard file name
-				$path = $this->helper->getLanguagePath($basePath, $this->default);
-				$filename = $internal ? $this->default : $this->default . '.' . $extension;
-				$filename = "$path/$filename.ini";
-
-				// If the one we tried is different than the new name, try again
-				if ($oldFilename != $filename)
-				{
-					$result = $this->loadLanguage($filename, $extension);
-				}
+				$result = $this->loadLanguage($filename, $extension);
 			}
 		}
 
@@ -956,11 +944,13 @@ class Language
 	protected function getCallerInfo()
 	{
 		// Try to determine the source if none was provided
+		// @codeCoverageIgnoreStart
 		if (!function_exists('debug_backtrace'))
 		{
 			return null;
 		}
 
+		// @codeCoverageIgnoreEnd
 		$backtrace = debug_backtrace();
 		$info = array();
 
@@ -1022,10 +1012,8 @@ class Language
 
 			return null;
 		}
-		else
-		{
-			return $this->paths;
-		}
+
+		return $this->paths;
 	}
 
 	/**

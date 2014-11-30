@@ -40,7 +40,8 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 		parent::setUp();
 
 		$this->testPath = __DIR__ . '/data';
-		$this->object   = new Language($this->testPath);
+		$this->object   = new Language($this->testPath, 'en-GB');
+		$this->object->load();
 	}
 
 	/**
@@ -92,7 +93,81 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::transliterate() returns a string
+	 * @testdox  Verify that Language::translate() returns the correct string for a key
+	 *
+	 * @covers   Joomla\Language\Language::translate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testTranslateReturnsTheCorrectStringForAKey()
+	{
+		$this->assertSame('Bar', $this->object->translate('FOO'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::translate() returns the correct string for a key in debug mode
+	 *
+	 * @covers   Joomla\Language\Language::translate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testTranslateReturnsTheCorrectStringForAKeyInDebugMode()
+	{
+		$this->object->setDebug(true);
+		$this->assertSame('**Bar**', $this->object->translate('FOO'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::translate() identifies a key as unknown in debug mode
+	 *
+	 * @covers   Joomla\Language\Language::translate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testTranslateIdentifiesAKeyAsUnknownInDebugMode()
+	{
+		$this->object->setDebug(true);
+		$this->assertSame('??BAR??', $this->object->translate('BAR'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::translate() returns a JavaScript safe string
+	 *
+	 * @covers   Joomla\Language\Language::translate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testTranslateReturnsAJavascriptSafeKey()
+	{
+		$this->assertSame('foobar\\\'s', $this->object->translate('foobar\'s', true));
+	}
+
+	/**
+	 * @testdox  Verify that Language::translate() returns a string without backslashes interpreted
+	 *
+	 * @covers   Joomla\Language\Language::translate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testTranslateReturnsAStringWithoutBackslashesInterpreted()
+	{
+		$this->assertSame('foobar\\\'s', $this->object->translate('foobar\'s', true, false));
+	}
+
+	/**
+	 * @testdox  Verify that Language::transliterate() calls defined transliterator
+	 *
+	 * @covers   Joomla\Language\Language::transliterate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testTransliterateCallsDefinedTransliterator()
+	{
+		$this->assertSame('Así', $this->object->transliterate('Así'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::transliterate() uses default transliterator
 	 *
 	 * @covers   Joomla\Language\Language::transliterate
 	 * @uses     Joomla\Language\Language
@@ -100,9 +175,11 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 * @uses     Joomla\Language\Transliterate
 	 * @uses     Joomla\String\String
 	 */
-	public function testTransliterateReturnsAString()
+	public function testTransliterateUsesDefaultTransliterator()
 	{
-		$this->assertSame('Así', $this->object->transliterate('Así'));
+		$this->object->setTransliterator(null);
+
+		$this->assertSame('asi', $this->object->transliterate('Así'));
 	}
 
 	/**
@@ -130,6 +207,18 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @testdox  Verify that Language::getPluralSuffixes() calls the defined callback
+	 *
+	 * @covers   Joomla\Language\Language::getPluralSuffixes
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetPluralSuffixesCallsTheDefinedCallback()
+	{
+		$this->assertInternalType('array', $this->object->getPluralSuffixes(1));
+	}
+
+	/**
 	 * @testdox  Verify that Language::getPluralSuffixes() returns an array
 	 *
 	 * @covers   Joomla\Language\Language::getPluralSuffixes
@@ -138,7 +227,9 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetPluralSuffixesReturnsAnArray()
 	{
-		$this->assertInternalType('array', $this->object->getPluralSuffixes(1));
+		$this->object->setPluralSuffixesCallback(null);
+
+		$this->assertSame(array('1'), $this->object->getPluralSuffixes(1));
 	}
 
 	/**
@@ -166,15 +257,29 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getIgnoredSearchWords() returns an array
+	 * @testdox  Verify that Language::getIgnoredSearchWords() calls the defined callback
 	 *
 	 * @covers   Joomla\Language\Language::getIgnoredSearchWords
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetIgnoredSearchWordsReturnsAnArray()
+	public function testGetIgnoredSearchWordsCallsTheDefinedCallback()
 	{
 		$this->assertInternalType('array', $this->object->getIgnoredSearchWords());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getIgnoredSearchWords() returns an empty array with no callback
+	 *
+	 * @covers   Joomla\Language\Language::getIgnoredSearchWords
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetIgnoredSearchWordsReturnsAnEmptyArrayWithNoCallback()
+	{
+		$this->object->setIgnoredSearchWordsCallback(null);
+
+		$this->assertEmpty($this->object->getIgnoredSearchWords());
 	}
 
 	/**
@@ -202,15 +307,29 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getLowerLimitSearchWord() returns an integer
+	 * @testdox  Verify that Language::getLowerLimitSearchWord() calls the defined callback
 	 *
 	 * @covers   Joomla\Language\Language::getLowerLimitSearchWord
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetLowerLimitSearchWordReturnsAnInteger()
+	public function testGetLowerLimitSearchWordCallsTheDefinedCallback()
 	{
 		$this->assertInternalType('integer', $this->object->getLowerLimitSearchWord());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getLowerLimitSearchWord() returns a specific value with no callback
+	 *
+	 * @covers   Joomla\Language\Language::getLowerLimitSearchWord
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetLowerLimitSearchWordReturnsASpecificValueWithNoCallback()
+	{
+		$this->object->setLowerLimitSearchWordCallback(null);
+
+		$this->assertSame(3, $this->object->getLowerLimitSearchWord());
 	}
 
 	/**
@@ -238,15 +357,29 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getUpperLimitSearchWord() returns an integer
+	 * @testdox  Verify that Language::getUpperLimitSearchWord() calls the defined callback
 	 *
 	 * @covers   Joomla\Language\Language::getUpperLimitSearchWord
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetUpperLimitSearchWordReturnsAnInteger()
+	public function testGetUpperLimitSearchWordCallsTheDefinedCallback()
 	{
 		$this->assertInternalType('integer', $this->object->getUpperLimitSearchWord());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getUpperLimitSearchWord() returns a specific value with no callback
+	 *
+	 * @covers   Joomla\Language\Language::getUpperLimitSearchWord
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetUpperLimitSearchWordReturnsASpecificValueWithNoCallback()
+	{
+		$this->object->setUpperLimitSearchWordCallback(null);
+
+		$this->assertSame(20, $this->object->getUpperLimitSearchWord());
 	}
 
 	/**
@@ -274,15 +407,29 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getSearchDisplayedCharactersNumber() returns an integer
+	 * @testdox  Verify that Language::getSearchDisplayedCharactersNumber() calls the defined callback
 	 *
 	 * @covers   Joomla\Language\Language::getSearchDisplayedCharactersNumber
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetSearchDisplayedCharactersNumberReturnsAnInteger()
+	public function testGetSearchDisplayedCharactersNumberCallsTheDefinedCallback()
 	{
 		$this->assertInternalType('integer', $this->object->getSearchDisplayedCharactersNumber());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getSearchDisplayedCharactersNumber() returns a specific value with no callback
+	 *
+	 * @covers   Joomla\Language\Language::getSearchDisplayedCharactersNumber
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testGetSearchDisplayedCharactersNumberReturnsASpecificValueWithNoCallback()
+	{
+		$this->object->setSearchDisplayedCharactersNumberCallback(null);
+
+		$this->assertSame(200, $this->object->getSearchDisplayedCharactersNumber());
 	}
 
 	/**
@@ -336,6 +483,18 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @testdox  Verify that Language::load() fails to load an extension language file with errors
+	 *
+	 * @covers   Joomla\Language\Language::load
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyLoadFailsToLoadAnExtensionLanguageFileWithErrors()
+	{
+		$this->assertFalse($this->object->load('bad'));
+	}
+
+	/**
 	 * @testdox  Verify that Language::load() successfully loads a language file
 	 *
 	 * @covers   Joomla\Language\Language::loadLanguage
@@ -360,6 +519,46 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @testdox  Verify that Language::parse() successfully parses a language file in debug mode
+	 *
+	 * @covers   Joomla\Language\Language::parse
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyParseSuccessfullyParsesALanguageFileInDebugMode()
+	{
+		$this->object->setDebug(true);
+
+		$this->assertNotEmpty(TestHelper::invoke($this->object, 'parse', $this->testPath . '/good.ini'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::parse() fails to parse a language file with errors
+	 *
+	 * @covers   Joomla\Language\Language::parse
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyParseFailsToParseALanguageFileWithErrors()
+	{
+		$this->assertEmpty(TestHelper::invoke($this->object, 'parse', $this->testPath . '/bad.ini'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::parse() fails to parse a language file with errors in debug mode
+	 *
+	 * @covers   Joomla\Language\Language::parse
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyParseFailsToParseALanguageFileWithErrorsInDebugMode()
+	{
+		$this->object->setDebug(true);
+
+		$this->assertEmpty(TestHelper::invoke($this->object, 'parse', $this->testPath . '/bad.ini'));
+	}
+
+	/**
 	 * @testdox  Verify that Language::get() returns the correct metadata
 	 *
 	 * @covers   Joomla\Language\Language::get
@@ -369,6 +568,18 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	public function testVerifyThatGetReturnsTheCorrectMetadata()
 	{
 		$this->assertEquals('en-GB', $this->object->get('tag'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::get() returns the default if metadata does not exist
+	 *
+	 * @covers   Joomla\Language\Language::get
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetReturnsTheDefaultIfMetadataDoesNotExist()
+	{
+		$this->assertEquals('default', $this->object->get('doesnotexist', 'default'));
 	}
 
 	/**
@@ -405,6 +616,32 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	public function testVerifyThatGetPathsDefaultReturnsAnArray()
 	{
 		$this->assertInternalType('array', $this->object->getPaths());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getPaths() returns null for an unloaded extension
+	 *
+	 * @covers   Joomla\Language\Language::getPaths
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetPathsReturnsNullForAnUnloadedExtension()
+	{
+		$this->assertNull($this->object->getPaths('good'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::getPaths() returns the extension path for a loaded extension
+	 *
+	 * @covers   Joomla\Language\Language::getPaths
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetPathsReturnsTheExtensionPathForALoadedExtension()
+	{
+		$this->object->load('good');
+
+		$this->assertInternalType('array', $this->object->getPaths('good'));
 	}
 
 	/**
