@@ -4,17 +4,17 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+namespace Joomla\Language\Tests\Stemmer;
+
 use Joomla\Language\Stemmer\Porteren;
 
 /**
  * Test class for Porteren.
- *
- * @since  1.0
  */
-class PorterenTest extends PHPUnit_Framework_TestCase
+class PorterenTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var Porteren
+	 * @var  Porteren
 	 */
 	protected $object;
 
@@ -22,7 +22,7 @@ class PorterenTest extends PHPUnit_Framework_TestCase
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
-	 * @return void
+	 * @return  void
 	 */
 	protected function setUp()
 	{
@@ -34,9 +34,9 @@ class PorterenTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Data provider for testStem()
 	 *
-	 * @return array
+	 * @return  array
 	 */
-	public function testData()
+	public function dataStemProvider()
 	{
 		return array(
 			array('Car', 'Car', 'en'),
@@ -154,19 +154,15 @@ class PorterenTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test...
+	 * @param   string  $token   The token to stem.
+	 * @param   string  $result  The expected result
+	 * @param   string  $lang    The language of the token.
 	 *
-	 * @param   string  $token   @todo
-	 * @param   string  $result  @todo
-	 * @param   string  $lang    @todo
-	 *
-	 * @covers  Joomla\Language\Stemmer\Porteren::stem
-	 * @covers  Joomla\Language\Stemmer\Porteren::<!public>
-	 * @dataProvider testData
-	 *
-	 * @return void
+	 * @covers        Joomla\Language\Stemmer\Porteren::stem
+	 * @covers        Joomla\Language\Stemmer\Porteren::<!public>
+	 * @dataProvider  dataStemProvider
 	 */
-	public function testStem($token, $result, $lang)
+	public function testTheCorrectStemIsReturnedFromAGivenString($token, $result, $lang)
 	{
 		$this->assertEquals($result, $this->object->stem($token, $lang));
 	}

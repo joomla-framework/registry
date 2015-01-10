@@ -133,6 +133,22 @@ You will now be able translate strings in your twig file using:
 @TODO
 
 
+## Changes From 1.x
+
+The following changes have been made to the `Language` package since 1.x.
+
+### Class methods non-static
+
+The `Language` and `Text` classes have been refactored to follow an object oriented approach instead of static methods.  Instantiating the `Text` class requires a `Language` instance to be injected.
+
+### Language requires base path to be defined
+
+In 1.x, applications were required to define a `JPATH_ROOT` constant for the base path to search for languages in.  In 2.x, you are required to pass the base path as the first parameter in the `Language` constructor (and getInstance() method).
+
+### Language::_ and Text::_ deprecated
+
+The `_` method in `Language` and `Text` has been deprecated in favor of `translate`.
+
 ## Installation via Composer
 
 Add `"joomla/language": "2.0.*@dev"` to the require block in your composer.json and then run `composer install`.

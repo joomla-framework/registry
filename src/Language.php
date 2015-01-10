@@ -13,7 +13,10 @@ use Joomla\String\String;
 /**
  * Allows for quoting in language .ini files.
  */
+// @codeCoverageIgnoreStart
 define('_QQ_', '"');
+
+// @codeCoverageIgnoreEnd
 
 /**
  * Languages/translation handler class
@@ -25,7 +28,7 @@ class Language
 	/**
 	 * Language instance container
 	 *
-	 * @var    array
+	 * @var    Language[]
 	 * @since  1.0
 	 */
 	protected static $languages = array();
@@ -175,26 +178,44 @@ class Language
 	protected $searchDisplayedCharactersNumberCallback = null;
 
 	/**
+	 * LanguageHelper object
+	 *
+	 * @var    LanguageHelper
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $helper;
+
+	/**
+	 * The base path to the language folder
+	 *
+	 * @var    string
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $basePath;
+
+	/**
 	 * Constructor activating the default information of the language.
 	 *
+	 * @param   string   $path   The base path to the language folder
 	 * @param   string   $lang   The language
 	 * @param   boolean  $debug  Indicates if language debugging is enabled.
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($lang = null, $debug = false)
+	public function __construct($path, $lang = null, $debug = false)
 	{
-		$this->strings = array();
+		$this->basePath = $path;
+		$this->strings  = array();
+		$this->helper   = new LanguageHelper;
 
-		if ($lang == null)
-		{
-			$lang = $this->default;
-		}
+		$lang = ($lang == null) ? $this->default : $lang;
 
 		$this->setLanguage($lang);
 		$this->setDebug($debug);
 
-		$filename = JPATH_ROOT . "/language/overrides/$lang.override.ini";
+		$basePath = $this->helper->getLanguagePath($this->basePath);
+
+		$filename = $basePath . "/overrides/$lang.override.ini";
 
 		if (file_exists($filename) && $contents = $this->parse($filename))
 		{
@@ -212,10 +233,10 @@ class Language
 		$class = str_replace('-', '_', $lang . 'Localise');
 		$paths = array();
 
-		$basePath = self::getLanguagePath(JPATH_ROOT);
+		$basePath = $this->helper->getLanguagePath($this->basePath);
 
-		$paths[0] = $basePath . "/language/overrides/$lang.localise.php";
-		$paths[1] = $basePath . "/language/$lang/$lang.localise.php";
+		$paths[0] = $basePath . "/overrides/$lang.localise.php";
+		$paths[1] = $basePath . "/$lang/$lang.localise.php";
 
 		ksort($paths);
 		$path = reset($paths);
@@ -277,6 +298,7 @@ class Language
 	/**
 	 * Returns a language object.
 	 *
+	 * @param   string   $path   The base path to the language folder
 	 * @param   string   $lang   The language to use.
 	 * @param   boolean  $debug  The debug mode.
 	 *
@@ -284,11 +306,11 @@ class Language
 	 *
 	 * @since   1.0
 	 */
-	public static function getInstance($lang = null, $debug = false)
+	public static function getInstance($path, $lang = null, $debug = false)
 	{
 		if (!isset(self::$languages[$lang . $debug]))
 		{
-			$language = new self($lang, $debug);
+			$language = new self($path, $lang, $debug);
 
 			self::$languages[$lang . $debug] = $language;
 
@@ -317,9 +339,29 @@ class Language
 	 *
 	 * @return  string  The translation of the string
 	 *
+	 * @see     Language::translate()
 	 * @since   1.0
+	 * @deprecated  3.0  Use translate instead
 	 */
 	public function _($string, $jsSafe = false, $interpretBackSlashes = true)
+	{
+		return $this->translate($string, $jsSafe, $interpretBackSlashes);
+	}
+
+	/**
+	 * Translate function, mimics the php gettext (alias _) function.
+	 *
+	 * The function checks if $jsSafe is true, then if $interpretBackslashes is true.
+	 *
+	 * @param   string   $string                The string to translate
+	 * @param   boolean  $jsSafe                Make the result javascript safe
+	 * @param   boolean  $interpretBackSlashes  Interpret \t and \n
+	 *
+	 * @return  string  The translation of the string
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function translate($string, $jsSafe = false, $interpretBackSlashes = true)
 	{
 		// Detect empty string
 		if ($string == '')
@@ -397,7 +439,8 @@ class Language
 			return call_user_func($this->transliterator, $string);
 		}
 
-		$string = Transliterate::utf8_latin_to_ascii($string);
+		$transliterate = new Transliterate;
+		$string = $transliterate->utf8_latin_to_ascii($string);
 		$string = String::strtolower($string);
 
 		return $string;
@@ -447,10 +490,8 @@ class Language
 		{
 			return call_user_func($this->pluralSuffixesCallback, $count);
 		}
-		else
-		{
-			return array((string) $count);
-		}
+
+		return array((string) $count);
 	}
 
 	/**
@@ -495,10 +536,8 @@ class Language
 		{
 			return call_user_func($this->ignoredSearchWordsCallback);
 		}
-		else
-		{
-			return array();
-		}
+
+		return array();
 	}
 
 	/**
@@ -543,10 +582,8 @@ class Language
 		{
 			return call_user_func($this->lowerLimitSearchWordCallback);
 		}
-		else
-		{
-			return 3;
-		}
+
+		return 3;
 	}
 
 	/**
@@ -591,10 +628,8 @@ class Language
 		{
 			return call_user_func($this->upperLimitSearchWordCallback);
 		}
-		else
-		{
-			return 20;
-		}
+
+		return 20;
 	}
 
 	/**
@@ -639,10 +674,8 @@ class Language
 		{
 			return call_user_func($this->searchDisplayedCharactersNumberCallback);
 		}
-		else
-		{
-			return 200;
-		}
+
+		return 200;
 	}
 
 	/**
@@ -684,30 +717,15 @@ class Language
 	 *
 	 * @return  boolean  True if the language exists.
 	 *
+	 * @see     LanguageHelper::exists()
 	 * @since   1.0
+	 * @deprecated  3.0  Use LanguageHelper::exists() instead
 	 */
-	public static function exists($lang, $basePath = JPATH_ROOT)
+	public static function exists($lang, $basePath = '')
 	{
-		static $paths = array();
+		$helper = new LanguageHelper;
 
-		// Return false if no language was specified
-		if (!$lang)
-		{
-			return false;
-		}
-
-		$path = $basePath . '/language/' . $lang;
-
-		// Return previous check results if it exists
-		if (isset($paths[$path]))
-		{
-			return $paths[$path];
-		}
-
-		// Check if the language exists
-		$paths[$path] = is_dir($path);
-
-		return $paths[$path];
+		return $helper->exists($lang, $basePath);
 	}
 
 	/**
@@ -723,14 +741,12 @@ class Language
 	 *
 	 * @since   1.0
 	 */
-	public function load($extension = 'joomla', $basePath = JPATH_ROOT, $lang = null, $reload = false, $default = true)
+	public function load($extension = 'joomla', $basePath = '', $lang = null, $reload = false, $default = true)
 	{
-		if (!$lang)
-		{
-			$lang = $this->lang;
-		}
+		$lang     = !$lang ? $this->lang : $lang;
+		$basePath = empty($basePath) ? $this->basePath : $basePath;
 
-		$path = self::getLanguagePath($basePath, $lang);
+		$path = $this->helper->getLanguagePath($basePath, $lang);
 
 		$internal = $extension == 'joomla' || $extension == '';
 		$filename = $internal ? $lang : $lang . '.' . $extension;
@@ -739,29 +755,27 @@ class Language
 		if (isset($this->paths[$extension][$filename]) && !$reload)
 		{
 			// This file has already been tested for loading.
-			$result = $this->paths[$extension][$filename];
+			return $this->paths[$extension][$filename];
 		}
-		else
+
+		// Load the language file
+		$result = $this->loadLanguage($filename, $extension);
+
+		// Check whether there was a problem with loading the file
+		if ($result === false && $default)
 		{
-			// Load the language file
-			$result = $this->loadLanguage($filename, $extension);
+			// No strings, so either file doesn't exist or the file is invalid
+			$oldFilename = $filename;
 
-			// Check whether there was a problem with loading the file
-			if ($result === false && $default)
+			// Check the standard file name
+			$path = $this->helper->getLanguagePath($basePath, $this->default);
+			$filename = $internal ? $this->default : $this->default . '.' . $extension;
+			$filename = "$path/$filename.ini";
+
+			// If the one we tried is different than the new name, try again
+			if ($oldFilename != $filename)
 			{
-				// No strings, so either file doesn't exist or the file is invalid
-				$oldFilename = $filename;
-
-				// Check the standard file name
-				$path = self::getLanguagePath($basePath, $this->default);
-				$filename = $internal ? $this->default : $this->default . '.' . $extension;
-				$filename = "$path/$filename.ini";
-
-				// If the one we tried is different than the new name, try again
-				if ($oldFilename != $filename)
-				{
-					$result = $this->loadLanguage($filename, $extension);
-				}
+				$result = $this->loadLanguage($filename, $extension);
 			}
 		}
 
@@ -930,11 +944,13 @@ class Language
 	protected function getCallerInfo()
 	{
 		// Try to determine the source if none was provided
+		// @codeCoverageIgnoreStart
 		if (!function_exists('debug_backtrace'))
 		{
 			return null;
 		}
 
+		// @codeCoverageIgnoreEnd
 		$backtrace = debug_backtrace();
 		$info = array();
 
@@ -996,10 +1012,8 @@ class Language
 
 			return null;
 		}
-		else
-		{
-			return $this->paths;
-		}
+
+		return $this->paths;
 	}
 
 	/**
@@ -1141,30 +1155,20 @@ class Language
 	/**
 	 * Returns a associative array holding the metadata.
 	 *
-	 * @param   string  $lang  The name of the language.
+	 * @param   string  $lang      The name of the language.
+	 * @param   string  $basePath  The filepath to the language folder.
 	 *
 	 * @return  mixed  If $lang exists return key/value pair with the language metadata, otherwise return NULL.
 	 *
+	 * @see     LanguageHelper::getMetadata()
 	 * @since   1.0
+	 * @deprecated  3.0  Use LanguageHelper::getMetadata() instead
 	 */
-	public static function getMetadata($lang)
+	public static function getMetadata($lang, $basePath)
 	{
-		$path = self::getLanguagePath(JPATH_ROOT, $lang);
-		$file = $lang . '.xml';
+		$helper = new LanguageHelper;
 
-		$result = null;
-
-		if (is_file("$path/$file"))
-		{
-			$result = self::parseXMLLanguageFile("$path/$file");
-		}
-
-		if (empty($result))
-		{
-			return null;
-		}
-
-		return $result;
+		return $helper->getMetadata($lang, $basePath);
 	}
 
 	/**
@@ -1174,14 +1178,15 @@ class Language
 	 *
 	 * @return  array  key/value pair with the language file and real name.
 	 *
+	 * @see     LanguageHelper::getKnownLanguages()
 	 * @since   1.0
+	 * @deprecated  3.0  Use LanguageHelper::getKnownLanguages() instead
 	 */
-	public static function getKnownLanguages($basePath = JPATH_ROOT)
+	public static function getKnownLanguages($basePath = '')
 	{
-		$dir = self::getLanguagePath($basePath);
-		$knownLanguages = self::parseLanguageFiles($dir);
+		$helper = new LanguageHelper;
 
-		return $knownLanguages;
+		return $helper->getKnownLanguages($basePath);
 	}
 
 	/**
@@ -1192,18 +1197,15 @@ class Language
 	 *
 	 * @return  string  language related path or null.
 	 *
+	 * @see     LanguageHelper::getLanguagePath()
 	 * @since   1.0
+	 * @deprecated  3.0  Use LanguageHelper::getLanguagePath() instead
 	 */
-	public static function getLanguagePath($basePath = JPATH_ROOT, $language = null)
+	public static function getLanguagePath($basePath = '', $language = null)
 	{
-		$dir = $basePath . '/language';
+		$helper = new LanguageHelper;
 
-		if (!empty($language))
-		{
-			$dir .= '/' . $language;
-		}
-
-		return $dir;
+		return $helper->getLanguagePath($basePath, $language);
 	}
 
 	/**
@@ -1233,7 +1235,7 @@ class Language
 	{
 		$previous = $this->lang;
 		$this->lang = $lang;
-		$this->metadata = $this->getMetadata($this->lang);
+		$this->metadata = $this->helper->getMetadata($this->lang, $this->basePath);
 
 		return $previous;
 	}
@@ -1283,42 +1285,15 @@ class Language
 	 *
 	 * @return  array  Array holding the found languages as filename => real name pairs.
 	 *
+	 * @see     LanguageHelper::parseLanguageFiles()
 	 * @since   1.0
+	 * @deprecated  3.0  Use LanguageHelper::parseLanguageFiles() instead
 	 */
 	public static function parseLanguageFiles($dir = null)
 	{
-		$languages = array();
+		$helper = new LanguageHelper;
 
-		$iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
-
-		foreach ($iterator as $file)
-		{
-			$langs    = array();
-			$fileName = $file->getFilename();
-
-			if (!$file->isFile() || !preg_match("/^([-_A-Za-z]*)\.xml$/", $fileName))
-			{
-				continue;
-			}
-
-			try
-			{
-				$metadata = self::parseXMLLanguageFile($file->getRealPath());
-
-				if ($metadata)
-				{
-					$lang = str_replace('.xml', '', $fileName);
-					$langs[$lang] = $metadata;
-				}
-
-				$languages = array_merge($languages, $langs);
-			}
-			catch (\RuntimeException $e)
-			{
-			}
-		}
-
-		return $languages;
+		return $helper->parseLanguageFiles($dir);
 	}
 
 	/**
@@ -1328,37 +1303,14 @@ class Language
 	 *
 	 * @return  array  Array holding the found metadata as a key => value pair.
 	 *
+	 * @see     LanguageHelper::parseXMLLanguageFile()
 	 * @since   1.0
-	 * @throws  \RuntimeException
+	 * @deprecated  3.0  Use LanguageHelper::parseXMLLanguageFile() instead
 	 */
 	public static function parseXMLLanguageFile($path)
 	{
-		if (!is_readable($path))
-		{
-			throw new \RuntimeException('File not found or not readable');
-		}
+		$helper = new LanguageHelper;
 
-		// Try to load the file
-		$xml = simplexml_load_file($path);
-
-		if (!$xml)
-		{
-			return null;
-		}
-
-		// Check that it's a metadata file
-		if ((string) $xml->getName() != 'metafile')
-		{
-			return null;
-		}
-
-		$metadata = array();
-
-		foreach ($xml->metadata->children() as $child)
-		{
-			$metadata[$child->getName()] = (string) $child;
-		}
-
-		return $metadata;
+		return $helper->parseXMLLanguageFile($path);
 	}
 }

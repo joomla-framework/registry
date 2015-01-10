@@ -4,17 +4,17 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+namespace Joomla\Language\Tests;
+
 use Joomla\Language\Transliterate;
 
 /**
  * Test class for Transliterate.
- *
- * @since  1.0
  */
-class TransliterateTest extends PHPUnit_Framework_TestCase
+class TransliterateTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var Transliterate
+	 * @var  Transliterate
 	 */
 	protected $object;
 
@@ -22,7 +22,7 @@ class TransliterateTest extends PHPUnit_Framework_TestCase
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
-	 * @return void
+	 * @return  void
 	 */
 	protected function setUp()
 	{
@@ -34,9 +34,9 @@ class TransliterateTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Data provider for testUtf8_latin_to_ascii()
 	 *
-	 * @return array
+	 * @return  array
 	 */
-	public function testData()
+	public function dataProvider()
 	{
 		return array(
 			array('Weiß', 'Weiss', 0),
@@ -57,18 +57,16 @@ class TransliterateTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Verify a UTF-8 string is transliterated correctly
 	 *
-	 * @param   string  $word    @todo
-	 * @param   string  $result  @todo
-	 * @param   string  $case    @todo
+	 * @param   string   $word    Word to transliterate
+	 * @param   string   $result  Expected test result
+	 * @param   integer  $case    Optionally specify upper or lower case. Default to 0 (both).
 	 *
-	 * @covers Joomla\Language\Transliterate::utf8_latin_to_ascii
-	 * @dataProvider testData
-	 *
-	 * @return void
+	 * @covers        Joomla\Language\Transliterate::utf8_latin_to_ascii
+	 * @dataProvider  dataProvider
 	 */
-	public function testUtf8_latin_to_ascii($word, $result, $case)
+	public function testVerifyAUTF8StringIsTransliteratedCorrectly($word, $result, $case)
 	{
 		$this->assertEquals($result, $this->object->utf8_latin_to_ascii($word, $case));
 	}
