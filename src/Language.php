@@ -233,8 +233,6 @@ class Language
 		$class = str_replace('-', '_', $lang . 'Localise');
 		$paths = array();
 
-		$basePath = $this->helper->getLanguagePath($this->basePath);
-
 		$paths[0] = $basePath . "/overrides/$lang.localise.php";
 		$paths[1] = $basePath . "/$lang/$lang.localise.php";
 
