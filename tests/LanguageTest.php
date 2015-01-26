@@ -65,7 +65,20 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testVerifyGetInstanceReturnsALanguageObject()
 	{
-		$this->assertInstanceOf('\\Joomla\\Language\\Language', Language::getInstance($this->testPath));
+		$this->assertInstanceOf('\\Joomla\\Language\\Language', Language::getInstance(null, $this->testPath));
+	}
+
+	/**
+	 * @testdox  Verify that getInstance() throws an \InvalidArgumentException when no path is given
+	 *
+	 * @covers             Joomla\Language\Language::getInstance
+	 * @uses               Joomla\Language\Language
+	 * @uses               Joomla\Language\LanguageHelper
+	 * @expectedException  \InvalidArgumentException
+	 */
+	public function testVerifyGetInstanceThrowsAnExceptionWhenNoPathIsGiven()
+	{
+		Language::getInstance('es-ES');
 	}
 
 	/**
@@ -841,6 +854,19 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	public function testVerifyTheDefaultReturnForGetLocale()
 	{
 		$this->assertInternalType('array', $this->object->getLocale());
+	}
+
+	/**
+	 * @testdox  Verify that Language::getText() returns a Text object
+	 *
+	 * @covers   Joomla\Language\Language::getText
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
+	 */
+	public function testVerifyThatGetTextReturnsATextObject()
+	{
+		$this->assertInstanceOf('\\Joomla\\Language\\Text', $this->object->getText());
 	}
 
 	/**

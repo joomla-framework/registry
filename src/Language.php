@@ -303,6 +303,7 @@ class Language
 	 * @return  Language  The Language object.
 	 *
 	 * @since   1.0
+	 * @throws  \InvalidArgumentException
 	 */
 	public static function getInstance($lang = null, $path = null, $debug = false)
 	{
