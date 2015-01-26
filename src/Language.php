@@ -1265,6 +1265,18 @@ class Language
 	}
 
 	/**
+	 * Retrieves a new Text object for the current instance
+	 *
+	 * @return  Text
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function getText()
+	{
+		return new Text($this);
+	}
+
+	/**
 	 * Get the first day of the week for this language.
 	 *
 	 * @return  integer  The first day of the week according to the language
