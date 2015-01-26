@@ -42,7 +42,7 @@ class LanguageProvider implements ServiceProviderInterface
 				$defaultLang = $config->get('language.default', 'en-GB');
 				$debug       = $config->get('language.debug', false);
 
-				return Language::getInstance($baseLangDir, $defaultLang, $debug);
+				return Language::getInstance($defaultLang, $baseLangDir, $debug);
 			}, true
 		);
 	}

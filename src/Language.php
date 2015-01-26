@@ -296,18 +296,25 @@ class Language
 	/**
 	 * Returns a language object.
 	 *
-	 * @param   string   $path   The base path to the language folder
 	 * @param   string   $lang   The language to use.
+	 * @param   string   $path   The base path to the language folder.  This is required if creating a new instance.
 	 * @param   boolean  $debug  The debug mode.
 	 *
 	 * @return  Language  The Language object.
 	 *
 	 * @since   1.0
 	 */
-	public static function getInstance($path, $lang = null, $debug = false)
+	public static function getInstance($lang = null, $path = null, $debug = false)
 	{
 		if (!isset(self::$languages[$lang . $debug]))
 		{
+			if ($path === null)
+			{
+				throw new \InvalidArgumentException(
+					'The $path variable cannot be null when creating a new Language object'
+				);
+			}
+
 			$language = new self($path, $lang, $debug);
 
 			self::$languages[$lang . $debug] = $language;
