@@ -85,9 +85,11 @@ class Text
 	 * @since   1.0
 	 * @deprecated  3.0  Use translate instead
 	 */
-	public function _($string, $jsSafe = false, $interpretBackSlashes = true, $script = false)
+	public static function _($string, $jsSafe = false, $interpretBackSlashes = true, $script = false)
 	{
-		return $this->translate($string, $jsSafe, $interpretBackSlashes, $script);
+		$language = Language::getInstance();
+
+		return $language->getText()->translate($string, $jsSafe, $interpretBackSlashes, $script);
 	}
 
 	/**

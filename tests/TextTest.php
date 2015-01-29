@@ -94,7 +94,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testUnderscoreMethodProxiesToTranslate()
 	{
-		$this->assertEmpty($this->object->_(''));
+		$object = $this->object;
+
+		$this->assertEmpty($object::_(''));
 	}
 
 	/**
