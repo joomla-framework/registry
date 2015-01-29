@@ -141,9 +141,15 @@ The following changes have been made to the `Language` package since 1.x.
 
 The `Language` and `Text` classes have been refactored to follow an object oriented approach instead of static methods.  Instantiating the `Text` class requires a `Language` instance to be injected.
 
+The `Text::_()` method remains static and will proxy to the object oriented API as long as a Language instance is available via `Language::getInstance()`.
+
 ### Language requires base path to be defined
 
 In 1.x, applications were required to define a `JPATH_ROOT` constant for the base path to search for languages in.  In 2.x, you are required to pass the base path as the first parameter in the `Language` constructor (and getInstance() method).
+
+### `_QQ_` constant removed
+
+The `_QQ_` constant was previous an allowed escape sequence for quotes in language files.  Support for this constant has been removed.  Double quotes in files should either be escaped (`\"`) or HTML encoded (`&quot;`) (if displayed in an HTML context).
 
 ### Language::_ and Text::_ deprecated
 
