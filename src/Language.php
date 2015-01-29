@@ -12,6 +12,8 @@ use Joomla\String\String;
 
 /**
  * Allows for quoting in language .ini files.
+ *
+ * @deprecated  2.0
  */
 // @codeCoverageIgnoreStart
 define('_QQ_', '"');
@@ -849,6 +851,7 @@ class Language
 	 * @return  array  The array of parsed strings.
 	 *
 	 * @since   1.0
+	 * @note    As of 2.0, this method will no longer support parsing _QQ_ into quotes
 	 */
 	protected function parse($filename)
 	{
