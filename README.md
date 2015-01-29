@@ -58,7 +58,7 @@ class MyApplication extends AbstractWebApplication
 	 *
 	 * @return  Language
 	 *
-	 * @note    JPATH_ROOT has to be defined.
+	 * @note    The base path to the directory where your language files are stored must be injected into the Language object
 	 */
 	protected function getLanguage()
 	{
@@ -66,10 +66,7 @@ class MyApplication extends AbstractWebApplication
 		{
 			// Get language object with the lang tag and debug setting in your configuration
 			// This also loads language file /xx-XX/xx-XX.ini and localisation methods /xx-XX/xx-XX.localise.php if available
-			$language = Language::getInstance($this->get('language'), $this->get('debug'));
-
-			// Configure Text to use language instance
-			Text::setLanguage($language);
+			$language = Language::getInstance($this->get('language'), $basePath, $this->get('debug'));
 
 			$this->language = $language;
 		}
@@ -82,7 +79,9 @@ class MyApplication extends AbstractWebApplication
 
 ### Use `Text` methods
 
-```PHP
+A `Text` instance can be retrieved via `Language::getText()` which injects the active Language instance into it for quick use 
+
+```php
 namespace App\Hello\Controller;
 
 use Joomla\Language\Text
@@ -94,7 +93,30 @@ class HelloController extends AbstractController
 	{
 		$app = $this->getApplication();
 
-		$translatedString = Text::_('APP_HELLO_WORLD');
+		$translatedString = Language::getInstance()->getText()->translate('APP_HELLO_WORLD');
+
+		$app->setBody($translatedString);
+	}
+}
+
+```
+
+`Text` objects require a `Language` instance to be instantiated
+
+```php
+namespace App\Hello\Controller;
+
+use Joomla\Language\Text
+use Joomla\Controller\AbstractController;
+
+class HelloController extends AbstractController
+{
+	public function execute()
+	{
+		$app = $this->getApplication();
+		$text = new Text($this->getLanguage());
+
+		$translatedString = $text->translate('APP_HELLO_WORLD');
 
 		$app->setBody($translatedString);
 	}
@@ -114,11 +136,11 @@ To create a Twig function to do this after creating the Twig_Environment and bef
 
 	$loader = new \Twig_Loader_Filesystem($this->path);
 	$twig = new \Twig_Environment($loader);
+	$text = Language::getInstance()->getText();
 
-	$jtextFunction = new \Twig_SimpleFunction('jtext',function($string){
-		$translation = Text::_($string);
-		return $translation;
-	},array('is_safe'=>array('html')));
+	$jtextFunction = new \Twig_SimpleFunction('jtext', function($string, $text) {
+		return $text->translate($string);
+	}, array('is_safe'=>array('html')));
 
 	$twig->addFunction($jtextFunction);
 
@@ -127,11 +149,9 @@ You will now be able translate strings in your twig file using:
 	{{jtext('APP_YOURSAMPLE_STRING')}}
 
 
-
 ### Load component language files
 
 @TODO
-
 
 ## Changes From 1.x
 
