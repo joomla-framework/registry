@@ -320,6 +320,12 @@ class Language
 			if (is_null($lang))
 			{
 				self::$languages[$language->getLanguage() . $debug] = $language;
+
+				// Set the "default" language object if it isn't
+				if (!isset(self::$languages[$debug]))
+				{
+					self::$languages[$debug] = $language;
+				}
 			}
 		}
 
