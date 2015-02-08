@@ -820,19 +820,6 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::setLanguage() returns the previous default language
-	 *
-	 * @covers   Joomla\Language\Language::setLanguage
-	 * @uses     Joomla\Language\LanguageHelper::getMetadata
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 */
-	public function testVerifyThatSetLanguageReturnsThePreviousLanguage()
-	{
-		$this->assertSame('en-GB', $this->object->setLanguage('de-DE'));
-	}
-
-	/**
 	 * @testdox  Verify that Language::getLanguage() default returns 'en-GB'
 	 *
 	 * @covers   Joomla\Language\Language::getLanguage

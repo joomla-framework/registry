@@ -175,6 +175,10 @@ The `_QQ_` constant was previous an allowed escape sequence for quotes in langua
 
 The `_` method in `Language` and `Text` has been deprecated in favor of `translate`.
 
+### `Language::setLanguage()` removed
+
+The `setLanguage()` method in `Language` has been removed.  A new Language instance in the new language should be instantiated instead.
+
 ## Installation via Composer
 
 Add `"joomla/language": "2.0.*@dev"` to the require block in your composer.json and then run `composer install`.

@@ -200,9 +200,9 @@ class Language
 		$this->strings  = array();
 		$this->helper   = new LanguageHelper;
 
-		$lang = ($lang == null) ? $this->default : $lang;
+		$this->lang = ($lang == null) ? $this->default : $lang;
 
-		$this->setLanguage($lang);
+		$this->metadata = $this->helper->getMetadata($this->lang, $this->basePath);
 		$this->setDebug($debug);
 
 		$basePath = $this->helper->getLanguagePath($this->basePath);
@@ -1253,27 +1253,6 @@ class Language
 	public function getLanguage()
 	{
 		return $this->lang;
-	}
-
-	/**
-	 * Set the language attributes to the given language.
-	 *
-	 * Once called, the language still needs to be loaded using Language::load().
-	 *
-	 * @param   string  $lang  Language code.
-	 *
-	 * @return  string  Previous value.
-	 *
-	 * @since   1.0
-	 * @deprecated  2.0  Instantiate a new Language object in the new language instead.
-	 */
-	public function setLanguage($lang)
-	{
-		$previous = $this->lang;
-		$this->lang = $lang;
-		$this->metadata = $this->helper->getMetadata($this->lang, $this->basePath);
-
-		return $previous;
 	}
 
 	/**
