@@ -192,54 +192,6 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getIgnoredSearchWords() calls the defined callback
-	 *
-	 * @covers   Joomla\Language\Language::getIgnoredSearchWords
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 */
-	public function testGetIgnoredSearchWordsCallsTheDefinedCallback()
-	{
-		$this->assertInternalType('array', $this->object->getIgnoredSearchWords());
-	}
-
-	/**
-	 * @testdox  Verify that Language::getLowerLimitSearchWord() calls the defined callback
-	 *
-	 * @covers   Joomla\Language\Language::getLowerLimitSearchWord
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 */
-	public function testGetLowerLimitSearchWordCallsTheDefinedCallback()
-	{
-		$this->assertInternalType('integer', $this->object->getLowerLimitSearchWord());
-	}
-
-	/**
-	 * @testdox  Verify that Language::getUpperLimitSearchWord() calls the defined callback
-	 *
-	 * @covers   Joomla\Language\Language::getUpperLimitSearchWord
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 */
-	public function testGetUpperLimitSearchWordCallsTheDefinedCallback()
-	{
-		$this->assertInternalType('integer', $this->object->getUpperLimitSearchWord());
-	}
-
-	/**
-	 * @testdox  Verify that Language::getSearchDisplayedCharactersNumber() calls the defined callback
-	 *
-	 * @covers   Joomla\Language\Language::getSearchDisplayedCharactersNumber
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 */
-	public function testGetSearchDisplayedCharactersNumberCallsTheDefinedCallback()
-	{
-		$this->assertInternalType('integer', $this->object->getSearchDisplayedCharactersNumber());
-	}
-
-	/**
 	 * @testdox  Verify that Language::exists() proxies to LanguageHelper::exists()
 	 *
 	 * @covers   Joomla\Language\Language::exists

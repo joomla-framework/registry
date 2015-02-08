@@ -366,54 +366,6 @@ class Language
 	}
 
 	/**
-	 * Returns an array of ignored search words
-	 *
-	 * @return  array  The array of ignored search words.
-	 *
-	 * @since   1.0
-	 */
-	public function getIgnoredSearchWords()
-	{
-		return $this->localise->getIgnoredSearchWords();
-	}
-
-	/**
-	 * Returns a lower limit integer for length of search words
-	 *
-	 * @return  integer  The lower limit integer for length of search words (3 if no value was set for a specific language).
-	 *
-	 * @since   1.0
-	 */
-	public function getLowerLimitSearchWord()
-	{
-		return $this->localise->getLowerLimitSearchWord();
-	}
-
-	/**
-	 * Returns an upper limit integer for length of search words
-	 *
-	 * @return  integer  The upper limit integer for length of search words (20 if no value was set for a specific language).
-	 *
-	 * @since   1.0
-	 */
-	public function getUpperLimitSearchWord()
-	{
-		return $this->localise->getUpperLimitSearchWord();
-	}
-
-	/**
-	 * Returns the number of characters displayed in search results.
-	 *
-	 * @return  integer  The number of characters displayed (200 if no value was set for a specific language).
-	 *
-	 * @since   1.0
-	 */
-	public function getSearchDisplayedCharactersNumber()
-	{
-		return $this->localise->getSearchDisplayedCharactersNumber();
-	}
-
-	/**
 	 * Checks if a language exists.
 	 *
 	 * This is a simple, quick check for the directory that should contain language files for the given user.

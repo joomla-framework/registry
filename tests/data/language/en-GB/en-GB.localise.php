@@ -41,23 +41,6 @@ class En_GBLocalise extends AbstractLocalise
 	}
 
 	/**
-	 * Returns the ignored search words
-	 *
-	 * @return  array  An array of ignored search words.
-	 *
-	 * @since   1.0
-	 */
-	public function getIgnoredSearchWords()
-	{
-		$search_ignore = array();
-		$search_ignore[] = "and";
-		$search_ignore[] = "in";
-		$search_ignore[] = "on";
-
-		return $search_ignore;
-	}
-
-	/**
 	 * Custom translitrate fucntion to use.
 	 *
 	 * @param   string  $string  String to transliterate

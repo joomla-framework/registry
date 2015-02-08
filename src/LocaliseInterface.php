@@ -39,40 +39,4 @@ interface LocaliseInterface
 	 * @since   __DEPLOY_VERSION__
 	 */
 	public function getPluralSuffixes($count);
-
-	/**
-	 * Returns an array of ignored search words
-	 *
-	 * @return  array  The array of ignored search words.
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function getIgnoredSearchWords();
-
-	/**
-	 * Returns a lower limit integer for length of search words
-	 *
-	 * @return  integer  The lower limit integer for length of search words.
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function getLowerLimitSearchWord();
-
-	/**
-	 * Returns an upper limit integer for length of search words
-	 *
-	 * @return  integer  The upper limit integer for length of search words.
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function getUpperLimitSearchWord();
-
-	/**
-	 * Returns the number of characters displayed in search results.
-	 *
-	 * @return  integer  The number of characters displayed.
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function getSearchDisplayedCharactersNumber();
 }
