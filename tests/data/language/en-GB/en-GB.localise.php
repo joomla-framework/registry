@@ -4,12 +4,14 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Joomla\Language\Localise\AbstractLocalise;
+
 /**
  * en-GB localise class
  *
  * @since  1.0
  */
-abstract class En_GBLocalise
+class En_GBLocalise extends AbstractLocalise
 {
 	/**
 	 * Returns the potential suffixes for a specific number of items
@@ -20,7 +22,7 @@ abstract class En_GBLocalise
 	 *
 	 * @since   1.0
 	 */
-	public static function getPluralSuffixes($count)
+	public function getPluralSuffixes($count)
 	{
 		if ($count == 0)
 		{
@@ -45,7 +47,7 @@ abstract class En_GBLocalise
 	 *
 	 * @since   1.0
 	 */
-	public static function getIgnoredSearchWords()
+	public function getIgnoredSearchWords()
 	{
 		$search_ignore = array();
 		$search_ignore[] = "and";
@@ -53,42 +55,6 @@ abstract class En_GBLocalise
 		$search_ignore[] = "on";
 
 		return $search_ignore;
-	}
-
-	/**
-	 * Returns the lower length limit of search words
-	 *
-	 * @return  integer  The lower length limit of search words.
-	 *
-	 * @since   1.0
-	 */
-	public static function getLowerLimitSearchWord()
-	{
-		return 3;
-	}
-
-	/**
-	 * Returns the upper length limit of search words
-	 *
-	 * @return  integer  The upper length limit of search words.
-	 *
-	 * @since   1.0
-	 */
-	public static function getUpperLimitSearchWord()
-	{
-		return 20;
-	}
-
-	/**
-	 * Returns the number of chars to display when searching
-	 *
-	 * @return  integer  The number of chars to display when searching.
-	 *
-	 * @since   1.0
-	 */
-	public static function getSearchDisplayedCharactersNumber()
-	{
-		return 200;
 	}
 
 	/**
@@ -100,7 +66,7 @@ abstract class En_GBLocalise
 	 *
 	 * @since   1.0
 	 */
-	public static function transliterate($string)
+	public function transliterate($string)
 	{
 		return str_replace(
 			array('a', 'c', 'e', 'g'),

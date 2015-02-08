@@ -8,8 +8,6 @@
 
 namespace Joomla\Language;
 
-use Joomla\String\String;
-
 /**
  * Languages/translation handler class
  *
@@ -130,44 +128,12 @@ class Language
 	protected $transliterator = null;
 
 	/**
-	 * Name of the pluralSuffixesCallback function for this language.
+	 * The localisation object.
 	 *
-	 * @var    callable
-	 * @since  1.0
+	 * @var    LocaliseInterface
+	 * @since  __DEPLOY_VERSION__
 	 */
-	protected $pluralSuffixesCallback = null;
-
-	/**
-	 * Name of the ignoredSearchWordsCallback function for this language.
-	 *
-	 * @var    callable
-	 * @since  1.0
-	 */
-	protected $ignoredSearchWordsCallback = null;
-
-	/**
-	 * Name of the lowerLimitSearchWordCallback function for this language.
-	 *
-	 * @var    callable
-	 * @since  1.0
-	 */
-	protected $lowerLimitSearchWordCallback = null;
-
-	/**
-	 * Name of the uppperLimitSearchWordCallback function for this language
-	 *
-	 * @var    callable
-	 * @since  1.0
-	 */
-	protected $upperLimitSearchWordCallback = null;
-
-	/**
-	 * Name of the searchDisplayedCharactersNumberCallback function for this language.
-	 *
-	 * @var    callable
-	 * @since  1.0
-	 */
-	protected $searchDisplayedCharactersNumberCallback = null;
+	protected $localise = null;
 
 	/**
 	 * LanguageHelper object
@@ -221,66 +187,8 @@ class Language
 			unset($contents);
 		}
 
-		// Look for a language specific localise class
-		$class = str_replace('-', '_', $lang . 'Localise');
-		$paths = array();
-
-		$paths[0] = $basePath . "/overrides/$lang.localise.php";
-		$paths[1] = $basePath . "/$lang/$lang.localise.php";
-
-		ksort($paths);
-		$path = reset($paths);
-
-		while (!class_exists($class) && $path)
-		{
-			if (file_exists($path))
-			{
-				require_once $path;
-			}
-
-			$path = next($paths);
-		}
-
-		if (class_exists($class))
-		{
-			/* Class exists. Try to find
-			 * -a transliterate method,
-			 * -a getPluralSuffixes method,
-			 * -a getIgnoredSearchWords method
-			 * -a getLowerLimitSearchWord method
-			 * -a getUpperLimitSearchWord method
-			 * -a getSearchDisplayCharactersNumber method
-			 */
-			if (method_exists($class, 'transliterate'))
-			{
-				$this->transliterator = array($class, 'transliterate');
-			}
-
-			if (method_exists($class, 'getPluralSuffixes'))
-			{
-				$this->pluralSuffixesCallback = array($class, 'getPluralSuffixes');
-			}
-
-			if (method_exists($class, 'getIgnoredSearchWords'))
-			{
-				$this->ignoredSearchWordsCallback = array($class, 'getIgnoredSearchWords');
-			}
-
-			if (method_exists($class, 'getLowerLimitSearchWord'))
-			{
-				$this->lowerLimitSearchWordCallback = array($class, 'getLowerLimitSearchWord');
-			}
-
-			if (method_exists($class, 'getUpperLimitSearchWord'))
-			{
-				$this->upperLimitSearchWordCallback = array($class, 'getUpperLimitSearchWord');
-			}
-
-			if (method_exists($class, 'getSearchDisplayedCharactersNumber'))
-			{
-				$this->searchDisplayedCharactersNumberCallback = array($class, 'getSearchDisplayedCharactersNumber');
-			}
-		}
+		// Grab a localisation file
+		$this->localise = $this->helper->findLocalise($lang, $basePath);
 
 		$this->load();
 	}
@@ -438,45 +346,9 @@ class Language
 	 */
 	public function transliterate($string)
 	{
-		if ($this->transliterator !== null)
-		{
-			return call_user_func($this->transliterator, $string);
-		}
-
-		$transliterate = new Transliterate;
-		$string = $transliterate->utf8_latin_to_ascii($string);
-		$string = String::strtolower($string);
+		$string = $this->localise->transliterate($string);
 
 		return $string;
-	}
-
-	/**
-	 * Getter for transliteration function
-	 *
-	 * @return  callable  The transliterator function
-	 *
-	 * @since   1.0
-	 */
-	public function getTransliterator()
-	{
-		return $this->transliterator;
-	}
-
-	/**
-	 * Set the transliteration function.
-	 *
-	 * @param   callable  $function  Function name or the actual function.
-	 *
-	 * @return  callable  The previous function.
-	 *
-	 * @since   1.0
-	 */
-	public function setTransliterator($function)
-	{
-		$previous = $this->transliterator;
-		$this->transliterator = $function;
-
-		return $previous;
 	}
 
 	/**
@@ -490,41 +362,7 @@ class Language
 	 */
 	public function getPluralSuffixes($count)
 	{
-		if ($this->pluralSuffixesCallback !== null)
-		{
-			return call_user_func($this->pluralSuffixesCallback, $count);
-		}
-
-		return array((string) $count);
-	}
-
-	/**
-	 * Getter for pluralSuffixesCallback function.
-	 *
-	 * @return  callable  Function name or the actual function.
-	 *
-	 * @since   1.0
-	 */
-	public function getPluralSuffixesCallback()
-	{
-		return $this->pluralSuffixesCallback;
-	}
-
-	/**
-	 * Set the pluralSuffixes function.
-	 *
-	 * @param   callable  $function  Function name or actual function.
-	 *
-	 * @return  callable  The previous function.
-	 *
-	 * @since   1.0
-	 */
-	public function setPluralSuffixesCallback($function)
-	{
-		$previous = $this->pluralSuffixesCallback;
-		$this->pluralSuffixesCallback = $function;
-
-		return $previous;
+		return $this->localise->getPluralSuffixes($count);
 	}
 
 	/**
@@ -536,41 +374,7 @@ class Language
 	 */
 	public function getIgnoredSearchWords()
 	{
-		if ($this->ignoredSearchWordsCallback !== null)
-		{
-			return call_user_func($this->ignoredSearchWordsCallback);
-		}
-
-		return array();
-	}
-
-	/**
-	 * Getter for ignoredSearchWordsCallback function.
-	 *
-	 * @return  callable  Function name or the actual function.
-	 *
-	 * @since   1.0
-	 */
-	public function getIgnoredSearchWordsCallback()
-	{
-		return $this->ignoredSearchWordsCallback;
-	}
-
-	/**
-	 * Setter for the ignoredSearchWordsCallback function
-	 *
-	 * @param   callable  $function  Function name or actual function.
-	 *
-	 * @return  callable  The previous function.
-	 *
-	 * @since   1.0
-	 */
-	public function setIgnoredSearchWordsCallback($function)
-	{
-		$previous = $this->ignoredSearchWordsCallback;
-		$this->ignoredSearchWordsCallback = $function;
-
-		return $previous;
+		return $this->localise->getIgnoredSearchWords();
 	}
 
 	/**
@@ -582,41 +386,7 @@ class Language
 	 */
 	public function getLowerLimitSearchWord()
 	{
-		if ($this->lowerLimitSearchWordCallback !== null)
-		{
-			return call_user_func($this->lowerLimitSearchWordCallback);
-		}
-
-		return 3;
-	}
-
-	/**
-	 * Getter for lowerLimitSearchWordCallback function
-	 *
-	 * @return  callable  Function name or the actual function.
-	 *
-	 * @since   1.0
-	 */
-	public function getLowerLimitSearchWordCallback()
-	{
-		return $this->lowerLimitSearchWordCallback;
-	}
-
-	/**
-	 * Setter for the lowerLimitSearchWordCallback function.
-	 *
-	 * @param   callable  $function  Function name or actual function.
-	 *
-	 * @return  callable  The previous function.
-	 *
-	 * @since   1.0
-	 */
-	public function setLowerLimitSearchWordCallback($function)
-	{
-		$previous = $this->lowerLimitSearchWordCallback;
-		$this->lowerLimitSearchWordCallback = $function;
-
-		return $previous;
+		return $this->localise->getLowerLimitSearchWord();
 	}
 
 	/**
@@ -628,41 +398,7 @@ class Language
 	 */
 	public function getUpperLimitSearchWord()
 	{
-		if ($this->upperLimitSearchWordCallback !== null)
-		{
-			return call_user_func($this->upperLimitSearchWordCallback);
-		}
-
-		return 20;
-	}
-
-	/**
-	 * Getter for upperLimitSearchWordCallback function
-	 *
-	 * @return  callable  Function name or the actual function.
-	 *
-	 * @since   1.0
-	 */
-	public function getUpperLimitSearchWordCallback()
-	{
-		return $this->upperLimitSearchWordCallback;
-	}
-
-	/**
-	 * Setter for the upperLimitSearchWordCallback function
-	 *
-	 * @param   callable  $function  Function name or the actual function.
-	 *
-	 * @return  callable  The previous function.
-	 *
-	 * @since   1.0
-	 */
-	public function setUpperLimitSearchWordCallback($function)
-	{
-		$previous = $this->upperLimitSearchWordCallback;
-		$this->upperLimitSearchWordCallback = $function;
-
-		return $previous;
+		return $this->localise->getUpperLimitSearchWord();
 	}
 
 	/**
@@ -674,41 +410,7 @@ class Language
 	 */
 	public function getSearchDisplayedCharactersNumber()
 	{
-		if ($this->searchDisplayedCharactersNumberCallback !== null)
-		{
-			return call_user_func($this->searchDisplayedCharactersNumberCallback);
-		}
-
-		return 200;
-	}
-
-	/**
-	 * Getter for searchDisplayedCharactersNumberCallback function
-	 *
-	 * @return  callable  Function name or the actual function.
-	 *
-	 * @since   1.0
-	 */
-	public function getSearchDisplayedCharactersNumberCallback()
-	{
-		return $this->searchDisplayedCharactersNumberCallback;
-	}
-
-	/**
-	 * Setter for the searchDisplayedCharactersNumberCallback function.
-	 *
-	 * @param   callable  $function  Function name or the actual function.
-	 *
-	 * @return  callable  The previous function.
-	 *
-	 * @since   1.0
-	 */
-	public function setSearchDisplayedCharactersNumberCallback($function)
-	{
-		$previous = $this->searchDisplayedCharactersNumberCallback;
-		$this->searchDisplayedCharactersNumberCallback = $function;
-
-		return $previous;
+		return $this->localise->getSearchDisplayedCharactersNumber();
 	}
 
 	/**
