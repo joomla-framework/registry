@@ -4,14 +4,12 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-use Joomla\Language\Localise\AbstractLocalise;
-
 /**
- * xx-XX localise class
+ * yy-YY localise class that does not implement the LocaliseInterface
  *
  * @since  1.0
  */
-class Xx_XXLocalise extends AbstractLocalise
+class Yy_YYLocalise
 {
 	/**
 	 * Returns the potential suffixes for a specific number of items

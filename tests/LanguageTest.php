@@ -180,13 +180,13 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getPluralSuffixes() calls the defined callback
+	 * @testdox  Verify that Language::getPluralSuffixes() calls the defined method
 	 *
 	 * @covers   Joomla\Language\Language::getPluralSuffixes
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
 	 */
-	public function testGetPluralSuffixesCallsTheDefinedCallback()
+	public function testGetPluralSuffixesCallsTheDefinedMethod()
 	{
 		$this->assertInternalType('array', $this->object->getPluralSuffixes(1));
 	}

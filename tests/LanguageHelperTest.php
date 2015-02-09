@@ -86,26 +86,39 @@ class LanguageHelperTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::findLocalise() returns the default localise class when none exists
+	 * @testdox  Verify that LanguageHelper::findLocalise() returns the default localise class when none exists
 	 *
 	 * @covers   Joomla\Language\LanguageHelper::findLocalise
 	 */
-	public function testVerifyDefaultLocaliseReturnedWhenNoneExists()
+	public function testVerifyFindLocaliseReturnsDefaultLocaliseWhenNoneExists()
 	{
 		$this->assertInstanceOf('\\Joomla\\Language\\Localise\\En_GBLocalise', $this->object->findLocalise('fr-FR', $this->testPath));
 	}
 
 	/**
-	 * @testdox  Verify that Language::findLocalise() returns the correct localise class when it exists
+	 * @testdox  Verify that LanguageHelper::findLocalise() returns the correct localise class when it exists
 	 *
 	 * @covers   Joomla\Language\LanguageHelper::findLocalise
 	 */
-	public function testVerifyLocaliseReturnedWhenExists()
+	public function testVerifyFindLocaliseReturnedWhenExists()
 	{
 		// Class exists check in PHPUnit happens before we import the file in our method
 		require_once $this->testPath . '/language/xx-XX/xx-XX.localise.php';
 
 		$this->assertInstanceOf('\\Xx_XXLocalise', $this->object->findLocalise('xx-XX', $this->testPath));
+	}
+
+	/**
+	 * @testdox  Verify that LanguageHelper::findLocalise() throws an exception if the localise file doesn't follow the interface
+	 *
+	 * @covers             Joomla\Language\LanguageHelper::findLocalise
+	 * @expectedException  \RuntimeException
+	 */
+	public function testVerifyFindLocaliseThrowsAnExceptionIfTheFileIsNotFound()
+	{
+		require_once $this->testPath . '/language/yy-YY/yy-YY.localise.php';
+
+		$this->object->findLocalise('yy-YY', $this->testPath);
 	}
 
 	/**
