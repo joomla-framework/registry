@@ -179,6 +179,15 @@ The `_` method in `Language` and `Text` has been deprecated in favor of `transla
 
 The `setLanguage()` method in `Language` has been removed.  A new Language instance in the new language should be instantiated instead.
 
+### Methods for Search Component
+
+The methods `getUpperLimitSearchWord`, `getSearchDisplayedCharactersNumber`, `getLowerLimitSearchWord` and `getIgnoredSearchWords` have all been removed as well as the associated methods to get and set their callback functions. These should be implemented by the user if required.
+
+### Localise Interface
+This has been introduced as a standard way to set the way to set functions for ```Language::getPluralSuffixes()``` and ```Language::transliterate()```. Both these must now be set in the language's localise.php file (this was possible in Language version 1 however could optionally could have callback functions set if such a file didn't exist).
+
+Localise files now MUST implement this interface to be recognized. An abstract version is available suitable for most Western Languages.
+
 ## Installation via Composer
 
 Add `"joomla/language": "2.0.*@dev"` to the require block in your composer.json and then run `composer install`.
