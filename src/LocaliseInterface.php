@@ -23,7 +23,7 @@ interface LocaliseInterface
 	 *
 	 * @param   string  $string  The string to transliterate.
 	 *
-	 * @return  string[]  The transliteration of the string.
+	 * @return  string|boolean  The transliterated string or boolean false on a failure
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */

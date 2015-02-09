@@ -22,12 +22,11 @@ abstract class AbstractLocalise implements LocaliseInterface
 	/**
 	 * Transliterate function
 	 *
-	 * This method processes a string and replaces all accented UTF-8 characters by unaccented
-	 * ASCII-7 "equivalents".
+	 * This method processes a string and replaces all accented UTF-8 characters by unaccented ASCII-7 equivalents.
 	 *
 	 * @param   string  $string  The string to transliterate.
 	 *
-	 * @return  string  The array of suffixes.
+	 * @return  string|boolean  The transliterated string or boolean false on a failure
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */

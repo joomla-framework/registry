@@ -342,7 +342,7 @@ class Language
 		$string = $this->localise->transliterate($string);
 
 		// The transliterate method can return false if there isn't a fully valid UTF-8 string entered
-		if ($string == false)
+		if ($string === false)
 		{
 			throw new \RuntimeException('Invalid UTF-8 was detected in the string "%s"', $lowercaseString);
 		}
@@ -355,7 +355,7 @@ class Language
 	 *
 	 * @param   integer  $count  The count number the rule is for.
 	 *
-	 * @return  array    The array of suffixes.
+	 * @return  string[]  The array of suffixes.
 	 *
 	 * @since   1.0
 	 */
