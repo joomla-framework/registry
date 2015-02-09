@@ -294,6 +294,30 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @testdox  Verify that Language::debugFile() finds no errors in a good file
+	 *
+	 * @covers   Joomla\Language\Language::debugFile
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyDebugFileFindsNoErrorsInAGoodFile()
+	{
+		$this->assertSame(0, $this->object->debugFile($this->testPath . '/good.ini'));
+	}
+
+	/**
+	 * @testdox  Verify that Language::debugFile() finds errors in a bad file
+	 *
+	 * @covers   Joomla\Language\Language::debugFile
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyDebugFileFindsErrorsInABadFile()
+	{
+		$this->assertGreaterThan(0, $this->object->debugFile($this->testPath . '/bad.ini'));
+	}
+
+	/**
 	 * @testdox  Verify that Language::get() returns the correct metadata
 	 *
 	 * @covers   Joomla\Language\Language::get
