@@ -27,7 +27,7 @@ abstract class AbstractLocalise implements LocaliseInterface
 	 *
 	 * @param   string  $string  The string to transliterate.
 	 *
-	 * @return  string  The transliteration of the string.
+	 * @return  string  The array of suffixes.
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
@@ -44,7 +44,7 @@ abstract class AbstractLocalise implements LocaliseInterface
 	 *
 	 * @param   integer  $count  The count number the rule is for.
 	 *
-	 * @return  array    The array of suffixes.
+	 * @return  string[]  The array of suffixes.
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
