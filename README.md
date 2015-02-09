@@ -1,5 +1,4 @@
-# The Language Package [![Build Status](https://travis-ci.org/joomla-framework/language.png?branch=master)](https://travis-ci.org/joomla-framework/language)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/joomla-framework/language/badges/quality-score.png?b=2.0-dev)](https://scrutinizer-ci.com/g/joomla-framework/language/?branch=2.0-dev)
+# The Language Package [![Build Status](https://travis-ci.org/joomla-framework/language.png?branch=master)](https://travis-ci.org/joomla-framework/language) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/joomla-framework/language/badges/quality-score.png?b=2.0-dev)](https://scrutinizer-ci.com/g/joomla-framework/language/?branch=2.0-dev)
 
 ## Usage
 
