@@ -116,16 +116,7 @@ class PasswordSimple implements PasswordInterface
 		// Check if the hash is a blowfish hash.
 		if (substr($hash, 0, 4) == '$2a$' || substr($hash, 0, 4) == '$2y$')
 		{
-			if (version_compare(PHP_VERSION, '5.3.7') >= 0)
-			{
-				$type = '$2y$';
-			}
-			else
-			{
-				$type = '$2a$';
-			}
-
-			$hash = $type . substr($hash, 4);
+			$hash = '$2y$' . substr($hash, 4);
 
 			return (crypt($password, $hash) === $hash);
 		}
