@@ -201,6 +201,7 @@ class KeychainManager extends AbstractCliApplication
 			$this->out('error: entry already exists. To change this entry, use "change"');
 			$this->close(1);
 		}
+
 		$this->change();
 	}
 
@@ -218,6 +219,7 @@ class KeychainManager extends AbstractCliApplication
 			$this->out("usage: {$this->input->executable} [options] change entry_name entry_value");
 			$this->close(1);
 		}
+
 		$this->updated = true;
 		$this->keychain->set($this->input->args[1], $this->input->args[2]);
 	}
@@ -296,6 +298,7 @@ class KeychainManager extends AbstractCliApplication
 			{
 				$line .= ': ' . $this->dumpVar($value);
 			}
+
 			$this->out($line);
 		}
 	}
@@ -309,15 +312,15 @@ class KeychainManager extends AbstractCliApplication
 	 */
 	protected function displayHelp()
 	{
-/*
-COMMANDS
-
- - list
- - create entry_name entry_value
- - change entry_name entry_value
- - delete entry_name
- - read   entry_name
-*/
+		/*
+		 * COMMANDS
+		 *
+		 * - list
+		 * - create entry_name entry_value
+		 * - change entry_name entry_value
+		 * - delete entry_name
+		 * - read   entry_name
+		 */
 
 		$help = <<<HELP
 Keychain Management Utility
