@@ -63,11 +63,6 @@ class PasswordSimple implements PasswordInterface
 
 				return crypt($password, $salt);
 
-			case PasswordInterface::JOOMLA:
-				$salt = $this->getSalt(32);
-
-				return md5($password . $salt) . ':' . $salt;
-
 			default:
 				throw new \InvalidArgumentException(sprintf('Hash type %s is not supported', $type));
 				break;
@@ -139,12 +134,6 @@ class PasswordSimple implements PasswordInterface
 		if (substr($hash, 0, 3) == '$1$')
 		{
 			return (crypt($password, $hash) === $hash);
-		}
-
-		// Check if the hash is a Joomla hash.
-		if (preg_match('#[a-z0-9]{32}:[./A-Za-z0-9]{32}#', $hash) === 1)
-		{
-			return md5($password . substr($hash, 33)) == substr($hash, 0, 32);
 		}
 
 		return false;

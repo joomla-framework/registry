@@ -15,7 +15,6 @@ The verify method should accept a plain text password and a hashed password and 
 The `PasswordInterface` interface defines the following constants for use with implementations:
 
 - `PasswordInterface::BLOWFISH`
-- `PasswordInterface::JOOMLA`
 - `PasswordInterface::MD5`
 - `PasswordInterface::PBKDF`
 
@@ -43,6 +42,10 @@ The package has been refactored from 1.x to 2.0 to be PSR-4 compliant, and in do
 | `\Joomla\Crypt\Cipher_Rijndael256` | `\Joomla\Crypt\Cipher\CipherRijndael256` |
 | `\Joomla\Crypt\Cipher_Simple`      | `\Joomla\Crypt\Cipher\CipherSimple`      |
 | `\Joomla\Crypt\Password\Simple`    | `\Joomla\Crypt\Password\PasswordSimple`  |
+
+### Removed `PasswordInterface::JOOMLA`
+
+The 'Joomla' password hash has been removed.  This is a legacy password hash from when the Joomla! CMS used a MD5 based hash.
 
 ## Installation via Composer
 

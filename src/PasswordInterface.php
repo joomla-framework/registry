@@ -24,15 +24,6 @@ interface PasswordInterface
 	const BLOWFISH = '$2y$';
 
 	/**
-	 * Identifier for legacy Joomla! CMS hashed passwords
-	 *
-	 * @var    string
-	 * @since  1.0
-	 * @deprecated  2.0
-	 */
-	const JOOMLA = 'Joomla';
-
-	/**
 	 * Identifier for PBKDF2 hashed passwords
 	 *
 	 * @var    string

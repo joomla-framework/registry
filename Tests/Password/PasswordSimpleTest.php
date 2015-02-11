@@ -37,9 +37,6 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 			'MD5' => array('password', PasswordInterface::MD5, 'ABCDEFGHIJKL',
 				'$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1'),
 
-			'Joomla' => array('password', PasswordInterface::JOOMLA, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456',
-				'883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456'),
-
 			'Blowfish_5' => array('password', PasswordInterface::BLOWFISH, 'ABCDEFGHIJKLMNOPQRSTUV',
 				'$2y$05$ABCDEFGHIJKLMNOPQRSTUOvv7EU5o68GAoLxyfugvULZR70IIMZqW', 5),
 
@@ -167,8 +164,6 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 			'Blowfish Invalid:' => array('wrong password', '$2y$10$ABCDEFGHIJKLMNOPQRSTUOiAi7OcdE4zRCh6NcGWusEcNPtq6/w8.', false),
 			'MD5 Valid' => array('password', '$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1', true),
 			'MD5 Invalid' => array('passw0rd', '$1$ABCDEFGH$hGGndps75hhROKqu/zh9q1', false),
-			'Joomla Valid' => array('password', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', true),
-			'Joomla Invalid' => array('passw0rd', '883a96d8da5440781fe7b60f1d4ae2b3:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456', false),
 			'Invalid' => array('passw0rd', 'foo bar', false)
 		);
 	}
@@ -207,7 +202,6 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	{
 		// Type, expectation
 		return array(
-			'Joomla' => array('Joomla','Joomla'),
 			'Null' => array('','$2y$'),
 		);
 	}
