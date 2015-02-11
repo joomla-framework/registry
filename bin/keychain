@@ -7,8 +7,27 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-// Load the Joomla! Framework
-require_once realpath(__DIR__ . '/../vendor/autoload.php');
+define('_JEXEC', 1);
+define('JPATH_ROOT', __DIR__);
+
+$composerLoaded = false;
+
+foreach (array(__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../vendor/autoload.php') as $file)
+{
+	if (file_exists($file))
+	{
+		$composerLoaded = true;
+
+		break;
+	}
+}
+
+if (!$composerLoaded)
+{
+	fwrite(STDERR, 'Composer is not properly set up in this project.');
+
+	exit(1);
+}
 
 /**
  * Keychain Manager
@@ -30,13 +49,14 @@ class KeychainManager extends \Joomla\Application\AbstractCliApplication
 	protected $keychain = null;
 
 	/**
-	 * Execute the application
+	 * Method to run the application routines.  Most likely you will want to instantiate a controller
+	 * and execute it, or perform some sort of task directly.
 	 *
 	 * @return  void
 	 *
 	 * @since   1.0
 	 */
-	public function execute()
+	protected function doExecute()
 	{
 		if (!count($this->input->args))
 		{
@@ -92,19 +112,6 @@ class KeychainManager extends \Joomla\Application\AbstractCliApplication
 		}
 
 		$this->close(0);
-	}
-
-	/**
-	 * Method to run the application routines.  Most likely you will want to instantiate a controller
-	 * and execute it, or perform some sort of task directly.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function doExecute()
-	{
-		return;
 	}
 
 	/**
