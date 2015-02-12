@@ -28,7 +28,7 @@ In addition to the interface `PasswordInterface` there is also a basic implement
 
 Aside from the two methods create and verify methods, this implementation also adds an additional method called setCost. This method is used to set a cost parameter for methods that support workload factors. It takes an integer cost factor as a parameter.
 
-`Password\Simple` provides support for bcrypt, MD5 and the traditional Joomla! CMS hashing scheme. The hash format can be specified during hash creation by using the constants `PasswordInterface::BLOWFISH`, `PasswordInterface::MD5`, `PasswordInterface::JOOMLA`, and `PasswordInterface::PBKDF`. An appropriate salt will be automatically generated when required.
+`Password\Simple` provides support for BCrypt, MD5 and the PBKDF2 hashing scheme. The hash format can be specified during hash creation by using the constants `PasswordInterface::BLOWFISH`, `PasswordInterface::MD5`, and `PasswordInterface::PBKDF`. An appropriate salt will be automatically generated when required.
 
 ## Changes From 1.x
 
