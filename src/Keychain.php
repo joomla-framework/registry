@@ -150,6 +150,11 @@ class Keychain extends Registry
 	 */
 	public function saveKeychain($keychainFile, $passphraseFile, $publicKeyFile)
 	{
+		if (empty($keychainFile))
+		{
+			throw new \RuntimeException('A keychain file must be specified');
+		}
+
 		$passphrase = $this->getPassphraseFromFile($passphraseFile, $publicKeyFile);
 		$data = $this->toString('JSON');
 

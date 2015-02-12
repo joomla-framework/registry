@@ -152,6 +152,23 @@ class KeychainTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Create a new keychain and persist it to a new file.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 * @expectedException  \RuntimeException
+	 */
+	public function testSaveKeychainThrowsException()
+	{
+		$publicKeyFile = __DIR__ . '/data/publickey.pem';
+		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
+
+		$keychain = new Keychain;
+		$keychain->saveKeychain('', $passphraseFile, $publicKeyFile);
+	}
+
+	/**
 	 * Load a keychain file we just created
 	 *
 	 * @return  void
