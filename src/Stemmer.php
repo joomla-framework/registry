@@ -8,8 +8,6 @@
 
 namespace Joomla\Language;
 
-use RuntimeException;
-
 /**
  * Stemmer base class.
  *
@@ -24,47 +22,6 @@ abstract class Stemmer
 	 * @since  1.0
 	 */
 	protected $cache = array();
-
-	/**
-	 * Container with active Stemmer instances.
-	 *
-	 * @var    Stemmer[]
-	 * @since  1.0
-	 */
-	protected static $instances = array();
-
-	/**
-	 * Method to get a stemmer, creating it if necessary.
-	 *
-	 * @param   string  $adapter  The type of stemmer to load.
-	 *
-	 * @return  Stemmer
-	 *
-	 * @since   1.0
-	 * @throws  RuntimeException on invalid stemmer.
-	 */
-	public static function getInstance($adapter)
-	{
-		// Only create one stemmer for each adapter.
-		if (isset(self::$instances[$adapter]))
-		{
-			return self::$instances[$adapter];
-		}
-
-		// Setup the adapter for the stemmer.
-		$class = '\\Joomla\\Language\\Stemmer\\' . ucfirst(trim($adapter));
-
-		// Check if a stemmer exists for the adapter.
-		if (!class_exists($class))
-		{
-			// Throw invalid adapter exception.
-			throw new RuntimeException(sprintf('Invalid stemmer type %s', $adapter));
-		}
-
-		self::$instances[$adapter] = new $class;
-
-		return self::$instances[$adapter];
-	}
 
 	/**
 	 * Method to stem a token and return the root.
