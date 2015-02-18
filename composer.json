@@ -11,7 +11,6 @@
     },
     "require-dev": {
         "joomla/di": "~1.0",
-        "joomla/filesystem": "~1.0",
         "joomla/registry": "~1.0",
         "joomla/test": "~1.0",
         "phpunit/phpunit": "4.*",

@@ -7,7 +7,6 @@
 namespace Joomla\Language\Tests;
 
 use Joomla\Language\Language;
-use Joomla\Filesystem\Folder;
 use Joomla\Test\TestHelper;
 
 /**
