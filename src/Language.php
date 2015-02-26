@@ -146,6 +146,13 @@ class Language
 	 */
 	public function __construct($path, $lang = null, $debug = false)
 	{
+		if ($path === null)
+		{
+			throw new \InvalidArgumentException(
+				'The $path variable cannot be null when creating a new Language object'
+			);
+		}
+
 		$this->basePath = $path;
 		$this->strings  = array();
 		$this->helper   = new LanguageHelper;
@@ -173,7 +180,7 @@ class Language
 
 		// Grab a localisation file
 		$factory = new LanguageFactory;
-		$this->localise = $factory->getLocalise($lang, $basePath);
+		$this->localise = $factory->getLocalise($lang, $path);
 
 		$this->load();
 	}

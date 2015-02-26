@@ -186,16 +186,16 @@ class LanguageFactory
 		$class = '\\Joomla\\Language\\Stemmer\\' . ucfirst(trim($adapter));
 
 		// If we've already found this object, no need to try and find it again
-		if (isset(self::$loadedClasses['localise'][$class]))
+		if (isset(self::$loadedClasses['stemmer'][$class]))
 		{
-			return new $class;
+			return self::$loadedClasses['stemmer'][$class];
 		}
 
 		// Check if a stemmer exists for the adapter.
 		if (!class_exists($class))
 		{
 			// Throw invalid adapter exception.
-			throw new RuntimeException(sprintf('Invalid stemmer type %s', $adapter));
+			throw new \RuntimeException(sprintf('Invalid stemmer type %s', $class));
 		}
 
 		$stemmer = new $class;
@@ -211,7 +211,7 @@ class LanguageFactory
 		}
 
 		// Store the class name to the cache
-		self::$loadedClasses['stemmer'][$class] = true;
+		self::$loadedClasses['stemmer'][$class] = $stemmer;
 
 		return $stemmer;
 	}
