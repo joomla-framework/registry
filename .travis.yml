@@ -12,7 +12,7 @@ matrix:
     - php: 7.0
 
 before_script:
-  - composer update --dev
+  - composer update
 
 script:
   - mkdir -p .travis/logs
