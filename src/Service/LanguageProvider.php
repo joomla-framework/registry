@@ -10,7 +10,7 @@ namespace Joomla\Language\Service;
 
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
-use Joomla\Language\Language;
+use Joomla\Language\LanguageFactory;
 
 /**
  * Language object service provider
@@ -42,7 +42,9 @@ class LanguageProvider implements ServiceProviderInterface
 				$defaultLang = $config->get('language.default', 'en-GB');
 				$debug       = $config->get('language.debug', false);
 
-				return Language::getInstance($defaultLang, $baseLangDir, $debug);
+				$factory = new LanguageFactory;
+
+				return $factory->getLanguage($defaultLang, $baseLangDir, $debug);
 			}, true
 		);
 	}
