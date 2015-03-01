@@ -7,13 +7,13 @@
 namespace Joomla\Language\Tests\Service;
 
 use Joomla\DI\Container;
-use Joomla\Language\Service\LanguageProvider;
+use Joomla\Language\Service\LanguageFactoryProvider;
 use Joomla\Registry\Registry;
 
 /**
- * Test class for Joomla\Language\Service\LanguageProvider.
+ * Test class for Joomla\Language\Service\LanguageFactoryProvider.
  */
-class LanguageProviderTest extends \PHPUnit_Framework_TestCase
+class LanguageFactoryProviderTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * DI Container for testing
@@ -49,15 +49,18 @@ class LanguageProviderTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that the LanguageProvider returns a Language object
+	 * @testdox  Verify that the LanguageFactoryProvider returns a LanguageFactory object
 	 *
-	 * @covers   Joomla\Language\Service\LanguageProvider::register
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Service\LanguageFactoryProvider::register
+	 * @uses     Joomla\Language\LanguageFactory
 	 */
 	public function testVerifyTheLanguageObjectIsRegisteredToTheContainer()
 	{
-		$this->container->registerServiceProvider(new LanguageProvider());
+		$this->container->registerServiceProvider(new LanguageFactoryProvider);
 
-		$this->assertInstanceOf('\\Joomla\\Language\\Language', $this->container->get('Joomla\\Language\\Language'));
+		$this->assertInstanceOf(
+			'\\Joomla\\Language\\LanguageFactory',
+			$this->container->get('Joomla\\Language\\LanguageFactory')
+		);
 	}
 }
