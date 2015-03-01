@@ -39,7 +39,7 @@ class LanguageFactoryProviderTest extends \PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$this->testPath  = __DIR__ . '/data';
+		$this->testPath  = dirname(__DIR__) . '/data';
 
 		// Create a DI container for testing
 		$this->container = new Container;
