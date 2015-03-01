@@ -162,9 +162,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 			// Traverse the registry to find the correct node for the result.
 			for ($i = 0, $n = count($nodes); $i < $n; $i++)
 			{
-				if (is_object($node) && isset($node->$nodes[$i]))
+				if (is_object($node) && isset($node->{$nodes[$i]}))
 				{
-					$node = $node->$nodes[$i];
+					$node = $node->{$nodes[$i]};
 				}
 				elseif (is_array($node) && isset($node[$nodes[$i]]))
 				{
@@ -283,7 +283,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @param   array    $array      Associative array of value to load
 	 * @param   boolean  $flattened  Load from a one-dimensional array
 	 * @param   string   $separator  The key separator
-	 *   
+	 *
 	 * @return  Registry  Return this object to support chaining.
 	 *
 	 * @since   1.0
@@ -493,13 +493,13 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 			{
 				if (is_object($node))
 				{
-					if (!isset($node->$nodes[$i]) && ($i != $n))
+					if (!isset($node->{$nodes[$i]}) && ($i != $n))
 					{
-						$node->$nodes[$i] = new \stdClass;
+						$node->{$nodes[$i]} = new \stdClass;
 					}
 
 					// Pass the child as pointer in case it is an array
-					$node = &$node->$nodes[$i];
+					$node = &$node->{$nodes[$i]};
 				}
 				elseif (is_array($node))
 				{
@@ -516,7 +516,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 			// Get the old value if exists so we can return it
 			if (is_object($node))
 			{
-				$result = $node->$nodes[$i] = $value;
+				$result = $node->{$nodes[$i]} = $value;
 			}
 			elseif (is_array($node))
 			{
@@ -559,13 +559,13 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 			{
 				if (is_object($node))
 				{
-					if (!isset($node->$nodes[$i]) && ($i != $n))
+					if (!isset($node->{$nodes[$i]}) && ($i != $n))
 					{
-						$node->$nodes[$i] = new \stdClass;
+						$node->{$nodes[$i]} = new \stdClass;
 					}
 
 					// Pass the child as pointer in case it is an array
-					$node = &$node->$nodes[$i];
+					$node = &$node->{$nodes[$i]};
 				}
 				elseif (is_array($node))
 				{
