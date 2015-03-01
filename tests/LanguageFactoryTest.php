@@ -17,7 +17,7 @@ class LanguageFactoryTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Test language object
 	 *
-	 * @var  Language
+	 * @var  LanguageFactory
 	 */
 	protected $object;
 
@@ -43,7 +43,27 @@ class LanguageFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that LanguageFactory::getLocalise() returns the default localise class when none exists
+	 * @testdox  Verify the default return of getDefaultLanguage()
+	 *
+	 * @covers   Joomla\Language\LanguageFactory::getDefaultLanguage
+	 */
+	public function testTheDefaultReturnOfGetDefaultLanguage()
+	{
+		$this->assertSame('en-GB', $this->object->getDefaultLanguage());
+	}
+
+	/**
+	 * @testdox  Verify the default return of getLanguageDirectory()
+	 *
+	 * @covers   Joomla\Language\LanguageFactory::getLanguageDirectory
+	 */
+	public function testTheDefaultReturnOfGetLanguageDirectory()
+	{
+		$this->assertNull($this->object->getLanguageDirectory());
+	}
+
+	/**
+	 * @testdox  Verify that getLocalise() returns the default localise class when none exists
 	 *
 	 * @covers   Joomla\Language\LanguageFactory::getLocalise
 	 */
@@ -53,7 +73,7 @@ class LanguageFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that LanguageFactory::getLocalise() returns the correct localise class when it exists
+	 * @testdox  Verify that getLocalise() returns the correct localise class when it exists
 	 *
 	 * @covers   Joomla\Language\LanguageFactory::getLocalise
 	 */
@@ -66,7 +86,23 @@ class LanguageFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that LanguageFactory::getLocalise() throws an exception if the localise file doesn't follow the interface
+	 * @testdox  Verify that getLocalise() validates the cache when a localise object exists
+	 *
+	 * @covers   Joomla\Language\LanguageFactory::getLocalise
+	 */
+	public function testVerifyGetLocaliseValidatesTheCacheWhenALocaliseObjectExists()
+	{
+		// Class exists check in PHPUnit happens before we import the file in our method
+		require_once $this->testPath . '/language/xx-XX/xx-XX.localise.php';
+
+		// Call the method once to fill the cache
+		$this->object->getLocalise('xx-XX', $this->testPath);
+
+		$this->assertInstanceOf('\\Xx_XXLocalise', $this->object->getLocalise('xx-XX', $this->testPath));
+	}
+
+	/**
+	 * @testdox  Verify that getLocalise() throws an exception if the localise file doesn't follow the interface
 	 *
 	 * @covers             Joomla\Language\LanguageFactory::getLocalise
 	 * @expectedException  \RuntimeException
@@ -104,7 +140,7 @@ class LanguageFactoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getText() returns a Text object
+	 * @testdox  Verify that getText() returns a Text object
 	 *
 	 * @covers   Joomla\Language\LanguageFactory::getText
 	 * @uses     Joomla\Language\Language
@@ -149,5 +185,36 @@ class LanguageFactoryTest extends \PHPUnit_Framework_TestCase
 	public function testGetStemmerThrowsAnExceptionIfTheObjectDoesNotExist()
 	{
 		$this->object->getStemmer('unexisting');
+	}
+
+	/**
+	 * @testdox  Verify setDefaultLanguage() returns the current object
+	 *
+	 * @covers   Joomla\Language\LanguageFactory::setDefaultLanguage
+	 */
+	public function testSetDefaultLanguageReturnsTheCurrentObject()
+	{
+		$this->assertSame($this->object, $this->object->setDefaultLanguage('en-US'));
+	}
+
+	/**
+	 * @testdox  Verify setLanguageDirectory() returns the current object
+	 *
+	 * @covers   Joomla\Language\LanguageFactory::setLanguageDirectory
+	 */
+	public function testSetLanguageDirectoryReturnsTheCurrentObject()
+	{
+		$this->assertSame($this->object, $this->object->setLanguageDirectory($this->testPath));
+	}
+
+	/**
+	 * @testdox  Verify setLanguageDirectory() throws an exception when a path does not exist
+	 *
+	 * @covers             Joomla\Language\LanguageFactory::setLanguageDirectory
+	 * @expectedException  \InvalidArgumentException
+	 */
+	public function testSetLanguageDirectoryThrowsAnExceptionWhenAPathDoesNotExist()
+	{
+		$this->object->setLanguageDirectory(__DIR__ . '/negative-tester');
 	}
 }
