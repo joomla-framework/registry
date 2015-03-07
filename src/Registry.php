@@ -232,7 +232,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 			$found = true;
 		}
 
-		if (!$found || $node == null || $node == '')
+		if (!$found || $node === null || $node === '')
 		{
 			return $default;
 		}
