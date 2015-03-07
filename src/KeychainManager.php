@@ -45,12 +45,12 @@ class KeychainManager extends AbstractCliApplication
 			if ($this->input->get('help', false) === false)
 			{
 				$this->out("usage: {$this->input->executable} [options] [command] [<args>]");
-				exit(1);
+				return;
 			}
 			else
 			{
 				$this->displayHelp();
-				exit(0);
+				return;
 			}
 		}
 
@@ -91,8 +91,6 @@ class KeychainManager extends AbstractCliApplication
 		{
 			$this->saveKeychain();
 		}
-
-		$this->close(0);
 	}
 
 	/**
