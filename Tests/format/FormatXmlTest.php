@@ -16,7 +16,7 @@ use Joomla\Registry\AbstractRegistryFormat;
 class JRegistryFormatXMLTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Test the Cml::objectToString method.
+	 * Test the Xml::objectToString method.
 	 *
 	 * @return  void
 	 *
@@ -103,9 +103,9 @@ class JRegistryFormatXMLTest extends \PHPUnit_Framework_TestCase
 			"</registry>\n";
 
 		// Test basic object to string.
-		$this->assertThat(
+		$this->assertEquals(
 			$class->stringToObject($string),
-			$this->equalTo($object)
+			$object
 		);
 	}
 
@@ -142,6 +142,10 @@ class JRegistryFormatXMLTest extends \PHPUnit_Framework_TestCase
 		$object = $class->stringToObject($input);
 		$output = $class->objectToString($object);
 
-		$this->assertEquals($input, $output, 'Line:' . __LINE__ . ' Input and output data must be equal.');
+		$this->assertEquals(
+			$input,
+			$output,
+			'Line:' . __LINE__ . ' Input and output data must be equal.'
+		);
 	}
 }
