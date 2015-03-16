@@ -24,12 +24,6 @@ class JRegistryFormatXMLTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testObjectToString()
 	{
-		// Skip on PHP 7
-		if (PHP_MAJOR_VERSION == 7)
-		{
-			$this->markTestSkipped('Test skipped for PHP 7 as SimpleXMLElement seems to behave differently with empty nodes');
-		}
-
 		$class = AbstractRegistryFormat::getInstance('XML');
 		$options = null;
 		$object = new \stdClass;
@@ -81,12 +75,6 @@ class JRegistryFormatXMLTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testStringToObject()
 	{
-		// Skip on PHP 7
-		if (PHP_MAJOR_VERSION == 7)
-		{
-			$this->markTestSkipped('Test skipped for PHP 7 as SimpleXMLElement seems to behave differently with empty nodes');
-		}
-
 		$class = AbstractRegistryFormat::getInstance('XML');
 		$object = new \stdClass;
 		$object->foo = 'bar';
@@ -130,12 +118,6 @@ class JRegistryFormatXMLTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDataEquality()
 	{
-		// Skip on PHP 7
-		if (PHP_MAJOR_VERSION == 7)
-		{
-			$this->markTestSkipped('Test skipped for PHP 7 as SimpleXMLElement seems to behave differently with empty nodes');
-		}
-
 		$class = AbstractRegistryFormat::getInstance('XML');
 
 		// Check for different PHP behavior of displaying boolean false in XML.
