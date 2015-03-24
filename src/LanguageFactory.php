@@ -94,7 +94,6 @@ class LanguageFactory
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Searches for a specific localise file for a given language. Falls back to the .
 	 *
 	 * @param   string  $lang      Language to check.
