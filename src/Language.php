@@ -16,24 +16,6 @@ namespace Joomla\Language;
 class Language
 {
 	/**
-	 * Language instance container
-	 *
-	 * @var    Language[]
-	 * @since  1.0
-	 * @deprecated  2.0
-	 */
-	protected static $languages = array();
-
-	/**
-	 * Cached LanguageFactory object
-	 *
-	 * @var    LanguageFactory
-	 * @since  __DEPLOY_VERSION__
-	 * @deprecated  2.0
-	 */
-	protected static $languageFactory;
-
-	/**
 	 * Debug language, If true, highlights if string isn't found.
 	 *
 	 * @var    boolean
@@ -193,23 +175,6 @@ class Language
 		$this->localise = $this->helper->findLocalise($lang, $basePath);
 
 		$this->load();
-	}
-
-	/**
-	 * Returns a language object.
-	 *
-	 * @param   string   $lang   The language to use.
-	 * @param   string   $path   The base path to the language folder.  This is required if creating a new instance.
-	 * @param   boolean  $debug  The debug mode.
-	 *
-	 * @return  Language  The Language object.
-	 *
-	 * @since   1.0
-	 * @deprecated  2.0  Use LanguageFactory::getLanguage() instead
-	 */
-	public static function getInstance($lang = null, $path = null, $debug = false)
-	{
-		return self::$languageFactory->getLanguage($lang, null, $debug);
 	}
 
 	/**
