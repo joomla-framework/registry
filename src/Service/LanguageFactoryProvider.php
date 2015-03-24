@@ -10,15 +10,14 @@ namespace Joomla\Language\Service;
 
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
-use Joomla\Language\Language;
 use Joomla\Language\LanguageFactory;
 
 /**
- * Language object service provider
+ * LanguageFactory object service provider
  *
  * @since  __DEPLOY_VERSION__
  */
-class LanguageProvider implements ServiceProviderInterface
+class LanguageFactoryProvider implements ServiceProviderInterface
 {
 	/**
 	 * Registers the service provider with a DI container.
@@ -33,19 +32,25 @@ class LanguageProvider implements ServiceProviderInterface
 	public function register(Container $container)
 	{
 		$container->share(
-			'Joomla\\Language\\Language',
+			'Joomla\\Language\\LanguageFactory',
 			function () use ($container)
 			{
+				$factory = new LanguageFactory;
+
 				/** @var \Joomla\Registry\Registry $config */
 				$config = $container->get('config');
 
 				$baseLangDir = $config->get('language.basedir');
 				$defaultLang = $config->get('language.default', 'en-GB');
-				$debug       = $config->get('language.debug', false);
 
-				$languageFactory = new LanguageFactory;
+				if ($baseLangDir)
+				{
+					$factory->setLanguageDirectory($baseLangDir);
+				}
 
-				return $languageFactory->getLanguage($defaultLang, $baseLangDir, $debug);
+				$factory->setDefaultLanguage($defaultLang);
+
+				return $factory;
 			}, true
 		);
 	}

@@ -88,9 +88,10 @@ class Text
 	 */
 	public static function _($string, $jsSafe = false, $interpretBackSlashes = true, $script = false)
 	{
-		$languageFactory = new LanguageFactory;
+		$factory = new LanguageFactory;
+		$text    = $factory->getText();
 
-		return $languageFactory->getLanguage()->getText()->translate($string, $jsSafe, $interpretBackSlashes, $script);
+		return $text->translate($string, $jsSafe, $interpretBackSlashes, $script);
 	}
 
 	/**

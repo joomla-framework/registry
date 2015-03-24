@@ -564,19 +564,6 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getText() returns a Text object
-	 *
-	 * @covers   Joomla\Language\Language::getText
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testVerifyThatGetTextReturnsATextObject()
-	{
-		$this->assertInstanceOf('\\Joomla\\Language\\Text', $this->object->getText());
-	}
-
-	/**
 	 * @testdox  Verify that Language::getFirstDay() default returns an array
 	 *
 	 * @covers   Joomla\Language\Language::getFirstDay

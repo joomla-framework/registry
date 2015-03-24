@@ -8,8 +8,6 @@
 
 namespace Joomla\Language;
 
-use Joomla\Language\Localise\En_GBLocalise as DefaultLocalise;
-
 /**
  * Helper class for the Language package
  *
@@ -32,61 +30,6 @@ class LanguageHelper
 	public function exists($lang, $basePath)
 	{
 		return is_dir($this->getLanguagePath($basePath, $lang));
-	}
-
-	/**
-	 * Searches for a specific localise file for a given language. Falls back to the .
-	 *
-	 * @param   string  $lang      Language to check.
-	 * @param   string  $basePath  Base path to the language folder.
-	 *
-	 * @return  LocaliseInterface  The localise helper object.
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function findLocalise($lang, $basePath)
-	{
-		// Look for a language specific localise class
-		$class = str_replace('-', '_', $lang . 'Localise');
-		$paths = array();
-
-		$paths[0] = $basePath . "/overrides/$lang.localise.php";
-		$paths[1] = $basePath . "/$lang/$lang.localise.php";
-
-		ksort($paths);
-		$path = reset($paths);
-
-		while (!class_exists($class) && $path)
-		{
-			if (file_exists($path))
-			{
-				require_once $path;
-			}
-
-			$path = next($paths);
-		}
-
-		// If we have found a match initialise it and return it
-		if (class_exists($class))
-		{
-			// Need to instantiate the class to check it implements the LocaliseInterface
-			$localiseObject = new $class;
-
-			if (!($localiseObject instanceof LocaliseInterface))
-			{
-				throw new \RuntimeException(
-					sprintf(
-						'The %s class must implement the LocaliseInterface.',
-						$class
-					)
-				);
-			}
-
-			return $localiseObject;
-		}
-
-		// Return the en_GB class if no specific instance is found
-		return new DefaultLocalise;
 	}
 
 	/**

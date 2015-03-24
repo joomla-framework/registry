@@ -7,14 +7,13 @@
 namespace Joomla\Language\Tests\Service;
 
 use Joomla\DI\Container;
-use Joomla\Language\Service\LanguageProvider;
-use Joomla\Language\Service\TextProvider;
+use Joomla\Language\Service\LanguageFactoryProvider;
 use Joomla\Registry\Registry;
 
 /**
- * Test class for Joomla\Language\Service\TextProvider.
+ * Test class for Joomla\Language\Service\LanguageFactoryProvider.
  */
-class TextProviderTest extends \PHPUnit_Framework_TestCase
+class LanguageFactoryProviderTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * DI Container for testing
@@ -40,28 +39,28 @@ class TextProviderTest extends \PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$this->testPath  = __DIR__ . '/data';
+		$this->testPath  = dirname(__DIR__) . '/data';
 
 		// Create a DI container for testing
 		$this->container = new Container;
 		$config = new Registry;
 		$config->set('language.basedir', $this->testPath);
 		$this->container->set('config', $config);
-		$this->container->registerServiceProvider(new LanguageProvider());
 	}
 
 	/**
-	 * @testdox  Verify that the TextProvider returns a Text object
+	 * @testdox  Verify that the LanguageFactoryProvider returns a LanguageFactory object
 	 *
-	 * @covers   Joomla\Language\Service\TextProvider::register
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\Text
-	 * @uses     Joomla\Language\Service\LanguageProvider
+	 * @covers   Joomla\Language\Service\LanguageFactoryProvider::register
+	 * @uses     Joomla\Language\LanguageFactory
 	 */
-	public function testVerifyTheTextObjectIsRegisteredToTheContainer()
+	public function testVerifyTheLanguageObjectIsRegisteredToTheContainer()
 	{
-		$this->container->registerServiceProvider(new TextProvider());
+		$this->container->registerServiceProvider(new LanguageFactoryProvider);
 
-		$this->assertInstanceOf('\\Joomla\\Language\\Text', $this->container->get('Joomla\\Language\\Text'));
+		$this->assertInstanceOf(
+			'\\Joomla\\Language\\LanguageFactory',
+			$this->container->get('Joomla\\Language\\LanguageFactory')
+		);
 	}
 }
