@@ -7,7 +7,7 @@
     "license": "LGPL-2.1+",
     "require": {
         "php": ">=5.3.10",
-        "joomla/registry": "~1.0"
+        "joomla/registry": "~1.0|2.0.*@dev"
     },
     "require-dev": {
         "joomla/application": "~1.0",
@@ -32,5 +32,6 @@
             "dev-2.0-dev": "2.0-dev"
         }
     },
-    "bin": ["bin/keychain"]
+    "bin": ["bin/keychain"],
+    "prefer-stable": true
 }
