@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -20,8 +20,18 @@ class Language
 	 *
 	 * @var    Language[]
 	 * @since  1.0
+	 * @deprecated  2.0
 	 */
 	protected static $languages = array();
+
+	/**
+	 * Cached LanguageFactory object
+	 *
+	 * @var    LanguageFactory
+	 * @since  __DEPLOY_VERSION__
+	 * @deprecated  2.0
+	 */
+	protected static $languageFactory;
 
 	/**
 	 * Debug language, If true, highlights if string isn't found.
@@ -195,41 +205,11 @@ class Language
 	 * @return  Language  The Language object.
 	 *
 	 * @since   1.0
-	 * @throws  \InvalidArgumentException
+	 * @deprecated  2.0  Use LanguageFactory::getLanguage() instead
 	 */
 	public static function getInstance($lang = null, $path = null, $debug = false)
 	{
-		if (!isset(self::$languages[$lang . $debug]))
-		{
-			if ($path === null)
-			{
-				throw new \InvalidArgumentException(
-					'The $path variable cannot be null when creating a new Language object'
-				);
-			}
-
-			$language = new self($path, $lang, $debug);
-
-			self::$languages[$lang . $debug] = $language;
-
-			/*
-			 * Check if Language was instantiated with a null $lang param;
-			 * if so, retrieve the language code from the object and store
-			 * the instance with the language code as well
-			 */
-			if (is_null($lang))
-			{
-				self::$languages[$language->getLanguage() . $debug] = $language;
-
-				// Set the "default" language object if it isn't
-				if (!isset(self::$languages[$debug]))
-				{
-					self::$languages[$debug] = $language;
-				}
-			}
-		}
-
-		return self::$languages[$lang . $debug];
+		return self::$languageFactory->getLanguage($lang, null, $debug);
 	}
 
 	/**
