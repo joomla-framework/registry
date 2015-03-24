@@ -30,21 +30,20 @@ $text     = $language->getText();
 #### Example 3: Loading a Text Object from the DI Container
 
 Note: In order to use this method, your project must utilise Joomla's [Dependency Injection](https://github.com/joomla-framework/di)
-package.  A `Language` object must also be stored in the container.
+package.  A `LanguageFactory` object must also be stored in the container.
 
 ```php
 use Joomla\DI\Container;
-use Joomla\Language\Language;
-use Joomla\Language\Service\TextProvider;
+use Joomla\Language\Service\LanguageFactoryProvider;
 
 $container = new Container;
-$container->registerServiceProvider(new TextProvider);
+$container->registerServiceProvider(new LanguageFactoryProvider);
 
-$language = new Language('/var/www/jfw-application', 'en-GB');
+$languageFactory = $container->get('Joomla\Language\LanguageFactory');
+$languageFactory->setLanguageDirectory('/var/www/jfw-application');
 
-$container->set('Joomla\Language\Language', $language);
-
-$text = $container->get('Joomla\Language\Language');
+// This will also create a Language instance in the LanguageFactory in the default language
+$text = $languageFactory->getText();
 ```
 
 ### Translating a Key

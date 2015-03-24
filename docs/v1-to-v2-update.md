@@ -25,10 +25,18 @@ HTML context).
 
 The `_` method in `Language` and `Text` has been deprecated in favor of `translate`.
 
+### Language::getInstance() removed
+
+The `getInstance()` method in `Language` has been removed.  Use `LanguageFactory::getLanguage()` instead.
+
 ### Language::setLanguage() removed
 
 The `setLanguage()` method in `Language` has been removed.  A new Language instance in the new language should be instantiated
 instead.
+
+### Stemmer::getInstance() removed
+
+The `getInstance()` method in `Stemmer` has been removed.  Use `LanguageFactory::getStemmer()` instead.
 
 ### Methods for CMS Search Component
 
@@ -36,7 +44,7 @@ The methods `getUpperLimitSearchWord`, `getSearchDisplayedCharactersNumber`, `ge
 have all been removed as well as the associated methods to get and set their callback functions. These should be implemented
 by the user if required.
 
-### Localise Interface
+### LocaliseInterface
 A `LocaliseInterface` has been introduced as a standard way to set the way to set functions for `Language::getPluralSuffixes()`
 and `Language::transliterate()`. Both of these must now be set in the language's localise.php file (this was possible in
 version 1 however could optionally could have callback functions set if such a file didn't exist).
