@@ -8,8 +8,6 @@
 
 namespace Joomla\Language;
 
-use RuntimeException;
-
 /**
  * Stemmer base class.
  *
@@ -24,33 +22,6 @@ abstract class Stemmer
 	 * @since  1.0
 	 */
 	protected $cache = array();
-
-	/**
-	 * Container with active Stemmer instances.
-	 *
-	 * @var    Stemmer[]
-	 * @since  1.0
-	 * @deprecated  2.0
-	 */
-	protected static $instances = array();
-
-	/**
-	 * Method to get a stemmer, creating it if necessary.
-	 *
-	 * @param   string  $adapter  The type of stemmer to load.
-	 *
-	 * @return  Stemmer
-	 *
-	 * @since   1.0
-	 * @deprecated  2.0  Use LanguageFactory::getStemmer() instead
-	 * @throws  RuntimeException on invalid stemmer.
-	 */
-	public static function getInstance($adapter)
-	{
-		$factory = new LanguageFactory;
-
-		return $factory->getStemmer($adapter);
-	}
 
 	/**
 	 * Method to stem a token and return the root.

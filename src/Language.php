@@ -146,6 +146,13 @@ class Language
 	 */
 	public function __construct($path, $lang = null, $debug = false)
 	{
+		if ($path === null)
+		{
+			throw new \InvalidArgumentException(
+				'The $path variable cannot be null when creating a new Language object'
+			);
+		}
+
 		$this->basePath = $path;
 		$this->strings  = array();
 		$this->helper   = new LanguageHelper;
@@ -172,7 +179,8 @@ class Language
 		}
 
 		// Grab a localisation file
-		$this->localise = $this->helper->findLocalise($lang, $basePath);
+		$factory = new LanguageFactory;
+		$this->localise = $factory->getLocalise($lang, $path);
 
 		$this->load();
 	}
@@ -903,18 +911,6 @@ class Language
 		}
 
 		return $this->locale;
-	}
-
-	/**
-	 * Retrieves a new Text object for the current instance
-	 *
-	 * @return  Text
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function getText()
-	{
-		return new Text($this);
 	}
 
 	/**
