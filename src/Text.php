@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -81,15 +81,16 @@ class Text
 	 *
 	 * @return  string  The translated string or the key if $script is true
 	 *
+	 * @note    To use this method, a Language instance should be registered to the LanguageFactory
 	 * @see     Text::translate()
 	 * @since   1.0
 	 * @deprecated  3.0  Use translate instead
 	 */
 	public static function _($string, $jsSafe = false, $interpretBackSlashes = true, $script = false)
 	{
-		$language = Language::getInstance();
+		$languageFactory = new LanguageFactory;
 
-		return $language->getText()->translate($string, $jsSafe, $interpretBackSlashes, $script);
+		return $languageFactory->getLanguage()->getText()->translate($string, $jsSafe, $interpretBackSlashes, $script);
 	}
 
 	/**

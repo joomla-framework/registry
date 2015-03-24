@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -53,31 +53,6 @@ class LanguageTest extends \PHPUnit_Framework_TestCase
 	public function testVerifyThatLanguageIsInstantiatedCorrectly()
 	{
 		$this->assertInstanceOf('Joomla\\Language\\Language', new Language($this->testPath));
-	}
-
-	/**
-	 * @testdox  Verify that getInstance() returns a Language object
-	 *
-	 * @covers   Joomla\Language\Language::getInstance
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 */
-	public function testVerifyGetInstanceReturnsALanguageObject()
-	{
-		$this->assertInstanceOf('\\Joomla\\Language\\Language', Language::getInstance(null, $this->testPath));
-	}
-
-	/**
-	 * @testdox  Verify that getInstance() throws an \InvalidArgumentException when no path is given
-	 *
-	 * @covers             Joomla\Language\Language::getInstance
-	 * @uses               Joomla\Language\Language
-	 * @uses               Joomla\Language\LanguageHelper
-	 * @expectedException  \InvalidArgumentException
-	 */
-	public function testVerifyGetInstanceThrowsAnExceptionWhenNoPathIsGiven()
-	{
-		Language::getInstance('es-ES');
 	}
 
 	/**

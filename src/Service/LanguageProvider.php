@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -11,6 +11,7 @@ namespace Joomla\Language\Service;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Joomla\Language\Language;
+use Joomla\Language\LanguageFactory;
 
 /**
  * Language object service provider
@@ -42,7 +43,9 @@ class LanguageProvider implements ServiceProviderInterface
 				$defaultLang = $config->get('language.default', 'en-GB');
 				$debug       = $config->get('language.debug', false);
 
-				return Language::getInstance($defaultLang, $baseLangDir, $debug);
+				$languageFactory = new LanguageFactory;
+
+				return $languageFactory->getLanguage($defaultLang, $baseLangDir, $debug);
 			}, true
 		);
 	}
