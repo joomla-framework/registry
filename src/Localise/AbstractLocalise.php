@@ -10,7 +10,7 @@ namespace Joomla\Language\Localise;
 
 use Joomla\Language\LocaliseInterface;
 use Joomla\Language\Transliterate;
-use Joomla\String\String;
+use Joomla\String\StringHelper;
 
 /**
  * Abstract localisation handler class
@@ -35,7 +35,7 @@ abstract class AbstractLocalise implements LocaliseInterface
 		$transliterate = new Transliterate;
 		$string = $transliterate->utf8_latin_to_ascii($string);
 
-		return String::strtolower($string);
+		return StringHelper::strtolower($string);
 	}
 
 	/**
