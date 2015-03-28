@@ -2,13 +2,13 @@
 /**
  * Part of the Joomla Framework Utilities Package
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Utilities;
 
-use Joomla\String\String;
+use Joomla\String\StringHelper;
 
 /**
  * ArrayHelper is an array utility class for doing all sorts of odds and ends with arrays.
@@ -230,17 +230,24 @@ final class ArrayHelper
 	/**
 	 * Utility function to return a value from a named array or a specified default
 	 *
-	 * @param   array   $array    A named array
-	 * @param   string  $name     The key to search for
-	 * @param   mixed   $default  The default value to give if no key found
-	 * @param   string  $type     Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
+	 * @param   array|\ArrayAccess  $array    A named array or object that implements ArrayAccess
+	 * @param   string              $name     The key to search for
+	 * @param   mixed               $default  The default value to give if no key found
+	 * @param   string              $type     Return type for the variable (INT, FLOAT, STRING, WORD, BOOLEAN, ARRAY)
 	 *
 	 * @return  mixed  The value from the source array
 	 *
+	 * @throws  InvalidArgumentException
+	 *
 	 * @since   1.0
 	 */
-	public static function getValue(array $array, $name, $default = null, $type = '')
+	public static function getValue($array, $name, $default = null, $type = '')
 	{
+		if (!is_array($array) && !($array instanceof \ArrayAccess))
+		{
+			throw new \InvalidArgumentException('The object must be an array or a object that implements ArrayAccess');
+		}
+
 		$result = null;
 
 		if (isset($array[$name]))
@@ -505,11 +512,11 @@ final class ArrayHelper
 					}
 					elseif ($caseSensitive)
 					{
-						$cmp = String::strcmp($va, $vb, $locale);
+						$cmp = StringHelper::strcmp($va, $vb, $locale);
 					}
 					else
 					{
-						$cmp = String::strcasecmp($va, $vb, $locale);
+						$cmp = StringHelper::strcasecmp($va, $vb, $locale);
 					}
 
 					if ($cmp > 0)
