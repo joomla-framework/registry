@@ -56,9 +56,8 @@ translation and also has several optional parameters.
  * @param   string   $string                The string to translate.
  * @param   array    $jsSafe                Array containing data to make the string safe for JavaScript output
  * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
- * @param   boolean  $script                To indicate that the string will be push in the javascript language store
  */
-public function translate($string, $jsSafe = array(), $interpretBackSlashes = true, $script = false)
+public function translate($string, $jsSafe = array(), $interpretBackSlashes = true)
 ```
 
 The following example demonstrates basic usage of the `Text` class.
@@ -76,21 +75,6 @@ $translatedString = $text->translate('MY_KEY');
 If the supplied key is found in the `Language` class storage, the translated string will be returned; otherwise the
 key will be returned.
 
-The following example demonstrates storing a language key to the JavaScript store (useful if creating a JavaScript
-API to process translations):
-
-```php
-use Joomla\Language\Language;
-use Joomla\Language\Text;
-
-$language = new Language('/var/www/jfw-application', 'en-GB');
-$text     = new Text($language);
-
-$text->translate('MY_KEY', array('jsSafe' => true), true, true);
-```
-
-In this instance, the language key will always be returned when instructed to store to the JavaScript store.
-
 ### Alternate Translations
 
 The `alt` method is used for creating potential alternate translations of a base language key by specifying a possible
@@ -103,9 +87,8 @@ is returned, otherwise the base language key will be processed for translation.
  * @param   string   $alt                   The alternate option for global string
  * @param   array    $jsSafe                Array containing data to make the string safe for JavaScript output
  * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
- * @param   boolean  $script                To indicate that the string will be push in the javascript language store
  */
-public function alt($string, $alt, $jsSafe = false, $interpretBackSlashes = true, $script = false)
+public function alt($string, $alt, $jsSafe = false, $interpretBackSlashes = true)
 ```
 
 Assuming the following is the contents of the `en-GB.ini` language file:

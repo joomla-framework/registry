@@ -158,13 +158,12 @@ class Text
 	 *
 	 * The last argument can take an array of options:
 	 *
-	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean, 'script'=>boolean)
+	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean)
 	 *
 	 * where:
 	 *
 	 * jsSafe is a boolean to generate a javascript safe strings.
 	 * interpretBackSlashes is a boolean to interpret backslashes \\->\, \n->new line, \t->tabulation.
-	 * script is a boolean to indicate that the string will be push in the javascript language store.
 	 *
 	 * @param   string   $string  The format string.
 	 * @param   integer  $n       The number of items
@@ -222,13 +221,12 @@ class Text
 	 *
 	 * The last argument can take an array of options:
 	 *
-	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean, 'script'=>boolean)
+	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean)
 	 *
 	 * where:
 	 *
 	 * jsSafe is a boolean to generate a javascript safe strings.
 	 * interpretBackSlashes is a boolean to interpret backslashes \\->\, \n->new line, \t->tabulation.
-	 * script is a boolean to indicate that the string will be push in the javascript language store.
 	 *
 	 * @param   string  $string  The format string.
 	 *
@@ -263,13 +261,12 @@ class Text
 	 *
 	 * The last argument can take an array of options:
 	 *
-	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean, 'script'=>boolean)
+	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean)
 	 *
 	 * where:
 	 *
 	 * jsSafe is a boolean to generate a javascript safe strings.
 	 * interpretBackSlashes is a boolean to interpret backslashes \\->\, \n->new line, \t->tabulation.
-	 * script is a boolean to indicate that the string will be push in the javascript language store.
 	 *
 	 * @param   string  $string  The format string.
 	 *
