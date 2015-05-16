@@ -82,26 +82,7 @@ class Text
 		$factory = new LanguageFactory;
 		$text    = $factory->getText();
 
-		return $text->translate($string, array(), $jsSafe, $interpretBackSlashes);
-	}
-
-	/**
-	 * Translates a string into the current language.
-	 *
-	 * @param   string   $string                The string to translate.
-	 * @param   array    $parameters            Array of parameters for the string
-	 * @param   array    $jsSafe                Array containing data to make the string safe for JavaScript output
-	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
-	 *
-	 * @return  string  The translated string or the key if $script is true
-	 *
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function translate($string, $parameters = array(), $jsSafe = array(), $interpretBackSlashes = true)
-	{
-		$lang = $this->getLanguage();
-
-		if (!empty($jsSafe))
+		if (is_array($jsSafe) && !empty($jsSafe))
 		{
 			if (array_key_exists('interpretBackSlashes', $jsSafe))
 			{
@@ -118,7 +99,24 @@ class Text
 			}
 		}
 
-		$translated = $lang->translate($string, $jsSafe, $interpretBackSlashes);
+		return $text->translate($string, array(), $jsSafe, $interpretBackSlashes);
+	}
+
+	/**
+	 * Translates a string into the current language.
+	 *
+	 * @param   string   $string                The string to translate.
+	 * @param   array    $parameters            Array of parameters for the string
+	 * @param   boolean  $jsSafe                True to escape the string for JavaScript output
+	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
+	 *
+	 * @return  string  The translated string or the key if $script is true
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function translate($string, $parameters = array(), $jsSafe = false, $interpretBackSlashes = true)
+	{
+		$translated = $this->getLanguage()->translate($string, $jsSafe, $interpretBackSlashes);
 
 		if (!empty($parameters))
 		{

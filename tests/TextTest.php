@@ -164,23 +164,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testTranslateReturnsAJavascriptSafeKey()
 	{
-		$this->assertSame('foobar\\\'s', $this->object->translate('foobar\'s', array(), array('jsSafe' => true)));
-	}
-
-	/**
-	 * @testdox  Verify that Text::translate() returns the translated string when the input params are overridden
-	 *
-	 * @covers   Joomla\Language\Text::translate
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testTranslateReturnsTheTranslatedStringWhenTheInputParamsAreOverridden()
-	{
-		$this->assertSame(
-			'foobar\'s',
-			$this->object->translate('foobar\'s', array(), array('interpretBackSlashes' => false), true)
-		);
+		$this->assertSame('foobar\\\'s', $this->object->translate('foobar\'s', array(), true));
 	}
 
 	/**
