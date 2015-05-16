@@ -16,15 +16,6 @@ namespace Joomla\Language;
 class Text
 {
 	/**
-	 * JavaScript strings
-	 *
-	 * @var         array
-	 * @since       1.0
-	 * @deprecated  2.0
-	 */
-	protected $strings = array();
-
-	/**
 	 * Language instance
 	 *
 	 * @var    Language
@@ -78,7 +69,6 @@ class Text
 	 * @param   string   $string                The string to translate.
 	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
 	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
-	 * @param   boolean  $script                To indicate that the string will be push in the javascript language store [@deprecated 2.0]
 	 *
 	 * @return  string  The translated string or the key if $script is true
 	 *
@@ -87,12 +77,12 @@ class Text
 	 * @since   1.0
 	 * @deprecated  3.0  Use translate instead
 	 */
-	public static function _($string, $jsSafe = false, $interpretBackSlashes = true, $script = false)
+	public static function _($string, $jsSafe = false, $interpretBackSlashes = true)
 	{
 		$factory = new LanguageFactory;
 		$text    = $factory->getText();
 
-		return $text->translate($string, $jsSafe, $interpretBackSlashes, $script);
+		return $text->translate($string, $jsSafe, $interpretBackSlashes);
 	}
 
 	/**
@@ -101,13 +91,12 @@ class Text
 	 * @param   string   $string                The string to translate.
 	 * @param   array    $jsSafe                Array containing data to make the string safe for JavaScript output
 	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
-	 * @param   boolean  $script                To indicate that the string will be push in the javascript language store
 	 *
 	 * @return  string  The translated string or the key if $script is true
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function translate($string, $jsSafe = array(), $interpretBackSlashes = true, $script = false)
+	public function translate($string, $jsSafe = array(), $interpretBackSlashes = true)
 	{
 		$lang = $this->getLanguage();
 
@@ -116,11 +105,6 @@ class Text
 			if (array_key_exists('interpretBackSlashes', $jsSafe))
 			{
 				$interpretBackSlashes = (boolean) $jsSafe['interpretBackSlashes'];
-			}
-
-			if (array_key_exists('script', $jsSafe))
-			{
-				$script = (boolean) $jsSafe['script'];
 			}
 
 			if (array_key_exists('jsSafe', $jsSafe))
@@ -133,13 +117,6 @@ class Text
 			}
 		}
 
-		if ($script)
-		{
-			$this->strings[$string] = $lang->translate($string, $jsSafe, $interpretBackSlashes);
-
-			return $string;
-		}
-
 		return $lang->translate($string, $jsSafe, $interpretBackSlashes);
 	}
 
@@ -150,22 +127,21 @@ class Text
 	 * @param   string   $alt                   The alternate option for global string
 	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
 	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
-	 * @param   boolean  $script                To indicate that the string will be pushed in the javascript language store [@deprecated 2.0]
 	 *
 	 * @return  string  The translated string or the key if $script is true
 	 *
 	 * @since   1.0
 	 */
-	public function alt($string, $alt, $jsSafe = false, $interpretBackSlashes = true, $script = false)
+	public function alt($string, $alt, $jsSafe = false, $interpretBackSlashes = true)
 	{
 		$lang = $this->getLanguage();
 
 		if ($lang->hasKey($string . '_' . $alt))
 		{
-			return $this->translate($string . '_' . $alt, $jsSafe, $interpretBackSlashes, $script);
+			return $this->translate($string . '_' . $alt, $jsSafe, $interpretBackSlashes);
 		}
 
-		return $this->translate($string, $jsSafe, $interpretBackSlashes, $script);
+		return $this->translate($string, $jsSafe, $interpretBackSlashes);
 	}
 
 	/**
@@ -223,13 +199,6 @@ class Text
 				$key, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
 				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
 			);
-
-			if (array_key_exists('script', $args[$count - 1]) && $args[$count - 1]['script'])
-			{
-				$this->strings[$key] = call_user_func_array('sprintf', $args);
-
-				return $key;
-			}
 		}
 		else
 		{
@@ -271,13 +240,6 @@ class Text
 				$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
 				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
 			);
-
-			if (array_key_exists('script', $args[$count - 1]) && $args[$count - 1]['script'])
-			{
-				$this->strings[$string] = call_user_func_array('sprintf', $args);
-
-				return $string;
-			}
 		}
 		else
 		{
@@ -326,46 +288,5 @@ class Text
 		}
 
 		return call_user_func_array('printf', $args);
-	}
-
-	/**
-	 * Translate a string into the current language and stores it in the JavaScript language store.
-	 *
-	 * @param   string   $string                The Text key.
-	 * @param   array    $jsSafe                Ensure the output is JavaScript safe.
-	 * @param   boolean  $interpretBackSlashes  Interpret \t and \n.
-	 *
-	 * @return  array
-	 *
-	 * @since       1.0
-	 * @deprecated  2.0  Deprecated without replacement
-	 */
-	public function script($string = null, $jsSafe = array(), $interpretBackSlashes = true)
-	{
-		// Add the string to the array if not null.
-		if ($string !== null)
-		{
-			if (is_array($jsSafe))
-			{
-				if (array_key_exists('interpretBackSlashes', $jsSafe))
-				{
-					$interpretBackSlashes = (boolean) $jsSafe['interpretBackSlashes'];
-				}
-
-				if (array_key_exists('jsSafe', $jsSafe))
-				{
-					$jsSafe = (boolean) $jsSafe['jsSafe'];
-				}
-				else
-				{
-					$jsSafe = false;
-				}
-			}
-
-			// Normalize the key and translate the string.
-			$this->strings[strtoupper($string)] = $this->getLanguage()->translate($string, $jsSafe, $interpretBackSlashes);
-		}
-
-		return $this->strings;
 	}
 }

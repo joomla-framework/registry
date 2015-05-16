@@ -38,6 +38,11 @@ instead.
 
 The `getInstance()` method in `Stemmer` has been removed.  Use `LanguageFactory::getStemmer()` instead.
 
+### Text::script() removed
+
+The `script()` method in `Text` has been removed, as well as support for the internal JavaScript store.  Downstream applications
+should implement this feature if needed.
+
 ### Methods for CMS Search Component
 
 The methods `getUpperLimitSearchWord`, `getSearchDisplayedCharactersNumber`, `getLowerLimitSearchWord` and `getIgnoredSearchWords`

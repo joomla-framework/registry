@@ -138,19 +138,6 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Text::translate() returns the original string when storing to the JavaScript store
-	 *
-	 * @covers   Joomla\Language\Text::translate
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testTranslateReturnsTheOriginalStringWhenStoringToJavascriptStore()
-	{
-		$this->assertSame('foobar\'s', $this->object->translate('foobar\'s', array('jsSafe' => true), true, true));
-	}
-
-	/**
 	 * @testdox  Verify that Text::translate() returns the translated string when the input params are overridden
 	 *
 	 * @covers   Joomla\Language\Text::translate
@@ -162,7 +149,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertSame(
 			'foobar\'s',
-			$this->object->translate('foobar\'s', array('script' => false, 'interpretBackSlashes' => false), true, true)
+			$this->object->translate('foobar\'s', array('interpretBackSlashes' => false), true)
 		);
 	}
 
@@ -219,19 +206,6 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Text::plural() returns the key when the 'script' key is passed
-	 *
-	 * @covers   Joomla\Language\Text::plural
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testPluralReturnsTheKeyWhenTheScriptKeyIsPassed()
-	{
-		$this->assertSame('BAR_MORE', $this->object->plural('BAR', 3, array('script' => true)));
-	}
-
-	/**
 	 * @testdox  Verify that Text::sprintf() returns the input key when no key is found
 	 *
 	 * @covers   Joomla\Language\Text::sprintf
@@ -255,19 +229,6 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	public function testSprintfReturnsTranslatedStringWhenKeyFound()
 	{
 		$this->assertSame('I have 3 cars!', $this->object->sprintf('MANY_CARS', 3));
-	}
-
-	/**
-	 * @testdox  Verify that Text::sprintf() returns the key when the 'script' key is passed
-	 *
-	 * @covers   Joomla\Language\Text::sprintf
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testSprintfReturnsTheKeyWhenTheScriptKeyIsPassed()
-	{
-		$this->assertSame('MANY_CARS', $this->object->sprintf('MANY_CARS', 3, array('script' => true)));
 	}
 
 	/**
@@ -302,64 +263,5 @@ class TextTest extends \PHPUnit_Framework_TestCase
 		$return = ob_get_clean();
 
 		$this->assertSame('I have 3 cars!', $return);
-	}
-
-	/**
-	 * @testdox  Verify that Text::printf() returns the key when the 'script' key is passed
-	 *
-	 * @covers   Joomla\Language\Text::printf
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testPrintfReturnsTheTranslatedStringWhenTheScriptKeyIsPassed()
-	{
-		ob_start();
-		$this->object->printf('MANY_CARS', 3, array('script' => true));
-		$return = ob_get_clean();
-
-		$this->assertSame('I have 3 cars!', $return);
-	}
-
-	/**
-	 * @testdox  Verify that Text::script() returns the JavaScript store by default
-	 *
-	 * @covers   Joomla\Language\Text::script
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testScriptReturnsTheJavascriptStoreByDefault()
-	{
-		$this->assertSame(array(), $this->object->script());
-	}
-
-	/**
-	 * @testdox  Verify that Text::script() returns the JavaScript store with the translated string
-	 *
-	 * @covers   Joomla\Language\Text::script
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testScriptReturnsTheJavascriptStoreWithTheTranslatedString()
-	{
-		$this->assertSame(array('FOO' => 'Bar'), $this->object->script('FOO'));
-	}
-
-	/**
-	 * @testdox  Verify that Text::script() returns the JavaScript store with the JavaScript safe translated string
-	 *
-	 * @covers   Joomla\Language\Text::script
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testScriptReturnsTheJavascriptStoreWithTheJavascriptSafeTranslatedString()
-	{
-		$this->assertSame(
-			array('FOOBAR\'S' => 'foobar\\\'s'),
-			$this->object->script('foobar\'s', array('jsSafe' => true, 'interpretBackSlashes' => false))
-		);
 	}
 }

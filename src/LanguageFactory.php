@@ -164,7 +164,7 @@ class LanguageFactory
 		}
 
 		// Return the en_GB class if no specific instance is found
-		return new DefaultLocalise;
+		return new Localise\En_GBLocalise;
 	}
 
 	/**
