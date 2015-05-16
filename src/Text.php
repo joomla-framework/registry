@@ -82,13 +82,14 @@ class Text
 		$factory = new LanguageFactory;
 		$text    = $factory->getText();
 
-		return $text->translate($string, $jsSafe, $interpretBackSlashes);
+		return $text->translate($string, array(), $jsSafe, $interpretBackSlashes);
 	}
 
 	/**
 	 * Translates a string into the current language.
 	 *
 	 * @param   string   $string                The string to translate.
+	 * @param   array    $parameters            Array of parameters for the string
 	 * @param   array    $jsSafe                Array containing data to make the string safe for JavaScript output
 	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
 	 *
@@ -96,7 +97,7 @@ class Text
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function translate($string, $jsSafe = array(), $interpretBackSlashes = true)
+	public function translate($string, $parameters = array(), $jsSafe = array(), $interpretBackSlashes = true)
 	{
 		$lang = $this->getLanguage();
 
@@ -117,7 +118,14 @@ class Text
 			}
 		}
 
-		return $lang->translate($string, $jsSafe, $interpretBackSlashes);
+		$translated = $lang->translate($string, $jsSafe, $interpretBackSlashes);
+
+		if (!empty($parameters))
+		{
+			$translated = strtr($translated, $parameters);
+		}
+
+		return $translated;
 	}
 
 	/**
@@ -125,6 +133,7 @@ class Text
 	 *
 	 * @param   string   $string                The string to translate.
 	 * @param   string   $alt                   The alternate option for global string
+	 * @param   array    $parameters            Array of parameters for the string
 	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
 	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
 	 *
@@ -132,16 +141,16 @@ class Text
 	 *
 	 * @since   1.0
 	 */
-	public function alt($string, $alt, $jsSafe = false, $interpretBackSlashes = true)
+	public function alt($string, $alt, $parameters = array(), $jsSafe = false, $interpretBackSlashes = true)
 	{
 		$lang = $this->getLanguage();
 
 		if ($lang->hasKey($string . '_' . $alt))
 		{
-			return $this->translate($string . '_' . $alt, $jsSafe, $interpretBackSlashes);
+			return $this->translate($string . '_' . $alt, $parameters, $jsSafe, $interpretBackSlashes);
 		}
 
-		return $this->translate($string, $jsSafe, $interpretBackSlashes);
+		return $this->translate($string, $parameters, $jsSafe, $interpretBackSlashes);
 	}
 
 	/**
