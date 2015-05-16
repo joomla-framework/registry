@@ -54,11 +54,11 @@ translation and also has several optional parameters.
 ```php
 /*
  * @param   string   $string                The string to translate.
+ * @param   array    $parameters            Array of parameters for the string
  * @param   array    $jsSafe                Array containing data to make the string safe for JavaScript output
  * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
- * @param   boolean  $script                To indicate that the string will be push in the javascript language store
  */
-public function translate($string, $jsSafe = array(), $interpretBackSlashes = true, $script = false)
+public function translate($string, $parameters = array(), $jsSafe = array(), $interpretBackSlashes = true)
 ```
 
 The following example demonstrates basic usage of the `Text` class.
@@ -76,8 +76,18 @@ $translatedString = $text->translate('MY_KEY');
 If the supplied key is found in the `Language` class storage, the translated string will be returned; otherwise the
 key will be returned.
 
-The following example demonstrates storing a language key to the JavaScript store (useful if creating a JavaScript
-API to process translations):
+#### Named Parameter Support
+
+A new feature in 2.0 is support for named parameters.  The second parameter in the `translate` method accepts an
+associative array where the key is the string to replace and the value is the replacement.
+
+Assuming the following is the contents of the `en-GB.ini` language file:
+
+```ini
+MY_KEY="%term% Rocks!"
+```
+
+The following example demonstrates usage of the `translate` method with named parameters.
 
 ```php
 use Joomla\Language\Language;
@@ -86,10 +96,10 @@ use Joomla\Language\Text;
 $language = new Language('/var/www/jfw-application', 'en-GB');
 $text     = new Text($language);
 
-$text->translate('MY_KEY', array('jsSafe' => true), true, true);
+// Will return "Joomla Rocks!"
+$translatedAltString = $text->translate('MY_KEY', array('%term%' => 'Joomla');
 ```
 
-In this instance, the language key will always be returned when instructed to store to the JavaScript store.
 
 ### Alternate Translations
 
@@ -101,11 +111,11 @@ is returned, otherwise the base language key will be processed for translation.
 /*
  * @param   string   $string                The string to translate.
  * @param   string   $alt                   The alternate option for global string
+ * @param   array    $parameters            Array of parameters for the string
  * @param   array    $jsSafe                Array containing data to make the string safe for JavaScript output
  * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
- * @param   boolean  $script                To indicate that the string will be push in the javascript language store
  */
-public function alt($string, $alt, $jsSafe = false, $interpretBackSlashes = true, $script = false)
+public function alt($string, $parameters = array(), $alt, $jsSafe = false, $interpretBackSlashes = true)
 ```
 
 Assuming the following is the contents of the `en-GB.ini` language file:
@@ -130,3 +140,5 @@ $translatedAltString = $text->alt('MY_KEY', 'ROCKS');
 // Will return "Foo"
 $translatedBaseString = $text->alt('MY_KEY', 'IS_COOL');
 ```
+
+The `alt` method also supports named parameters.

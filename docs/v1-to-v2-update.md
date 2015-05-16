@@ -38,6 +38,12 @@ instead.
 
 The `getInstance()` method in `Stemmer` has been removed.  Use `LanguageFactory::getStemmer()` instead.
 
+### Text::alt() signature changed
+
+The `alt()` method's signature has had a backward compatibility breaking change.  A `$parameters` parameter has been added and is
+now the third parameter in the method signature.  This affects calls to the method which included the `$jsSafe` and
+`$interpretBackSlashes` parameters.
+
 ### Text::script() removed
 
 The `script()` method in `Text` has been removed, as well as support for the internal JavaScript store.  Downstream applications

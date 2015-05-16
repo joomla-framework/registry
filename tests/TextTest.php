@@ -6,6 +6,7 @@
 
 namespace Joomla\Language\Tests;
 
+use Joomla\Language\LanguageFactory;
 use Joomla\Language\Text;
 use Joomla\Language\Language;
 use Joomla\Test\TestHelper;
@@ -15,6 +16,13 @@ use Joomla\Test\TestHelper;
  */
 class TextTest extends \PHPUnit_Framework_TestCase
 {
+	/**
+	 * LanguageFactory object to use for testing
+	 *
+	 * @var  LanguageFactory
+	 */
+	private static $factory;
+
 	/**
 	 * Test Text object
 	 *
@@ -27,7 +35,18 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @var  string
 	 */
-	private $testPath;
+	private static $testPath;
+
+	/**
+	 * This method is called before the first test of this test class is run.
+	 */
+	public static function setUpBeforeClass()
+	{
+		self::$testPath = __DIR__ . '/data';
+
+		self::$factory = new LanguageFactory;
+		self::$factory->setLanguageDirectory(self::$testPath);
+	}
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -37,9 +56,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$this->testPath = __DIR__ . '/data';
-
-		$language = new Language($this->testPath, 'en-GB');
+		$language = new Language(self::$testPath, 'en-GB');
 		$language->load();
 		$this->object = new Text($language);
 	}
@@ -54,7 +71,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testVerifyThatTextIsInstantiatedCorrectly()
 	{
-		$this->assertInstanceOf('Joomla\\Language\\Text', new Text(new Language($this->testPath)));
+		$this->assertInstanceOf('Joomla\\Language\\Text', new Text(new Language(self::$testPath)));
 	}
 
 	/**
@@ -80,7 +97,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testVerifyThatSetLanguageReturnsSelf()
 	{
-		$this->assertSame($this->object, $this->object->setLanguage(new Language($this->testPath, 'de-DE')));
+		$this->assertSame($this->object, $this->object->setLanguage(new Language(self::$testPath, 'de-DE')));
 	}
 
 	/**
@@ -125,6 +142,19 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @testdox  Verify that Text::translate() returns the correct string for a key with named parameters
+	 *
+	 * @covers   Joomla\Language\Text::translate
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
+	 */
+	public function testTranslateReturnsTheCorrectStringForAKeyWithNamedParameters()
+	{
+		$this->assertSame('Bar None', $this->object->translate('Bar %value%', array('%value%' => 'None')));
+	}
+
+	/**
 	 * @testdox  Verify that Text::translate() returns a JavaScript safe string
 	 *
 	 * @covers   Joomla\Language\Text::translate
@@ -134,7 +164,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testTranslateReturnsAJavascriptSafeKey()
 	{
-		$this->assertSame('foobar\\\'s', $this->object->translate('foobar\'s', true));
+		$this->assertSame('foobar\\\'s', $this->object->translate('foobar\'s', array(), true));
 	}
 
 	/**
@@ -161,6 +191,19 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	public function testAltReturnsTheCorrectStringForAKeyWithAlt()
 	{
 		$this->assertSame('Car', $this->object->alt('FOO', 'GOO'));
+	}
+
+	/**
+	 * @testdox  Verify that Text::alt() returns the correct string for a key with an alt and named parameters
+	 *
+	 * @covers   Joomla\Language\Text::alt
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\Text
+	 */
+	public function testAltReturnsTheCorrectStringForAKeyWithAltAndNamedParameters()
+	{
+		$this->assertSame('Green Car', $this->object->alt('FOO', 'BOO', array('%description%' => 'Green')));
 	}
 
 	/**
