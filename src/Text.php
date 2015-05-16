@@ -18,8 +18,9 @@ class Text
 	/**
 	 * JavaScript strings
 	 *
-	 * @var    array
-	 * @since  1.0
+	 * @var         array
+	 * @since       1.0
+	 * @deprecated  2.0
 	 */
 	protected $strings = array();
 
@@ -77,7 +78,7 @@ class Text
 	 * @param   string   $string                The string to translate.
 	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
 	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
-	 * @param   boolean  $script                To indicate that the string will be push in the javascript language store
+	 * @param   boolean  $script                To indicate that the string will be push in the javascript language store [@deprecated 2.0]
 	 *
 	 * @return  string  The translated string or the key if $script is true
 	 *
@@ -149,7 +150,7 @@ class Text
 	 * @param   string   $alt                   The alternate option for global string
 	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
 	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
-	 * @param   boolean  $script                To indicate that the string will be pushed in the javascript language store
+	 * @param   boolean  $script                To indicate that the string will be pushed in the javascript language store [@deprecated 2.0]
 	 *
 	 * @return  string  The translated string or the key if $script is true
 	 *
@@ -336,7 +337,8 @@ class Text
 	 *
 	 * @return  array
 	 *
-	 * @since   1.0
+	 * @since       1.0
+	 * @deprecated  2.0  Deprecated without replacement
 	 */
 	public function script($string = null, $jsSafe = array(), $interpretBackSlashes = true)
 	{
