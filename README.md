@@ -1,5 +1,10 @@
 # The Registry Package [![Build Status](https://travis-ci.org/joomla-framework/registry.png?branch=master)](https://travis-ci.org/joomla-framework/registry)
 
+[![Latest Stable Version](https://poser.pugx.org/joomla/registry/v/stable)](https://packagist.org/packages/joomla/registry)
+[![Total Downloads](https://poser.pugx.org/joomla/registry/downloads)](https://packagist.org/packages/joomla/registry)
+[![Latest Unstable Version](https://poser.pugx.org/joomla/registry/v/unstable)](https://packagist.org/packages/joomla/registry)
+[![License](https://poser.pugx.org/joomla/registry/license)](https://packagist.org/packages/joomla/registry)
+
 ``` php
 use Joomla\Registry\Registry;
 
@@ -286,6 +291,13 @@ $registry = new Registry(array(
 
 $registry->loadString('<data><value name="foo" type="string">bar</value></data>, 'xml');
 ```
+
+## Custom Formats
+To load your own custom format you must implement the `Joomla\Registry\FormatInterface`. This can then be loaded through the `Joomla\Registry\Factory` class. To load a custom format not provided by Joomla then you can load it by using
+
+`Factory::getFormat($type, $options)`
+
+In this scenario `$type` contains the format (and class) name. Whilst `$options` is an array with the key `format_namespace` which contains the namespace that the format is in. 
 
 ## Installation via Composer
 
