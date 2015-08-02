@@ -6,7 +6,7 @@
 
 namespace Joomla\Registry\Tests\Format;
 
-use Joomla\Registry\AbstractRegistryFormat;
+use Joomla\Registry\Factory;
 
 /**
  * Test class for Php.
@@ -24,7 +24,7 @@ class JRegistryFormatPHPTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testObjectToString()
 	{
-		$class = AbstractRegistryFormat::getInstance('PHP');
+		$class = Factory::getFormat('PHP');
 		$options = array('class' => 'myClass');
 		$object = new \stdClass;
 		$object->foo = 'bar';
@@ -65,7 +65,7 @@ class JRegistryFormatPHPTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testObjectToStringNamespace()
 	{
-		$class = AbstractRegistryFormat::getInstance('PHP');
+		$class = Factory::getFormat('PHP');
 		$options = array('class' => 'myClass', 'namespace' => 'Joomla\\Registry\\Test');
 		$object = new \stdClass;
 		$object->foo = 'bar';
@@ -107,7 +107,7 @@ class JRegistryFormatPHPTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testStringToObject()
 	{
-		$class = AbstractRegistryFormat::getInstance('PHP');
+		$class = Factory::getFormat('PHP');
 
 		// This method is not implemented in the class. The test is to achieve 100% code coverage
 		$this->assertTrue($class->stringToObject(''));
@@ -124,7 +124,7 @@ class JRegistryFormatPHPTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->MarkTestIncomplete('Method is not implemented in the class');
 
-		$class = AbstractRegistryFormat::getInstance('PHP');
+		$class = Factory::getFormat('PHP');
 
 		$input = "<?php\n" .
 			"class myClass {\n" .

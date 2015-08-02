@@ -8,7 +8,8 @@
 
 namespace Joomla\Registry\Format;
 
-use Joomla\Registry\AbstractRegistryFormat;
+use Joomla\Registry\Factory;
+use Joomla\Registry\FormatInterface;
 use Joomla\String\StringHelper;
 
 /**
@@ -16,7 +17,7 @@ use Joomla\String\StringHelper;
  *
  * @since  1.0
  */
-class Json extends AbstractRegistryFormat
+class Json implements FormatInterface
 {
 	/**
 	 * Converts an object into a JSON formatted string.
@@ -51,7 +52,7 @@ class Json extends AbstractRegistryFormat
 
 		if ((substr($data, 0, 1) != '{') && (substr($data, -1, 1) != '}'))
 		{
-			$ini = AbstractRegistryFormat::getInstance('Ini');
+			$ini = Factory::getFormat('Ini');
 			$obj = $ini->stringToObject($data, $options);
 		}
 		else

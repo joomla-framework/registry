@@ -6,7 +6,7 @@
 
 namespace Joomla\Registry\Tests\Format;
 
-use Joomla\Registry\AbstractRegistryFormat;
+use Joomla\Registry\Factory;
 
 /**
  * Test class for Json.
@@ -25,7 +25,7 @@ class JRegistryFormatJSONTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testObjectToString()
 	{
-		$class = AbstractRegistryFormat::getInstance('JSON');
+		$class = Factory::getFormat('JSON');
 		$options = null;
 		$object = new \stdClass;
 		$object->foo = 'bar';
@@ -63,7 +63,7 @@ class JRegistryFormatJSONTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testStringToObject()
 	{
-		$class = AbstractRegistryFormat::getInstance('JSON');
+		$class = Factory::getFormat('JSON');
 
 		$string1 = '{"title":"Joomla Framework","author":"Me","params":{"show_title":1,"show_abstract":0,"show_author":1,"categories":[1,2]}}';
 		$string2 = "[section]\nfoo=bar";
@@ -128,7 +128,7 @@ class JRegistryFormatJSONTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDataEquality()
 	{
-		$class = AbstractRegistryFormat::getInstance('JSON');
+		$class = Factory::getFormat('JSON');
 
 		$input = '{"title":"Joomla Framework","author":"Me","params":{"show_title":1,"show_abstract":0,"show_author":1,"categories":[1,2]}}';
 		$object = $class->stringToObject($input);

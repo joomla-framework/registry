@@ -6,7 +6,7 @@
 
 namespace Joomla\Registry\Tests\Format;
 
-use Joomla\Registry\AbstractRegistryFormat;
+use Joomla\Registry\Factory;
 
 /**
  * Test class for Yaml.
@@ -33,7 +33,7 @@ class FormatYamlTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function setUp()
 	{
-		$this->fixture = AbstractRegistryFormat::getInstance('Yaml');
+		$this->fixture = Factory::getFormat('Yaml');
 	}
 
 	/**

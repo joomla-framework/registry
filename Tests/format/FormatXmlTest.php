@@ -6,7 +6,7 @@
 
 namespace Joomla\Registry\Tests\Format;
 
-use Joomla\Registry\AbstractRegistryFormat;
+use Joomla\Registry\Factory;
 
 /**
  * Test class for Xml.
@@ -24,7 +24,7 @@ class JRegistryFormatXMLTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testObjectToString()
 	{
-		$class = AbstractRegistryFormat::getInstance('XML');
+		$class = Factory::getFormat('XML');
 		$options = null;
 		$object = new \stdClass;
 		$object->foo = 'bar';
@@ -75,7 +75,7 @@ class JRegistryFormatXMLTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testStringToObject()
 	{
-		$class = AbstractRegistryFormat::getInstance('XML');
+		$class = Factory::getFormat('XML');
 		$object = new \stdClass;
 		$object->foo = 'bar';
 		$object->booleantrue = true;
@@ -118,7 +118,7 @@ class JRegistryFormatXMLTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDataEquality()
 	{
-		$class = AbstractRegistryFormat::getInstance('XML');
+		$class = Factory::getFormat('XML');
 
 		// Check for different PHP behavior of displaying boolean false in XML.
 		$checkFalse = '<check/>' == simplexml_load_string('<test/>')->addChild('check', false)->asXML()

@@ -15,17 +15,6 @@ use Joomla\Test\TestHelper;
 class FactoryTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * {@inheritdoc}
-	 */
-	protected function tearDown()
-	{
-		// Reset the internal cache
-		TestHelper::setValue('Joomla\\Registry\\Factory', 'formatInstances', array());
-
-		parent::tearDown();
-	}
-
-	/**
 	 * @testdox  A format object is returned from the local Joomla namespace
 	 *
 	 * @covers   Joomla\Registry\Factory::getFormat

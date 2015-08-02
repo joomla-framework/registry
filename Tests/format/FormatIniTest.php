@@ -6,7 +6,7 @@
 
 namespace Joomla\Registry\Tests\Format;
 
-use Joomla\Registry\AbstractRegistryFormat;
+use Joomla\Registry\Factory;
 
 /**
  * Test class for Ini.
@@ -24,7 +24,7 @@ class JRegistryFormatINITest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testObjectToString()
 	{
-		$class = AbstractRegistryFormat::getInstance('INI');
+		$class = Factory::getFormat('INI');
 
 		$object = new \stdClass;
 		$object->foo = 'bar';
@@ -52,7 +52,7 @@ class JRegistryFormatINITest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testStringToObject()
 	{
-		$class = AbstractRegistryFormat::getInstance('INI');
+		$class = Factory::getFormat('INI');
 
 		$string2 = "[section]\nfoo=bar";
 
@@ -119,7 +119,7 @@ class JRegistryFormatINITest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDataEquality()
 	{
-		$class = AbstractRegistryFormat::getInstance('INI');
+		$class = Factory::getFormat('INI');
 
 		$input = "[section1]\nboolfalse=false\nbooltrue=true\nnumericfloat=3.1415\nnumericint=42\nkey=\"value\"\n" .
 			"arrayitem[]=\"item1\"\narrayitem[]=\"item2\"\n\n" .
