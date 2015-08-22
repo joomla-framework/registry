@@ -275,43 +275,6 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Joomla\Registry\Registry::getInstance method.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Registry\Registry::getInstance
-	 * @since   1.0
-	 */
-	public function testGetInstance()
-	{
-		// Test INI format.
-		$a = Registry::getInstance('a');
-		$b = Registry::getInstance('a');
-		$c = Registry::getInstance('c');
-
-		// Check the object type.
-		$this->assertInstanceOf(
-			'\\Joomla\\Registry\\Registry',
-			$a,
-			'Line ' . __LINE__ . ' - Object $a should be an instance of Registry.'
-		);
-
-		// Check cache handling for same registry id.
-		$this->assertThat(
-			$a,
-			$this->identicalTo($b),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		// Check cache handling for different registry id.
-		$this->assertThat(
-			$a,
-			$this->logicalNot($this->identicalTo($c)),
-			'Line: ' . __LINE__ . '.'
-		);
-	}
-
-	/**
 	 * Tests the Joomla\Registry\Registry::getIterator method.
 	 *
 	 * @return  void

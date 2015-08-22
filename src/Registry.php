@@ -26,15 +26,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	protected $data;
 
 	/**
-	 * Registry instances container.
-	 *
-	 * @var    array
-	 * @since  1.0
-	 * @deprecated  2.0  Object caching will no longer be supported
-	 */
-	protected static $instances = array();
-
-	/**
 	 * Path separator
 	 *
 	 * @var    string
@@ -239,30 +230,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 		}
 
 		return $node;
-	}
-
-	/**
-	 * Returns a reference to a global Registry object, only creating it
-	 * if it doesn't already exist.
-	 *
-	 * This method must be invoked as:
-	 * <pre>$registry = Registry::getInstance($id);</pre>
-	 *
-	 * @param   string  $id  An ID for the registry instance
-	 *
-	 * @return  Registry  The Registry object.
-	 *
-	 * @deprecated  2.0  Instantiate a new Registry instance instead
-	 * @since   1.0
-	 */
-	public static function getInstance($id)
-	{
-		if (empty(self::$instances[$id]))
-		{
-			self::$instances[$id] = new self;
-		}
-
-		return self::$instances[$id];
 	}
 
 	/**
