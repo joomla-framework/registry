@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Keychain Package
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -91,15 +91,15 @@ class Keychain extends Registry
 			{
 				if (!isset($node->$nodes[$i]) && ($i != $n))
 				{
-					$node->$nodes[$i] = new \stdClass;
+					$node->{$nodes[$i]} = new \stdClass;
 				}
 
-				$node = $node->$nodes[$i];
+				$node = $node->{$nodes[$i]};
 			}
 
 			// Get the old value if exists so we can return it
-			$result = $node->$nodes[$i];
-			unset($node->$nodes[$i]);
+			$result = $node->{$nodes[$i]};
+			unset($node->{$nodes[$i]});
 		}
 
 		return $result;

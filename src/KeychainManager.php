@@ -75,6 +75,7 @@ class KeychainManager extends AbstractCliApplication
 				break;
 			case 'change':
 				$this->change();
+				break;
 			case 'delete':
 				$this->delete();
 				break;
