@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Crypt Package
  *
- * @copyright  Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -14,7 +14,8 @@ use Joomla\Crypt\Key;
 /**
  * Cipher class for mcrypt algorithm encryption, decryption and key generation.
  *
- * @since  1.0
+ * @since       1.0
+ * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
  */
 abstract class CipherMcrypt implements CipherInterface
 {
@@ -22,6 +23,7 @@ abstract class CipherMcrypt implements CipherInterface
 	 * @var    integer  The mcrypt cipher constant.
 	 * @see    http://www.php.net/manual/en/mcrypt.ciphers.php
 	 * @since  1.0
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	protected $type;
 
@@ -29,12 +31,14 @@ abstract class CipherMcrypt implements CipherInterface
 	 * @var    integer  The mcrypt block cipher mode.
 	 * @see    http://www.php.net/manual/en/mcrypt.constants.php
 	 * @since  1.0
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	protected $mode;
 
 	/**
 	 * @var    string  The Crypt key type for validation.
 	 * @since  1.0
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	protected $keyType;
 
@@ -43,6 +47,7 @@ abstract class CipherMcrypt implements CipherInterface
 	 *
 	 * @since   1.0
 	 * @throws  \RuntimeException
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	public function __construct()
 	{
@@ -62,6 +67,7 @@ abstract class CipherMcrypt implements CipherInterface
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	public function decrypt($data, Key $key)
 	{
@@ -87,6 +93,7 @@ abstract class CipherMcrypt implements CipherInterface
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	public function encrypt($data, Key $key)
 	{
@@ -110,6 +117,7 @@ abstract class CipherMcrypt implements CipherInterface
 	 * @return  Key
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	public function generateKey(array $options = array())
 	{
@@ -143,6 +151,7 @@ abstract class CipherMcrypt implements CipherInterface
 	 * @see     http://en.wikipedia.org/wiki/PBKDF2
 	 * @see     http://www.ietf.org/rfc/rfc2898.txt
 	 * @since   1.0
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	public function pbkdf2($p, $s, $kl, $c = 10000, $a = 'sha256')
 	{

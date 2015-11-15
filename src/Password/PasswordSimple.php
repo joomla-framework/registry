@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Crypt Package
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -14,19 +14,22 @@ use Joomla\Crypt\PasswordInterface;
 /**
  * Joomla Framework Password Crypter
  *
- * @since  1.0
+ * @since       1.0
+ * @deprecated  2.0  Use PHP 5.5's native password hashing API
  */
 class PasswordSimple implements PasswordInterface
 {
 	/**
 	 * @var    integer  The cost parameter for hashing algorithms.
 	 * @since  1.0
+	 * @deprecated  2.0  Use PHP 5.5's native password hashing API
 	 */
 	protected $cost = 10;
 
 	/**
 	 * @var    string   The default hash type
 	 * @since  1.0
+	 * @deprecated  2.0  Use PHP 5.5's native password hashing API
 	 */
 	protected $defaultType = '$2y$';
 
@@ -40,6 +43,7 @@ class PasswordSimple implements PasswordInterface
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
+	 * @deprecated  2.0  Use PHP 5.5's native password hashing API
 	 */
 	public function create($password, $type = null)
 	{
@@ -77,6 +81,7 @@ class PasswordSimple implements PasswordInterface
 	 * @return  void
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use PHP 5.5's native password hashing API
 	 */
 	public function setCost($cost)
 	{
@@ -91,6 +96,7 @@ class PasswordSimple implements PasswordInterface
 	 * @return  string  The string of random characters.
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use PHP 5.5's native password hashing API
 	 */
 	protected function getSalt($length)
 	{
@@ -110,6 +116,7 @@ class PasswordSimple implements PasswordInterface
 	 * @return  boolean  True if the password is valid, false otherwise.
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use PHP 5.5's native password hashing API
 	 */
 	public function verify($password, $hash)
 	{
@@ -138,6 +145,7 @@ class PasswordSimple implements PasswordInterface
 	 * @return  void
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use PHP 5.5's native password hashing API
 	 */
 	public function setDefaultType($type)
 	{
@@ -153,6 +161,7 @@ class PasswordSimple implements PasswordInterface
 	 * @return  string  $type  The default type
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use PHP 5.5's native password hashing API
 	 */
 	public function getDefaultType()
 	{

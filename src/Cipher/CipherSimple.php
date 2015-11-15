@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Crypt Package
  *
- * @copyright  Copyright (C) 2005 - 2011 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -13,7 +13,8 @@ use Joomla\Crypt\Key;
 /**
  * Cipher class for Simple encryption, decryption and key generation.
  *
- * @since  1.0
+ * @since       1.0
+ * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
  */
 class CipherSimple implements CipherInterface
 {
@@ -27,6 +28,7 @@ class CipherSimple implements CipherInterface
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	public function decrypt($data, Key $key)
 	{
@@ -68,6 +70,7 @@ class CipherSimple implements CipherInterface
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	public function encrypt($data, Key $key)
 	{
@@ -107,6 +110,7 @@ class CipherSimple implements CipherInterface
 	 * @return  Key
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	public function generateKey(array $options = array())
 	{
@@ -128,6 +132,7 @@ class CipherSimple implements CipherInterface
 	 * @return  string
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	private function _getRandomKey($length = 256)
 	{
@@ -153,6 +158,7 @@ class CipherSimple implements CipherInterface
 	 * @return  integer
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	private function _hexToInt($s, $i)
 	{
@@ -233,6 +239,7 @@ class CipherSimple implements CipherInterface
 	 * @return  array  An array of integers.
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	private function _hexToIntArray($hex)
 	{
@@ -256,6 +263,7 @@ class CipherSimple implements CipherInterface
 	 * @return  string
 	 *
 	 * @since   1.0
+	 * @deprecated  2.0  Use \Joomla\Crypt\Cipher_Crypto instead
 	 */
 	private function _intToHex($i)
 	{
