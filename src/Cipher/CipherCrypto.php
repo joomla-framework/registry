@@ -14,7 +14,7 @@ use Joomla\Crypt\Key;
 /**
  * Joomla cipher for encryption, decryption and key generation via the php-encryption library.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  1.3.0
  */
 class CipherCrypto implements CipherInterface
 {
@@ -26,7 +26,7 @@ class CipherCrypto implements CipherInterface
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 * @throws  \InvalidArgumentException
 	 * @throws  \RuntimeException
 	 */
@@ -65,7 +65,7 @@ class CipherCrypto implements CipherInterface
 	 *
 	 * @return  string  The encrypted data string.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 * @throws  \InvalidArgumentException
 	 * @throws  \RuntimeException
 	 */
@@ -99,7 +99,7 @@ class CipherCrypto implements CipherInterface
 	 *
 	 * @return  Key
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 * @throws  \RuntimeException
 	 */
 	public function generateKey(array $options = array())
