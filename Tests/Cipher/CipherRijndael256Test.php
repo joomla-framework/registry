@@ -66,7 +66,7 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.3.0
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function data()
 	{
@@ -120,7 +120,7 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherRijndael256::decrypt
 	 * @expectedException  \InvalidArgumentException
-	 * @since              1.3.0
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testDecryptInvalidKeyType()
 	{
@@ -175,7 +175,7 @@ class CipherRijndael256Test extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherRijndael256::encrypt
 	 * @expectedException  \InvalidArgumentException
-	 * @since              1.3.0
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testEncryptInvalidKeyType()
 	{

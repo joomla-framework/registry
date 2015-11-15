@@ -66,7 +66,7 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.3.0
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function data()
 	{
@@ -120,7 +120,7 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             Joomla\Crypt\Cipher\Cipher3DES::decrypt
 	 * @expectedException  \InvalidArgumentException
-	 * @since              1.3.0
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testDecryptInvalidKeyType()
 	{
@@ -178,7 +178,7 @@ class Cipher3DESTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             Joomla\Crypt\Cipher\Cipher3DES::encrypt
 	 * @expectedException  \InvalidArgumentException
-	 * @since              1.3.0
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testEncryptInvalidKeyType()
 	{

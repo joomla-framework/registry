@@ -22,7 +22,7 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.3.0
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function createData()
 	{
@@ -133,7 +133,7 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Password\PasswordSimple::setCost
-	 * @since   1.3.0
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testSetCost()
 	{
@@ -154,7 +154,7 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return array
 	 *
-	 * @since  1.3.0
+	 * @since  __DEPLOY_VERSION__
 	 */
 	public function verifyData()
 	{
@@ -179,7 +179,7 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers        Joomla\Crypt\Password\PasswordSimple::verify
 	 * @dataProvider  verifyData
-	 * @since   1.3.0
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testVerify($password, $hash, $expectation)
 	{
@@ -257,7 +257,7 @@ class PasswordSimpleTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Password\PasswordSimple::getSalt
-	 * @since   1.3.0
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testGetSalt()
 	{

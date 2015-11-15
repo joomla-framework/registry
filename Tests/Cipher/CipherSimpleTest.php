@@ -60,7 +60,7 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.3.0
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function dataForEncrypt()
 	{
@@ -115,7 +115,7 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherSimple::decrypt
 	 * @expectedException  \InvalidArgumentException
-	 * @since              1.3.0
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testDecryptInvalidKeyType()
 	{
@@ -171,7 +171,7 @@ class CipherSimpleTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherSimple::encrypt
 	 * @expectedException  \InvalidArgumentException
-	 * @since              1.3.0
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testEncryptInvalidKeyType()
 	{

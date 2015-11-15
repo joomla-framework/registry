@@ -21,7 +21,7 @@ class KeyTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Key::__construct()
-	 * @since   1.3.0
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function test__construct()
 	{
@@ -71,7 +71,7 @@ class KeyTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Joomla\Crypt\Key::__get()
 	 * @expectedException  PHPUnit_Framework_Error
-	 * @since   1.3.0
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function test__get()
 	{

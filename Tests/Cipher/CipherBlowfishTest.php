@@ -66,7 +66,7 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   1.3.0
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function data()
 	{
@@ -120,7 +120,7 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherBlowfish::decrypt
 	 * @expectedException  \InvalidArgumentException
-	 * @since              1.3.0
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testDecryptInvalidKeyType()
 	{
@@ -178,7 +178,7 @@ class CipherBlowfishTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers             Joomla\Crypt\Cipher\CipherBlowfish::encrypt
 	 * @expectedException  \InvalidArgumentException
-	 * @since              1.3.0
+	 * @since              __DEPLOY_VERSION__
 	 */
 	public function testEncryptInvalidKeyType()
 	{
