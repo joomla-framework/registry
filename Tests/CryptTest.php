@@ -6,8 +6,10 @@
 
 namespace Joomla\Crypt\Tests;
 
+use Joomla\Crypt\Cipher\CipherCrypto;
 use Joomla\Crypt\Crypt;
 use Joomla\Crypt\Key;
+use Symfony\Polyfill\Util\Binary;
 
 /**
  * Test class for \Joomla\Crypt\Crypt.
@@ -17,235 +19,194 @@ use Joomla\Crypt\Key;
 class CryptTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var    Crypt
-	 * @since  1.0
+	 * Cipher used for testing
+	 *
+	 * @var  CipherCrypto
 	 */
-	protected $object;
+	private $cipher;
+
+	/**
+	 * Generated key for testing
+	 *
+	 * @var  Key
+	 */
+	private $key;
+
+	/**
+	 * Object under testing
+	 *
+	 * @var  Crypt
+	 */
+	private $object;
+
+	/**
+	 * This method is called before the first test of this test class is run.
+	 *
+	 * @return  void
+	 */
+	public static function setUpBeforeClass()
+	{
+		// Only run the test if the environment supports it.
+		try
+		{
+			\Crypto::RuntimeTest();
+		}
+		catch (\CryptoTestFailedException $e)
+		{
+			self::markTestSkipped('The environment cannot safely perform encryption with this cipher.');
+		}
+	}
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
 	 * @return  void
-	 *
-	 * @since   __DEPLOY_VERSION__
 	 */
 	protected function setUp()
 	{
 		parent::setUp();
 
-		$this->object = new Crypt;
+		$this->cipher = new CipherCrypto;
+		$this->key    = $this->cipher->generateKey();
 
-		$key = new Key('simple');
-		$key->private = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUgkVF4mLxAUf80ZJPAJHXHoac';
-		$key->public = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUgkVF4mLxAUf80ZJPAJHXHoac';
-
-		$this->object->setKey($key);
+		$this->object = new Crypt($this->cipher, $this->key);
 	}
 
 	/**
-	 * Test __construct()
+	 * @testdox  Validates the object is instantiated correctly
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Crypt\Crypt::__construct()
-	 * @since   __DEPLOY_VERSION__
+	 * @covers   \Joomla\Crypt\Crypt::__construct()
 	 */
 	public function test__construct()
 	{
-		$this->assertAttributeInstanceOf(
-			'Joomla\\Crypt\\CipherInterface',
+		$this->assertAttributeSame(
+			$this->cipher,
 			'cipher',
 			$this->object
 		);
 
-		$this->assertAttributeInstanceOf(
-			'Joomla\\Crypt\\Key',
+		$this->assertAttributeSame(
+			$this->key,
 			'key',
 			$this->object
 		);
 	}
 
 	/**
-	 * Test...
+	 * Test data for processing
 	 *
 	 * @return  array
-	 *
-	 * @since   __DEPLOY_VERSION__
 	 */
-	public function dataForEncrypt()
+	public function dataStrings()
 	{
 		return array(
-			array(
-				'1.txt',
-				'c-;3-(Is>{DJzOHMCv_<#yKuN/G`/Us{GkgicWG$M|HW;kI0BVZ^|FY/"Obt53?PNaWwhmRtH;lWkWE4vlG5CIFA!abu&F=Xo#Qw}gAp3;GL\'k])%D}C+W&ne6_F$3P5'),
-			array(
-				'2.txt',
-				'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
+			array('c-;3-(Is>{DJzOHMCv_<#yKuN/G`/Us{GkgicWG$M|HW;kI0BVZ^|FY/"Obt53?PNaWwhmRtH;lWkWE4vlG5CIFA!abu&F=Xo#Qw}gAp3;GL\'k])%D}C+W&ne6_F$3P5'),
+			array('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
 					'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' .
 					'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ' .
 					'in culpa qui officia deserunt mollit anim id est laborum.'),
-			array('3.txt', 'لا أحد يحب الألم بذاته، يسعى ورائه أو يبتغيه، ببساطة لأنه الألم...'),
-			array('4.txt',
-				'Широкая электрификация южных губерний даст мощный ' .
-					'толчок подъёму сельского хозяйства'),
-			array('5.txt', 'The quick brown fox jumps over the lazy dog.')
+			array('لا أحد يحب الألم بذاته، يسعى ورائه أو يبتغيه، ببساطة لأنه الألم...'),
+			array('Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства'),
+			array('The quick brown fox jumps over the lazy dog.')
 		);
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Validates data is encrypted and decrypted correctly
 	 *
-	 * @param   string  $file  @todo
-	 * @param   string  $data  @todo
+	 * @param   string  $data  The decrypted data to validate
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Crypt\Crypt::decrypt
-	 * @dataProvider dataForEncrypt
-	 * @since   __DEPLOY_VERSION__
+	 * @covers        \Joomla\Crypt\Crypt::decrypt
+	 * @covers        \Joomla\Crypt\Crypt::encrypt
+	 * @dataProvider  dataStrings
 	 */
-	public function testDecrypt($file, $data)
+	public function testDataEncryptionAndDecryption($data)
 	{
-		$encrypted = file_get_contents(__DIR__ . '/Cipher/stubs/encrypted/simple/' . $file);
-		$decrypted = $this->object->decrypt($encrypted);
+		$cipher = new CipherCrypto;
+		$key    = $cipher->generateKey();
 
-		// Assert that the decrypted values are the same as the expected ones.
-		$this->assertEquals(
-			$data,
-			$decrypted
-		);
-	}
-
-	/**
-	 * Test...
-	 *
-	 * @param   string  $file  @todo
-	 * @param   string  $data  @todo
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Crypt\Crypt::encrypt
-	 * @dataProvider  dataForEncrypt
-	 * @since   __DEPLOY_VERSION__
-	 */
-	public function testEncrypt($file, $data)
-	{
-		$encrypted = $this->object->encrypt($data);
+		$encrypted = $cipher->encrypt($data, $key);
 
 		// Assert that the encrypted value is not the same as the clear text value.
-		$this->assertNotEquals(
-			$data,
-			$encrypted
-		);
+		$this->assertNotSame($data, $encrypted);
 
-		// Assert that the encrypted values are the same as the expected ones.
-		$this->assertStringEqualsFile(
-			__DIR__ . '/Cipher/stubs/encrypted/simple/' . $file,
-			$encrypted
-		);
+		$decrypted = $cipher->decrypt($encrypted, $key);
+
+		// Assert the decrypted string is the same value we started with
+		$this->assertSame($data, $decrypted);
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Validates keys are correctly generated
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Crypt\Crypt::generateKey
-	 * @since   __DEPLOY_VERSION__
+	 * @covers   \Joomla\Crypt\Crypt::generateKey
 	 */
 	public function testGenerateKey()
 	{
 		$key = $this->object->generateKey();
 
-		$this->assertInstanceOf(
-			'Joomla\\Crypt\\Key',
-			$key
-		);
+		// Assert that the key is the correct type.
+		$this->assertInstanceOf('Joomla\Crypt\Key', $key);
+
+		// Assert the private key is our expected value.
+		$this->assertSame('unused', $key->private);
+
+		// Assert the public key is the expected length
+		$this->assertSame(\Crypto::KEY_BYTE_SIZE, Binary::strlen($key->public));
+
+		// Assert the key is of the correct type.
+		$this->assertAttributeEquals('crypto', 'type', $key);
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Validates keys are correctly set
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Crypt\Crypt::setKey
-	 * @since   __DEPLOY_VERSION__
+	 * @covers   \Joomla\Crypt\Crypt::setKey
 	 */
 	public function testSetKey()
 	{
-		$keyMock = $this->getMock('Joomla\\Crypt\\Key', array(), array('simple'));
+		$keyMock = $this->getMock('Joomla\\Crypt\\Key', array(), array('crypto'));
 
 		$this->object->setKey($keyMock);
 
-		$this->assertAttributeEquals(
-			$keyMock,
+		$this->assertAttributeNotSame(
+			$this->key,
 			'key',
-			$this->object
+			$this->object,
+			'The new key did not replace the existing key.'
 		);
 	}
 
 	/**
-	 * Test...
+	 * Test data for processing
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Crypt\Crypt::genRandomBytes
-	 * @since   __DEPLOY_VERSION__
+	 * @return  array
 	 */
-	public function testGenRandomBytes()
+	public function dataRandomByteLength()
 	{
-		// We're just testing wether the value has the expected length.
-		// We obviously can't test the result since it's random.
-
-		$randomBytes16 = Crypt::genRandomBytes();
-		$this->assertEquals(
-			16,
-			strlen($randomBytes16)
-		);
-
-		$randomBytes8 = Crypt::genRandomBytes(8);
-		$this->assertEquals(
-			8,
-			strlen($randomBytes8)
-		);
-
-		$randomBytes17 = Crypt::genRandomBytes(17);
-		$this->assertEquals(
-			17,
-			strlen($randomBytes17)
+		return array(
+			'8 bytes' => array(8),
+			'16 bytes' => array(16),
+			'24 bytes' => array(24),
+			'32 bytes' => array(32),
+			'40 bytes' => array(40),
 		);
 	}
 
 	/**
-	 * Test...
+	 * @testdox  Validates a string of random bytes of the requested size is returned
 	 *
-	 * @return  void
+	 * @param    integer  $length  The length of the random string to generate
 	 *
-	 * @covers  Joomla\Crypt\Crypt::genRandomBytesCustom
-	 * @since   __DEPLOY_VERSION__
+	 * @covers        Joomla\Crypt\Crypt::genRandomBytes
+	 * @dataProvider  dataRandomByteLength
 	 */
-	public function testGenRandomBytesCustom()
+	public function testGenRandomBytes($length)
 	{
-		// We're just testing wether the value has the expected length.
-		// We obviously can't test the result since it's random.
-
-		$randomBytes16 = Crypt::genRandomBytesCustom();
-		$this->assertEquals(
-			16,
-			strlen($randomBytes16)
-		);
-
-		$randomBytes8 = Crypt::genRandomBytesCustom(8);
-		$this->assertEquals(
-			8,
-			strlen($randomBytes8)
-		);
-
-		$randomBytes17 = Crypt::genRandomBytesCustom(17);
-		$this->assertEquals(
-			17,
-			strlen($randomBytes17)
+		$this->assertSame(
+			$length,
+			strlen(Crypt::genRandomBytes($length))
 		);
 	}
 }

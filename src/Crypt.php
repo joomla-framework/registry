@@ -7,7 +7,8 @@
  */
 
 namespace Joomla\Crypt;
-use Joomla\Crypt\Cipher\CipherSimple;
+
+use Joomla\Crypt\Cipher\CipherCrypto;
 
 /**
  * Crypt is a Joomla Framework class for handling basic encryption/decryption of data.
@@ -44,7 +45,7 @@ class Crypt
 	public function __construct(CipherInterface $cipher = null, Key $key = null)
 	{
 		// Set the encryption cipher.
-		$this->cipher = isset($cipher) ? $cipher : new CipherSimple;
+		$this->cipher = isset($cipher) ? $cipher : new CipherCrypto;
 
 		// Set the encryption key[/pair)].
 		$this->key = isset($key) ? $key : $this->generateKey();

@@ -18,19 +18,25 @@ namespace Joomla\Crypt;
 class Key
 {
 	/**
-	 * @var    string  The private key.
+	 * The private key.
+	 *
+	 * @var    string
 	 * @since  1.0
 	 */
 	public $private;
 
 	/**
-	 * @var    string  The public key.
+	 * The public key.
+	 *
+	 * @var    string
 	 * @since  1.0
 	 */
 	public $public;
 
 	/**
-	 * @var    string  The key type.
+	 * The key type.
+	 *
+	 * @var    string
 	 * @since  1.0
 	 */
 	protected $type;
@@ -69,9 +75,7 @@ class Key
 		{
 			return $this->type;
 		}
-		else
-		{
-			trigger_error('Cannot access property ' . __CLASS__ . '::' . $name, E_USER_WARNING);
-		}
+
+		trigger_error('Cannot access property ' . __CLASS__ . '::' . $name, E_USER_WARNING);
 	}
 }
