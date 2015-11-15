@@ -6,14 +6,17 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Joomla\Crypt;
+namespace Joomla\Crypt\Cipher;
+
+use Joomla\Crypt\CipherInterface;
+use Joomla\Crypt\Key;
 
 /**
  * Joomla cipher for encryption, decryption and key generation via the php-encryption library.
  *
  * @since  __DEPLOY_VERSION__
  */
-class Cipher_Crypto implements CipherInterface
+class CipherCrypto implements CipherInterface
 {
 	/**
 	 * Method to decrypt a data string.
