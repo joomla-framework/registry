@@ -6,7 +6,8 @@
     "homepage": "https://github.com/joomla-framework/crypt",
     "license": "GPL-2.0+",
     "require": {
-        "php": ">=5.3.10",
+        "php": ">=5.4",
+        "defuse/php-encryption": "~1.2",
         "paragonie/random_compat": "~1.0",
         "symfony/polyfill-php56": "~1.0"
     },
@@ -18,10 +19,7 @@
     "autoload": {
         "psr-4": {
             "Joomla\\Crypt\\": "src/"
-        },
-        "files": [
-            "lib/Crypto.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
