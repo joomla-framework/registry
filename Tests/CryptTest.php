@@ -28,7 +28,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	protected function setUp()
 	{
@@ -49,7 +49,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Crypt::__construct()
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	public function test__construct()
 	{
@@ -71,7 +71,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @return  array
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	public function dataForEncrypt()
 	{
@@ -103,7 +103,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Joomla\Crypt\Crypt::decrypt
 	 * @dataProvider dataForEncrypt
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	public function testDecrypt($file, $data)
 	{
@@ -127,7 +127,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @covers  Joomla\Crypt\Crypt::encrypt
 	 * @dataProvider  dataForEncrypt
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	public function testEncrypt($file, $data)
 	{
@@ -152,7 +152,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Crypt::generateKey
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	public function testGenerateKey()
 	{
@@ -170,7 +170,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Crypt::setKey
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	public function testSetKey()
 	{
@@ -191,7 +191,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Crypt::genRandomBytes
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	public function testGenRandomBytes()
 	{
@@ -223,7 +223,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 * @return  void
 	 *
 	 * @covers  Joomla\Crypt\Crypt::genRandomBytesCustom
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.3.0
 	 */
 	public function testGenRandomBytesCustom()
 	{
