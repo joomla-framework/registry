@@ -150,13 +150,13 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('Joomla\Crypt\Key', $key);
 
 		// Assert the private key is our expected value.
-		$this->assertSame('unused', $key->private);
+		$this->assertSame('unused', $key->getPrivate());
 
 		// Assert the public key is the expected length
-		$this->assertSame(\Crypto::KEY_BYTE_SIZE, Binary::strlen($key->public));
+		$this->assertSame(\Crypto::KEY_BYTE_SIZE, Binary::strlen($key->getPublic()));
 
 		// Assert the key is of the correct type.
-		$this->assertAttributeEquals('crypto', 'type', $key);
+		$this->assertSame('crypto', $key->getType());
 	}
 
 	/**
@@ -166,7 +166,9 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetKey()
 	{
-		$keyMock = $this->getMock('Joomla\\Crypt\\Key', array(), array('crypto'));
+		$keyMock = $this->getMockBuilder('Joomla\\Crypt\\Key')
+			->setConstructorArgs(array('test', 'private', 'public'))
+			->getMock();
 
 		$this->object->setKey($keyMock);
 

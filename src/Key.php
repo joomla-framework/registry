@@ -11,8 +11,6 @@ namespace Joomla\Crypt;
 /**
  * Encryption key object for the Joomla Framework.
  *
- * @property-read  string  $type  The key type.
- *
  * @since  1.0
  */
 class Key
@@ -23,7 +21,7 @@ class Key
 	 * @var    string
 	 * @since  1.0
 	 */
-	public $private;
+	private $private;
 
 	/**
 	 * The public key.
@@ -31,7 +29,7 @@ class Key
 	 * @var    string
 	 * @since  1.0
 	 */
-	public $public;
+	private $public;
 
 	/**
 	 * The key type.
@@ -39,7 +37,7 @@ class Key
 	 * @var    string
 	 * @since  1.0
 	 */
-	protected $type;
+	private $type;
 
 	/**
 	 * Constructor.
@@ -50,32 +48,49 @@ class Key
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($type, $private = null, $public = null)
+	public function __construct($type, $private, $public)
 	{
 		// Set the key type.
 		$this->type = (string) $type;
 
-		// Set the optional public/private key strings.
-		$this->private = isset($private) ? (string) $private : null;
-		$this->public  = isset($public) ? (string) $public : null;
+		// Set the public/private key strings.
+		$this->private = (string) $private;
+		$this->public  = (string) $public;
 	}
 
 	/**
-	 * Magic method to return some protected property values.
+	 * Retrieve the private key
 	 *
-	 * @param   string  $name  The name of the property to return.
+	 * @return  string
 	 *
-	 * @return  mixed
-	 *
-	 * @since   1.0
+	 * @since   __DEPLOY_VERSION__
 	 */
-	public function __get($name)
+	public function getPrivate()
 	{
-		if ($name == 'type')
-		{
-			return $this->type;
-		}
+		return $this->private;
+	}
 
-		trigger_error('Cannot access property ' . __CLASS__ . '::' . $name, E_USER_WARNING);
+	/**
+	 * Retrieve the public key
+	 *
+	 * @return  string
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function getPublic()
+	{
+		return $this->public;
+	}
+
+	/**
+	 * Retrieve the key type
+	 *
+	 * @return  string
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function getType()
+	{
+		return $this->type;
 	}
 }

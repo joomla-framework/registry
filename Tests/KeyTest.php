@@ -10,82 +10,93 @@ use Joomla\Crypt\Key;
 
 /**
  * Test class for \Joomla\Crypt\Key.
- *
- * @since  1.0
  */
 class KeyTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Test __construct()
+	 * Object under testing
+	 *
+	 * @var  Key
+	 */
+	private $object;
+
+	/**
+	 * Private key for the test object
+	 *
+	 * @var string
+	 */
+	private $private = 'private';
+
+	/**
+	 * Public key for the test object
+	 *
+	 * @var string
+	 */
+	private $public = 'public';
+
+	/**
+	 * Key type for the test object
+	 *
+	 * @var string
+	 */
+	private $type = 'test';
+
+	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 * This method is called before a test is executed.
 	 *
 	 * @return  void
-	 *
-	 * @covers  Joomla\Crypt\Key::__construct()
-	 * @since   __DEPLOY_VERSION__
 	 */
-	public function test__construct()
+	protected function setUp()
 	{
-		$key = new Key('simple');
+		parent::setUp();
 
-		$this->assertEquals(
-			'simple',
-			$key->type,
-			'Line:' . __LINE__ . ' type of key should be assgined correctly.'
-		);
+		$this->type    = 'test';
+		$this->public  = 'public';
+		$this->private = 'private';
 
-		$this->assertNull(
-			$key->private,
-			'Line:' . __LINE__ . ' private key should be null if none given.'
-		);
-
-		$this->assertNull(
-			$key->public,
-			'Line:' . __LINE__ . ' public key should be null if none given.'
-		);
-
-		$key = new Key('simple', 'foo', 'bar');
-
-		$this->assertEquals(
-			'simple',
-			$key->type,
-			'Line:' . __LINE__ . ' type of key should be assgined correctly.'
-		);
-
-		$this->assertEquals(
-			'foo',
-			$key->private,
-			'Line:' . __LINE__ . ' public key should be assgined correctly.'
-		);
-
-		$this->assertEquals(
-			'bar',
-			$key->public,
-			'Line:' . __LINE__ . ' public key should be assgined correctly.'
-		);
+		$this->object = new Key($this->type, $this->private, $this->public);
 	}
 
 	/**
-	 * Test __get()
+	 * @testdox  Validates the object is instantiated correctly
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Crypt\Key::__get()
-	 * @expectedException  PHPUnit_Framework_Error
-	 * @since   __DEPLOY_VERSION__
+	 * @covers   \Joomla\Crypt\Key::__construct()
 	 */
-	public function test__get()
+	public function test__construct()
 	{
-		$key = new Key('simple');
+		$this->assertAttributeSame($this->type, 'type', $this->object);
+		$this->assertAttributeSame($this->public, 'public', $this->object);
+		$this->assertAttributeSame($this->private, 'private', $this->object);
+	}
 
-		$this->assertEquals(
-			'simple',
-			$key->type
-		);
+	/**
+	 * @testdox  Validates the private key is returned
+	 *
+	 * @covers   \Joomla\Crypt\Key::getPrivateKey()
+	 */
+	public function testGetPrivateKey()
+	{
+		$this->assertSame($this->private, $this->object->getPrivate());
+	}
 
-		// Throws PHP error which is tested by expected exception.
-		$this->assertEquals(
-			'',
-			$key->foobar
-		);
+	/**
+	 * @testdox  Validates the public key is returned
+	 *
+	 * @covers   \Joomla\Crypt\Key::getPublicKey()
+	 */
+	public function testGetPublicKey()
+	{
+		$this->assertSame($this->public, $this->object->getPublic());
+	}
+
+	/**
+	 * @testdox  Validates the key type is returned
+	 *
+	 * @covers   \Joomla\Crypt\Key::getType()
+	 */
+	public function testGetKeyType()
+	{
+		$this->assertSame($this->type, $this->object->getType());
 	}
 }

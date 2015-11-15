@@ -33,15 +33,15 @@ class CipherCrypto implements CipherInterface
 	public function decrypt($data, Key $key)
 	{
 		// Validate key.
-		if ($key->type != 'crypto')
+		if ($key->getType() != 'crypto')
 		{
-			throw new \InvalidArgumentException('Invalid key of type: ' . $key->type . '.  Expected crypto.');
+			throw new \InvalidArgumentException('Invalid key of type: ' . $key->getType() . '.  Expected crypto.');
 		}
 
 		// Decrypt the data.
 		try
 		{
-			return \Crypto::Decrypt($data, $key->public);
+			return \Crypto::Decrypt($data, $key->getPublic());
 		}
 		catch (\InvalidCiphertextException $ex)
 		{
@@ -72,15 +72,15 @@ class CipherCrypto implements CipherInterface
 	public function encrypt($data, Key $key)
 	{
 		// Validate key.
-		if ($key->type != 'crypto')
+		if ($key->getType() != 'crypto')
 		{
-			throw new \InvalidArgumentException('Invalid key of type: ' . $key->type . '.  Expected crypto.');
+			throw new \InvalidArgumentException('Invalid key of type: ' . $key->getType() . '.  Expected crypto.');
 		}
 
 		// Encrypt the data.
 		try
 		{
-			return \Crypto::Encrypt($data, $key->public);
+			return \Crypto::Encrypt($data, $key->getPublic());
 		}
 		catch (\CryptoTestFailedException $ex)
 		{
@@ -104,13 +104,10 @@ class CipherCrypto implements CipherInterface
 	 */
 	public function generateKey(array $options = array())
 	{
-		// Create the new encryption key object.
-		$key = new Key('crypto');
-
 		// Generate the encryption key.
 		try
 		{
-			$key->public = \Crypto::CreateNewRandomKey();
+			$public = \Crypto::CreateNewRandomKey();
 		}
 		catch (\CryptoTestFailedException $ex)
 		{
@@ -121,9 +118,7 @@ class CipherCrypto implements CipherInterface
 			throw new \RuntimeException('Cannot safely create a key', $ex->getCode(), $ex);
 		}
 
-		// Explicitly flag the private as unused in this cipher.
-		$key->private = 'unused';
-
-		return $key;
+		// Create the new encryption key object.
+		return new Key('crypto', 'unused', $public);
 	}
 }
