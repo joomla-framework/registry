@@ -21,7 +21,7 @@ matrix:
 
 before_script:
   # TODO - Remove @dev when Symfony 3.0 is tagged stable
-  - if [ "$SYMFONY_VERSION" == "3" ]; then composer require --no-update symfony/yaml:3.0@dev; fi
+  - if [ "$SYMFONY_VERSION" == "3" ]; then composer require --no-update symfony/yaml:3.0.*@dev; fi
   - composer update
 
 script:
