@@ -11,7 +11,7 @@ namespace Joomla\Registry;
 /**
  * Factory class to fetch Registry objects
  *
- * @since  __DEPLOY_VERSION__
+ * @since  1.5.0
  */
 class Factory
 {
@@ -23,7 +23,7 @@ class Factory
 	 *
 	 * @return  FormatInterface  Registry format handler
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.5.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public static function getFormat($type, array $options = array())
