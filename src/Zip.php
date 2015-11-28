@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Archive Package
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -131,10 +131,10 @@ class Zip implements ExtractableInterface
 
 		foreach ($files as $file)
 		{
-			$this->addToZIPFile($file, $contents, $ctrldir);
+			$this->addToZipFile($file, $contents, $ctrldir);
 		}
 
-		return $this->createZIPFile($contents, $ctrldir, $archive);
+		return $this->createZipFile($contents, $ctrldir, $archive);
 	}
 
 	/**
@@ -482,7 +482,7 @@ class Zip implements ExtractableInterface
 	 *
 	 * @since   1.0
 	 */
-	protected function unix2DOSTime($unixtime = null)
+	protected function unix2DosTime($unixtime = null)
 	{
 		$timearray = (is_null($unixtime)) ? getdate() : getdate($unixtime);
 
@@ -512,7 +512,7 @@ class Zip implements ExtractableInterface
 	 * @since   1.0
 	 * @todo    Review and finish implementation
 	 */
-	private function addToZIPFile(array &$file, array &$contents, array &$ctrldir)
+	private function addToZipFile(array &$file, array &$contents, array &$ctrldir)
 	{
 		$data = &$file['data'];
 		$name = str_replace('\\', '/', $file['name']);
@@ -622,7 +622,7 @@ class Zip implements ExtractableInterface
 	 * @since   1.0
 	 * @todo	Review and finish implementation
 	 */
-	private function createZIPFile(array &$contents, array &$ctrlDir, $path)
+	private function createZipFile(array &$contents, array &$ctrlDir, $path)
 	{
 		$data = implode('', $contents);
 		$dir = implode('', $ctrlDir);
