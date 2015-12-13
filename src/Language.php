@@ -714,7 +714,7 @@ class Language
 	 *
 	 * @since   1.0
 	 */
-	public function isRTL()
+	public function isRtl()
 	{
 		return (bool) $this->metadata['rtl'];
 	}
@@ -954,7 +954,7 @@ class Language
 	 * @since   1.0
 	 * @deprecated  3.0  Use LanguageHelper::parseXMLLanguageFile() instead
 	 */
-	public static function parseXMLLanguageFile($path)
+	public static function parseXmlLanguageFile($path)
 	{
 		$helper = new LanguageHelper;
 
