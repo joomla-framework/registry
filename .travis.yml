@@ -1,5 +1,7 @@
 language: php
 
+sudo: false
+
 env:
   global:
     - SYMFONY_VERSION="2.8.*"
@@ -17,7 +19,7 @@ matrix:
       env: SYMFONY_VERSION="3.0.*"
     - php: 7.0
     - php: 7.0
-      env: SYMFONY_VERSION="3.1@dev"
+      env: SYMFONY_VERSION="3.1.*@dev"
     - php: hhvm
   allow_failures:
     - php: hhvm
