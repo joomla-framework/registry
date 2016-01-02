@@ -16,6 +16,7 @@ class PhpTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  A data object is converted to a string
 	 *
+	 * @covers   Joomla\Registry\Format\Php::getArrayString
 	 * @covers   Joomla\Registry\Format\Php::objectToString
 	 */
 	public function testADataObjectIsConvertedToAString()
@@ -52,6 +53,7 @@ class PhpTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  A data object is converted to a string with no specified class
 	 *
+	 * @covers   Joomla\Registry\Format\Php::getArrayString
 	 * @covers   Joomla\Registry\Format\Php::objectToString
 	 */
 	public function testADataObjectIsConvertedToAStringWithNoSpecifiedClass()
@@ -88,6 +90,7 @@ class PhpTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  A data object is converted to a string with a namespace
 	 *
+	 * @covers   Joomla\Registry\Format\Php::getArrayString
 	 * @covers   Joomla\Registry\Format\Php::objectToString
 	 */
 	public function testADataObjectIsConvertedToAStringWithANamespace()
