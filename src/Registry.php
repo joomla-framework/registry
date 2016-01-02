@@ -49,11 +49,8 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 		if (is_array($data) || is_object($data))
 		{
 			$this->bindData($this->data, $data);
-
-			return;
 		}
-
-		if (!empty($data) && is_string($data))
+		elseif (!empty($data) && is_string($data))
 		{
 			$this->loadString($data);
 		}
