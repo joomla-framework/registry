@@ -7,7 +7,6 @@
 namespace Joomla\Registry\Tests;
 
 use Joomla\Registry\Factory;
-use Joomla\Test\TestHelper;
 
 /**
  * Test class for Joomla\Registry\Factory
