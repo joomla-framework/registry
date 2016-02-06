@@ -45,7 +45,7 @@ abstract class AbstractController implements ControllerInterface
 	public function __construct(Input $input = null, AbstractApplication $app = null)
 	{
 		$this->input = $input;
-		$this->app = $app;
+		$this->app   = $app;
 	}
 
 	/**

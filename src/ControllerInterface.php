@@ -30,44 +30,4 @@ interface ControllerInterface extends \Serializable
 	 * @throws  \RuntimeException
 	 */
 	public function execute();
-
-	/**
-	 * Get the application object.
-	 *
-	 * @return  AbstractApplication  The application object.
-	 *
-	 * @since   1.0
-	 */
-	public function getApplication();
-
-	/**
-	 * Get the input object.
-	 *
-	 * @return  Input  The input object.
-	 *
-	 * @since   1.0
-	 */
-	public function getInput();
-
-	/**
-	 * Set the application object.
-	 *
-	 * @param   AbstractApplication  $app  The application object.
-	 *
-	 * @return  ControllerInterface  Returns itself to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function setApplication(AbstractApplication $app);
-
-	/**
-	 * Set the input object.
-	 *
-	 * @param   Input  $input  The input object.
-	 *
-	 * @return  ControllerInterface  Returns itself to support chaining.
-	 *
-	 * @since   1.0
-	 */
-	public function setInput(Input $input);
 }
