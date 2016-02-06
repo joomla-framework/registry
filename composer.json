@@ -6,17 +6,20 @@
     "homepage": "https://github.com/joomla-framework/input",
     "license": "GPL-2.0+",
     "require": {
-        "php": ">=5.3.10|>=7.0",
+        "php": ">=5.4|>=7.0",
         "joomla/filter": "~1.0"
     },
     "require-dev": {
-        "joomla/test": "~1.0",
         "phpunit/phpunit": "~4.8|~5.0",
         "squizlabs/php_codesniffer": "1.*"
     },
     "autoload": {
         "psr-4": {
-            "Joomla\\Input\\": "src/",
+            "Joomla\\Input\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Joomla\\Input\\Tests\\": "Tests/"
         }
     },

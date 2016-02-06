@@ -7,73 +7,55 @@
 namespace Joomla\Input\Tests;
 
 use Joomla\Input\Cookie;
-use Joomla\Test\TestHelper;
-
-require_once __DIR__ . '/Stubs/FilterInputMock.php';
 
 /**
  * Test class for \Joomla\Input\Cookie.
- *
- * @since  1.0
  */
 class CookieTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Test the Joomla\Input\Cookie::__construct method.
+	 * @testdox  Tests the default constructor behavior
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Cookie::__construct
-	 * @since   1.1.4
+	 * @covers   Joomla\Input\Cookie::__construct
 	 */
-	public function test__construct()
+	public function test__constructDefaultBehaviour()
 	{
-		// Default constructor call
 		$instance = new Cookie;
 
-		$this->assertInstanceOf(
-			'Joomla\Filter\InputFilter',
-			TestHelper::getValue($instance, 'filter')
-		);
-
-		$this->assertEmpty(
-			TestHelper::getValue($instance, 'options')
-		);
-
-		$this->assertEquals(
-			$_COOKIE,
-			TestHelper::getValue($instance, 'data')
-		);
-
-		// Given Source & filter
-		$src = array('foo' => 'bar');
-		$instance = new Cookie($src, array('filter' => new FilterInputMock));
-
-		$this->assertArrayHasKey(
-			'filter',
-			TestHelper::getValue($instance, 'options')
-		);
+		$this->assertAttributeSame($_COOKIE, 'data', $instance);
+		$this->assertAttributeInstanceOf('Joomla\Filter\InputFilter', 'filter', $instance);
 	}
 
 	/**
-	 * Test the Joomla\Input\Cookie::set method.
+	 * @testdox  Tests the constructor with injected data
 	 *
-	 * @return  void
+	 * @covers   Joomla\Input\Cookie::__construct
+	 */
+	public function test__constructDependencyInjection()
+	{
+		$src        = ['foo' => 'bar'];
+		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
+
+		$instance = new Cookie($src, ['filter' => $mockFilter]);
+
+		$this->assertAttributeSame($src, 'data', $instance);
+		$this->assertAttributeSame($mockFilter, 'filter', $instance);
+	}
+
+	/**
+	 * @testdox  Tests that data is correctly set
 	 *
-	 * @todo    Figure out out to tests w/o ob_start() in bootstrap. setcookie() prevents this.
-	 *
-	 * @covers  Joomla\Input\Cookie::set
-	 * @since   1.0
+	 * @covers   Joomla\Input\Cookie::set
+	 * @uses     Joomla\Input\Cookie::__construct
 	 */
 	public function testSet()
 	{
-		$instance = new Cookie;
+		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
+
+		$instance = new Cookie(null, ['filter' => $mockFilter]);
 		$instance->set('foo', 'bar');
 
-		$data = TestHelper::getValue($instance, 'data');
-
-		$this->assertArrayHasKey('foo', $data);
-		$this->assertContains('bar', $data);
+		$this->assertAttributeContains('bar', 'data', $instance);
 	}
 }
 

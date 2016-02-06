@@ -7,207 +7,112 @@
 namespace Joomla\Input\Tests;
 
 use Joomla\Input\Cli;
-use Joomla\Test\TestHelper;
-
-require_once __DIR__ . '/Stubs/FilterInputMock.php';
 
 /**
  * Test class for \Joomla\Input\Cli.
- *
- * @since  1.0
  */
 class CliTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Test the Joomla\Input\Cli::__construct method.
+	 * @testdox  Tests the default constructor behavior
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Cli::__construct
-	 * @since   1.1.4
+	 * @covers   Joomla\Input\Cli::__construct
 	 */
-	public function test__construct()
+	public function test__constructDefaultBehaviour()
 	{
-		// Default constructor call
-		$_SERVER['argv'] = array('/dev/null', '--foo=bar', '-ab', 'blah', '-g', 'flower sakura');
 		$instance = new Cli;
 
-		$this->assertEquals(
-			array(
+		$this->assertAttributeEmpty('data', $instance);
+		$this->assertAttributeInstanceOf('Joomla\Filter\InputFilter', 'filter', $instance);
+	}
+
+	/**
+	 * @testdox  Tests the constructor with injected data
+	 *
+	 * @covers   Joomla\Input\Cli::__construct
+	 * @covers   Joomla\Input\Cli::parseArguments
+	 *
+	 * @backupGlobals enabled
+	 */
+	public function test__constructDependencyInjection()
+	{
+		$_SERVER['argv'] = ['/dev/null', '--foo=bar', '-ab', 'blah', '-g', 'flower sakura'];
+		$mockFilter      = $this->getMock('Joomla\Filter\InputFilter');
+
+		$instance = new Cli(null, ['filter' => $mockFilter]);
+
+		$this->assertAttributeSame(
+			[
 				'foo' => 'bar',
-				'a' => true,
-				'b' => true,
-				'g' => 'flower sakura'
-			),
-			TestHelper::getValue($instance, 'data')
+				'a'   => true,
+				'b'   => true,
+				'g'   => 'flower sakura'
+			],
+			'data',
+			$instance
 		);
 
-		$this->assertInstanceOf(
-			'Joomla\Filter\InputFilter',
-			TestHelper::getValue($instance, 'filter')
-		);
-
-		// Given source & filter
-		$instance = new Cli(null, array('filter' => new FilterInputMock));
-
-		$this->assertInstanceOf(
-			'Joomla\Input\Tests\FilterInputMock',
-			TestHelper::getValue($instance, 'filter')
-		);
+		$this->assertSame(['blah'], $instance->args);
+		$this->assertAttributeSame($mockFilter, 'filter', $instance);
 	}
 
 	/**
-	 * Test the Joomla\Input\Cli::get method.
+	 * Data provider for get() method tests
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Cli::get
-	 * @covers  Joomla\Input\Cli::parseArguments
-	 * @since   1.0
+	 * @return  array
 	 */
-	public function testGet()
+	public function dataGet()
 	{
-		$_SERVER['argv'] = array('/dev/null', '--foo=bar', '-ab', 'blah', '-g', 'flower sakura');
-		$instance = new Cli(null, array('filter' => new FilterInputMock));
-
-		$this->assertThat(
-			$instance->get('foo'),
-			$this->identicalTo('bar'),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		$this->assertThat(
-			$instance->get('a'),
-			$this->identicalTo(true),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		$this->assertThat(
-			$instance->get('b'),
-			$this->identicalTo(true),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		$this->assertThat(
-			$instance->args,
-			$this->equalTo(array('blah')),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		// Default filter
-		$this->assertEquals(
-			'flower sakura',
-			$instance->get('g'),
-			'Default filter should be string. Line: ' . __LINE__
-		);
+		return [
+			'foo' => ['foo', 'bar', 'string'],
+			'a'   => ['a', true, 'bool'],
+			'b'   => ['b', true, 'bool'],
+			'g'   => ['g', 'flower sakura', null],
+			'ab'  => ['ab', 'cd', 'string'],
+			'ef'  => ['ef', true, 'bool'],
+			'gh'  => ['gh', 'bam', 'string']
+		];
 	}
 
 	/**
-	 * Test the Joomla\Input\Cli::get method.
+	 * @testdox  Tests the data source is correctly read
 	 *
-	 * @return  void
+	 * @param    string  $lookup    The key to lookup
+	 * @param    mixed   $expected  The expected return
+	 * @param    string  $filter    The filter type to use
 	 *
-	 * @covers  Joomla\Input\Cli::get
-	 * @covers  Joomla\Input\Cli::parseArguments
-	 * @since   1.0
+	 * @covers   Joomla\Input\Cli::get
+	 * @uses     Joomla\Input\Cli::__construct
+	 * @uses     Joomla\Input\Cli::parseArguments
+	 *
+	 * @backupGlobals enabled
+	 * @dataProvider  dataGet
 	 */
-	public function testParseLongArguments()
+	public function testGet($lookup, $expected, $filter)
 	{
-		$_SERVER['argv'] = array('/dev/null', '--ab', 'cd', '--ef', '--gh=bam');
-		$instance = new Cli(null, array('filter' => new FilterInputMock));
+		$_SERVER['argv'] = ['/dev/null', '--foo=bar', '-ab', 'blah', '-g', 'flower sakura', '--ab', 'cd', '--ef', '--gh=bam'];
+		$instance        = new Cli;
 
-		$this->assertThat(
-			$instance->get('ab'),
-			$this->identicalTo('cd'),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		$this->assertThat(
-			$instance->get('ef'),
-			$this->identicalTo(true),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		$this->assertThat(
-			$instance->get('gh'),
-			$this->identicalTo('bam'),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		$this->assertEmpty(
-			$instance->args,
-			'Line: ' . __LINE__ . '.'
-		);
+		$this->assertSame($expected, $instance->get($lookup, null, $filter));
 	}
 
 	/**
-	 * Test the Joomla\Input\Cli::get method.
+	 * @testdox   Tests the magic get method correctly proxies to another global
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Cli::get
-	 * @covers  Joomla\Input\Cli::parseArguments
-	 * @since   1.0
+	 * @covers    Joomla\Input\Cli::__get
 	 */
-	public function testParseShortArguments()
+	public function testGetFromServer()
 	{
-		$_SERVER['argv'] = array('/dev/null', '-ab', '-c', '-e', 'f', 'foobar', 'ghijk');
-		$instance = new Cli(null, array('filter' => new FilterInputMock));
+		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
 
-		$this->assertThat(
-			$instance->get('a'),
-			$this->identicalTo(true),
-			'Line: ' . __LINE__ . '.'
-		);
+		$instance = new Cli(null, ['filter' => $mockFilter]);
 
-		$this->assertThat(
-			$instance->get('b'),
-			$this->identicalTo(true),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		$this->assertThat(
-			$instance->get('c'),
-			$this->identicalTo(true),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		$this->assertThat(
-			$instance->get('e'),
-			$this->identicalTo('f'),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		$this->assertThat(
-			$instance->args,
-			$this->equalTo(array('foobar', 'ghijk')),
-			'Line: ' . __LINE__ . '.'
-		);
+		// Check the object type.
+		$this->assertInstanceOf('Joomla\Input\Input', $instance->server);
 	}
 
 	/**
-	 * Test the JInput::parseArguments method.
-	 *
-	 * @dataProvider provider_parseArguments
-	 */
-	public function testParseArguments($inputArgv, $expectedData, $expectedArgs)
-	{
-		$_SERVER['argv'] = $inputArgv;
-		$instance = new Cli(null, array('filter' => new FilterInputMock));
-
-		$this->assertThat(
-			TestHelper::getValue($instance, 'data'),
-			$this->identicalTo($expectedData)
-		);
-
-		$this->assertThat(
-			$instance->args,
-			$this->identicalTo($expectedArgs)
-		);
-	}
-
-	/**
-	 * Test inputs:
+	 * Data provider for parseArguments() method tests
 	 *
 	 * php test.php --foo --bar=baz
 	 * php test.php -abc
@@ -218,134 +123,137 @@ class CliTest extends \PHPUnit_Framework_TestCase
 	 * php test.php --key1 value1 -a --key2 -b b-value --c
 	 *
 	 * Note that this pattern is not supported: -abc c-value
+	 *
+	 * @return  array
 	 */
-	public function provider_parseArguments()
+	public function dataParseArguments()
 	{
-		return array(
+		return [
 
 			// php test.php --foo --bar=baz
-			array(
-				array('test.php', '--foo', '--bar=baz'),
-				array(
+			[
+				['test.php', '--foo', '--bar=baz'],
+				[
 					'foo' => true,
 					'bar' => 'baz'
-				),
-				array()
-			),
+				],
+				[]
+			],
 
 			// php test.php -abc
-			array(
-				array('test.php', '-abc'),
-				array(
+			[
+				['test.php', '-abc'],
+				[
 					'a' => true,
 					'b' => true,
 					'c' => true
-				),
-				array()
-			),
+				],
+				[]
+			],
 
 			// php test.php arg1 arg2 arg3
-			array(
-				array('test.php', 'arg1', 'arg2', 'arg3'),
-				array(),
-				array(
+			[
+				['test.php', 'arg1', 'arg2', 'arg3'],
+				[],
+				[
 					'arg1',
 					'arg2',
 					'arg3'
-				)
-			),
+				]
+			],
 
 			// php test.php plain-arg --foo --bar=baz --funny="spam=eggs" --also-funny=spam=eggs \
 			//      'plain arg 2' -abc -k=value "plain arg 3" --s="original" --s='overwrite' --s
-			array(
-				array('test.php', 'plain-arg', '--foo', '--bar=baz', '--funny=spam=eggs', '--also-funny=spam=eggs',
-					'plain arg 2', '-abc', '-k=value', 'plain arg 3', '--s=original', '--s=overwrite', '--s'),
-				array(
-					'foo' => true,
-					'bar' => 'baz',
-					'funny' => 'spam=eggs',
+			[
+				[
+					'test.php', 'plain-arg', '--foo', '--bar=baz', '--funny=spam=eggs', '--also-funny=spam=eggs',
+					'plain arg 2', '-abc', '-k=value', 'plain arg 3', '--s=original', '--s=overwrite', '--s'
+				],
+				[
+					'foo'        => true,
+					'bar'        => 'baz',
+					'funny'      => 'spam=eggs',
 					'also-funny' => 'spam=eggs',
-					'a' => true,
-					'b' => true,
-					'c' => true,
-					'k' => 'value',
-					's' => 'overwrite'
-				),
-				array(
+					'a'          => true,
+					'b'          => true,
+					'c'          => true,
+					'k'          => 'value',
+					's'          => 'overwrite'
+				],
+				[
 					'plain-arg',
 					'plain arg 2',
 					'plain arg 3'
-				)
-			),
+				]
+			],
 
 			// php test.php --key value -abc not-c-value
-			array(
-				array('test.php', '--key', 'value', '-abc', 'not-c-value'),
-				array(
+			[
+				['test.php', '--key', 'value', '-abc', 'not-c-value'],
+				[
 					'key' => 'value',
-					'a' => true,
-					'b' => true,
-					'c' => true
-				),
-				array(
+					'a'   => true,
+					'b'   => true,
+					'c'   => true
+				],
+				[
 					'not-c-value'
-				)
-			),
+				]
+			],
 
 			// php test.php --key1 value1 -a --key2 -b b-value --c
-			array(
-				array('test.php', '--key1', 'value1', '-a', '--key2', '-b', 'b-value', '--c'),
-				array(
+			[
+				['test.php', '--key1', 'value1', '-a', '--key2', '-b', 'b-value', '--c'],
+				[
 					'key1' => 'value1',
-					'a' => true,
+					'a'    => true,
 					'key2' => true,
-					'b' => 'b-value',
-					'c' => true
-				),
-				array()
-			)
-		);
+					'b'    => 'b-value',
+					'c'    => true
+				],
+				[]
+			]
+		];
 	}
 
 	/**
-	 * Test the Joomla\Input\Cli::get method.
+	 * @testdox  Tests that input arguments are parsed correctly
 	 *
-	 * @return  void
+	 * @param    array  $inputArgv     The input data
+	 * @param    array  $expectedData  The expected `data` attribute value
+	 * @param    array  $expectedArgs  The expected `args` attribute value
 	 *
-	 * @covers  Joomla\Input\Cli::get
-	 * @since   1.0
+	 * @covers   Joomla\Input\Cli::parseArguments
+	 * @uses     Joomla\Input\Cli::__construct
+	 *
+	 * @backupGlobals enabled
+	 * @dataProvider  dataParseArguments
 	 */
-	public function testGetFromServer()
+	public function testParseArguments($inputArgv, $expectedData, $expectedArgs)
 	{
-		$instance = new Cli(null, array('filter' => new FilterInputMock));
+		$_SERVER['argv'] = $inputArgv;
+		$mockFilter      = $this->getMock('Joomla\Filter\InputFilter');
 
-		// Check the object type.
-		$this->assertInstanceOf(
-			'Joomla\\Input\\Input',
-			$instance->server,
-			'Line: ' . __LINE__ . '.'
-		);
+		$instance = new Cli(null, ['filter' => $mockFilter]);
 
-		// Test the get method.
-		$this->assertThat(
-			$instance->server->get('PHP_SELF'),
-			$this->identicalTo($_SERVER['PHP_SELF']),
-			'Line: ' . __LINE__ . '.'
-		);
+		$this->assertAttributeSame($expectedData, 'data', $instance);
+
+		$this->assertSame($expectedArgs, $instance->args);
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::serialize method.
+	 * @testdox  Tests that the object is correctly serialized
 	 *
-	 * @return  void
+	 * @covers   Joomla\Input\Cli::serialize
 	 *
-	 * @covers  Joomla\Input\Cli::serialize
-	 * @since   1.1.4
+	 * @backupGlobals enabled
 	 */
 	public function testSerialize()
 	{
 		$_SERVER['argv'] = array('/dev/null', '--foo=bar');
-		$instance = new Cli(null, array('filter' => new FilterInputMock));
+		$mockFilter      = $this->getMock('Joomla\Filter\InputFilter');
+
+		$instance = new Cli(null, ['filter' => $mockFilter]);
 
 		$this->assertGreaterThan(
 			0,
@@ -354,44 +262,23 @@ class CliTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::unserialize method.
+	 * @testdox  Tests that the object is correctly unserialized
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Cli::unserialize
-	 * @since   1.1.4
+	 * @covers   Joomla\Input\Cli::unserialize
 	 */
 	public function testUnserialize()
 	{
 		$serialized = 'a:5:{i:0;s:9:"/dev/null";i:1;a:1:{s:3:"foo";s:3:"bar";}i:2;a:1:{s:6:"filter";s:3:"raw";}i:3;s:4:"data";i:4;a:1:{s:7:"request";s:4:"keep";}}';
+		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
 
-		$instance = new Cli(null, array('filter' => new FilterInputMock));
+		$instance = new Cli(null, ['filter' => $mockFilter]);
 
 		$instance->unserialize($serialized);
 
-		$this->assertEquals(
-			'/dev/null',
-			TestHelper::getValue($instance, 'executable')
-		);
-
-		$this->assertEquals(
-			array('foo' => 'bar'),
-			TestHelper::getValue($instance, 'args')
-		);
-
-		$this->assertEquals(
-			array('request' => 'keep'),
-			TestHelper::getValue($instance, 'inputs')
-		);
-
-		$this->assertEquals(
-			array('filter' => 'raw'),
-			TestHelper::getValue($instance, 'options')
-		);
-
-		$this->assertEquals(
-			'data',
-			TestHelper::getValue($instance, 'data')
-		);
+		$this->assertAttributeSame('/dev/null', 'executable', $instance);
+		$this->assertSame(['foo' => 'bar'], $instance->args);
+		$this->assertAttributeSame(['request' => 'keep'], 'inputs', $instance);
+		$this->assertAttributeSame(['filter' => 'raw'], 'options', $instance);
+		$this->assertAttributeSame('data', 'data', $instance);
 	}
 }

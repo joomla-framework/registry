@@ -6,307 +6,173 @@
 
 namespace Joomla\Input\Tests;
 
+use Joomla\Filter\InputFilter;
 use Joomla\Input\Input;
 use Joomla\Input\Cookie;
-use Joomla\Test\TestHelper;
-
-require_once __DIR__ . '/Stubs/FilterInputMock.php';
 
 /**
- * Test class for Input.
- *
- * @since  1.0
+ * Test class for \Joomla\Input\Input.
  */
 class InputTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * The test class.
 	 *
-	 * @var    Input
-	 * @since  1.0
+	 * @var  Input
 	 */
 	private $instance;
 
 	/**
 	 * The mock filter object
 	 *
-	 * @var    FilterInputMock
-	 * @since  1.0
+	 * @var  InputFilter|\PHPUnit_Framework_MockObject_MockObject
 	 */
 	private $filterMock;
 
 	/**
-	 * Test the Joomla\Input\Input::__construct method.
+	 * Sets up the fixture, for example, open a network connection.
+	 * This method is called before a test is executed.
 	 *
 	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::__construct
-	 * @since   1.0
 	 */
-	public function test__construct()
+	protected function setUp()
 	{
-		// Default constructor call
+		parent::setUp();
+
+		$this->filterMock = $this->getMock('Joomla\Filter\InputFilter');
+	}
+
+	/**
+	 * Get an Input object populated with passed in data
+	 *
+	 * @param   array  $data  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 *
+	 * @return  Input
+	 */
+	protected function getInputObject($data = null)
+	{
+		return new Input($data, ['filter' => $this->filterMock]);
+	}
+
+	/**
+	 * @testdox  Tests the default constructor behavior
+	 *
+	 * @covers   Joomla\Input\Input::__construct
+	 */
+	public function test__constructDefaultBehaviour()
+	{
 		$instance = new Input;
 
-		$this->assertEquals(
-			$_REQUEST,
-			TestHelper::getValue($instance, 'data')
-		);
-
-		$this->assertInstanceOf(
-			'Joomla\Filter\InputFilter',
-			TestHelper::getValue($instance, 'filter')
-		);
-
-		// Given source & filter
-		$instance = new Input($_GET, array('filter' => $this->filterMock));
-
-		$this->assertEquals(
-			$_GET,
-			TestHelper::getValue($instance, 'data')
-		);
-
-		$this->assertInstanceOf(
-			'Joomla\Input\Tests\FilterInputMock',
-			TestHelper::getValue($instance, 'filter')
-		);
+		$this->assertAttributeSame($_REQUEST, 'data', $instance);
+		$this->assertAttributeInstanceOf('Joomla\Filter\InputFilter', 'filter', $instance);
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::__call method.
+	 * @testdox  Tests the constructor with injected data
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::__call
-	 * @since   1.0
+	 * @covers   Joomla\Input\Input::__construct
 	 */
-	public function test__call()
+	public function test__constructDependencyInjection()
 	{
-		$instance = $this->getInputObject(array('foo' => 'bar'));
+		$instance = $this->getInputObject($_GET);
 
-		$this->assertEquals(
-			'bar',
-			$instance->getRaw('foo')
-		);
-
-		$this->assertEquals(
-			'two',
-			$instance->getRaw('one', 'two')
-		);
-
-		$this->assertNull(
-			$instance->setRaw('one', 'two')
-		);
+		$this->assertAttributeSame($_GET, 'data', $instance);
+		$this->assertAttributeSame($this->filterMock, 'filter', $instance);
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::__get method.
+	 * @testdox  Tests convenience methods are proxied
 	 *
-	 * @return  void
+	 * @covers   Joomla\Input\Input::__call
+	 * @uses     Joomla\Input\Input::get
+	 */
+	public function test__callProxiesToTheGetMethod()
+	{
+		$this->filterMock->expects($this->once())
+			->method('clean')
+			->willReturnArgument(0);
+
+		$instance = $this->getInputObject(['foo' => 'bar']);
+
+		$this->assertSame('bar', $instance->getRaw('foo'));
+	}
+
+	/**
+	 * @testdox  Tests an error is thrown if an undefined method is called
 	 *
-	 * @covers  Joomla\Input\Input::__get
-	 * @since   1.0
+	 * @covers   Joomla\Input\Input::__call
+	 *
+	 * @expectedException  \PHPUnit_Framework_Error
+	 */
+	public function test__callThrowsAnErrorIfAnUndefinedMethodIsCalled()
+	{
+		$instance = $this->getInputObject()->setRaw();
+	}
+
+	/**
+	 * @testdox   Tests the magic get method correctly proxies to another global
+	 *
+	 * @covers    Joomla\Input\Input::__get
 	 */
 	public function test__get()
 	{
-		$instance = $this->getInputObject(array());
+		$instance = $this->getInputObject();
 
 		$this->assertAttributeEquals($_GET, 'data', $instance->get);
-
-		$inputs = TestHelper::getValue($instance, 'inputs');
-
-		// Previously cached input
-		$this->assertArrayHasKey('get', $inputs);
-
-		$this->assertTrue($inputs['get'] instanceof Input);
-
-		$this->assertAttributeEquals($_GET, 'data', $instance->get);
-
-		$cookies = $instance->cookie;
-		$this->assertTrue($cookies instanceof Input);
-		$this->assertTrue($cookies instanceof Cookie);
+		$this->assertAttributeContains($instance->get, 'inputs', $instance, 'An object retrieved via __get() should be cached internally');
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::count method with no data.
+	 * @testdox   Tests an error is thrown if an undefined property is called
 	 *
-	 * @return  void
+	 * @covers    Joomla\Input\Input::__get
 	 *
-	 * @covers  Joomla\Input\Input::count
-	 * @since   1.0
+	 * @expectedException  \PHPUnit_Framework_Error
 	 */
-	public function testCountWithNoData()
+	public function test__getThrowsAnErrorIfAnUndefinedPropertyIsCalled()
 	{
-		$instance = $this->getInputObject(array());
-
-		$this->assertEquals(
-			0,
-			$instance->count()
-		);
+		$instance = $this->getInputObject()->put;
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::count method with data.
+	 * @testdox   Tests the data store is counted
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::count
-	 * @since   1.0
+	 * @covers    Joomla\Input\Input::count
 	 */
-	public function testCountWithData()
+	public function testCount()
 	{
-		$instance = $this->getInputObject(array('foo' => 2, 'bar' => 3, 'gamma' => 4));
-
-		$this->assertEquals(
-			3,
-			$instance->count()
-		);
+		$this->assertCount(3, $this->getInputObject(['foo' => 2, 'bar' => 3, 'gamma' => 4]));
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::get method with a normal value.
+	 * @testdox  Tests the data source is correctly read
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::get
-	 * @since   1.0
+	 * @covers   Joomla\Input\Input::get
 	 */
-	public function testGetWithStandardValue()
+	public function testGet()
 	{
-		$instance = $this->getInputObject(array('foo' => 'bar'));
+		$this->filterMock->expects($this->once())
+			->method('clean')
+			->willReturnArgument(0);
 
-		$this->assertEquals(
-			'bar',
-			$instance->get('foo')
-		);
+		$instance = $this->getInputObject(['foo' => 'bar']);
+
+		$this->assertEquals('bar', $instance->get('foo'));
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::get method with empty string.
+	 * @testdox  Tests a key is not redefined if already present
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::get
-	 * @since   1.0
-	 */
-	public function testGetWithEmptyString()
-	{
-		$instance = $this->getInputObject(array('foo' => ''));
-
-		$this->assertEquals(
-			'',
-			$instance->get('foo')
-		);
-
-		$this->assertInternalType('string', $instance->get('foo'));
-	}
-
-	/**
-	 * Test the Joomla\Input\Input::get method with integer 0.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::get
-	 * @since   1.0
-	 */
-	public function testGetWith0()
-	{
-		$instance = $this->getInputObject(array('foo' => 0));
-
-		$this->assertEquals(
-			0,
-			$instance->getInt('foo')
-		);
-
-		$this->assertInternalType('integer', $instance->get('foo'));
-	}
-
-	/**
-	 * Test the Joomla\Input\Input::get method with float 0.0.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::get
-	 * @since   1.0
-	 */
-	public function testGetWith0Point0()
-	{
-		$instance = $this->getInputObject(array('foo' => 0.0));
-
-		$this->assertEquals(
-			0.0,
-			$instance->getFloat('foo')
-		);
-
-		$this->assertInternalType('float', $instance->get('foo'));
-	}
-
-	/**
-	 * Test the Joomla\Input\Input::get method with string "0".
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::get
-	 * @since   1.0
-	 */
-	public function testGetWithString0()
-	{
-		$instance = $this->getInputObject(array('foo' => "0"));
-
-		$this->assertEquals(
-			"0",
-			$instance->get('foo')
-		);
-
-		$this->assertInternalType('string', $instance->get('foo'));
-	}
-
-	/**
-	 * Test the Joomla\Input\Input::get method with false.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::get
-	 * @since   1.0
-	 */
-	public function testGetWithFalse()
-	{
-		$instance = $this->getInputObject(array('foo' => false));
-
-		$this->assertFalse(
-			$instance->getBoolean('foo')
-		);
-
-		$this->assertInternalType('boolean', $instance->get('foo'));
-	}
-
-	/**
-	 * Tests retrieving a default value..
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::get
-	 * @since   1.0
-	 */
-	public function testGetDefault()
-	{
-		$instance = $this->getInputObject(array('foo' => 'bar'));
-
-		// Test the get method.
-		$this->assertEquals('default', $instance->get('default_value', 'default'));
-	}
-
-	/**
-	 * Test the Joomla\Input\Input::def method.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::def
-	 * @since   1.0
+	 * @covers   Joomla\Input\Input::def
+	 * @uses     Joomla\Input\Input::get
 	 */
 	public function testDefNotReadWhenValueExists()
 	{
-		$instance = $this->getInputObject(array('foo' => 'bar'));
+		$this->filterMock->expects($this->once())
+			->method('clean')
+			->willReturnArgument(0);
+
+		$instance = $this->getInputObject(['foo' => 'bar']);
 
 		$instance->def('foo', 'nope');
 
@@ -314,16 +180,18 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::def method.
+	 * @testdox  Tests a key is defined when not present
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::def
-	 * @since   1.0
+	 * @covers   Joomla\Input\Input::def
+	 * @uses     Joomla\Input\Input::get
 	 */
 	public function testDefRead()
 	{
-		$instance = $this->getInputObject(array('foo' => 'bar'));
+		$this->filterMock->expects($this->once())
+			->method('clean')
+			->willReturnArgument(0);
+
+		$instance = $this->getInputObject(['foo' => 'bar']);
 
 		$instance->def('bar', 'nope');
 
@@ -331,16 +199,18 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::set method.
+	 * @testdox  Tests a key is added or overwritten in the data source
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::set
-	 * @since   1.0
+	 * @covers   Joomla\Input\Input::set
+	 * @uses     Joomla\Input\Input::get
 	 */
 	public function testSet()
 	{
-		$instance = $this->getInputObject(array('foo' => 'bar'));
+		$this->filterMock->expects($this->once())
+			->method('clean')
+			->willReturnArgument(0);
+
+		$instance = $this->getInputObject(['foo' => 'bar']);
 
 		$instance->set('foo', 'gamma');
 
@@ -348,104 +218,66 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::exists method.
+	 * @testdox  Tests for a key's existence in the data source
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::exists
-	 * @since   1.2.0
+	 * @covers   Joomla\Input\Input::exists
 	 */
 	public function testExists()
 	{
-		$instance = $this->getInputObject(array('foo' => 'bar'));
+		$instance = $this->getInputObject(['foo' => 'bar']);
 
-		$this->assertTrue(
-			$instance->exists('foo')
-		);
-
-		$this->assertFalse(
-			$instance->exists('bar')
-		);
+		$this->assertTrue($instance->exists('foo'));
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::getArray method.
+	 * @testdox  Tests that an array of keys are read from the data source
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::get
-	 * @since   1.0
+	 * @covers   Joomla\Input\Input::getArray
+	 * @uses     Joomla\Input\Input::get
 	 */
 	public function testGetArray()
 	{
-		$array = array(
+		$this->filterMock->expects($this->any())
+			->method('clean')
+			->willReturnArgument(0);
+
+		$array = [
 			'var1' => 'value1',
 			'var2' => 34,
-			'var3' => array('test')
-		);
+			'var3' => ['test'],
+			'var4' => ['var1' => ['var2' => 'test']]
+		];
 
 		$input = $this->getInputObject($array);
 
 		$this->assertEquals(
 			$array,
 			$input->getArray(
-				array('var1' => 'filter1', 'var2' => 'filter2', 'var3' => 'filter3')
-			)
-		);
-
-		$this->assertEquals(array('value1', 'filter1'), $this->filterMock->calls['clean'][0]);
-		$this->assertEquals(array(34, 'filter2'), $this->filterMock->calls['clean'][1]);
-		$this->assertEquals(array(array('test'), 'filter3'), $this->filterMock->calls['clean'][2]);
-	}
-
-	/**
-	 * Test the Joomla\Input\Input::get method using a nested data set.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::get
-	 * @since   1.0
-	 */
-	public function testGetArrayNested()
-	{
-		$array = array(
-			'var2' => 34,
-			'var3' => array('var2' => 'test'),
-			'var4' => array('var1' => array('var2' => 'test'))
-		);
-
-		$input = $this->getInputObject($array);
-
-		$this->assertEquals(
-			array('var4' => array('var1' => array('var2' => 'test'))),
-			$input->getArray(
-				array(
-					'var4' => array(
-						'var1' => array('var2' => 'test')
-					)
-				)
+				['var1' => 'string', 'var2' => 'int', 'var3' => 'array', 'var4' => ['var1' => ['var2' => 'array']]]
 			)
 		);
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::getArray method without specified variables.
+	 * @testdox  Tests that the full data array is read from the data source
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::getArray
-	 * @since   1.0
+	 * @covers   Joomla\Input\Input::getArray
+	 * @uses     Joomla\Input\Input::get
 	 */
 	public function testGetArrayWithoutSpecifiedVariables()
 	{
-		$array = array(
+		$this->filterMock->expects($this->any())
+			->method('clean')
+			->willReturnArgument(0);
+
+		$array = [
 			'var2' => 34,
-			'var3' => array('var2' => 'test'),
-			'var4' => array('var1' => array('var2' => 'test')),
-			'var5' => array('foo' => array()),
-			'var6' => array('bar' => null),
+			'var3' => ['var2' => 'test'],
+			'var4' => ['var1' => ['var2' => 'test']],
+			'var5' => ['foo' => []],
+			'var6' => ['bar' => null],
 			'var7' => null
-		);
+		];
 
 		$input = $this->getInputObject($array);
 
@@ -453,152 +285,56 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::get method.
+	 * @testdox  Tests that the request method is returned
 	 *
-	 * @return  void
+	 * @covers   Joomla\Input\Input::getMethod
 	 *
-	 * @covers  Joomla\Input\Input::get
-	 * @since   1.0
-	 */
-	public function testGetFromCookie()
-	{
-		$instance = $this->getInputObject(array());
-
-		$_COOKIE['foo'] = 'bar';
-
-		$this->assertAttributeEquals($_COOKIE, 'data', $instance->cookie);
-	}
-
-	/**
-	 * Test the Joomla\Input\Input::getMethod method.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::getMethod
-	 * @since   1.0
+	 * @backupGlobals enabled
 	 */
 	public function testGetMethod()
 	{
+		$this->filterMock->expects($this->any())
+			->method('clean')
+			->willReturnArgument(0);
+
 		$_SERVER['REQUEST_METHOD'] = 'custom';
 
-		$instance = $this->getInputObject(array());
+		$instance = $this->getInputObject([]);
 
 		$this->assertEquals('CUSTOM', $instance->getMethod());
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::serialize method.
+	 * @testdox  Tests that the object is correctly serialized
 	 *
-	 * @return  void
+	 * @covers   Joomla\Input\Input::loadAllInputs
+	 * @covers   Joomla\Input\Input::serialize
 	 *
-	 * @covers  Joomla\Input\Input::serialize
-	 * @since   1.0
+	 * @backupGlobals enabled
 	 */
 	public function testSerialize()
 	{
-		$instance = $this->getInputObject(array());
+		$instance = $this->getInputObject([]);
 
-		// Load the inputs so that the static $loaded is set to true.
-		TestHelper::invoke($instance, 'loadAllInputs');
-
-		// Adjust the values so they are easier to handle.
-		TestHelper::setValue($instance, 'inputs', array('server' => 'remove', 'env' => 'remove', 'request' => 'keep'));
-		TestHelper::setValue($instance, 'options', array('options'));
-		TestHelper::setValue($instance, 'data', 'data');
-
-		$this->assertEquals(
-			'a:3:{i:0;a:1:{i:0;s:7:"options";}i:1;s:4:"data";i:2;a:1:{s:7:"request";s:4:"keep";}}',
-			$instance->serialize()
-		);
+		$this->assertGreaterThan(0, strlen($instance->serialize()));
+		$this->assertAttributeEquals(true, 'loaded', $instance);
 	}
 
 	/**
-	 * Test the Joomla\Input\Input::unserialize method.
+	 * @testdox  Tests that the object is correctly unserialized
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::unserialize
-	 * @since   1.0
+	 * @covers   Joomla\Input\Input::unserialize
 	 */
 	public function testUnserialize()
 	{
 		$serialized = 'a:3:{i:0;a:1:{s:6:"filter";s:3:"raw";}i:1;s:4:"data";i:2;a:1:{s:7:"request";s:4:"keep";}}';
 
-		$instance = $this->getInputObject(array());
+		$instance = $this->getInputObject([]);
 
 		$instance->unserialize($serialized);
 
-		// Adjust the values so they are easier to handle.
-		$this->assertEquals(
-			array('request' => 'keep'),
-			TestHelper::getValue($instance, 'inputs')
-		);
-
-		$this->assertEquals(
-			array('filter' => 'raw'),
-			TestHelper::getValue($instance, 'options')
-		);
-
-		$this->assertEquals(
-			'data',
-			TestHelper::getValue($instance, 'data')
-		);
-
-		$serialized = 'a:3:{i:0;a:1:{i:0;s:7:"options";}i:1;s:4:"data";i:2;a:1:{s:7:"request";s:4:"keep";}}';
-		$instance->unserialize($serialized);
-		$this->assertEquals(
-			array('options'),
-			TestHelper::getValue($instance, 'options')
-		);
-	}
-
-	/**
-	 * Test the Joomla\Input\Input::loadAllInputs method.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Input::loadAllInputs
-	 * @since   1.1.4
-	 */
-	public function testLoadAllInputs()
-	{
-		$instance = $this->getInputObject(array());
-		TestHelper::setValue($instance, 'loaded', false);
-
-		$inputs = TestHelper::getValue($instance, 'inputs');
-		$this->assertCount(0, $inputs);
-
-		TestHelper::invoke($instance, 'loadAllInputs');
-
-		$inputs = TestHelper::getValue($instance, 'inputs');
-		$this->assertGreaterThan(0, count($inputs));
-	}
-
-	/**
-	 * Get Input object populated with passed in data
-	 *
-	 * @param   array  $data  Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 *
-	 * @return  Input
-	 *
-	 * @since   1.0
-	 */
-	protected function getInputObject($data = null)
-	{
-		return new Input($data, array('filter' => $this->filterMock));
-	}
-
-	/**
-	 * Setup for testing.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->filterMock = new FilterInputMock;
+		$this->assertAttributeSame(['request' => 'keep'], 'inputs', $instance);
+		$this->assertAttributeSame(['filter' => 'raw'], 'options', $instance);
+		$this->assertAttributeSame('data', 'data', $instance);
 	}
 }

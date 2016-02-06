@@ -91,25 +91,8 @@ class Input implements \Serializable, \Countable
 	 */
 	public function __construct($source = null, array $options = array())
 	{
-		if (isset($options['filter']))
-		{
-			$this->filter = $options['filter'];
-		}
-		else
-		{
-			$this->filter = new Filter\InputFilter;
-		}
-
-		if (is_null($source))
-		{
-			$this->data = $_REQUEST;
-		}
-		else
-		{
-			$this->data = $source;
-		}
-
-		// Set the options for the class.
+		$this->data    = is_null($source) ? $_REQUEST : $source;
+		$this->filter  = isset($options['filter']) ? $options['filter'] : new Filter\InputFilter;
 		$this->options = $options;
 	}
 
@@ -129,7 +112,7 @@ class Input implements \Serializable, \Countable
 			return $this->inputs[$name];
 		}
 
-		$className = '\\Joomla\\Input\\' . ucfirst($name);
+		$className = __NAMESPACE__ . '\\' . ucfirst($name);
 
 		if (class_exists($className))
 		{
@@ -334,7 +317,7 @@ class Input implements \Serializable, \Countable
 	 */
 	public function getMethod()
 	{
-		return strtoupper($_SERVER['REQUEST_METHOD']);
+		return strtoupper($this->server->getRaw('REQUEST_METHOD'));
 	}
 
 	/**
@@ -373,14 +356,7 @@ class Input implements \Serializable, \Countable
 		list($this->options, $this->data, $this->inputs) = unserialize($input);
 
 		// Load the filter.
-		if (isset($this->options['filter']))
-		{
-			$this->filter = $this->options['filter'];
-		}
-		else
-		{
-			$this->filter = new Filter\InputFilter;
-		}
+		$this->filter  = isset($this->options['filter']) ? $this->options['filter'] : new Filter\InputFilter;
 	}
 
 	/**
