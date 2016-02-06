@@ -36,6 +36,7 @@ use Joomla\Filter;
  * @method      string   getHtml($name, $default = null)      Get a HTML string.
  * @method      string   getPath($name, $default = null)      Get a file path.
  * @method      string   getUsername($name, $default = null)  Get a username.
+ * @method      mixed    getRaw($name, $default = null)       Get an unfiltered value.
  */
 class Input implements \Serializable, \Countable
 {
@@ -316,6 +317,12 @@ class Input implements \Serializable, \Countable
 
 			return $this->get($arguments[0], $default, $filter);
 		}
+
+		$trace = debug_backtrace();
+		trigger_error(
+			'Call to undefined method via call(): ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'],
+			E_USER_ERROR
+		);
 	}
 
 	/**
@@ -390,8 +397,8 @@ class Input implements \Serializable, \Countable
 			// Load up all the globals.
 			foreach ($GLOBALS as $global => $data)
 			{
-				// Check if the global starts with an underscore.
-				if (strpos($global, '_') === 0)
+				// Check if the global starts with only a single underscore (required for checks against Composer or PHPUnit for example)
+				if (strpos($global, '_') === 0 && substr($global, 0, 2) !== '__')
 				{
 					// Convert global name to input name.
 					$global = strtolower($global);
