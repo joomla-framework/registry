@@ -8,8 +8,6 @@
 
 namespace Joomla\Input;
 
-use Joomla\Filter;
-
 /**
  * Joomla! Input Cookie Class
  *

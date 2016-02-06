@@ -8,20 +8,19 @@
 
 namespace Joomla\Input;
 
-use Joomla\Filter;
-
 /**
  * Joomla! Input JSON Class
  *
- * This class decodes a JSON string from the raw request data and makes it available via
- * the standard Input interface.
+ * This class decodes a JSON string from the raw request data and makes it available via the standard Input interface.
  *
  * @since  1.0
  */
 class Json extends Input
 {
 	/**
-	 * @var    string  The raw JSON string from the request.
+	 * The raw JSON string from the request.
+	 *
+	 * @var    string
 	 * @since  1.0
 	 */
 	private $raw;

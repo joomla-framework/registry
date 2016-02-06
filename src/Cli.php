@@ -26,8 +26,7 @@ class Cli extends Input
 	public $executable;
 
 	/**
-	 * The additional arguments passed to the script that are not associated
-	 * with a specific argument name.
+	 * The additional arguments passed to the script that are not associated with a specific argument name.
 	 *
 	 * @var    array
 	 * @since  1.0
@@ -95,7 +94,7 @@ class Cli extends Input
 	 *
 	 * @param   string  $input  The serialized input.
 	 *
-	 * @return  Input  The input object.
+	 * @return  void
 	 *
 	 * @since   1.0
 	 */
