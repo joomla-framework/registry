@@ -146,7 +146,11 @@ class Input implements \Serializable, \Countable
 			return $this->inputs[$name];
 		}
 
-		// TODO throw an exception
+		$trace = debug_backtrace();
+		trigger_error(
+			'Undefined property via __get(): ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'],
+			E_USER_NOTICE
+		);
 	}
 
 	/**

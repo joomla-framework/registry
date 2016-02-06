@@ -125,9 +125,6 @@ class InputTest extends \PHPUnit_Framework_TestCase
 		$cookies = $instance->cookie;
 		$this->assertTrue($cookies instanceof Input);
 		$this->assertTrue($cookies instanceof Cookie);
-
-		// If nothing is returned
-		$this->assertEquals(null, $instance->foobar);
 	}
 
 	/**
