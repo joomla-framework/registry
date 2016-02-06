@@ -96,7 +96,7 @@ class Zip implements ExtractableInterface
 	/**
 	 * Holds the options array.
 	 *
-	 * @var    mixed  Array or object that implements \ArrayAccess
+	 * @var    array|\ArrayAccess
 	 * @since  1.0
 	 */
 	protected $options = array();
@@ -104,12 +104,19 @@ class Zip implements ExtractableInterface
 	/**
 	 * Create a new Archive object.
 	 *
-	 * @param   mixed  $options  An array of options or an object that implements \ArrayAccess
+	 * @param   array|\ArrayAccess  $options  An array of options or an object that implements \ArrayAccess
 	 *
 	 * @since   1.0
 	 */
 	public function __construct($options = array())
 	{
+		if (!is_array($options) && !($options instanceof \ArrayAccess))
+		{
+			throw new \InvalidArgumentException(
+				'The options param must be an array or implement the ArrayAccess interface.'
+			);
+		}
+
 		$this->options = $options;
 	}
 
@@ -159,10 +166,8 @@ class Zip implements ExtractableInterface
 		{
 			return $this->extractNative($archive, $destination);
 		}
-		else
-		{
-			return $this->extractCustom($archive, $destination);
-		}
+
+		return $this->extractCustom($archive, $destination);
 	}
 
 	/**
@@ -200,14 +205,7 @@ class Zip implements ExtractableInterface
 	 */
 	public function checkZipData(&$data)
 	{
-		if (strpos($data, $this->fileHeader) === false)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		return strpos($data, $this->fileHeader) !== false;
 	}
 
 	/**
@@ -278,43 +276,39 @@ class Zip implements ExtractableInterface
 	{
 		$zip = zip_open($archive);
 
-		if (is_resource($zip))
-		{
-			// Make sure the destination folder exists
-			if (!Folder::create($destination))
-			{
-				throw new \RuntimeException('Unable to create destination');
-			}
-
-			// Read files in the archive
-			while ($file = @zip_read($zip))
-			{
-				if (zip_entry_open($zip, $file, "r"))
-				{
-					if (substr(zip_entry_name($file), strlen(zip_entry_name($file)) - 1) != "/")
-					{
-						$buffer = zip_entry_read($file, zip_entry_filesize($file));
-
-						if (File::write($destination . '/' . zip_entry_name($file), $buffer) === false)
-						{
-							throw new \RuntimeException('Unable to write entry');
-						}
-
-						zip_entry_close($file);
-					}
-				}
-				else
-				{
-					throw new \RuntimeException('Unable to read entry');
-				}
-			}
-
-			@zip_close($zip);
-		}
-		else
+		if (!is_resource($zip))
 		{
 			throw new \RuntimeException('Unable to open archive');
 		}
+
+		// Make sure the destination folder exists
+		if (!Folder::create($destination))
+		{
+			throw new \RuntimeException('Unable to create destination');
+		}
+
+		// Read files in the archive
+		while ($file = @zip_read($zip))
+		{
+			if (!zip_entry_open($zip, $file, "r"))
+			{
+				throw new \RuntimeException('Unable to read entry');
+			}
+
+			if (substr(zip_entry_name($file), strlen(zip_entry_name($file)) - 1) != "/")
+			{
+				$buffer = zip_entry_read($file, zip_entry_filesize($file));
+
+				if (File::write($destination . '/' . zip_entry_name($file), $buffer) === false)
+				{
+					throw new \RuntimeException('Unable to write entry');
+				}
+
+				zip_entry_close($file);
+			}
+		}
+
+		@zip_close($zip);
 
 		return true;
 	}
@@ -454,12 +448,14 @@ class Zip implements ExtractableInterface
 		{
 			return gzinflate(substr($this->data, $this->metadata[$key]['_dataStart'], $this->metadata[$key]['csize']));
 		}
-		elseif ($this->metadata[$key]['_method'] == 0x0)
+
+		if ($this->metadata[$key]['_method'] == 0x0)
 		{
-			/* Files that aren't compressed. */
+			// Files that aren't compressed.
 			return substr($this->data, $this->metadata[$key]['_dataStart'], $this->metadata[$key]['csize']);
 		}
-		elseif ($this->metadata[$key]['_method'] == 0x12)
+
+		if ($this->metadata[$key]['_method'] == 0x12)
 		{
 			// If bz2 extension is loaded use it
 			if (extension_loaded('bz2'))
@@ -472,9 +468,7 @@ class Zip implements ExtractableInterface
 	}
 
 	/**
-	 * Converts a UNIX timestamp to a 4-byte DOS date and time format
-	 * (date in high 2-bytes, time in low 2-bytes allowing magnitude
-	 * comparison).
+	 * Converts a UNIX timestamp to a 4-byte DOS date and time format (date in high 2-bytes, time in low 2-bytes allowing magnitude comparison).
 	 *
 	 * @param   integer  $unixtime  The current UNIX timestamp.
 	 *
@@ -634,13 +628,6 @@ class Zip implements ExtractableInterface
 		pack('V', strlen($data)) . /* ZIP file comment length. */
 		"\x00\x00";
 
-		if (File::write($path, $buffer) === false)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		return File::write($path, $buffer) !== false;
 	}
 }
