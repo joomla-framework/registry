@@ -48,16 +48,14 @@ class KeychainManager extends AbstractCliApplication
 
 				return;
 			}
-			else
-			{
-				$this->displayHelp();
 
-				return;
-			}
+			$this->displayHelp();
+
+			return;
 		}
 
 		// For all tasks but help and init we use the keychain
-		if (!in_array($this->input->args[0], array('help', 'init')))
+		if (!in_array($this->input->args[0], ['help', 'init']))
 		{
 			$this->loadKeychain();
 		}
