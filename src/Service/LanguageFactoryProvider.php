@@ -33,7 +33,7 @@ class LanguageFactoryProvider implements ServiceProviderInterface
 	{
 		$container->share(
 			'Joomla\\Language\\LanguageFactory',
-			function () use ($container)
+			function (Container $container)
 			{
 				$factory = new LanguageFactory;
 

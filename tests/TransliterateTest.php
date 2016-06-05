@@ -38,22 +38,22 @@ class TransliterateTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function dataProvider()
 	{
-		return array(
-			array('Weiß', 'Weiss', 0),
-			array('Goldmann', 'Goldmann', 0),
-			array('Göbel', 'Goebel', 0),
-			array('Weiss', 'Weiss', 0),
-			array('Göthe', 'Goethe', 0),
-			array('Götz', 'Goetz', 0),
-			array('Weßling', 'Wessling', 0),
-			array('Šíleně', 'Silene', 0),
-			array('žluťoučký', 'zlutoucky', 0),
-			array('Vašek', 'Vasek', 0),
-			array('úpěl', 'upel', 0),
-			array('olol', 'olol', 0),
-			array('Göbel', 'Goebel', -1),
-			array('Göbel', 'Göbel', 1)
-		);
+		return [
+			['Weiß', 'Weiss', 0],
+			['Goldmann', 'Goldmann', 0],
+			['Göbel', 'Goebel', 0],
+			['Weiss', 'Weiss', 0],
+			['Göthe', 'Goethe', 0],
+			['Götz', 'Goetz', 0],
+			['Weßling', 'Wessling', 0],
+			['Šíleně', 'Silene', 0],
+			['žluťoučký', 'zlutoucky', 0],
+			['Vašek', 'Vasek', 0],
+			['úpěl', 'upel', 0],
+			['olol', 'olol', 0],
+			['Göbel', 'Goebel', -1],
+			['Göbel', 'Göbel', 1]
+		];
 	}
 
 	/**

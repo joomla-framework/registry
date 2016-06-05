@@ -37,10 +37,10 @@ class LanguageFactory
 	 * @var    array
 	 * @since  1.3.0
 	 */
-	private static $loadedClasses = array(
-		'language' => array(),
-		'stemmer'  => array()
-	);
+	private static $loadedClasses = [
+		'language' => [],
+		'stemmer'  => []
+	];
 
 	/**
 	 * Get the application's default language
@@ -121,9 +121,7 @@ class LanguageFactory
 		$basePath = ($basePath === null) ? $this->getLanguageDirectory() : $basePath;
 
 		// Get the LanguageHelper to set the proper language directory
-		$languageHelper = new LanguageHelper;
-
-		$basePath = $languageHelper->getLanguagePath($basePath);
+		$basePath = (new LanguageHelper)->getLanguagePath($basePath);
 
 		$paths[0] = $basePath . "/overrides/$lang.localise.php";
 		$paths[1] = $basePath . "/$lang/$lang.localise.php";

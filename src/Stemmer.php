@@ -21,7 +21,7 @@ abstract class Stemmer
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $cache = array();
+	protected $cache = [];
 
 	/**
 	 * Method to stem a token and return the root.

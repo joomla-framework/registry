@@ -32,8 +32,7 @@ abstract class AbstractLocalise implements LocaliseInterface
 	 */
 	public function transliterate($string)
 	{
-		$transliterate = new Transliterate;
-		$string = $transliterate->utf8_latin_to_ascii($string);
+		$string = (new Transliterate)->utf8_latin_to_ascii($string);
 
 		return StringHelper::strtolower($string);
 	}
@@ -49,6 +48,6 @@ abstract class AbstractLocalise implements LocaliseInterface
 	 */
 	public function getPluralSuffixes($count)
 	{
-		return array((string) $count);
+		return [(string) $count];
 	}
 }

@@ -154,7 +154,7 @@ class Language
 		}
 
 		$this->basePath = $path;
-		$this->strings  = array();
+		$this->strings  = [];
 		$this->helper   = new LanguageHelper;
 
 		$this->lang = ($lang == null) ? $this->default : $lang;
@@ -179,8 +179,7 @@ class Language
 		}
 
 		// Grab a localisation file
-		$factory = new LanguageFactory;
-		$this->localise = $factory->getLocalise($lang, $path);
+		$this->localise = (new LanguageFactory)->getLocalise($lang, $path);
 
 		$this->load();
 	}
@@ -239,7 +238,7 @@ class Language
 
 				if (!array_key_exists($key, $this->used))
 				{
-					$this->used[$key] = array();
+					$this->used[$key] = [];
 				}
 
 				$this->used[$key][] = $caller;
@@ -249,12 +248,12 @@ class Language
 		{
 			if ($this->debug)
 			{
-				$caller = $this->getCallerInfo();
+				$caller           = $this->getCallerInfo();
 				$caller['string'] = $string;
 
 				if (!array_key_exists($key, $this->orphans))
 				{
-					$this->orphans[$key] = array();
+					$this->orphans[$key] = [];
 				}
 
 				$this->orphans[$key][] = $caller;
@@ -271,7 +270,7 @@ class Language
 		elseif ($interpretBackSlashes)
 		{
 			// Interpret \n and \t characters
-			$string = str_replace(array('\\\\', '\t', '\n'), array("\\", "\t", "\n"), $string);
+			$string = str_replace(['\\\\', '\t', '\n'], ["\\", "\t", "\n"], $string);
 		}
 
 		return $string;
@@ -280,8 +279,7 @@ class Language
 	/**
 	 * Transliterate function
 	 *
-	 * This method processes a string and replaces all accented UTF-8 characters by unaccented
-	 * ASCII-7 "equivalents".
+	 * This method processes a string and replaces all accented UTF-8 characters by unaccented ASCII-7 "equivalents".
 	 *
 	 * @param   string  $string  The string to transliterate.
 	 *
@@ -333,9 +331,7 @@ class Language
 	 */
 	public static function exists($lang, $basePath = '')
 	{
-		$helper = new LanguageHelper;
-
-		return $helper->exists($lang, $basePath);
+		return (new LanguageHelper)->exists($lang, $basePath);
 	}
 
 	/**
@@ -378,7 +374,7 @@ class Language
 			$oldFilename = $filename;
 
 			// Check the standard file name
-			$path = $this->helper->getLanguagePath($basePath, $this->default);
+			$path     = $this->helper->getLanguagePath($basePath, $this->default);
 			$filename = $internal ? $this->default : $this->default . '.' . $extension;
 			$filename = "$path/$filename.ini";
 
@@ -409,7 +405,7 @@ class Language
 	{
 		$this->counter++;
 
-		$result = false;
+		$result  = false;
 		$strings = false;
 
 		if (file_exists($filename))
@@ -422,14 +418,14 @@ class Language
 			if (is_array($strings) && count($strings))
 			{
 				$this->strings = array_replace($this->strings, $strings, $this->override);
-				$result = true;
+				$result        = true;
 			}
 		}
 
 		// Record the result of loading the extension's file.
 		if (!isset($this->paths[$extension]))
 		{
-			$this->paths[$extension] = array();
+			$this->paths[$extension] = [];
 		}
 
 		$this->paths[$extension][$filename] = $result;
@@ -460,7 +456,7 @@ class Language
 
 		if (!is_array($strings))
 		{
-			$strings = array();
+			$strings = [];
 		}
 
 		if ($this->debug)
@@ -494,10 +490,9 @@ class Language
 		}
 
 		// Initialise variables for manually parsing the file for common errors.
-		$blacklist = array('YES', 'NO', 'NULL', 'FALSE', 'ON', 'OFF', 'NONE', 'TRUE');
-		$debug = $this->getDebug();
-		$this->debug = false;
-		$errors = array();
+		$blacklist    = ['YES', 'NO', 'NULL', 'FALSE', 'ON', 'OFF', 'NONE', 'TRUE'];
+		$debug        = $this->setDebug(false);
+		$errors       = [];
 		$php_errormsg = null;
 
 		// Open the file as a stream.
@@ -568,7 +563,7 @@ class Language
 			$this->errorfiles['PHP' . $filename] = 'PHP parser errors -' . $php_errormsg;
 		}
 
-		$this->debug = $debug;
+		$this->setDebug($debug);
 
 		return count($errors);
 	}
@@ -585,12 +580,7 @@ class Language
 	 */
 	public function get($property, $default = null)
 	{
-		if (isset($this->metadata[$property]))
-		{
-			return $this->metadata[$property];
-		}
-
-		return $default;
+		return isset($this->metadata[$property]) ? $this->metadata[$property] : $default;
 	}
 
 	/**
@@ -611,22 +601,22 @@ class Language
 
 		// @codeCoverageIgnoreEnd
 		$backtrace = debug_backtrace();
-		$info = array();
+		$info      = [];
 
 		// Search through the backtrace to our caller
 		$continue = true;
 
 		while ($continue && next($backtrace))
 		{
-			$step = current($backtrace);
+			$step  = current($backtrace);
 			$class = @ $step['class'];
 
 			// We're looking for something outside of language.php
 			if ($class != '\\Joomla\\Language\\Language' && $class != '\\Joomla\\Language\\Text')
 			{
 				$info['function'] = @ $step['function'];
-				$info['class'] = $class;
-				$info['step'] = prev($backtrace);
+				$info['class']    = $class;
+				$info['step']     = prev($backtrace);
 
 				// Determine the file and name of the file
 				$info['file'] = @ $step['file'];
@@ -664,12 +654,7 @@ class Language
 	{
 		if (isset($extension))
 		{
-			if (isset($this->paths[$extension]))
-			{
-				return $this->paths[$extension];
-			}
-
-			return null;
+			return isset($this->paths[$extension]) ? $this->paths[$extension] : null;
 		}
 
 		return $this->paths;
@@ -722,7 +707,7 @@ class Language
 	 */
 	public function setDebug($debug)
 	{
-		$previous = $this->debug;
+		$previous    = $this->debug;
 		$this->debug = (boolean) $debug;
 
 		return $previous;
@@ -825,9 +810,7 @@ class Language
 	 */
 	public static function getMetadata($lang, $basePath)
 	{
-		$helper = new LanguageHelper;
-
-		return $helper->getMetadata($lang, $basePath);
+		return (new LanguageHelper)->getMetadata($lang, $basePath);
 	}
 
 	/**
@@ -843,9 +826,7 @@ class Language
 	 */
 	public static function getKnownLanguages($basePath = '')
 	{
-		$helper = new LanguageHelper;
-
-		return $helper->getKnownLanguages($basePath);
+		return (new LanguageHelper)->getKnownLanguages($basePath);
 	}
 
 	/**
@@ -862,9 +843,7 @@ class Language
 	 */
 	public static function getLanguagePath($basePath = '', $language = null)
 	{
-		$helper = new LanguageHelper;
-
-		return $helper->getLanguagePath($basePath, $language);
+		return (new LanguageHelper)->getLanguagePath($basePath, $language);
 	}
 
 	/**
@@ -892,14 +871,7 @@ class Language
 		{
 			$locale = str_replace(' ', '', isset($this->metadata['locale']) ? $this->metadata['locale'] : '');
 
-			if ($locale)
-			{
-				$this->locale = explode(',', $locale);
-			}
-			else
-			{
-				$this->locale = false;
-			}
+			$this->locale = $locale ? explode(',', $locale) : false;
 		}
 
 		return $this->locale;
@@ -930,9 +902,7 @@ class Language
 	 */
 	public static function parseLanguageFiles($dir = null)
 	{
-		$helper = new LanguageHelper;
-
-		return $helper->parseLanguageFiles($dir);
+		return (new LanguageHelper)->parseLanguageFiles($dir);
 	}
 
 	/**
@@ -948,8 +918,6 @@ class Language
 	 */
 	public static function parseXmlLanguageFile($path)
 	{
-		$helper = new LanguageHelper;
-
-		return $helper->parseXMLLanguageFile($path);
+		return (new LanguageHelper)->parseXMLLanguageFile($path);
 	}
 }

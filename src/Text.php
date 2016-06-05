@@ -79,8 +79,7 @@ class Text
 	 */
 	public static function _($string, $jsSafe = false, $interpretBackSlashes = true)
 	{
-		$factory = new LanguageFactory;
-		$text    = $factory->getText();
+		$text = (new LanguageFactory)->getText();
 
 		if (is_array($jsSafe) && !empty($jsSafe))
 		{
@@ -99,7 +98,7 @@ class Text
 			}
 		}
 
-		return $text->translate($string, array(), $jsSafe, $interpretBackSlashes);
+		return $text->translate($string, [], $jsSafe, $interpretBackSlashes);
 	}
 
 	/**
@@ -114,7 +113,7 @@ class Text
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function translate($string, $parameters = array(), $jsSafe = false, $interpretBackSlashes = true)
+	public function translate($string, array $parameters = [], $jsSafe = false, $interpretBackSlashes = true)
 	{
 		$translated = $this->getLanguage()->translate($string, $jsSafe, $interpretBackSlashes);
 
@@ -139,11 +138,9 @@ class Text
 	 *
 	 * @since   1.0
 	 */
-	public function alt($string, $alt, $parameters = array(), $jsSafe = false, $interpretBackSlashes = true)
+	public function alt($string, $alt, array $parameters = [], $jsSafe = false, $interpretBackSlashes = true)
 	{
-		$lang = $this->getLanguage();
-
-		if ($lang->hasKey($string . '_' . $alt))
+		if ($this->getLanguage()->hasKey($string . '_' . $alt))
 		{
 			return $this->translate($string . '_' . $alt, $parameters, $jsSafe, $interpretBackSlashes);
 		}
@@ -173,12 +170,12 @@ class Text
 	 */
 	public function plural($string, $n)
 	{
-		$lang = $this->getLanguage();
-		$args = func_get_args();
+		$lang  = $this->getLanguage();
+		$args  = func_get_args();
 		$count = count($args);
 
 		// Try the key from the language plural potential suffixes
-		$found = false;
+		$found    = false;
 		$suffixes = $lang->getPluralSuffixes((int) $n);
 		array_unshift($suffixes, (int) $n);
 
@@ -235,8 +232,8 @@ class Text
 	 */
 	public function sprintf($string)
 	{
-		$lang = $this->getLanguage();
-		$args = func_get_args();
+		$lang  = $this->getLanguage();
+		$args  = func_get_args();
 		$count = count($args);
 
 		if (is_array($args[$count - 1]))
@@ -275,8 +272,8 @@ class Text
 	 */
 	public function printf($string)
 	{
-		$lang = $this->getLanguage();
-		$args = func_get_args();
+		$lang  = $this->getLanguage();
+		$args  = func_get_args();
 		$count = count($args);
 
 		if (is_array($args[$count - 1]))

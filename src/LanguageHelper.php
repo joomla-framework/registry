@@ -73,10 +73,7 @@ class LanguageHelper
 	 */
 	public function getKnownLanguages($basePath)
 	{
-		$dir = $this->getLanguagePath($basePath);
-		$knownLanguages = $this->parseLanguageFiles($dir);
-
-		return $knownLanguages;
+		return $this->parseLanguageFiles($this->getLanguagePath($basePath));
 	}
 
 	/**
@@ -112,7 +109,7 @@ class LanguageHelper
 	 */
 	public function parseLanguageFiles($dir = null)
 	{
-		$languages = array();
+		$languages = [];
 
 		// Search main language directory for subdirectories
 		foreach (glob($dir . '/*', GLOB_NOSORT | GLOB_ONLYDIR) as $directory)
@@ -133,7 +130,7 @@ class LanguageHelper
 					// Get installed language metadata from xml file and merge it with lang array
 					if ($metadata = $this->parseXMLLanguageFile($file))
 					{
-						$languages = array_replace($languages, array($dirPathParts['filename'] => $metadata));
+						$languages = array_replace($languages, [$dirPathParts['filename'] => $metadata]);
 					}
 				}
 				catch (\RuntimeException $e)
@@ -176,7 +173,7 @@ class LanguageHelper
 			return null;
 		}
 
-		$metadata = array();
+		$metadata = [];
 
 		/** @var \SimpleXMLElement $child */
 		foreach ($xml->metadata->children() as $child)
