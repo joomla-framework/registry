@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -143,6 +143,97 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Tests the Joomla\Data\DataSet::toArray method.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Data\DataSet::toArray
+	 * @since   1.2.0
+	 */
+	public function testGetObjectsKeys()
+	{
+		$instance = new Data\DataSet(
+			array(
+				'key1' => new Data\DataObject(array('foo' => 'var', 'bar' => 'var', 'baz' => 'var')),
+				'key2' => new Data\DataObject(array('foo' => 'var', 'quz' => 'var', 'baz' => 'var')),
+				'key3' => new Data\DataObject(array('foo' => 'var', 'bar' => 'var'))
+			)
+		);
+
+		$this->assertThat(
+			$instance->getObjectsKeys(),
+			$this->equalTo(array('foo', 'bar', 'baz', 'quz'))
+		);
+
+		$this->assertThat(
+			$instance->getObjectsKeys('common'),
+			$this->equalTo(array('foo'))
+		);
+	}
+
+	/**
+	 * Tests the Joomla\Data\DataSet::toArray method.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Data\DataSet::toArray
+	 * @since   1.0
+	 */
+	public function testToArray()
+	{
+		$instance = new Data\DataSet(
+			array(
+				'key1' => new Data\DataObject(array('date1' => '2014-08-29', 'date2' => '2014-09-16')),
+				'key2' => new Data\DataObject(array('date1' => '2014-07-06', 'date2' => '2014-08-05')),
+				'key3' => new Data\DataObject(array('date1' => '2013-12-01', 'date2' => '2014-06-26')),
+				'key4' => new Data\DataObject(array('date1' => '2013-10-07')),
+				'key5' => new Data\DataObject(array('date2' => '2010-04-01'))
+			)
+		);
+
+		$array1 = $instance->toArray(true);
+		$expect1 = array(
+			'key1' => array('date1' => '2014-08-29', 'date2' => '2014-09-16'),
+			'key2' => array('date1' => '2014-07-06', 'date2' => '2014-08-05'),
+			'key3' => array('date1' => '2013-12-01', 'date2' => '2014-06-26'),
+			'key4' => array('date1' => '2013-10-07', 'date2' => null),
+			'key5' => array('date1' => null, 'date2' => '2010-04-01')
+		);
+
+		$array2 = $instance->toArray(false, 'date1');
+		$expect2 = array(
+			array('2014-08-29'),
+			array('2014-07-06'),
+			array('2013-12-01'),
+			array('2013-10-07'),
+			array(null)
+		);
+
+		$array3 = $instance->toArray(false);
+		$expect3 = array(
+			array('2014-08-29','2014-09-16'),
+			array('2014-07-06','2014-08-05'),
+			array('2013-12-01','2014-06-26'),
+			array('2013-10-07', null),
+			array(null, '2010-04-01')
+		);
+
+		$array4 = $instance->toArray(true, 'date2');
+		$expect4 = array(
+			'key1' => array('date2' => '2014-09-16'),
+			'key2' => array('date2' => '2014-08-05'),
+			'key3' => array('date2' => '2014-06-26'),
+			'key4' => array('date2' => null),
+			'key5' => array('date2' => '2010-04-01')
+		);
+
+		$this->assertEquals($expect1, $array1, 'Method should return uniform arrays');
+		$this->assertEquals($expect2, $array2);
+		$this->assertEquals($expect3, $array3);
+		$this->assertEquals($expect4, $array4);
+	}
+
+	/**
 	 * Tests the Joomla\Data\DataSet::count method.
 	 *
 	 * @return  void
@@ -267,6 +358,34 @@ class DataSetTest extends \PHPUnit_Framework_TestCase
 		$instance['key2'] = new Data\DataObject;
 
 		$this->assertEquals(array('key1', 'key2'), $instance->keys());
+	}
+
+	/**
+	 * Tests the Joomla\Data\DataSet::walk method.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Data\DataSet::walk
+	 * @since   1.2.0
+	 */
+	public function testWalk()
+	{
+		$instance = new Data\DataSet;
+		$instance['key1'] = new Data\DataObject(array('foo' => 'bar'));
+		$instance['key2'] = new Data\DataObject(array('foo' => 'qux'));
+
+		$instance->walk(
+			function(&$object, $key)
+			{
+				$object->old = $object->foo;
+				$object->foo = 'new-value';
+			}
+		);
+
+		$this->assertEquals('bar', $instance->old['key1']);
+		$this->assertEquals('qux', $instance->old['key2']);
+		$this->assertEquals('new-value', $instance->foo['key1']);
+		$this->assertEquals('new-value', $instance->foo['key2']);
 	}
 
 	/**

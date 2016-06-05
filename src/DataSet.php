@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Data Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -27,7 +27,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	/**
 	 * The iterator objects.
 	 *
-	 * @var    array
+	 * @var    DataObject[]
 	 * @since  1.0
 	 */
 	private $objects = array();
@@ -35,7 +35,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	/**
 	 * The class constructor.
 	 *
-	 * @param   array  $objects  An array of Data\Object objects to bind to the data set.
+	 * @param   DataObject[]  $objects  An array of DataObject objects to bind to the data set.
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException if an object is not an instance of Data\Object.
@@ -187,6 +187,94 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	}
 
 	/**
+	 * Gets an array of keys, existing in objects
+	 *
+	 * @param   string  $type  Selection type 'all' or 'common'
+	 *
+	 * @return  array   Array of keys
+	 *
+	 * @since   1.2.0
+	 * @throws  \InvalidArgumentException
+	 */
+	public function getObjectsKeys($type = 'all')
+	{
+		$keys = null;
+
+		if ($type == 'all')
+		{
+			$function = 'array_merge';
+		}
+		elseif ($type == 'common')
+		{
+			$function = 'array_intersect_key';
+		}
+		else
+		{
+			throw new \InvalidArgumentException("Unknown selection type: $type");
+		}
+
+		foreach ($this->objects as $object)
+		{
+			if (version_compare(PHP_VERSION, '5.4.0', '<'))
+			{
+				$object_vars = json_decode(json_encode($object->jsonSerialize()), true);
+			}
+			else
+			{
+				$object_vars = json_decode(json_encode($object), true);
+			}
+
+			$keys = (is_null($keys)) ? $object_vars : $function($keys, $object_vars);
+		}
+
+		return array_keys($keys);
+	}
+
+	/**
+	 * Gets all objects as an array
+	 *
+	 * @param   boolean  $associative  Option to set return mode: associative or numeric array.
+	 * @param   string   $k            Unlimited optional property names to extract from objects.
+	 *
+	 * @return  array    Returns an array according to defined options.
+	 *
+	 * @since   1.2.0
+	 */
+	public function toArray($associative = true, $k = null)
+	{
+		$keys        = func_get_args();
+		$associative = array_shift($keys);
+
+		if (empty($keys))
+		{
+			$keys = $this->getObjectsKeys();
+		}
+
+		$return = array();
+
+		$i = 0;
+
+		foreach ($this->objects as $key => $object)
+		{
+			$array_item = array();
+
+			$key = ($associative) ? $key : $i++;
+
+			$j = 0;
+
+			foreach ($keys as $property)
+			{
+				$property_key              = ($associative) ? $property : $j++;
+				$array_item[$property_key] = (isset($object->$property)) ? $object->$property : null;
+			}
+
+			$return[$key] = $array_item;
+		}
+
+		return $return;
+	}
+
+	/**
 	 * Gets the number of data objects in the set.
 	 *
 	 * @return  integer  The number of objects.
@@ -321,6 +409,38 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	public function keys()
 	{
 		return array_keys($this->objects);
+	}
+
+	/**
+	 * Applies a function to every object in the set (emulates array_walk).
+	 * 
+	 * @param   callable  $funcname  Callback function.  
+	 * 
+	 * @return  boolean
+	 * 
+	 * @since   1.2.0
+	 * @throws  \InvalidArgumentException
+	 */
+	public function walk($funcname)
+	{
+		if (!is_callable($funcname))
+		{
+			$message = __METHOD__ . '() expects parameter 1 to be a valid callback';
+
+			if (is_string($funcname))
+			{
+				$message .= sprintf(', function \'%s\' not found or invalid function name', $funcname);
+			}
+
+			throw new \InvalidArgumentException($message);
+		}
+
+		foreach ($this->objects as $key => $object)
+		{
+			$funcname($object, $key);
+		}
+
+		return true;
 	}
 
 	/**
