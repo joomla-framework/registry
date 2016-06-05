@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Registry Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -16,7 +16,7 @@ namespace Joomla\Registry;
 class Factory
 {
 	/**
-	 * Returns a AbstractRegistryFormat object, only creating it if it doesn't already exist.
+	 * Returns an AbstractRegistryFormat object, only creating it if it doesn't already exist.
 	 *
 	 * @param   string  $type     The format to load
 	 * @param   array   $options  Additional options to configure the object

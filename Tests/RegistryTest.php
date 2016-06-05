@@ -1,12 +1,13 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Registry\Tests;
 
 use Joomla\Registry\Registry;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Test class for \Joomla\Registry\Registry.
@@ -47,6 +48,35 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		$a = new Registry(json_encode(array('foo' => 'bar')));
 
 		$this->assertSame(1, count($a), 'The Registry data store should not be empty.');
+	}
+
+	/**
+	 * @testdox  A Registry instance instantiated with a string of data is correctly manipulated
+	 *
+	 * @covers   Joomla\Registry\Registry::__construct
+	 * @covers   Joomla\Registry\Registry::def
+	 * @covers   Joomla\Registry\Registry::get
+	 * @covers   Joomla\Registry\Registry::set
+	 */
+	public function testARegistryInstanceInstantiatedWithAStringOfDataIsCorrectlyManipulated()
+	{
+		$a = new Registry(json_encode(array('foo' => 'bar', 'goo' => 'car', 'nested' => array('foo' => 'bar', 'goo' => 'car'))));
+
+		// Check top level values
+		$this->assertSame('bar', $a->get('foo'));
+		$this->assertSame('bar', $a->def('foo'));
+		$this->assertSame('far', $a->set('foo', 'far'));
+
+		// Check nested values
+		$this->assertSame('bar', $a->get('nested.foo'));
+		$this->assertSame('bar', $a->def('nested.foo'));
+		$this->assertSame('far', $a->set('nested.foo', 'far'));
+
+		// Check adding a new nested object
+		$a->set('new.nested', array('foo' => 'bar', 'goo' => 'car'));
+		$this->assertSame('bar', $a->get('new.nested.foo'));
+		$this->assertSame('bar', $a->def('new.nested.foo'));
+		$this->assertSame('far', $a->set('new.nested.foo', 'far'));
 	}
 
 	/**
@@ -252,6 +282,29 @@ class RegistryTest extends \PHPUnit_Framework_TestCase
 		$a->set('foo.bar', 0);
 
 		$this->assertSame(0, $a->get('foo.bar'), 'The Registry correctly handles when a nested key has a value of 0');
+	}
+
+	/**
+	 * @testdox  The Registry correctly handles assignments for class instances.
+	 *
+	 * @covers   Joomla\Registry\Registry::get
+	 * @covers   Joomla\Registry\Registry::set
+	 * @ticket   https://github.com/joomla-framework/registry/issues/8
+	 */
+	public function testTheRegistryCorrectlyHandlesAssignmentsForClassInstances()
+	{
+		// Only using the Yaml object here as it's pulled in as a package dependency
+		$yaml = new Yaml;
+
+		$a = new Registry;
+		$a->set('yaml', $yaml);
+
+		$this->assertSame($yaml, $a->get('yaml'), 'The Registry correctly handles when a top level key is an instance of a class');
+
+		$a = new Registry;
+		$a->set('nested.yaml', $yaml);
+
+		$this->assertSame($yaml, $a->get('nested.yaml'), 'The Registry correctly handles when a nested key is an instance of a class');
 	}
 
 	/**

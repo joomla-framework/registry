@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Registry Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -24,6 +24,14 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @since  1.0
 	 */
 	protected $data;
+
+	/**
+	 * Flag if the Registry data object has been initialized
+	 *
+	 * @var    boolean
+	 * @since  1.5.2
+	 */
+	protected $initialized = false;
 
 	/**
 	 * Path separator
@@ -245,7 +253,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Load a associative array of values into the default namespace
+	 * Load an associative array of values into the default namespace
 	 *
 	 * @param   array    $array      Associative array of value to load
 	 * @param   boolean  $flattened  Load from a one-dimensional array
@@ -323,6 +331,16 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 		$handler = Factory::getFormat($format, $options);
 
 		$obj = $handler->stringToObject($data, $options);
+
+		// If the data object has not yet been initialized, direct assign the object
+		if (!$this->initialized)
+		{
+			$this->data        = $obj;
+			$this->initialized = true;
+
+			return $this;
+		}
+
 		$this->loadObject($obj);
 
 		return $this;
@@ -624,6 +642,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	protected function bindData($parent, $data, $recursive = true, $allowNull = true)
 	{
+		// The data object is now initialized
+		$this->initialized = true;
+
 		// Ensure the input data is an array.
 		$data = is_object($data)
 			? get_object_vars($data)

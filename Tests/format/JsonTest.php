@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -30,6 +30,9 @@ class JsonTest extends \PHPUnit_Framework_TestCase
 		$object->numericint = 42;
 		$object->numericfloat = 3.1415;
 
+		// A string that looks like an unicode sequence, should remain what it is: a string
+		$object->unicodesequence = '\u0000';
+
 		// The PHP registry format does not support nested objects
 		$object->section = new \stdClass;
 		$object->section->key = 'value';
@@ -38,9 +41,23 @@ class JsonTest extends \PHPUnit_Framework_TestCase
 		$string = '{"foo":"bar","quoted":"\"stringwithquotes\"",' .
 			'"booleantrue":true,"booleanfalse":false,' .
 			'"numericint":42,"numericfloat":3.1415,' .
+			'"unicodesequence":"\\\\u0000",' .
 			'"section":{"key":"value"},' .
 			'"array":{"nestedarray":{"test1":"value1"}}' .
 			'}';
+
+		$decoded = json_decode($class->objectToString($object));
+
+		// Ensures that the generated string respects the json syntax
+		$errorMsg = 'JSON error decoding string.  Code: ' . json_last_error();
+
+		// If PHP 5.5 grab the last error message too
+		if (version_compare(PHP_VERSION, '5.5', 'ge'))
+		{
+			$errorMsg .= '; Message: ' . json_last_error_msg();
+		}
+
+		$this->assertNotNull($decoded, $errorMsg);
 
 		// Test basic object to string.
 		$this->assertSame($string, $class->objectToString($object));
@@ -94,13 +111,19 @@ class JsonTest extends \PHPUnit_Framework_TestCase
 			$object2,
 			'The JSON string should covert into an object with sections.'
 		);
+	}
 
-		/**
-		 * Test for bad input
-		 * Everything that is not starting with { is handled by
-		 * Format\Ini, which we test seperately
-		 */
-		$this->assertNull($class->stringToObject('{key:\'value\''));
+	/**
+	 * @testdox  A malformed JSON string causes an Exception to be thrown
+	 *
+	 * @covers   Joomla\Registry\Format\Json::stringToObject
+	 * @expectedException  \RuntimeException
+	 */
+	public function testAMalformedJsonStringCausesAnExceptionToBeThrown()
+	{
+		$class = new Json;
+
+		$class->stringToObject('{key:\'value\'');
 	}
 
 	/**
