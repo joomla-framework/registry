@@ -26,7 +26,7 @@ class Factory
 	 * @since   1.5.0
 	 * @throws  \InvalidArgumentException
 	 */
-	public static function getFormat($type, array $options = array())
+	public static function getFormat($type, array $options = [])
 	{
 		// Sanitize format type.
 		$type = strtolower(preg_replace('/[^A-Z0-9_]/i', '', $type));

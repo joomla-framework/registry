@@ -28,7 +28,7 @@ class Php implements FormatInterface
 	 *
 	 * @since   1.0
 	 */
-	public function objectToString($object, $params = array())
+	public function objectToString($object, array $params = [])
 	{
 		// A class must be provided
 		$class = !empty($params['class']) ? $params['class'] : 'Registry';
@@ -79,7 +79,7 @@ class Php implements FormatInterface
 	 *
 	 * @since   1.0
 	 */
-	public function stringToObject($data, array $options = array())
+	public function stringToObject($data, array $options = [])
 	{
 		return true;
 	}

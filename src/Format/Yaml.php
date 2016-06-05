@@ -22,7 +22,7 @@ class Yaml implements FormatInterface
 	/**
 	 * The YAML parser class.
 	 *
-	 * @var    \Symfony\Component\Yaml\Parser
+	 * @var    SymfonyYamlParser
 	 * @since  1.0
 	 */
 	private $parser;
@@ -30,7 +30,7 @@ class Yaml implements FormatInterface
 	/**
 	 * The YAML dumper class.
 	 *
-	 * @var    \Symfony\Component\Yaml\Dumper
+	 * @var    SymfonyYamlDumper
 	 * @since  1.0
 	 */
 	private $dumper;
@@ -57,7 +57,7 @@ class Yaml implements FormatInterface
 	 *
 	 * @since   1.0
 	 */
-	public function objectToString($object, $options = array())
+	public function objectToString($object, array $options = [])
 	{
 		$array = json_decode(json_encode($object), true);
 
@@ -75,7 +75,7 @@ class Yaml implements FormatInterface
 	 *
 	 * @since   1.0
 	 */
-	public function stringToObject($data, array $options = array())
+	public function stringToObject($data, array $options = [])
 	{
 		$array = $this->parser->parse(trim($data));
 

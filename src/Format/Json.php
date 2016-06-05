@@ -28,7 +28,7 @@ class Json implements FormatInterface
 	 *
 	 * @since   1.0
 	 */
-	public function objectToString($object, $options = array())
+	public function objectToString($object, array $options = [])
 	{
 		$bitmask = isset($options['bitmask']) ? $options['bitmask'] : 0;
 
@@ -56,7 +56,7 @@ class Json implements FormatInterface
 	 * @since   1.0
 	 * @throws  \RuntimeException
 	 */
-	public function stringToObject($data, array $options = array('processSections' => false))
+	public function stringToObject($data, array $options = ['processSections' => false])
 	{
 		$data = trim($data);
 

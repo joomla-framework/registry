@@ -263,7 +263,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   1.0
 	 */
-	public function loadArray($array, $flattened = false, $separator = null)
+	public function loadArray(array $array, $flattened = false, $separator = null)
 	{
 		if (!$flattened)
 		{
@@ -307,7 +307,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   1.0
 	 */
-	public function loadFile($file, $format = 'JSON', $options = array())
+	public function loadFile($file, $format = 'JSON', array $options = [])
 	{
 		$data = file_get_contents($file);
 
@@ -325,12 +325,10 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   1.0
 	 */
-	public function loadString($data, $format = 'JSON', $options = array())
+	public function loadString($data, $format = 'JSON', array $options = [])
 	{
 		// Load a string into the given namespace [or default namespace if not given]
-		$handler = Factory::getFormat($format, $options);
-
-		$obj = $handler->stringToObject($data, $options);
+		$obj = Factory::getFormat($format, $options)->stringToObject($data, $options);
 
 		// If the data object has not yet been initialized, direct assign the object
 		if (!$this->initialized)
@@ -395,7 +393,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function offsetExists($offset)
 	{
-		return (boolean) ($this->get($offset) !== null);
+		return $this->exists($offset);
 	}
 
 	/**
@@ -614,18 +612,15 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * Get a namespace in a given string format
 	 *
 	 * @param   string  $format   Format to return the string in
-	 * @param   mixed   $options  Parameters used by the formatter, see formatters for more info
+	 * @param   array   $options  Parameters used by the formatter, see formatters for more info
 	 *
 	 * @return  string   Namespace in string format
 	 *
 	 * @since   1.0
 	 */
-	public function toString($format = 'JSON', $options = array())
+	public function toString($format = 'JSON', array $options = [])
 	{
-		// Return a namespace in a given format
-		$handler = Factory::getFormat($format, $options);
-
-		return $handler->objectToString($this->data, $options);
+		return Factory::getFormat($format, $options)->objectToString($this->data, $options);
 	}
 
 	/**
@@ -684,7 +679,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	protected function asArray($data)
 	{
-		$array = array();
+		$array = [];
 
 		if (is_object($data))
 		{
@@ -717,7 +712,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function flatten($separator = null)
 	{
-		$array = array();
+		$array = [];
 
 		if (empty($separator))
 		{
@@ -741,7 +736,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   1.3.0
 	 */
-	protected function toFlatten($separator = null, $data = null, &$array = array(), $prefix = '')
+	protected function toFlatten($separator = null, $data = null, array &$array = [], $prefix = '')
 	{
 		$data = (array) $data;
 

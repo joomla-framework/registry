@@ -10,10 +10,9 @@ env:
 
 matrix:
   include:
-    - php: 5.3
-    - php: 5.3
-      env: COMPOSER_FLAGS="--prefer-lowest"
     - php: 5.4
+    - php: 5.4
+      env: COMPOSER_FLAGS="--prefer-lowest"
     - php: 5.5
     - php: 5.6
     - php: 5.6
@@ -22,7 +21,9 @@ matrix:
       env: RUN_PHPCS="yes" SYMFONY_VERSION="3.0.*"
     - php: 7.0
     - php: 7.0
-      env: SYMFONY_VERSION="3.1.*@dev"
+      env: SYMFONY_VERSION="3.1.*"
+    - php: 7.0
+      env: SYMFONY_VERSION="3.2.*@dev"
   allow_failures:
     - php: hhvm
 
