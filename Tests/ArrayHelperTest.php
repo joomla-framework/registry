@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -63,7 +63,7 @@ class ArrayHelperTest extends PHPUnit_Framework_TestCase
 				// String   Regex to select only some attributes
 				null,
 				// String   The expected return value
-				null,
+				array(),
 				// Boolean  Use function defaults (true) or full argument list
 				true
 			),
@@ -444,6 +444,66 @@ class ArrayHelperTest extends PHPUnit_Framework_TestCase
 					1 => 4, 11 => 14, 16 => 19
 				),
 				'Should get column \'four\' with keys from column \'one\' and item with missing value should be skipped'
+			),
+			'object array with null value-col' => array(
+				array(
+					(object) array(
+						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
+					),
+					(object) array(
+						'one' => 6, 'two' => 7, 'three' => 8, 'five' => 10
+					),
+					(object) array(
+						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
+					),
+					(object) array(
+						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
+					)
+				),
+				null,
+				'one',
+				array(
+					1 => (object) array(
+						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
+					),
+					6 => (object) array(
+						'one' => 6, 'two' => 7, 'three' => 8, 'five' => 10
+					),
+					11 => (object) array(
+						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
+					),
+					16 => (object) array(
+						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
+					)
+				),
+				'Should get whole objects with keys from column \'one\''
+			),
+			'object array with null value-col and key-col' => array(
+				array(
+					'a' => (object) array(
+						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
+					),
+					'b' => (object) array(
+						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
+					),
+					'c' => (object) array(
+						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
+					)
+				),
+				null,
+				null,
+				array(
+					(object) array(
+						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
+					),
+					(object) array(
+						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
+					),
+					(object) array(
+						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
+					)
+				),
+				'Should get whole objects with automatic indexes'
 			),
 		);
 	}
