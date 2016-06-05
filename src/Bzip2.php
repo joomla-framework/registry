@@ -32,7 +32,7 @@ class Bzip2 implements ExtractableInterface
 	 * @var    array|\ArrayAccess
 	 * @since  1.0
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Create a new Archive object.
@@ -41,7 +41,7 @@ class Bzip2 implements ExtractableInterface
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($options = array())
+	public function __construct($options = [])
 	{
 		if (!is_array($options) && !($options instanceof \ArrayAccess))
 		{
@@ -91,7 +91,6 @@ class Bzip2 implements ExtractableInterface
 				throw new \RuntimeException('Unable to write archive');
 			}
 		}
-		// @codeCoverageIgnoreStart
 		else
 		{
 			// New style! streams!
@@ -134,7 +133,7 @@ class Bzip2 implements ExtractableInterface
 			$output->close();
 			$input->close();
 		}
-		// @codeCoverageIgnoreEnd
+
 		return true;
 	}
 

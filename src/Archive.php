@@ -24,7 +24,7 @@ class Archive
 	 * @var    ExtractableInterface[]
 	 * @since  1.0
 	 */
-	protected $adapters = array();
+	protected $adapters = [];
 
 	/**
 	 * Holds the options array.
@@ -32,7 +32,7 @@ class Archive
 	 * @var    array|\ArrayAccess
 	 * @since  1.0
 	 */
-	public $options = array();
+	public $options = [];
 
 	/**
 	 * Create a new Archive object.
@@ -41,7 +41,7 @@ class Archive
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($options = array())
+	public function __construct($options = [])
 	{
 		if (!is_array($options) && !($options instanceof \ArrayAccess))
 		{

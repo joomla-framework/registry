@@ -31,8 +31,8 @@ class Tar implements ExtractableInterface
 	 * @var    array
 	 * @since  1.0
 	 */
-	private $types = array(
-		0x0 => 'Unix file',
+	private $types = [
+		0x0  => 'Unix file',
 		0x30 => 'File',
 		0x31 => 'Link',
 		0x32 => 'Symbolic link',
@@ -40,7 +40,8 @@ class Tar implements ExtractableInterface
 		0x34 => 'Block special file',
 		0x35 => 'Directory',
 		0x36 => 'FIFO special file',
-		0x37 => 'Contiguous file');
+		0x37 => 'Contiguous file'
+	];
 
 	/**
 	 * Tar file data buffer
@@ -64,7 +65,7 @@ class Tar implements ExtractableInterface
 	 * @var    array|\ArrayAccess
 	 * @since  1.0
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Create a new Archive object.
@@ -73,7 +74,7 @@ class Tar implements ExtractableInterface
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($options = array())
+	public function __construct($options = [])
 	{
 		if (!is_array($options) && !($options instanceof \ArrayAccess))
 		{
@@ -168,8 +169,8 @@ class Tar implements ExtractableInterface
 	 */
 	protected function getTarInfo(&$data)
 	{
-		$position = 0;
-		$return_array = array();
+		$position     = 0;
+		$return_array = [];
 
 		while ($position < strlen($data))
 		{
@@ -199,13 +200,14 @@ class Tar implements ExtractableInterface
 
 			if ($info['filename'])
 			{
-				$file = array(
+				$file = [
 					'attr' => null,
 					'data' => null,
 					'date' => octdec($info['mtime']),
 					'name' => trim($info['filename']),
 					'size' => octdec($info['size']),
-					'type' => isset($this->types[$info['typeflag']]) ? $this->types[$info['typeflag']] : null);
+					'type' => isset($this->types[$info['typeflag']]) ? $this->types[$info['typeflag']] : null
+				];
 
 				if (($info['typeflag'] == 0) || ($info['typeflag'] == 0x30) || ($info['typeflag'] == 0x35))
 				{

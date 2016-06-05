@@ -42,7 +42,7 @@ class Zip implements ExtractableInterface
 	 * @var    array
 	 * @since  1.0
 	 */
-	private $methods = array(
+	private $methods = [
 		0x0 => 'None',
 		0x1 => 'Shrunk',
 		0x2 => 'Super Fast',
@@ -51,7 +51,7 @@ class Zip implements ExtractableInterface
 		0x5 => 'Maximum',
 		0x6 => 'Imploded',
 		0x8 => 'Deflated'
-	);
+	];
 
 	/**
 	 * Beginning of central directory record.
@@ -99,7 +99,7 @@ class Zip implements ExtractableInterface
 	 * @var    array|\ArrayAccess
 	 * @since  1.0
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Create a new Archive object.
@@ -108,7 +108,7 @@ class Zip implements ExtractableInterface
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($options = array())
+	public function __construct($options = [])
 	{
 		if (!is_array($options) && !($options instanceof \ArrayAccess))
 		{
@@ -133,8 +133,8 @@ class Zip implements ExtractableInterface
 	 */
 	public function create($archive, $files)
 	{
-		$contents = array();
-		$ctrldir = array();
+		$contents = [];
+		$ctrldir  = [];
 
 		foreach ($files as $file)
 		{
@@ -337,7 +337,7 @@ class Zip implements ExtractableInterface
 	 */
 	private function readZipInfo(&$data)
 	{
-		$entries = array();
+		$entries = [];
 
 		// Find the last central directory header entry
 		$fhLast = strpos($data, $this->ctrlDirEnd);
@@ -376,18 +376,18 @@ class Zip implements ExtractableInterface
 			$info = unpack('vMethod/VTime/VCRC32/VCompressed/VUncompressed/vLength', substr($data, $fhStart + 10, 20));
 			$name = substr($data, $fhStart + 46, $info['Length']);
 
-			$entries[$name] = array(
-				'attr' => null,
-				'crc' => sprintf("%08s", dechex($info['CRC32'])),
-				'csize' => $info['Compressed'],
-				'date' => null,
+			$entries[$name] = [
+				'attr'       => null,
+				'crc'        => sprintf("%08s", dechex($info['CRC32'])),
+				'csize'      => $info['Compressed'],
+				'date'       => null,
 				'_dataStart' => null,
-				'name' => $name,
-				'method' => $this->methods[$info['Method']],
-				'_method' => $info['Method'],
-				'size' => $info['Uncompressed'],
-				'type' => null
-			);
+				'name'       => $name,
+				'method'     => $this->methods[$info['Method']],
+				'_method'    => $info['Method'],
+				'size'       => $info['Uncompressed'],
+				'type'       => null
+			];
 
 			$entries[$name]['date'] = mktime(
 				(($info['Time'] >> 11) & 0x1f),
