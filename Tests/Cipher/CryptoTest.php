@@ -6,6 +6,9 @@
 
 namespace Joomla\Crypt\Tests;
 
+use Defuse\Crypto\Key as DefuseKey;
+use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
+use Defuse\Crypto\RuntimeTests;
 use Joomla\Crypt\Cipher\Crypto as CryptoCipher;
 use Symfony\Polyfill\Util\Binary;
 
@@ -24,9 +27,9 @@ class CryptoTest extends \PHPUnit_Framework_TestCase
 		// Only run the test if the environment supports it.
 		try
 		{
-			\Crypto::RuntimeTest();
+			RuntimeTests::runtimeTest();
 		}
-		catch (\CryptoTestFailedException $e)
+		catch (EnvironmentIsBrokenException $e)
 		{
 			self::markTestSkipped('The environment cannot safely perform encryption with this cipher.');
 		}
@@ -89,11 +92,8 @@ class CryptoTest extends \PHPUnit_Framework_TestCase
 		// Assert that the key is the correct type.
 		$this->assertInstanceOf('Joomla\Crypt\Key', $key);
 
-		// Assert the private key is our expected value.
-		$this->assertSame('unused', $key->getPrivate());
-
 		// Assert the public key is the expected length
-		$this->assertSame(\Crypto::KEY_BYTE_SIZE, Binary::strlen($key->getPublic()));
+		$this->assertSame(DefuseKey::KEY_BYTE_SIZE, Binary::strlen($key->getPublic()));
 
 		// Assert the key is of the correct type.
 		$this->assertSame('crypto', $key->getType());

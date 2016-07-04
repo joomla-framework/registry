@@ -8,6 +8,10 @@
 
 namespace Joomla\Crypt\Cipher;
 
+use Defuse\Crypto\Crypto as DefuseCrypto;
+use Defuse\Crypto\Key as DefuseKey;
+use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
+use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 use Joomla\Crypt\CipherInterface;
 use Joomla\Crypt\Key;
 
@@ -41,17 +45,13 @@ class Crypto implements CipherInterface
 		// Decrypt the data.
 		try
 		{
-			return \Crypto::Decrypt($data, $key->getPublic());
+			return DefuseCrypto::decrypt($data, DefuseKey::loadFromAsciiSafeString($key->getPrivate()));
 		}
-		catch (\InvalidCiphertextException $ex)
+		catch (WrongKeyOrModifiedCiphertextException $ex)
 		{
 			throw new \RuntimeException('DANGER! DANGER! The ciphertext has been tampered with!', $ex->getCode(), $ex);
 		}
-		catch (\CryptoTestFailedException $ex)
-		{
-			throw new \RuntimeException('Cannot safely perform decryption', $ex->getCode(), $ex);
-		}
-		catch (\CannotPerformOperationException $ex)
+		catch (EnvironmentIsBrokenException $ex)
 		{
 			throw new \RuntimeException('Cannot safely perform decryption', $ex->getCode(), $ex);
 		}
@@ -80,13 +80,9 @@ class Crypto implements CipherInterface
 		// Encrypt the data.
 		try
 		{
-			return \Crypto::Encrypt($data, $key->getPublic());
+			return DefuseCrypto::encrypt($data, DefuseKey::loadFromAsciiSafeString($key->getPrivate()));
 		}
-		catch (\CryptoTestFailedException $ex)
-		{
-			throw new \RuntimeException('Cannot safely perform encryption', $ex->getCode(), $ex);
-		}
-		catch (\CannotPerformOperationException $ex)
+		catch (EnvironmentIsBrokenException $ex)
 		{
 			throw new \RuntimeException('Cannot safely perform encryption', $ex->getCode(), $ex);
 		}
@@ -107,18 +103,14 @@ class Crypto implements CipherInterface
 		// Generate the encryption key.
 		try
 		{
-			$public = \Crypto::CreateNewRandomKey();
+			$public = DefuseKey::createNewRandomKey();
 		}
-		catch (\CryptoTestFailedException $ex)
-		{
-			throw new \RuntimeException('Cannot safely create a key', $ex->getCode(), $ex);
-		}
-		catch (\CannotPerformOperationException $ex)
+		catch (EnvironmentIsBrokenException $ex)
 		{
 			throw new \RuntimeException('Cannot safely create a key', $ex->getCode(), $ex);
 		}
 
 		// Create the new encryption key object.
-		return new Key('crypto', 'unused', $public);
+		return new Key('crypto', $public->saveToAsciiSafeString(), $public->saveToAsciiSafeString());
 	}
 }

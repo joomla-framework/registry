@@ -7,7 +7,7 @@
     "license": "GPL-2.0+",
     "require": {
         "php": ">=5.4|>=7.0",
-        "defuse/php-encryption": "~1.2",
+        "defuse/php-encryption": "~2.0",
         "paragonie/random_compat": "~1.0|~2.0",
         "symfony/polyfill-php56": "~1.0"
     },
