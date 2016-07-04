@@ -6,7 +6,7 @@
 
 namespace Joomla\Crypt\Tests;
 
-use Joomla\Crypt\Cipher\CipherCrypto;
+use Joomla\Crypt\Cipher\Crypto;
 use Joomla\Crypt\Crypt;
 use Joomla\Crypt\Key;
 use Symfony\Polyfill\Util\Binary;
@@ -21,7 +21,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * Cipher used for testing
 	 *
-	 * @var  CipherCrypto
+	 * @var  Crypto
 	 */
 	private $cipher;
 
@@ -67,7 +67,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$this->cipher = new CipherCrypto;
+		$this->cipher = new Crypto;
 		$this->key    = $this->cipher->generateKey();
 
 		$this->object = new Crypt($this->cipher, $this->key);
@@ -123,7 +123,7 @@ class CryptTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testDataEncryptionAndDecryption($data)
 	{
-		$cipher = new CipherCrypto;
+		$cipher = new Crypto;
 		$key    = $cipher->generateKey();
 
 		$encrypted = $cipher->encrypt($data, $key);

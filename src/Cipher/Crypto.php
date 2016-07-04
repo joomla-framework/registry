@@ -16,7 +16,7 @@ use Joomla\Crypt\Key;
  *
  * @since  1.3.0
  */
-class CipherCrypto implements CipherInterface
+class Crypto implements CipherInterface
 {
 	/**
 	 * Method to decrypt a data string.

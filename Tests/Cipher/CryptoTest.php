@@ -6,13 +6,13 @@
 
 namespace Joomla\Crypt\Tests;
 
-use Joomla\Crypt\Cipher\CipherCrypto;
+use Joomla\Crypt\Cipher\Crypto as CryptoCipher;
 use Symfony\Polyfill\Util\Binary;
 
 /**
- * Test class for \Joomla\Crypt\Cipher\CipherCrypto.
+ * Test class for \Joomla\Crypt\Cipher\Crypto.
  */
-class CipherCryptoTest extends \PHPUnit_Framework_TestCase
+class CryptoTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * This method is called before the first test of this test class is run.
@@ -56,13 +56,13 @@ class CipherCryptoTest extends \PHPUnit_Framework_TestCase
 	 *
 	 * @param   string  $data  The decrypted data to validate
 	 *
-	 * @covers        \Joomla\Crypt\Cipher\CipherCrypto::decrypt
-	 * @covers        \Joomla\Crypt\Cipher\CipherCrypto::encrypt
+	 * @covers        \Joomla\Crypt\Cipher\Crypto::decrypt
+	 * @covers        \Joomla\Crypt\Cipher\Crypto::encrypt
 	 * @dataProvider  dataStrings
 	 */
 	public function testDataEncryptionAndDecryption($data)
 	{
-		$cipher = new CipherCrypto;
+		$cipher = new CryptoCipher;
 		$key    = $cipher->generateKey();
 
 		$encrypted = $cipher->encrypt($data, $key);
@@ -79,11 +79,11 @@ class CipherCryptoTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  Validates keys are correctly generated
 	 *
-	 * @covers   \Joomla\Crypt\Cipher\CipherCrypto::generateKey
+	 * @covers   \Joomla\Crypt\Cipher\Crypto::generateKey
 	 */
 	public function testGenerateKey()
 	{
-		$cipher = new CipherCrypto;
+		$cipher = new CryptoCipher;
 		$key    = $cipher->generateKey();
 
 		// Assert that the key is the correct type.
