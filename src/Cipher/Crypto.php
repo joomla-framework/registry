@@ -111,6 +111,6 @@ class Crypto implements CipherInterface
 		}
 
 		// Create the new encryption key object.
-		return new Key('crypto', $public->saveToAsciiSafeString(), $public->saveToAsciiSafeString());
+		return new Key('crypto', $public->saveToAsciiSafeString(), $public->getRawBytes());
 	}
 }
