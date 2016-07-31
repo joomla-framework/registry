@@ -6,13 +6,18 @@
     "homepage": "https://github.com/joomla-framework/archive",
     "license": "GPL-2.0+",
     "require": {
-        "php": ">=5.4|>=7.0",
+        "php": "~5.4|~7.0",
         "joomla/filesystem": "~1.0"
     },
     "require-dev": {
         "joomla/test": "~1.0",
         "phpunit/phpunit": "~4.8|~5.0",
         "squizlabs/php_codesniffer": "1.*"
+    },
+    "suggest": {
+        "ext-bz2": "To extract bzip2 compressed packages",
+        "ext-zip": "To extract zip compressed packages",
+        "ext-zlib": "To extract gzip or zip compressed packages"
     },
     "autoload": {
         "psr-4": {

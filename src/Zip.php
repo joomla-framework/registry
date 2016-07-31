@@ -179,7 +179,7 @@ class Zip implements ExtractableInterface
 	 */
 	public static function isSupported()
 	{
-		return (self::hasNativeSupport() || extension_loaded('zlib'));
+		return self::hasNativeSupport() || extension_loaded('zlib');
 	}
 
 	/**
@@ -191,7 +191,7 @@ class Zip implements ExtractableInterface
 	 */
 	public static function hasNativeSupport()
 	{
-		return (function_exists('zip_open') && function_exists('zip_read'));
+		return extension_loaded('zip');
 	}
 
 	/**
