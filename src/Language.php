@@ -269,8 +269,11 @@ class Language
 		}
 		elseif ($interpretBackSlashes)
 		{
-			// Interpret \n and \t characters
-			$string = str_replace(['\\\\', '\t', '\n'], ["\\", "\t", "\n"], $string);
+			if (strpos($string, '\\') !== false)
+			{
+				// Interpret \n and \t characters
+				$string = str_replace(['\\\\', '\t', '\n'], ["\\", "\t", "\n"], $string);
+			}
 		}
 
 		return $string;
@@ -537,7 +540,7 @@ class Language
 			}
 
 			// Check that the line passes the necessary format.
-			if (!preg_match('#^[A-Z][A-Z0-9_\-\.]*\s*=\s*".*"(\s*;.*)?$#', $line))
+			if (!preg_match('#^[A-Z][A-Z0-9_\*\-\.]*\s*=\s*".*"(\s*;.*)?$#', $line))
 			{
 				$errors[] = $realNumber;
 				continue;
