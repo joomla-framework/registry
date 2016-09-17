@@ -31,7 +31,7 @@ class Cli extends Input
 	 * @var    array
 	 * @since  1.0
 	 */
-	public $args = array();
+	public $args = [];
 
 	/**
 	 * Constructor.
@@ -41,10 +41,10 @@ class Cli extends Input
 	 *
 	 * @since   1.0
 	 */
-	public function __construct(array $source = null, array $options = array())
+	public function __construct(array $source = [], array $options = [])
 	{
 		// Get the command line options
-		if (is_null($source))
+		if (empty($source))
 		{
 			$source = $this->parseArguments();
 		}
@@ -70,7 +70,7 @@ class Cli extends Input
 		unset($inputs['server']);
 
 		// Serialize the executable, args, options, data, and inputs.
-		return serialize(array($this->executable, $this->args, $this->options, $this->data, $inputs));
+		return serialize([$this->executable, $this->args, $this->options, $this->data, $inputs]);
 	}
 
 	/**
@@ -122,7 +122,7 @@ class Cli extends Input
 
 		$this->executable = array_shift($argv);
 
-		$out = array();
+		$out = [];
 
 		for ($i = 0, $j = count($argv); $i < $j; $i++)
 		{
@@ -141,23 +141,23 @@ class Cli extends Input
 					// --foo value
 					if ($i + 1 < $j && $argv[$i + 1][0] !== '-')
 					{
-						$value          = $argv[$i + 1];
+						$value = $argv[$i + 1];
 						$i++;
 					}
 					else
 					{
-						$value          = isset($out[$key]) ? $out[$key] : true;
+						$value = isset($out[$key]) ? $out[$key] : true;
 					}
 
-					$out[$key]          = $value;
+					$out[$key] = $value;
 				}
 
 				// --bar=baz
 				else
 				{
-					$key                = substr($arg, 2, $eqPos - 2);
-					$value              = substr($arg, $eqPos + 1);
-					$out[$key]          = $value;
+					$key       = substr($arg, 2, $eqPos - 2);
+					$value     = substr($arg, $eqPos + 1);
+					$out[$key] = $value;
 				}
 			}
 			// -k=value -abc
@@ -166,26 +166,26 @@ class Cli extends Input
 				// -k=value
 				if (substr($arg, 2, 1) === '=')
 				{
-					$key                = substr($arg, 1, 1);
-					$value              = substr($arg, 3);
-					$out[$key]          = $value;
+					$key       = substr($arg, 1, 1);
+					$value     = substr($arg, 3);
+					$out[$key] = $value;
 				}
 				// -abc
 				else
 				{
-					$chars              = str_split(substr($arg, 1));
+					$chars = str_split(substr($arg, 1));
 
 					foreach ($chars as $char)
 					{
-						$key            = $char;
-						$value          = isset($out[$key]) ? $out[$key] : true;
-						$out[$key]      = $value;
+						$key       = $char;
+						$value     = isset($out[$key]) ? $out[$key] : true;
+						$out[$key] = $value;
 					}
 
 					// -a a-value
 					if ((count($chars) === 1) && ($i + 1 < $j) && ($argv[$i + 1][0] !== '-'))
 					{
-						$out[$key]      = $argv[$i + 1];
+						$out[$key] = $argv[$i + 1];
 						$i++;
 					}
 				}

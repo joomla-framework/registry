@@ -18,14 +18,14 @@ class Cookie extends Input
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $source   Ignored.
+	 * @param   array  $source   Source data (Optional, default is $_COOKIE)
 	 * @param   array  $options  Array of configuration parameters (Optional)
 	 *
 	 * @since   1.0
 	 */
-	public function __construct(array $source = null, array $options = array())
+	public function __construct(array $source = [], array $options = [])
 	{
-		if (is_null($source))
+		if (empty($source))
 		{
 			$source = $_COOKIE;
 		}

@@ -46,7 +46,7 @@ class Input implements \Serializable, \Countable
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $options = array();
+	protected $options = [];
 
 	/**
 	 * Filter object to use.
@@ -54,7 +54,7 @@ class Input implements \Serializable, \Countable
 	 * @var    Filter\InputFilter
 	 * @since  1.0
 	 */
-	protected $filter = null;
+	protected $filter;
 
 	/**
 	 * Input data.
@@ -62,7 +62,7 @@ class Input implements \Serializable, \Countable
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $data = array();
+	protected $data = [];
 
 	/**
 	 * Input objects
@@ -70,7 +70,7 @@ class Input implements \Serializable, \Countable
 	 * @var    Input[]
 	 * @since  1.0
 	 */
-	protected $inputs = array();
+	protected $inputs = [];
 
 	/**
 	 * Is all GLOBAL added
@@ -89,9 +89,9 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($source = null, array $options = array())
+	public function __construct(array $source = [], array $options = [])
 	{
-		$this->data    = is_null($source) ? $_REQUEST : $source;
+		$this->data    = empty($source) ? $_REQUEST : $source;
 		$this->filter  = isset($options['filter']) ? $options['filter'] : new Filter\InputFilter;
 		$this->options = $options;
 	}
@@ -184,14 +184,14 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @since   1.0
 	 */
-	public function getArray(array $vars = array(), $datasource = null)
+	public function getArray(array $vars = [], $datasource = null)
 	{
 		if (empty($vars) && is_null($datasource))
 		{
 			$vars = $this->data;
 		}
 
-		$results = array();
+		$results = [];
 
 		foreach ($vars as $k => $v)
 		{
@@ -338,7 +338,7 @@ class Input implements \Serializable, \Countable
 		unset($inputs['server']);
 
 		// Serialize the options, data, and inputs.
-		return serialize(array($this->options, $this->data, $inputs));
+		return serialize([$this->options, $this->data, $inputs]);
 	}
 
 	/**
@@ -356,7 +356,7 @@ class Input implements \Serializable, \Countable
 		list($this->options, $this->data, $this->inputs) = unserialize($input);
 
 		// Load the filter.
-		$this->filter  = isset($this->options['filter']) ? $this->options['filter'] : new Filter\InputFilter;
+		$this->filter = isset($this->options['filter']) ? $this->options['filter'] : new Filter\InputFilter;
 	}
 
 	/**
