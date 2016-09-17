@@ -254,7 +254,7 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 			}
 
 			// Check if the object is a date.
-			if ($value instanceof \DateTime)
+			if ($value instanceof \DateTimeInterface)
 			{
 				$value = $value->format('Y-m-d H:i:s');
 			}
