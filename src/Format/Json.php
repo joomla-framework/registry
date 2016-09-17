@@ -31,16 +31,9 @@ class Json implements FormatInterface
 	public function objectToString($object, array $options = [])
 	{
 		$bitmask = isset($options['bitmask']) ? $options['bitmask'] : 0;
+		$depth = isset($options['depth']) ? $options['depth'] : 512;
 
-		// The depth parameter is only present as of PHP 5.5
-		if (version_compare(PHP_VERSION, '5.5', '>='))
-		{
-			$depth = isset($options['depth']) ? $options['depth'] : 512;
-
-			return json_encode($object, $bitmask, $depth);
-		}
-
-		return json_encode($object, $bitmask);
+		return json_encode($object, $bitmask, $depth);
 	}
 
 	/**

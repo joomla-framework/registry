@@ -49,13 +49,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
 		$decoded = json_decode($class->objectToString($object));
 
 		// Ensures that the generated string respects the json syntax
-		$errorMsg = 'JSON error decoding string.  Code: ' . json_last_error();
-
-		// If PHP 5.5 grab the last error message too
-		if (version_compare(PHP_VERSION, '5.5', 'ge'))
-		{
-			$errorMsg .= '; Message: ' . json_last_error_msg();
-		}
+		$errorMsg = 'JSON error decoding string.  Code: ' . json_last_error() . '; Message: ' . json_last_error_msg();
 
 		$this->assertNotNull($decoded, $errorMsg);
 
