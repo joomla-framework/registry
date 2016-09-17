@@ -45,7 +45,7 @@ final class ArrayHelper
 
 		if ($default === null)
 		{
-			return array();
+			return [];
 		}
 
 		if (is_array($default))
@@ -53,7 +53,7 @@ final class ArrayHelper
 			return static::toInteger($default, null);
 		}
 
-		return array((int) $default);
+		return [(int) $default];
 	}
 
 	/**
@@ -100,7 +100,7 @@ final class ArrayHelper
 	 */
 	public static function toString(array $array, $inner_glue = '=', $outer_glue = ' ', $keepOuterKey = false)
 	{
-		$output = array();
+		$output = [];
 
 		foreach ($array as $key => $item)
 		{
@@ -141,7 +141,7 @@ final class ArrayHelper
 			return self::arrayFromObject($p_obj, $recurse, $regex);
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -159,7 +159,7 @@ final class ArrayHelper
 	{
 		if (is_object($item))
 		{
-			$result = array();
+			$result = [];
 
 			foreach (get_object_vars($item) as $k => $v)
 			{
@@ -181,7 +181,7 @@ final class ArrayHelper
 
 		if (is_array($item))
 		{
-			$result = array();
+			$result = [];
 
 			foreach ($item as $k => $v)
 			{
@@ -211,7 +211,7 @@ final class ArrayHelper
 	 */
 	public static function getColumn(array $array, $valueCol, $keyCol = null)
 	{
-		$result = array();
+		$result = [];
 
 		foreach ($array as $item)
 		{
@@ -301,7 +301,7 @@ final class ArrayHelper
 			case 'ARRAY':
 				if (!is_array($result))
 				{
-					$result = array($result);
+					$result = [$result];
 				}
 				break;
 
@@ -351,7 +351,7 @@ final class ArrayHelper
 	 */
 	public static function invert(array $array)
 	{
-		$return = array();
+		$return = [];
 
 		foreach ($array as $base => $values)
 		{
@@ -410,8 +410,8 @@ final class ArrayHelper
 	 */
 	public static function pivot(array $source, $key = null)
 	{
-		$result  = array();
-		$counter = array();
+		$result  = [];
+		$counter = [];
 
 		foreach ($source as $index => $value)
 		{
@@ -449,16 +449,16 @@ final class ArrayHelper
 			if (empty($counter[$resultKey]))
 			{
 				// The first time around we just assign the value to the key.
-				$result[$resultKey] = $resultValue;
+				$result[$resultKey]  = $resultValue;
 				$counter[$resultKey] = 1;
 			}
 			elseif ($counter[$resultKey] == 1)
 			{
 				// If there is a second time, we convert the value into an array.
-				$result[$resultKey] = array(
+				$result[$resultKey] = [
 					$result[$resultKey],
 					$resultValue,
-				);
+				];
 				$counter[$resultKey]++;
 			}
 			else
@@ -490,7 +490,7 @@ final class ArrayHelper
 	{
 		if (!is_array($locale) || !is_array($locale[0]))
 		{
-			$locale = array($locale);
+			$locale = [$locale];
 		}
 
 		$sortCase      = (array) $caseSensitive;
