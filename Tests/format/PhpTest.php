@@ -16,6 +16,7 @@ class PhpTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  A data object is converted to a string
 	 *
+	 * @covers   Joomla\Registry\Format\Php::formatValue
 	 * @covers   Joomla\Registry\Format\Php::getArrayString
 	 * @covers   Joomla\Registry\Format\Php::objectToString
 	 */
@@ -39,12 +40,12 @@ class PhpTest extends \PHPUnit_Framework_TestCase
 			"class myClass {\n" .
 			"\tpublic \$foo = 'bar';\n" .
 			"\tpublic \$quoted = '\"stringwithquotes\"';\n" .
-			"\tpublic \$booleantrue = '1';\n" .
-			"\tpublic \$booleanfalse = '';\n" .
-			"\tpublic \$numericint = '42';\n" .
-			"\tpublic \$numericfloat = '3.1415';\n" .
-			"\tpublic \$section = array(\"key\" => \"value\");\n" .
-			"\tpublic \$array = array(\"nestedarray\" => array(\"test1\" => \"value1\"));\n" .
+			"\tpublic \$booleantrue = true;\n" .
+			"\tpublic \$booleanfalse = false;\n" .
+			"\tpublic \$numericint = 42;\n" .
+			"\tpublic \$numericfloat = 3.1415;\n" .
+			"\tpublic \$section = array('key' => 'value');\n" .
+			"\tpublic \$array = array('nestedarray' => array('test1' => 'value1'));\n" .
 			"}\n?>";
 
 		$this->assertSame($string, $class->objectToString($object, $options));
@@ -53,6 +54,7 @@ class PhpTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  A data object is converted to a string with no specified class
 	 *
+	 * @covers   Joomla\Registry\Format\Php::formatValue
 	 * @covers   Joomla\Registry\Format\Php::getArrayString
 	 * @covers   Joomla\Registry\Format\Php::objectToString
 	 */
@@ -76,12 +78,12 @@ class PhpTest extends \PHPUnit_Framework_TestCase
 			"class Registry {\n" .
 			"\tpublic \$foo = 'bar';\n" .
 			"\tpublic \$quoted = '\"stringwithquotes\"';\n" .
-			"\tpublic \$booleantrue = '1';\n" .
-			"\tpublic \$booleanfalse = '';\n" .
-			"\tpublic \$numericint = '42';\n" .
-			"\tpublic \$numericfloat = '3.1415';\n" .
-			"\tpublic \$section = array(\"key\" => \"value\");\n" .
-			"\tpublic \$array = array(\"nestedarray\" => array(\"test1\" => \"value1\"));\n" .
+			"\tpublic \$booleantrue = true;\n" .
+			"\tpublic \$booleanfalse = false;\n" .
+			"\tpublic \$numericint = 42;\n" .
+			"\tpublic \$numericfloat = 3.1415;\n" .
+			"\tpublic \$section = array('key' => 'value');\n" .
+			"\tpublic \$array = array('nestedarray' => array('test1' => 'value1'));\n" .
 			"}\n?>";
 
 		$this->assertSame($string, $class->objectToString($object));
@@ -90,6 +92,7 @@ class PhpTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @testdox  A data object is converted to a string with a namespace
 	 *
+	 * @covers   Joomla\Registry\Format\Php::formatValue
 	 * @covers   Joomla\Registry\Format\Php::getArrayString
 	 * @covers   Joomla\Registry\Format\Php::objectToString
 	 */
@@ -116,12 +119,12 @@ class PhpTest extends \PHPUnit_Framework_TestCase
 			"class myClass {\n" .
 			"\tpublic \$foo = 'bar';\n" .
 			"\tpublic \$quoted = '\"stringwithquotes\"';\n" .
-			"\tpublic \$booleantrue = '1';\n" .
-			"\tpublic \$booleanfalse = '';\n" .
-			"\tpublic \$numericint = '42';\n" .
-			"\tpublic \$numericfloat = '3.1415';\n" .
-			"\tpublic \$section = array(\"key\" => \"value\");\n" .
-			"\tpublic \$array = array(\"nestedarray\" => array(\"test1\" => \"value1\"));\n" .
+			"\tpublic \$booleantrue = true;\n" .
+			"\tpublic \$booleanfalse = false;\n" .
+			"\tpublic \$numericint = 42;\n" .
+			"\tpublic \$numericfloat = 3.1415;\n" .
+			"\tpublic \$section = array('key' => 'value');\n" .
+			"\tpublic \$array = array('nestedarray' => array('test1' => 'value1'));\n" .
 			"}\n?>";
 
 		$this->assertSame($string, $class->objectToString($object, $options));
@@ -156,12 +159,12 @@ class PhpTest extends \PHPUnit_Framework_TestCase
 			"class myClass {\n" .
 			"\tpublic \$foo = 'bar';\n" .
 			"\tpublic \$quoted = '\"stringwithquotes\"';\n" .
-			"\tpublic \$booleantrue = '1';\n" .
-			"\tpublic \$booleanfalse = '';\n" .
-			"\tpublic \$numericint = '42';\n" .
-			"\tpublic \$numericfloat = '3.1415';\n" .
-			"\tpublic \$section = array(\"key\" => \"value\");\n" .
-			"\tpublic \$array = array(\"nestedarray\" => array(\"test1\" => \"value1\"));\n" .
+			"\tpublic \$booleantrue = true;\n" .
+			"\tpublic \$booleanfalse = false;\n" .
+			"\tpublic \$numericint = 42;\n" .
+			"\tpublic \$numericfloat = 3.1415;\n" .
+			"\tpublic \$section = array('key' => 'value');\n" .
+			"\tpublic \$array = array('nestedarray' => array('test1' => 'value1'));\n" .
 			"}\n?>";
 
 		$object = $class->stringToObject($input);
