@@ -66,6 +66,6 @@ class Json implements FormatInterface
 			throw new \RuntimeException(sprintf('Error decoding JSON data: %s', json_last_error_msg()));
 		}
 
-		return $decoded;
+		return (object) $decoded;
 	}
 }

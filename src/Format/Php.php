@@ -74,7 +74,7 @@ class Php implements FormatInterface
 	 */
 	public function stringToObject($data, array $options = [])
 	{
-		return true;
+		return new \stdClass;
 	}
 
 	/**
