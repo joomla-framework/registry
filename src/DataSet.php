@@ -406,28 +406,16 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 
 	/**
 	 * Applies a function to every object in the set (emulates array_walk).
-	 * 
-	 * @param   callable  $funcname  Callback function.  
-	 * 
+	 *
+	 * @param   callable  $funcname  Callback function.
+	 *
 	 * @return  boolean
-	 * 
+	 *
 	 * @since   1.2.0
 	 * @throws  \InvalidArgumentException
 	 */
-	public function walk($funcname)
+	public function walk(callable $funcname)
 	{
-		if (!is_callable($funcname))
-		{
-			$message = __METHOD__ . '() expects parameter 1 to be a valid callback';
-
-			if (is_string($funcname))
-			{
-				$message .= sprintf(', function \'%s\' not found or invalid function name', $funcname);
-			}
-
-			throw new \InvalidArgumentException($message);
-		}
-
 		foreach ($this->objects as $key => $object)
 		{
 			$funcname($object, $key);
