@@ -40,6 +40,7 @@ class Archive
 	 * @param   array|\ArrayAccess  $options  An array of options
 	 *
 	 * @since   1.0
+	 * @throws  \InvalidArgumentException
 	 */
 	public function __construct($options = [])
 	{
@@ -91,7 +92,7 @@ class Archive
 
 				try
 				{
-					$gzresult = $this->getAdapter('gzip')->extract($archivename, $tmpfname);
+					$this->getAdapter('gzip')->extract($archivename, $tmpfname);
 				}
 				catch (\RuntimeException $exception)
 				{
@@ -122,7 +123,7 @@ class Archive
 
 				try
 				{
-					$bzresult = $this->getAdapter('bzip2')->extract($archivename, $tmpfname);
+					$this->getAdapter('bzip2')->extract($archivename, $tmpfname);
 				}
 				catch (\RuntimeException $exception)
 				{
@@ -149,12 +150,7 @@ class Archive
 				throw new \InvalidArgumentException(sprintf('Unsupported archive type: %s', $ext));
 		}
 
-		if (!$result || $result instanceof \Exception)
-		{
-			return false;
-		}
-
-		return true;
+		return $result;
 	}
 
 	/**

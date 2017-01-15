@@ -37,9 +37,10 @@ class Bzip2 implements ExtractableInterface
 	/**
 	 * Create a new Archive object.
 	 *
-	 * @param   array|\ArrayAccess  $options  An array of options or an object that implements \ArrayAccess
+	 * @param   array|\ArrayAccess  $options  An array of options
 	 *
 	 * @since   1.0
+	 * @throws  \InvalidArgumentException
 	 */
 	public function __construct($options = [])
 	{
@@ -86,7 +87,7 @@ class Bzip2 implements ExtractableInterface
 				throw new \RuntimeException('Unable to decompress data');
 			}
 
-			if (File::write($destination, $buffer) === false)
+			if (!File::write($destination, $buffer))
 			{
 				throw new \RuntimeException('Unable to write archive');
 			}

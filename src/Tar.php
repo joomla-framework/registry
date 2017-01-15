@@ -73,6 +73,7 @@ class Tar implements ExtractableInterface
 	 * @param   array|\ArrayAccess  $options  An array of options or an object that implements \ArrayAccess
 	 *
 	 * @since   1.0
+	 * @throws  \InvalidArgumentException
 	 */
 	public function __construct($options = [])
 	{
@@ -126,7 +127,7 @@ class Tar implements ExtractableInterface
 					throw new \RuntimeException('Unable to create destination');
 				}
 
-				if (File::write($path, $buffer) === false)
+				if (!File::write($path, $buffer))
 				{
 					throw new \RuntimeException('Unable to write entry');
 				}

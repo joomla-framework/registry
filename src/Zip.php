@@ -107,6 +107,7 @@ class Zip implements ExtractableInterface
 	 * @param   array|\ArrayAccess  $options  An array of options or an object that implements \ArrayAccess
 	 *
 	 * @since   1.0
+	 * @throws  \InvalidArgumentException
 	 */
 	public function __construct($options = [])
 	{
@@ -214,7 +215,7 @@ class Zip implements ExtractableInterface
 	 * @param   string  $archive      Path to ZIP archive to extract.
 	 * @param   string  $destination  Path to extract archive into.
 	 *
-	 * @return  mixed   True if successful
+	 * @return  boolean  True if successful
 	 *
 	 * @since   1.0
 	 * @throws  \RuntimeException
@@ -251,7 +252,7 @@ class Zip implements ExtractableInterface
 					throw new \RuntimeException('Unable to create destination');
 				}
 
-				if (File::write($path, $buffer) === false)
+				if (!File::write($path, $buffer))
 				{
 					throw new \RuntimeException('Unable to write entry');
 				}
@@ -628,6 +629,6 @@ class Zip implements ExtractableInterface
 		pack('V', strlen($data)) . /* ZIP file comment length. */
 		"\x00\x00";
 
-		return File::write($path, $buffer) !== false;
+		return File::write($path, $buffer);
 	}
 }

@@ -51,9 +51,14 @@ class Gzip implements ExtractableInterface
 	/**
 	 * Create a new Archive object.
 	 *
+<<<<<<< HEAD
 	 * @param   array|\ArrayAccess  $options  An array of options or an object that implements \ArrayAccess
+=======
+	 * @param   array|\ArrayAccess  $options  An array of options
+>>>>>>> 322d7754c3c339808c4eead1688595a27f8bfaf2
 	 *
 	 * @since   1.0
+	 * @throws  \InvalidArgumentException
 	 */
 	public function __construct($options = [])
 	{
@@ -99,7 +104,7 @@ class Gzip implements ExtractableInterface
 				throw new \RuntimeException('Unable to decompress data');
 			}
 
-			if (File::write($destination, $buffer) === false)
+			if (!File::write($destination, $buffer))
 			{
 				throw new \RuntimeException('Unable to write archive');
 			}
