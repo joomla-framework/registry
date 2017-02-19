@@ -8,12 +8,12 @@ namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Input;
-use Joomla\Input\Cookie;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Input\Input.
  */
-class InputTest extends \PHPUnit_Framework_TestCase
+class InputTest extends TestCase
 {
 	/**
 	 * The test class.

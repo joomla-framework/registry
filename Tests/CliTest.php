@@ -7,11 +7,12 @@
 namespace Joomla\Input\Tests;
 
 use Joomla\Input\Cli;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Input\Cli.
  */
-class CliTest extends \PHPUnit_Framework_TestCase
+class CliTest extends TestCase
 {
 	/**
 	 * @testdox  Tests the default constructor behavior

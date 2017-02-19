@@ -7,11 +7,12 @@
 namespace Joomla\Input\Tests;
 
 use Joomla\Input\Files;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Input\Files.
  */
-class FilesTest extends \PHPUnit_Framework_TestCase
+class FilesTest extends TestCase
 {
 	/**
 	 * @testdox  Tests the default constructor behavior

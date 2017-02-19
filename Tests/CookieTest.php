@@ -7,11 +7,12 @@
 namespace Joomla\Input\Tests;
 
 use Joomla\Input\Cookie;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Input\Cookie.
  */
-class CookieTest extends \PHPUnit_Framework_TestCase
+class CookieTest extends TestCase
 {
 	/**
 	 * @testdox  Tests the default constructor behavior

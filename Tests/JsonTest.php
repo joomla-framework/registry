@@ -7,11 +7,12 @@
 namespace Joomla\Input\Tests;
 
 use Joomla\Input\Json;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Input\Json.
  */
-class JsonTest extends \PHPUnit_Framework_TestCase
+class JsonTest extends TestCase
 {
 	/**
 	 * @testdox  Tests the default constructor behavior
