@@ -7,11 +7,12 @@
 namespace Joomla\Crypt\Tests;
 
 use Joomla\Crypt\Key;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Crypt\Key.
  */
-class KeyTest extends \PHPUnit_Framework_TestCase
+class KeyTest extends TestCase
 {
 	/**
 	 * Object under testing
