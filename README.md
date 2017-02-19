@@ -273,53 +273,8 @@ The `set` method is disabled in `Input\Files`.
 For simple cases where you only need to mock the `Input\Input` class, the following snippet can be used:
 
 ```
-$mockInput = $this->getMock('Joomla\Input\Input');
+$mockInput = $this->getMockBuilder('Joomla\Input\Input')->getMock();
 ```
-
-For more complicated mocking where you need to similate input, you can use the `Input\Tests\InputMocker` class to create robust mock objects.
-
-```php
-use Joomla\Input\Tests\InputMocker;
-
-class MyTest extends \PHPUnit_Framework_TestCase
-{
-	private $instance;
-
-	protected function setUp()
-	{
-		parent::setUp();
-
-		// Create the mock input object.
-		$inputMocker = new InputMocker($this);
-		$mockInput = $inputMocker->createInput();
-
-		// Set up some mock values for the input class to return.
-		$mockInput->set('foo', 'bar');
-
-		// Create the test instance injecting the mock dependency.
-		$this->instance = new MyClass($mockInput);
-	}
-}
-```
-
-The `createInput` method will return a mock of the `Input\Input` class with the following methods mocked to roughly simulate real behaviour albeit with reduced functionality:
-
-* `get($name [, $default, $fitler])`
-* `getArray([$array, $datasource])`
-* `getInt($name [, $default])`
-* `set($name, $value)`
-
-The `createInputJson` method will return a mock of the `Input\Json` class. It extends from the `createInput` method and adds the following method:
-
-* `getRaw`
-
-You can provide customised implementations these methods by creating the following methods in your test class respectively:
-
-* `mockInputGet`
-* `mockInputGetArray`
-* `mockInputGetInt`
-* `mockInputSet`
-* `mockInputGetRaw`
 
 ## Changes From 1.x
 
