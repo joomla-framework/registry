@@ -12,6 +12,7 @@ use Defuse\Crypto\RuntimeTests;
 use Joomla\Crypt\Cipher\Crypto;
 use Joomla\Crypt\Crypt;
 use Joomla\Crypt\Key;
+use PHPUnit\Framework\TestCase;
 use Symfony\Polyfill\Util\Binary;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Polyfill\Util\Binary;
  *
  * @since  1.0
  */
-class CryptTest extends \PHPUnit_Framework_TestCase
+class CryptTest extends TestCase
 {
 	/**
 	 * Cipher used for testing

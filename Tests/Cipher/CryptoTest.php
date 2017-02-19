@@ -10,12 +10,12 @@ use Defuse\Crypto\Key as DefuseKey;
 use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
 use Defuse\Crypto\RuntimeTests;
 use Joomla\Crypt\Cipher\Crypto as CryptoCipher;
-use Symfony\Polyfill\Util\Binary;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Crypt\Cipher\Crypto.
  */
-class CryptoTest extends \PHPUnit_Framework_TestCase
+class CryptoTest extends TestCase
 {
 	/**
 	 * This method is called before the first test of this test class is run.
