@@ -7,11 +7,12 @@
 namespace Joomla\Language\Tests;
 
 use Joomla\Language\LanguageHelper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for Joomla\Language\LanguageHelper.
  */
-class LanguageHelperTest extends \PHPUnit_Framework_TestCase
+class LanguageHelperTest extends TestCase
 {
 	/**
 	 * Test language object

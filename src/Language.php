@@ -461,7 +461,7 @@ class Language
 		if ($this->debug)
 		{
 			// Restore error tracking to what it was before.
-			ini_set('track_errors', $track_errors);
+			ini_set('track_errors', $trackErrors);
 
 			$this->debugFile($filename);
 		}

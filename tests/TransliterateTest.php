@@ -7,11 +7,12 @@
 namespace Joomla\Language\Tests;
 
 use Joomla\Language\Transliterate;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for Transliterate.
  */
-class TransliterateTest extends \PHPUnit_Framework_TestCase
+class TransliterateTest extends TestCase
 {
 	/**
 	 * @var  Transliterate

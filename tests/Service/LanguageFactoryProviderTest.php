@@ -9,11 +9,12 @@ namespace Joomla\Language\Tests\Service;
 use Joomla\DI\Container;
 use Joomla\Language\Service\LanguageFactoryProvider;
 use Joomla\Registry\Registry;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for Joomla\Language\Service\LanguageFactoryProvider.
  */
-class LanguageFactoryProviderTest extends \PHPUnit_Framework_TestCase
+class LanguageFactoryProviderTest extends TestCase
 {
 	/**
 	 * DI Container for testing

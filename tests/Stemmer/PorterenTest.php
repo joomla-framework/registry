@@ -7,11 +7,12 @@
 namespace Joomla\Language\Tests\Stemmer;
 
 use Joomla\Language\Stemmer\Porteren;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for Porteren.
  */
-class PorterenTest extends \PHPUnit_Framework_TestCase
+class PorterenTest extends TestCase
 {
 	/**
 	 * @var  Porteren
