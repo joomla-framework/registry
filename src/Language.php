@@ -447,20 +447,16 @@ class Language
 	 */
 	protected function parse($filename)
 	{
+		// Capture hidden PHP errors from the parsing.
 		if ($this->debug)
 		{
-			// Capture hidden PHP errors from the parsing.
+			// See https://secure.php.net/manual/en/reserved.variables.phperrormsg.php
 			$php_errormsg = null;
-			$track_errors = ini_get('track_errors');
+			$trackErrors  = ini_get('track_errors');
 			ini_set('track_errors', true);
 		}
 
 		$strings = @parse_ini_file($filename);
-
-		if (!is_array($strings))
-		{
-			$strings = [];
-		}
 
 		if ($this->debug)
 		{
@@ -470,7 +466,7 @@ class Language
 			$this->debugFile($filename);
 		}
 
-		return $strings;
+		return is_array($strings) ? $strings : [];
 	}
 
 	/**
