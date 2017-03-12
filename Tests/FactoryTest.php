@@ -7,11 +7,7 @@
 namespace Joomla\Registry\Tests;
 
 use Joomla\Registry\Factory;
-<<<<<<< HEAD
-=======
-use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
->>>>>>> 4d90f7ce709423813b7a65f811568c65c1c2206e
 
 /**
  * Test class for Joomla\Registry\Factory
