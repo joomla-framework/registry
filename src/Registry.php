@@ -8,8 +8,6 @@
 
 namespace Joomla\Registry;
 
-use Joomla\Utilities\ArrayHelper;
-
 /**
  * Registry class
  *
@@ -699,7 +697,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 				continue;
 			}
 
-			if ($recursive && ((is_array($v) && ArrayHelper::isAssociative($v)) || is_object($v)))
+			if ($recursive && (is_array($v) || is_object($v)))
 			{
 				if (!isset($parent->$k))
 				{
