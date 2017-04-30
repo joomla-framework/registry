@@ -20,7 +20,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Registry Object
 	 *
-	 * @var    object
+	 * @var    \stdClass
 	 * @since  1.0
 	 */
 	protected $data;
@@ -54,7 +54,11 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 		$this->data = new \stdClass;
 
 		// Optionally load supplied data.
-		if (is_array($data) || is_object($data))
+		if ($data instanceof Registry)
+		{
+			$this->merge($data);
+		}
+		elseif (is_array($data) || is_object($data))
 		{
 			$this->bindData($this->data, $data);
 		}
@@ -93,7 +97,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @return  integer  The custom count as an integer.
 	 *
-	 * @link    http://php.net/manual/en/countable.count.php
+	 * @link    https://secure.php.net/manual/en/countable.count.php
 	 * @since   1.3.0
 	 */
 	public function count()
