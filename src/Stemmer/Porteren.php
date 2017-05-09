@@ -9,7 +9,7 @@
 
 namespace Joomla\Language\Stemmer;
 
-use Joomla\Language\Stemmer;
+use Joomla\Language\StemmerInterface;
 
 /**
  * Porter English stemmer class.
@@ -19,8 +19,16 @@ use Joomla\Language\Stemmer;
  *
  * @since  1.0
  */
-class Porteren extends Stemmer
+class Porteren implements StemmerInterface
 {
+	/**
+	 * An internal cache of stemmed tokens.
+	 *
+	 * @var    array
+	 * @since  1.0
+	 */
+	protected $cache = [];
+
 	/**
 	 * Regex for matching a consonant.
 	 *

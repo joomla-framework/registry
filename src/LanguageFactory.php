@@ -135,11 +135,11 @@ class LanguageFactory
 	}
 
 	/**
-	 * Creates a new Stemmer instance for the requested adapter.
+	 * Creates a new StemmerInterface instance for the requested adapter.
 	 *
 	 * @param   string  $adapter  The type of stemmer to load.
 	 *
-	 * @return  Stemmer
+	 * @return  StemmerInterface
 	 *
 	 * @since   1.3.0
 	 * @throws  RuntimeException on invalid stemmer

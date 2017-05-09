@@ -9,20 +9,12 @@
 namespace Joomla\Language;
 
 /**
- * Stemmer base class.
+ * Stemmer interface.
  *
- * @since  1.0
+ * @since  __DEPLOY_VERSION__
  */
-abstract class Stemmer
+interface StemmerInterface
 {
-	/**
-	 * An internal cache of stemmed tokens.
-	 *
-	 * @var    array
-	 * @since  1.0
-	 */
-	protected $cache = [];
-
 	/**
 	 * Method to stem a token and return the root.
 	 *
@@ -31,7 +23,7 @@ abstract class Stemmer
 	 *
 	 * @return  string  The root token.
 	 *
-	 * @since   1.0
+	 * @since   __DEPLOY_VERSION__
 	 */
-	abstract public function stem($token, $lang);
+	public function stem($token, $lang);
 }
