@@ -36,9 +36,10 @@ The `getInstance()` method in `Language` has been removed.  Use `LanguageFactory
 The `setLanguage()` method in `Language` has been removed.  A new Language instance in the new language should be instantiated
 instead.
 
-### Stemmer::getInstance() removed
+### Abstract Stemmer removed
 
-The `getInstance()` method in `Stemmer` has been removed.  Use `LanguageFactory::getStemmer()` instead.
+The abstract `Stemmer` class has been removed. Stemmers are now defined by a new `StemmerInterface`. Use `LanguageFactory::getStemmer()`
+to get an instance of a `Stemmer` as a replacement for `Stemmer::getInstance()`.
 
 ### Text::alt() signature changed
 
