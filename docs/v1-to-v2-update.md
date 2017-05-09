@@ -7,8 +7,10 @@ The following changes were made to the Language package between v1 and v2.
 The `Language` and `Text` classes have been refactored to follow an object oriented approach instead of using static methods.
 Instantiating the `Text` class requires a `Language` instance to be injected.
 
-The `Text::_()` method remains static and will proxy to the object oriented API as long as a Language instance is
-available via `Language::getInstance()`.
+### Singleton object storage removed
+
+The package no longer supports singleton object storage. Calling the `LanguageFactory` will always return a new instance of
+the requested object.
 
 ### Language requires base path to be defined
 
@@ -21,9 +23,9 @@ The `_QQ_` constant was previously an allowed escape sequence for quotes in lang
 has been removed. Double quotes in files should either be escaped (`\"`) or HTML encoded (`&quot;`) (if displayed in an
 HTML context).
 
-### Language::_ and Text::_ deprecated
+### Language::_ deprecated
 
-The `_` method in `Language` and `Text` has been deprecated in favor of `translate`.
+The `_` method in `Language` has been deprecated in favor of `translate`.
 
 ### Language::getInstance() removed
 
@@ -48,6 +50,11 @@ now the third parameter in the method signature.  This affects calls to the meth
 
 The `script()` method in `Text` has been removed, as well as support for the internal JavaScript store.  Downstream applications
 should implement this feature if needed.
+
+### Text::_() removed
+
+The `_()` method in `Text` has been removed. Because the package no longer supports singleton objects, it is not possible to proxy
+this to the non-static API.
 
 ### Methods for CMS Search Component
 

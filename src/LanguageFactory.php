@@ -32,18 +32,7 @@ class LanguageFactory
 	private $languageDirectory;
 
 	/**
-	 * Container with a list of loaded classes grouped by object type
-	 *
-	 * @var    array
-	 * @since  1.3.0
-	 */
-	private static $loadedClasses = [
-		'language' => [],
-		'stemmer'  => []
-	];
-
-	/**
-	 * Get the application's default language
+	 * Get the application's default language.
 	 *
 	 * @return  string
 	 *
@@ -55,7 +44,7 @@ class LanguageFactory
 	}
 
 	/**
-	 * Returns a language object.
+	 * Creates a new Language instance based on the given parameters.
 	 *
 	 * @param   string   $lang   The language to use.
 	 * @param   string   $path   The base path to the language folder.  This is required if creating a new instance.
@@ -67,19 +56,14 @@ class LanguageFactory
 	 */
 	public function getLanguage($lang = null, $path = null, $debug = false)
 	{
-		$path = ($path === null) ? $this->getLanguageDirectory() : $path;
-		$lang = ($lang === null) ? $this->getDefaultLanguage() : $lang;
+		$path = $path ?: $this->getLanguageDirectory();
+		$lang = $lang ?: $this->getDefaultLanguage();
 
-		if (!isset(self::$loadedClasses['language'][$lang]))
-		{
-			self::$loadedClasses['language'][$lang] = new Language($path, $lang, $debug);
-		}
-
-		return self::$loadedClasses['language'][$lang];
+		return new Language($path, $lang, $debug);
 	}
 
 	/**
-	 * Get the path to the directory containing the application's language folder
+	 * Get the path to the directory containing the application's language folder.
 	 *
 	 * @return  string
 	 *
@@ -91,7 +75,7 @@ class LanguageFactory
 	}
 
 	/**
-	 * Searches for a specific localise file for a given language. Falls back to the .
+	 * Creates a new LocaliseInterface instance for the language.
 	 *
 	 * @param   string  $lang      Language to check.
 	 * @param   string  $basePath  Base path to the language folder.
@@ -110,19 +94,20 @@ class LanguageFactory
 		 */
 		$class = str_replace('-', '_', $lang . 'Localise');
 
-		// If we've already found this object, no need to try and find it again
-		if (isset(self::$loadedClasses['localise'][$class]))
+		// If this class already exists, no need to try and find it
+		if (class_exists($class))
 		{
 			return new $class;
 		}
 
-		$paths = array();
+		$paths = [];
 
-		$basePath = ($basePath === null) ? $this->getLanguageDirectory() : $basePath;
+		$basePath = $basePath ?: $this->getLanguageDirectory();
 
 		// Get the LanguageHelper to set the proper language directory
 		$basePath = (new LanguageHelper)->getLanguagePath($basePath);
 
+		// Explicitly set the keys to define the lookup order
 		$paths[0] = $basePath . "/overrides/$lang.localise.php";
 		$paths[1] = $basePath . "/$lang/$lang.localise.php";
 
@@ -142,23 +127,7 @@ class LanguageFactory
 		// If we have found a match initialise it and return it
 		if (class_exists($class))
 		{
-			// Need to instantiate the class to check it implements the LocaliseInterface
-			$localiseObject = new $class;
-
-			if (!($localiseObject instanceof LocaliseInterface))
-			{
-				throw new \RuntimeException(
-					sprintf(
-						'The %s class must implement the LocaliseInterface.',
-						$class
-					)
-				);
-			}
-
-			// Store the class name to the cache
-			self::$loadedClasses['localise'][$class] = true;
-
-			return $localiseObject;
+			return new $class;
 		}
 
 		// Return the en_GB class if no specific instance is found
@@ -166,7 +135,7 @@ class LanguageFactory
 	}
 
 	/**
-	 * Method to get a stemmer, creating it if necessary.
+	 * Creates a new Stemmer instance for the requested adapter.
 	 *
 	 * @param   string  $adapter  The type of stemmer to load.
 	 *
@@ -178,13 +147,7 @@ class LanguageFactory
 	public function getStemmer($adapter)
 	{
 		// Setup the adapter for the stemmer.
-		$class = '\\Joomla\\Language\\Stemmer\\' . ucfirst(trim($adapter));
-
-		// If we've already found this object, no need to try and find it again
-		if (isset(self::$loadedClasses['stemmer'][$class]))
-		{
-			return self::$loadedClasses['stemmer'][$class];
-		}
+		$class = __NAMESPACE__ . '\\Stemmer\\' . ucfirst(trim($adapter));
 
 		// Check if a stemmer exists for the adapter.
 		if (!class_exists($class))
@@ -193,22 +156,7 @@ class LanguageFactory
 			throw new \RuntimeException(sprintf('Invalid stemmer type %s', $class));
 		}
 
-		$stemmer = new $class;
-
-		if (!($stemmer instanceof Stemmer))
-		{
-			throw new \RuntimeException(
-				sprintf(
-					'The %s class must extend the Stemmer class.',
-					$class
-				)
-			);
-		}
-
-		// Store the class name to the cache
-		self::$loadedClasses['stemmer'][$class] = $stemmer;
-
-		return $stemmer;
+		return new $class;
 	}
 
 	/**
@@ -222,7 +170,7 @@ class LanguageFactory
 	 */
 	public function getText(Language $language = null)
 	{
-		$language = $language === null ? $this->getLanguage() : $language;
+		$language = $language ?: $this->getLanguage();
 
 		return new Text($language);
 	}

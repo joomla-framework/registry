@@ -67,44 +67,6 @@ class Text
 	 * Translates a string into the current language.
 	 *
 	 * @param   string   $string                The string to translate.
-	 * @param   mixed    $jsSafe                Boolean: Make the result javascript safe.
-	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
-	 *
-	 * @return  string  The translated string or the key if $script is true
-	 *
-	 * @note    To use this method, a Language instance should be registered to the LanguageFactory
-	 * @see     Text::translate()
-	 * @since   1.0
-	 * @deprecated  3.0  Use translate instead
-	 */
-	public static function _($string, $jsSafe = false, $interpretBackSlashes = true)
-	{
-		$text = (new LanguageFactory)->getText();
-
-		if (is_array($jsSafe) && !empty($jsSafe))
-		{
-			if (array_key_exists('interpretBackSlashes', $jsSafe))
-			{
-				$interpretBackSlashes = (boolean) $jsSafe['interpretBackSlashes'];
-			}
-
-			if (array_key_exists('jsSafe', $jsSafe))
-			{
-				$jsSafe = (boolean) $jsSafe['jsSafe'];
-			}
-			else
-			{
-				$jsSafe = false;
-			}
-		}
-
-		return $text->translate($string, [], $jsSafe, $interpretBackSlashes);
-	}
-
-	/**
-	 * Translates a string into the current language.
-	 *
-	 * @param   string   $string                The string to translate.
 	 * @param   array    $parameters            Array of parameters for the string
 	 * @param   boolean  $jsSafe                True to escape the string for JavaScript output
 	 * @param   boolean  $interpretBackSlashes  To interpret backslashes (\\=\, \n=carriage return, \t=tabulation)
