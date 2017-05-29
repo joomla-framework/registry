@@ -102,19 +102,6 @@ class LanguageFactoryTest extends TestCase
 	}
 
 	/**
-	 * @testdox  Verify that getLocalise() throws an exception if the localise file doesn't follow the interface
-	 *
-	 * @covers             Joomla\Language\LanguageFactory::getLocalise
-	 * @expectedException  \RuntimeException
-	 */
-	public function testVerifyGetLocaliseThrowsAnExceptionIfTheFileIsNotFound()
-	{
-		require_once $this->testPath . '/language/yy-YY/yy-YY.localise.php';
-
-		$this->object->getLocalise('yy-YY', $this->testPath);
-	}
-
-	/**
 	 * @testdox  Verify that getLanguage() returns a Language object
 	 *
 	 * @covers   Joomla\Language\LanguageFactory::getLanguage
@@ -161,19 +148,6 @@ class LanguageFactoryTest extends TestCase
 	public function testGetStemmerReturnsAnInstanceOfTheCorrectObject()
 	{
 		$this->assertInstanceOf('\\Joomla\\Language\\Stemmer\\Porteren', $this->object->getStemmer('porteren'));
-	}
-
-	/**
-	 * @testdox  Verify getInstance() returns the cached object
-	 *
-	 * @covers   Joomla\Language\LanguageFactory::getStemmer
-	 */
-	public function testGetStemmerReturnsTheCachedObject()
-	{
-		$firstInstance  = $this->object->getStemmer('porteren');
-		$cachedInstance = $this->object->getStemmer('porteren');
-
-		$this->assertSame($firstInstance, $cachedInstance);
 	}
 
 	/**

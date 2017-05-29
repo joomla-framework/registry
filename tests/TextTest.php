@@ -101,21 +101,6 @@ class TextTest extends TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Text::_() proxies to Text::translate()
-	 *
-	 * @covers   Joomla\Language\Text::_
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testUnderscoreMethodProxiesToTranslate()
-	{
-		$object = $this->object;
-
-		$this->assertEmpty($object::_(''));
-	}
-
-	/**
 	 * @testdox  Verify that Text::translate() returns an empty string when one is input
 	 *
 	 * @covers   Joomla\Language\Text::translate
