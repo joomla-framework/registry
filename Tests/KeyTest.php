@@ -74,9 +74,9 @@ class KeyTest extends TestCase
 	/**
 	 * @testdox  Validates the private key is returned
 	 *
-	 * @covers   \Joomla\Crypt\Key::getPrivateKey()
+	 * @covers   \Joomla\Crypt\Key::getPrivate()
 	 */
-	public function testGetPrivateKey()
+	public function testGetPrivate()
 	{
 		$this->assertSame($this->private, $this->object->getPrivate());
 	}
@@ -84,9 +84,9 @@ class KeyTest extends TestCase
 	/**
 	 * @testdox  Validates the public key is returned
 	 *
-	 * @covers   \Joomla\Crypt\Key::getPublicKey()
+	 * @covers   \Joomla\Crypt\Key::getPublic()
 	 */
-	public function testGetPublicKey()
+	public function testGetPublic()
 	{
 		$this->assertSame($this->public, $this->object->getPublic());
 	}
