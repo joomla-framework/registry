@@ -318,14 +318,15 @@ class DataSetTest extends TestCase
 	 */
 	public function testJsonSerialize()
 	{
+		$objects = [];
+
+		foreach ($this->instance as $object)
+		{
+			$objects[] = $object;
+		}
+
 		$this->assertEquals(
-			array(
-				new \stdClass,
-				(object) array(
-					'mission' => 'Vostok 1',
-					'pilot' => 'Yuri Gagarin',
-				),
-			),
+			$objects,
 			$this->instance->jsonSerialize()
 		);
 	}
