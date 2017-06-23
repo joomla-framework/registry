@@ -320,12 +320,10 @@ class DataSetTest extends TestCase
 	{
 		$this->assertEquals(
 			array(
-				json_encode(new \stdClass),
-				json_encode(
-					(object) array(
-						'mission' => 'Vostok 1',
-						'pilot' => 'Yuri Gagarin',
-					)
+				new \stdClass,
+				(object) array(
+					'mission' => 'Vostok 1',
+					'pilot' => 'Yuri Gagarin',
 				),
 			),
 			$this->instance->jsonSerialize()
