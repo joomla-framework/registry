@@ -49,7 +49,7 @@ class InputTest extends TestCase
 	 *
 	 * @return  Input
 	 */
-	protected function getInputObject($data = null)
+	protected function getInputObject(array $data = [])
 	{
 		return new Input($data, ['filter' => $this->filterMock]);
 	}
@@ -299,7 +299,7 @@ class InputTest extends TestCase
 
 		$_SERVER['REQUEST_METHOD'] = 'custom';
 
-		$instance = $this->getInputObject([]);
+		$instance = $this->getInputObject();
 
 		$this->assertEquals('CUSTOM', $instance->getMethod());
 	}
@@ -314,7 +314,7 @@ class InputTest extends TestCase
 	 */
 	public function testSerialize()
 	{
-		$instance = $this->getInputObject([]);
+		$instance = $this->getInputObject();
 
 		$this->assertGreaterThan(0, strlen($instance->serialize()));
 		$this->assertAttributeEquals(true, 'loaded', $instance);
@@ -329,7 +329,7 @@ class InputTest extends TestCase
 	{
 		$serialized = 'a:3:{i:0;a:1:{s:6:"filter";s:3:"raw";}i:1;s:4:"data";i:2;a:1:{s:7:"request";s:4:"keep";}}';
 
-		$instance = $this->getInputObject([]);
+		$instance = $this->getInputObject();
 
 		$instance->unserialize($serialized);
 
