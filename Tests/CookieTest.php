@@ -53,7 +53,7 @@ class CookieTest extends TestCase
 	{
 		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
 
-		$instance = new Cookie(null, ['filter' => $mockFilter]);
+		$instance = new Cookie([], ['filter' => $mockFilter]);
 		$instance->set('foo', 'bar');
 
 		$this->assertAttributeContains('bar', 'data', $instance);
