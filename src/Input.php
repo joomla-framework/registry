@@ -116,7 +116,7 @@ class Input implements \Serializable, \Countable
 
 		if (class_exists($className))
 		{
-			$this->inputs[$name] = new $className(null, $this->options);
+			$this->inputs[$name] = new $className([], $this->options);
 
 			return $this->inputs[$name];
 		}
