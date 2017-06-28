@@ -45,10 +45,10 @@ class Crypt
 	public function __construct(CipherInterface $cipher = null, Key $key = null)
 	{
 		// Set the encryption cipher.
-		$this->cipher = isset($cipher) ? $cipher : new Crypto;
+		$this->cipher = $cipher !== null ? $cipher : new Crypto;
 
 		// Set the encryption key[/pair)].
-		$this->key = isset($key) ? $key : $this->generateKey();
+		$this->key = $key !== null ? $key : $this->generateKey();
 	}
 
 	/**
