@@ -151,7 +151,7 @@ class CryptTest extends TestCase
 		$key = $this->object->generateKey();
 
 		// Assert that the key is the correct type.
-		$this->assertInstanceOf('Joomla\Crypt\Key', $key);
+		$this->assertInstanceOf(Key::class, $key);
 
 		// Assert the public key is the expected length
 		$this->assertSame(DefuseKey::KEY_BYTE_SIZE, Binary::strlen($key->getPublic()));
@@ -167,7 +167,7 @@ class CryptTest extends TestCase
 	 */
 	public function testSetKey()
 	{
-		$keyMock = $this->getMockBuilder('Joomla\\Crypt\\Key')
+		$keyMock = $this->getMockBuilder(Key::class)
 			->setConstructorArgs(array('test', 'private', 'public'))
 			->getMock();
 
