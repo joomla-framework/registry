@@ -37,7 +37,7 @@ class JsonTest extends TestCase
 		// The PHP registry format does not support nested objects
 		$object->section = new \stdClass;
 		$object->section->key = 'value';
-		$object->array = array('nestedarray' => array('test1' => 'value1'));
+		$object->array = ['nestedarray' => ['test1' => 'value1']];
 
 		$string = '{"foo":"bar","quoted":"\"stringwithquotes\"",' .
 			'"booleantrue":true,"booleanfalse":false,' .
@@ -77,7 +77,7 @@ class JsonTest extends TestCase
 		$object1->params->show_title = 1;
 		$object1->params->show_abstract = 0;
 		$object1->params->show_author = 1;
-		$object1->params->categories = array(1, 2);
+		$object1->params->categories = [1, 2];
 
 		$object2 = new \stdClass;
 		$object2->section = new \stdClass;
@@ -88,21 +88,21 @@ class JsonTest extends TestCase
 
 		// Test basic JSON string to object.
 		$this->assertEquals(
-			$class->stringToObject($string1, array('processSections' => false)),
+			$class->stringToObject($string1, ['processSections' => false]),
 			$object1,
 			'The complex JSON string should convert into the appropriate object.'
 		);
 
 		// Test JSON format string without sections.
 		$this->assertEquals(
-			$class->stringToObject($string2, array('processSections' => false)),
+			$class->stringToObject($string2, ['processSections' => false]),
 			$object3,
 			'The JSON string should convert into an object without sections.'
 		);
 
 		// Test JSON format string with sections.
 		$this->assertEquals(
-			$class->stringToObject($string2, array('processSections' => true)),
+			$class->stringToObject($string2, ['processSections' => true]),
 			$object2,
 			'The JSON string should covert into an object with sections.'
 		);

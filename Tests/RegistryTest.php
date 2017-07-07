@@ -24,7 +24,7 @@ class RegistryTest extends TestCase
 	{
 		$a = new Registry;
 
-		$this->assertSame(0, count($a), 'The Registry data store should be empty.');
+		$this->assertCount(0, $a, 'The Registry data store should be empty.');
 	}
 
 	/**
@@ -34,9 +34,9 @@ class RegistryTest extends TestCase
 	 */
 	public function testARegistryInstanceIsInstantiatedWithAnArrayOfData()
 	{
-		$a = new Registry(array('foo' => 'bar'));
+		$a = new Registry(['foo' => 'bar']);
 
-		$this->assertSame(1, count($a), 'The Registry data store should not be empty.');
+		$this->assertCount(1, $a, 'The Registry data store should not be empty.');
 	}
 
 	/**
@@ -46,9 +46,9 @@ class RegistryTest extends TestCase
 	 */
 	public function testARegistryInstanceIsInstantiatedWithAStringOfData()
 	{
-		$a = new Registry(json_encode(array('foo' => 'bar')));
+		$a = new Registry(json_encode(['foo' => 'bar']));
 
-		$this->assertSame(1, count($a), 'The Registry data store should not be empty.');
+		$this->assertCount(1, $a, 'The Registry data store should not be empty.');
 	}
 
 	/**
@@ -58,10 +58,10 @@ class RegistryTest extends TestCase
 	 */
 	public function testARegistryInstanceIsInstantiatedWithAnotherRegistry()
 	{
-		$a = new Registry(array('foo' => 'bar'));
+		$a = new Registry(['foo' => 'bar']);
 		$b = new Registry($a);
 
-		$this->assertSame(1, count($b), 'The Registry data store should not be empty.');
+		$this->assertCount(1, $b, 'The Registry data store should not be empty.');
 	}
 
 	/**
@@ -74,7 +74,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testARegistryInstanceInstantiatedWithAStringOfDataIsCorrectlyManipulated()
 	{
-		$a = new Registry(json_encode(array('foo' => 'bar', 'goo' => 'car', 'nested' => array('foo' => 'bar', 'goo' => 'car'))));
+		$a = new Registry(json_encode(['foo' => 'bar', 'goo' => 'car', 'nested' => ['foo' => 'bar', 'goo' => 'car']]));
 
 		// Check top level values
 		$this->assertSame('bar', $a->get('foo'));
@@ -87,7 +87,7 @@ class RegistryTest extends TestCase
 		$this->assertSame('far', $a->set('nested.foo', 'far'));
 
 		// Check adding a new nested object
-		$a->set('new.nested', array('foo' => 'bar', 'goo' => 'car'));
+		$a->set('new.nested', ['foo' => 'bar', 'goo' => 'car']);
 		$this->assertSame('bar', $a->get('new.nested.foo'));
 		$this->assertSame('bar', $a->def('new.nested.foo'));
 		$this->assertSame('far', $a->set('new.nested.foo', 'far'));
@@ -100,7 +100,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testCloningARegistry()
 	{
-		$a = new Registry(array('a' => '123', 'b' => '456'));
+		$a = new Registry(['a' => '123', 'b' => '456']);
 		$b = clone $a;
 
 		$this->assertSame(serialize($a), serialize($b), 'A cloned Registry should have the same serialized contents as the original.');
@@ -114,7 +114,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testConvertingARegistryToAString()
 	{
-		$a = new Registry(array('foo' => 'bar'));
+		$a = new Registry(['foo' => 'bar']);
 
 		// Registry::toString() defaults to JSON output
 		$this->assertSame((string) $a, '{"foo":"bar"}', 'The magic __toString method should return a JSON formatted Registry.');
@@ -128,16 +128,16 @@ class RegistryTest extends TestCase
 	public function testCountable()
 	{
 		$a = new Registry(
-			array(
+			[
 				'foo1' => 'testtoarray1',
 				'foo2' => 'testtoarray2',
-				'config' => array(
+				'config' => [
 					'foo3' => 'testtoarray3'
-				)
-			)
+				]
+			]
 		);
 
-		$this->assertSame(3, count($a), 'count() should correctly count the number of data elements.');
+		$this->assertCount(3, $a, 'count() should correctly count the number of data elements.');
 	}
 
 	/**
@@ -148,7 +148,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testJsonSerializingARegistry()
 	{
-		$a = new Registry(array('foo' => 'bar'));
+		$a = new Registry(['foo' => 'bar']);
 
 		$this->assertSame(json_encode($a), '{"foo":"bar"}', 'A Registry\'s data should be encoded to JSON.');
 	}
@@ -172,7 +172,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testDoNotDefineADefaultValueIfKeyIsSet()
 	{
-		$a = new Registry(array('foo' => 'bar'));
+		$a = new Registry(['foo' => 'bar']);
 
 		$this->assertSame($a->def('foo', 'car'), 'bar', 'Calling def() on a key with a value should return the current value.');
 	}
@@ -184,7 +184,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testEnsureTopLevelKeysExist()
 	{
-		$a = new Registry(array('foo' => 'bar'));
+		$a = new Registry(['foo' => 'bar']);
 
 		$this->assertTrue($a->exists('foo'), 'The top level key "foo" should exist.');
 		$this->assertFalse($a->exists('goo'), 'The top level key "goo" should not exist.');
@@ -198,7 +198,7 @@ class RegistryTest extends TestCase
 	public function testEnsureNestedKeysExist()
 	{
 		$a = new Registry;
-		$a->set('nested', array('foo' => 'bar'));
+		$a->set('nested', ['foo' => 'bar']);
 
 		$this->assertTrue($a->exists('nested.foo'), 'The nested key "nested.foo" should exist.');
 		$this->assertFalse($a->exists('nested.goo'), 'The nested key "nested.goo" should not exist.');
@@ -236,7 +236,7 @@ class RegistryTest extends TestCase
 	public function testGetReturnsTheDefaultValueWhenANestedKeyIsNotSet()
 	{
 		$a = new Registry;
-		$a->set('nested', (object) array('foo' => 'bar'));
+		$a->set('nested', (object) ['foo' => 'bar']);
 
 		$this->assertNull($a->get('nested.goo'), 'The default value should be returned for an unassigned nested key.');
 	}
@@ -260,7 +260,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testGetReturnsTheAssignedValueWhenAKeyIsSet()
 	{
-		$a = new Registry(array('foo' => 'bar'));
+		$a = new Registry(['foo' => 'bar']);
 
 		$this->assertSame($a->get('foo'), 'bar', 'The value of "foo" should be returned.');
 	}
@@ -273,7 +273,7 @@ class RegistryTest extends TestCase
 	public function testGetReturnsTheAssignedValueForASetNestedKey()
 	{
 		$a = new Registry;
-		$a->set('nested', (object) array('foo' => 'bar'));
+		$a->set('nested', (object) ['foo' => 'bar']);
 
 		$this->assertSame($a->get('nested.foo'), 'bar', 'The value of "nested.foo" should be returned.');
 	}
@@ -343,7 +343,7 @@ class RegistryTest extends TestCase
 	{
 		$registry = new Registry;
 
-		$this->assertSame($registry->loadArray(array('foo' => 'bar')), $registry, 'The loadArray() method should return $this');
+		$this->assertSame($registry->loadArray(['foo' => 'bar']), $registry, 'The loadArray() method should return $this');
 		$this->assertSame('bar', $registry->get('foo'), 'The array\'s data should be correctly loaded.');
 	}
 
@@ -355,11 +355,11 @@ class RegistryTest extends TestCase
 	 */
 	public function testAFlattenedArrayCanBeLoaded()
 	{
-		$array = array(
+		$array = [
 			'foo.bar'  => 1,
 			'foo.test' => 2,
 			'bar'      => 3
-		);
+		];
 		$registry = new Registry;
 
 		$this->assertSame($registry->loadArray($array, true), $registry, 'The loadArray() method should return $this');
@@ -418,18 +418,18 @@ class RegistryTest extends TestCase
 	 */
 	public function testTwoRegistryInstancesCanBeMerged()
 	{
-		$array1 = array(
+		$array1 = [
 			'foo' => 'bar',
 			'hoo' => 'hum',
-			'dum' => array(
+			'dum' => [
 				'dee' => 'dum'
-			)
-		);
+			]
+		];
 
-		$array2 = array(
+		$array2 = [
 			'foo' => 'soap',
 			'dum' => 'huh'
-		);
+		];
 
 		$registry1 = new Registry($array1);
 		$registry2 = new Registry($array2);
@@ -446,19 +446,19 @@ class RegistryTest extends TestCase
 	public function testASubsetOfDataCanBeExtractedToANewRegistry()
 	{
 		$a = new Registry(
-			array(
+			[
 				'foo'    => 'bar',
-				'subset' => array(
+				'subset' => [
 					'data1' => 'test1',
 					'data2' => 'test2',
-					'data3' => array(1, 2, 3)
-				)
-			)
+					'data3' => [1, 2, 3]
+				]
+			]
 		);
 
 		$b = $a->extract('subset');
 
-		$this->assertInstanceOf('Joomla\Registry\Registry', $b, 'The extracted data should be a Registry instance.');
+		$this->assertInstanceOf(Registry::class, $b, 'The extracted data should be a Registry instance.');
 		$this->assertNotSame($a, $b, 'The extracted Registry should be a new Registry instance.');
 		$this->assertNull($b->get('foo'), 'The extracted Registry should not contain data that is not part of a subset.');
 	}
@@ -484,7 +484,7 @@ class RegistryTest extends TestCase
 	{
 		$instance = new Registry;
 
-		$this->assertTrue(empty($instance['foo.bar']), 'Checks an offset is empty.');
+		$this->assertEmpty($instance['foo.bar'], 'Checks an offset is empty.');
 
 		$instance->set('foo.bar', 'value');
 
@@ -499,7 +499,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testGetOffsetAsAnArray()
 	{
-		$instance = new Registry(array('foo' => array('bar' => 'value')));
+		$instance = new Registry(['foo' => ['bar' => 'value']]);
 
 		$this->assertSame('value', $instance['foo.bar'], 'Checks a known offset.');
 		$this->assertNull($instance['goo.car'], 'Checks a unknown offset.');
@@ -552,7 +552,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testAKeyIsAppendedToANestedPath()
 	{
-		$a = new Registry(array('foo' => array('var1', 'var2', 'var3')));
+		$a = new Registry(['foo' => ['var1', 'var2', 'var3']]);
 		$a->append('foo', 'var4');
 
 		$this->assertSame('var4', $a->get('foo.3'), 'A key is appended to a nested path.');
@@ -569,17 +569,17 @@ class RegistryTest extends TestCase
 	{
 		$a = new Registry;
 		$a->loadArray(
-			array(
-				'assoc' => array(
+			[
+				'assoc' => [
 					'foo' => 'bar'
-				),
-				'unassoc' => array(
+				],
+				'unassoc' => [
 					'baz', 'baz2', 'baz3'
-				),
-				'mixed' => array(
+				],
+				'mixed' => [
 					'var', 'var2', 'key' => 'var3'
-				)
-			)
+				]
+			]
 		);
 
 		$a->set('assoc.foo2', 'bar2');
@@ -606,13 +606,13 @@ class RegistryTest extends TestCase
 	 */
 	public function testTheRegistryCanBeConvertedToAnArray()
 	{
-		$a = new Registry(array('foo1' => 'testtoarray1', 'foo2' => 'testtoarray2', 'config' => array('foo3' => 'testtoarray3')));
+		$a = new Registry(['foo1' => 'testtoarray1', 'foo2' => 'testtoarray2', 'config' => ['foo3' => 'testtoarray3']]);
 
-		$expected = array(
+		$expected = [
 			'foo1' => 'testtoarray1',
 			'foo2' => 'testtoarray2',
-			'config' => array('foo3' => 'testtoarray3')
-		);
+			'config' => ['foo3' => 'testtoarray3']
+		];
 
 		$this->assertSame($expected, $a->toArray(), 'The Registry should be converted to an array.');
 	}
@@ -624,7 +624,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testTheRegistryCanBeConvertedToAnObject()
 	{
-		$a = new Registry(array('foo1' => 'testtoobject1', 'foo2' => 'testtoobject2', 'config' => array('foo3' => 'testtoobject3')));
+		$a = new Registry(['foo1' => 'testtoobject1', 'foo2' => 'testtoobject2', 'config' => ['foo3' => 'testtoobject3']]);
 
 		$expected = new \stdClass;
 		$expected->foo1 = 'testtoobject1';
@@ -642,7 +642,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testTheRegistryCanBeConvertedToAString()
 	{
-		$a = new Registry(array('foo1' => 'testtostring1', 'foo2' => 'testtostring2', 'config' => array('foo3' => 'testtostring3')));
+		$a = new Registry(['foo1' => 'testtostring1', 'foo2' => 'testtostring2', 'config' => ['foo3' => 'testtostring3']]);
 		$a->set('foo1', 'testtostring1');
 		$a->set('foo2', 'testtostring2');
 		$a->set('config.foo3', 'testtostring3');
@@ -662,7 +662,7 @@ class RegistryTest extends TestCase
 	 */
 	public function testTheRegistryCanBeFlattenedToAnArray()
 	{
-		$a = new Registry(array('flower' => array('sunflower' => 'light', 'sakura' => 'samurai')));
+		$a = new Registry(['flower' => ['sunflower' => 'light', 'sakura' => 'samurai']]);
 
 		$flattened = $a->flatten();
 

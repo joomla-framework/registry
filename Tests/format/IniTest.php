@@ -34,7 +34,7 @@ class IniTest extends TestCase
 		$object->section->key = 'value';
 
 		// Test basic object to string.
-		$string = $class->objectToString($object, array('processSections' => true));
+		$string = $class->objectToString($object, ['processSections' => true]);
 
 		$this->assertSame(
 			"foo=\"bar\"\nbooleantrue=true\nbooleanfalse=false\nnumericint=42\nnumericfloat=3.1415\n\n[section]\nkey=\"value\"",
@@ -60,10 +60,10 @@ class IniTest extends TestCase
 		$object2->section = $object1;
 
 		// Test INI format string without sections.
-		$this->assertEquals($class->stringToObject($string2, array('processSections' => false)), $object1);
+		$this->assertEquals($class->stringToObject($string2, ['processSections' => false]), $object1);
 
 		// Test INI format string with sections.
-		$this->assertEquals($class->stringToObject($string2, array('processSections' => true)), $object2);
+		$this->assertEquals($class->stringToObject($string2, ['processSections' => true]), $object2);
 
 		// Test empty string
 		$this->assertEquals(new \stdClass, $class->stringToObject(null));
@@ -71,7 +71,7 @@ class IniTest extends TestCase
 		$string3 = "[section]\nfoo=bar\n;Testcomment\nkey=value\n\n/brokenkey=)brokenvalue";
 		$object2->section->key = 'value';
 
-		$this->assertEquals($class->stringToObject($string3, array('processSections' => true)), $object2);
+		$this->assertEquals($class->stringToObject($string3, ['processSections' => true]), $object2);
 
 		$string4 = "boolfalse=false\nbooltrue=true\nkeywithoutvalue\nnumericfloat=3.1415\nnumericint=42\nkey=\"value\"";
 		$object3 = new \stdClass;
@@ -101,8 +101,8 @@ class IniTest extends TestCase
 			"arrayitem[]=\"item1\"\narrayitem[]=\"item2\"\n\n" .
 			"[section2]\nboolfalse=false\nbooltrue=true\nnumericfloat=3.1415\nnumericint=42\nkey=\"value\"";
 
-		$object = $class->stringToObject($input, array('processSections' => true, 'supportArrayValues' => true));
-		$output = $class->objectToString($object, array('processSections' => true, 'supportArrayValues' => true));
+		$object = $class->stringToObject($input, ['processSections' => true, 'supportArrayValues' => true]);
+		$output = $class->objectToString($object, ['processSections' => true, 'supportArrayValues' => true]);
 
 		$this->assertEquals($input, $output, 'Input and output data must be equal.');
 	}

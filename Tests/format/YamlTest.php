@@ -50,16 +50,16 @@ class YamlTest extends TestCase
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
-		$object = (object) array(
+		$object = (object) [
 			'foo' => 'bar',
 			'quoted' => '"stringwithquotes"',
 			'booleantrue' => true,
 			'booleanfalse' => false,
 			'numericint' => 42,
 			'numericfloat' => 3.1415,
-			'section' => (object) array('key' => 'value'),
-			'array' => (object) array('nestedarray' => (object) array('test1' => 'value1'))
-		);
+			'section' => (object) ['key' => 'value'],
+			'array' => (object) ['nestedarray' => (object) ['test1' => 'value1']]
+		];
 
 		$yaml = 'foo: bar
 quoted: \'"stringwithquotes"\'
@@ -74,8 +74,8 @@ array:
 ';
 
 		$this->assertEquals(
-			str_replace(array("\n", "\r"), '', trim($this->fixture->objectToString($object))),
-			str_replace(array("\n", "\r"), '', trim($yaml))
+			str_replace(["\n", "\r"], '', trim($this->fixture->objectToString($object))),
+			str_replace(["\n", "\r"], '', trim($yaml))
 		);
 	}
 
@@ -86,16 +86,16 @@ array:
 	 */
 	public function testAnArrayIsConvertedToAString()
 	{
-		$object = array(
+		$object = [
 			'foo' => 'bar',
 			'quoted' => '"stringwithquotes"',
 			'booleantrue' => true,
 			'booleanfalse' => false,
 			'numericint' => 42,
 			'numericfloat' => 3.1415,
-			'section' => array('key' => 'value'),
-			'array' => array('nestedarray' => array('test1' => 'value1'))
-		);
+			'section' => ['key' => 'value'],
+			'array' => ['nestedarray' => ['test1' => 'value1']]
+		];
 
 		$yaml = 'foo: bar
 quoted: \'"stringwithquotes"\'
@@ -110,8 +110,8 @@ array:
 ';
 
 		$this->assertEquals(
-			str_replace(array("\n", "\r"), '', trim($this->fixture->objectToString($object))),
-			str_replace(array("\n", "\r"), '', trim($yaml))
+			str_replace(["\n", "\r"], '', trim($this->fixture->objectToString($object))),
+			str_replace(["\n", "\r"], '', trim($yaml))
 		);
 	}
 
@@ -122,16 +122,16 @@ array:
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
-		$object = (object) array(
+		$object = (object) [
 			'foo' => 'bar',
 			'quoted' => '"stringwithquotes"',
 			'booleantrue' => true,
 			'booleanfalse' => false,
 			'numericint' => 42,
 			'numericfloat' => 3.1415,
-			'section' => (object) array('key' => 'value'),
-			'array' => (object) array('nestedarray' => (object) array('test1' => 'value1'))
-		);
+			'section' => (object) ['key' => 'value'],
+			'array' => (object) ['nestedarray' => (object) ['test1' => 'value1']]
+		];
 
 		$yaml = 'foo: bar
 quoted: \'"stringwithquotes"\'

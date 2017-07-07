@@ -25,7 +25,7 @@ class PhpTest extends TestCase
 	{
 		$class = new Php;
 
-		$options = array('class' => 'myClass');
+		$options = ['class' => 'myClass'];
 		$object = new \stdClass;
 		$object->foo = 'bar';
 		$object->quoted = '"stringwithquotes"';
@@ -35,7 +35,7 @@ class PhpTest extends TestCase
 		$object->numericfloat = 3.1415;
 		$object->section = new \stdClass;
 		$object->section->key = 'value';
-		$object->array = array('nestedarray' => array('test1' => 'value1'));
+		$object->array = ['nestedarray' => ['test1' => 'value1']];
 
 		$string = "<?php\n" .
 			"class myClass {\n" .
@@ -73,7 +73,7 @@ class PhpTest extends TestCase
 		// The PHP registry format does not support nested objects
 		$object->section = new \stdClass;
 		$object->section->key = 'value';
-		$object->array = array('nestedarray' => array('test1' => 'value1'));
+		$object->array = ['nestedarray' => ['test1' => 'value1']];
 
 		$string = "<?php\n" .
 			"class Registry {\n" .
@@ -101,7 +101,7 @@ class PhpTest extends TestCase
 	{
 		$class = new Php;
 
-		$options = array('class' => 'myClass', 'namespace' => 'Joomla\\Registry\\Test');
+		$options = ['class' => 'myClass', 'namespace' => 'Joomla\\Registry\\Test'];
 		$object = new \stdClass;
 		$object->foo = 'bar';
 		$object->quoted = '"stringwithquotes"';
@@ -113,7 +113,7 @@ class PhpTest extends TestCase
 		// The PHP registry format does not support nested objects
 		$object->section = new \stdClass;
 		$object->section->key = 'value';
-		$object->array = array('nestedarray' => array('test1' => 'value1'));
+		$object->array = ['nestedarray' => ['test1' => 'value1']];
 
 		$string = "<?php\n" .
 			"namespace Joomla\\Registry\\Test;\n\n" .
