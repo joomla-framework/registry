@@ -30,10 +30,10 @@ class Json implements FormatInterface
 	 */
 	public function objectToString($object, array $options = [])
 	{
-		$bitmask = isset($options['bitmask']) ? $options['bitmask'] : 0;
+		$bitMask = isset($options['bitmask']) ? $options['bitmask'] : 0;
 		$depth = isset($options['depth']) ? $options['depth'] : 512;
 
-		return json_encode($object, $bitmask, $depth);
+		return json_encode($object, $bitMask, $depth);
 	}
 
 	/**
@@ -53,7 +53,7 @@ class Json implements FormatInterface
 	{
 		$data = trim($data);
 
-		if ((substr($data, 0, 1) != '{') && (substr($data, -1, 1) != '}'))
+		if ($data !== '' && $data[0] !== '{')
 		{
 			return Factory::getFormat('Ini')->stringToObject($data, $options);
 		}

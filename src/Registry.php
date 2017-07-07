@@ -378,7 +378,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	{
 		$data = $this->get($path);
 
-		if (is_null($data))
+		if (null === $data)
 		{
 			return null;
 		}
@@ -481,7 +481,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 		{
 			if (is_object($node))
 			{
-				if (!isset($node->{$nodes[$i]}) && ($i != $n))
+				if (!isset($node->{$nodes[$i]}) && ($i !== $n))
 				{
 					$node->{$nodes[$i]} = new \stdClass;
 				}
@@ -494,7 +494,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 
 			if (is_array($node))
 			{
-				if (!isset($node[$nodes[$i]]) && ($i != $n))
+				if (($i !== $n) && !isset($node[$nodes[$i]]))
 				{
 					$node[$nodes[$i]] = new \stdClass;
 				}
@@ -555,7 +555,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 			{
 				if (is_object($node))
 				{
-					if (!isset($node->{$nodes[$i]}) && ($i != $n))
+					if (!isset($node->{$nodes[$i]}) && ($i !== $n))
 					{
 						$node->{$nodes[$i]} = new \stdClass;
 					}
@@ -565,7 +565,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 				}
 				elseif (is_array($node))
 				{
-					if (!isset($node[$nodes[$i]]) && ($i != $n))
+					if (($i !== $n) && !isset($node[$nodes[$i]]))
 					{
 						$node[$nodes[$i]] = new \stdClass;
 					}
@@ -581,7 +581,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 				$node = get_object_vars($node);
 			}
 
-			array_push($node, $value);
+			$node[] = $value;
 			$result = $value;
 		}
 
