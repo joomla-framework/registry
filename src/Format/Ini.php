@@ -248,7 +248,7 @@ class Ini implements FormatInterface
 					$value = false;
 				}
 				elseif ($value === 'true')
-					// If the value is 'true' assume boolean true.
+				// If the value is 'true' assume boolean true.
 				{
 					$value = true;
 				}
@@ -355,7 +355,7 @@ class Ini implements FormatInterface
 
 			case 'string':
 				// Sanitize any CRLF characters..
-				$string = '"' . str_replace(array("\r\n", "\n"), '\\n', $value) . '"';
+				$string = '"' . str_replace(["\r\n", "\n"], '\\n', $value) . '"';
 				break;
 		}
 

@@ -8,6 +8,8 @@ namespace Joomla\Registry\Tests;
 
 use Joomla\Registry\Factory;
 use PHPUnit\Framework\TestCase;
+use Joomla\Registry\Format\Json;
+use Joomla\Registry\Format\Ini;
 
 /**
  * Test class for Joomla\Registry\Factory
@@ -22,7 +24,7 @@ class FactoryTest extends TestCase
 	public function testGetFormatFromLocalNamespace()
 	{
 		$this->assertInstanceOf(
-			'Joomla\\Registry\\Format\\Ini',
+			Ini::class,
 			Factory::getFormat('ini')
 		);
 	}
@@ -35,8 +37,8 @@ class FactoryTest extends TestCase
 	public function testGetFormatFromRequestedNamespace()
 	{
 		$this->assertInstanceOf(
-			'Joomla\\Registry\\Tests\\Stubs\\Ini',
-			Factory::getFormat('ini', array('format_namespace' => __NAMESPACE__ . '\\Stubs'))
+			Stubs\Ini::class,
+			Factory::getFormat('ini', ['format_namespace' => __NAMESPACE__ . '\\Stubs'])
 		);
 	}
 
@@ -48,8 +50,8 @@ class FactoryTest extends TestCase
 	public function testGetFormatFromLocalNamespaceWhenRequestedNamespaceDoesNotExist()
 	{
 		$this->assertInstanceOf(
-			'Joomla\\Registry\\Format\\Json',
-			Factory::getFormat('json', array('format_namespace' => __NAMESPACE__ . '\\Stubs'))
+			Json::class,
+			Factory::getFormat('json', ['format_namespace' => __NAMESPACE__ . '\\Stubs'])
 		);
 	}
 

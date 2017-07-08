@@ -354,7 +354,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @param   Registry  $source     Source Registry object to merge.
 	 * @param   boolean   $recursive  True to support recursive merge the children values.
 	 *
-	 * @return  Registry|false  Return this object to support chaining or false if $source is not an instance of Registry.
+	 * @return  Registry  Return this object to support chaining.
 	 *
 	 * @since   1.0
 	 */
@@ -378,7 +378,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	{
 		$data = $this->get($path);
 
-		if ($data === null)
+		if (null === $data)
 		{
 			return null;
 		}
