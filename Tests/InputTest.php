@@ -104,8 +104,15 @@ class InputTest extends TestCase
 	 */
 	public function test__callThrowsAnErrorIfAnUndefinedMethodIsCalled()
 	{
-		$exceptionClass = class_exists('PHPUnit_Framework_Error') ? 'PHPUnit_Framework_Error' : 'PHPUnit\Framework\Error\Error';
-		$this->setExpectedException($exceptionClass);
+		// expectException was added in PHPUnit 5.2 and setExpectedException removed in 6.0
+		if (method_exists($this, 'expectException'))
+		{
+			$this->expectException('PHPUnit_Framework_Error');
+		}
+		else
+		{
+			$this->setExpectedException('PHPUnit\Framework\Error\Error');
+		}
 
 		$instance = $this->getInputObject()->setRaw();
 	}
@@ -130,8 +137,15 @@ class InputTest extends TestCase
 	 */
 	public function test__getThrowsAnErrorIfAnUndefinedPropertyIsCalled()
 	{
-		$exceptionClass = class_exists('PHPUnit_Framework_Error') ? 'PHPUnit_Framework_Error' : 'PHPUnit\Framework\Error\Error';
-		$this->setExpectedException($exceptionClass);
+		// expectException was added in PHPUnit 5.2 and setExpectedException removed in 6.0
+		if (method_exists($this, 'expectException'))
+		{
+			$this->expectException('PHPUnit_Framework_Error');
+		}
+		else
+		{
+			$this->setExpectedException('PHPUnit\Framework\Error\Error');
+		}
 
 		$instance = $this->getInputObject()->put;
 	}
