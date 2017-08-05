@@ -101,11 +101,12 @@ class InputTest extends TestCase
 	 * @testdox  Tests an error is thrown if an undefined method is called
 	 *
 	 * @covers   Joomla\Input\Input::__call
-	 *
-	 * @expectedException  \PHPUnit_Framework_Error
 	 */
 	public function test__callThrowsAnErrorIfAnUndefinedMethodIsCalled()
 	{
+		$exceptionClass = class_exists('PHPUnit_Framework_Error') ? 'PHPUnit_Framework_Error' : 'PHPUnit\Framework\Error\Error';
+		$this->setExpectedException($exceptionClass);
+
 		$instance = $this->getInputObject()->setRaw();
 	}
 
@@ -126,11 +127,12 @@ class InputTest extends TestCase
 	 * @testdox   Tests an error is thrown if an undefined property is called
 	 *
 	 * @covers    Joomla\Input\Input::__get
-	 *
-	 * @expectedException  \PHPUnit_Framework_Error
 	 */
 	public function test__getThrowsAnErrorIfAnUndefinedPropertyIsCalled()
 	{
+		$exceptionClass = class_exists('PHPUnit_Framework_Error') ? 'PHPUnit_Framework_Error' : 'PHPUnit\Framework\Error\Error';
+		$this->setExpectedException($exceptionClass);
+
 		$instance = $this->getInputObject()->put;
 	}
 
