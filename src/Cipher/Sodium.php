@@ -6,8 +6,10 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Joomla\Crypt;
+namespace Joomla\Crypt\Cipher;
 
+use Joomla\Crypt\CipherInterface;
+use Joomla\Crypt\Key;
 use ParagonIE\Sodium\Compat;
 
 /**
@@ -15,7 +17,7 @@ use ParagonIE\Sodium\Compat;
  *
  * @since  __DEPLOY_VERSION__
  */
-class Cipher_Sodium implements CipherInterface
+class Sodium implements CipherInterface
 {
 	/**
 	 * The message nonce to be used with encryption/decryption
@@ -39,9 +41,9 @@ class Cipher_Sodium implements CipherInterface
 	public function decrypt($data, Key $key)
 	{
 		// Validate key.
-		if ($key->type !== 'sodium')
+		if ($key->getType() !== 'sodium')
 		{
-			throw new \InvalidArgumentException('Invalid key of type: ' . $key->type . '.  Expected sodium.');
+			throw new \InvalidArgumentException('Invalid key of type: ' . $key->getType() . '.  Expected sodium.');
 		}
 
 		if (!$this->nonce)
@@ -52,7 +54,7 @@ class Cipher_Sodium implements CipherInterface
 		$decrypted = Compat::crypto_box_open(
 			$data,
 			$this->nonce,
-			Compat::crypto_box_keypair_from_secretkey_and_publickey($key->private, $key->public)
+			Compat::crypto_box_keypair_from_secretkey_and_publickey($key->getPrivate(), $key->getPublic())
 		);
 
 		if ($decrypted === false)
@@ -77,9 +79,9 @@ class Cipher_Sodium implements CipherInterface
 	public function encrypt($data, Key $key)
 	{
 		// Validate key.
-		if ($key->type !== 'sodium')
+		if ($key->getType() !== 'sodium')
 		{
-			throw new \InvalidArgumentException('Invalid key of type: ' . $key->type . '.  Expected sodium.');
+			throw new \InvalidArgumentException('Invalid key of type: ' . $key->getType() . '.  Expected sodium.');
 		}
 
 		if (!$this->nonce)
@@ -90,7 +92,7 @@ class Cipher_Sodium implements CipherInterface
 		return Compat::crypto_box(
 			$data,
 			$this->nonce,
-			Compat::crypto_box_keypair_from_secretkey_and_publickey($key->private, $key->public)
+			Compat::crypto_box_keypair_from_secretkey_and_publickey($key->getPrivate(), $key->getPublic())
 		);
 	}
 
@@ -106,16 +108,10 @@ class Cipher_Sodium implements CipherInterface
 	 */
 	public function generateKey(array $options = array())
 	{
-		// Create the new encryption key object.
-		$key = new Key('sodium');
-
 		// Generate the encryption key.
 		$pair = Compat::crypto_box_keypair();
 
-		$key->public  = Compat::crypto_box_publickey($pair);
-		$key->private = Compat::crypto_box_secretkey($pair);
-
-		return $key;
+		return new Key('sodium', Compat::crypto_box_secretkey($pair), Compat::crypto_box_publickey($pair));
 	}
 
 	/**

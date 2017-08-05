@@ -4,7 +4,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Joomla\Crypt\Tests;
+namespace Joomla\Crypt\Tests\Cipher;
 
 use Defuse\Crypto\Key as DefuseKey;
 use Defuse\Crypto\Exception\EnvironmentIsBrokenException;

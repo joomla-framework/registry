@@ -4,32 +4,19 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Joomla\Crypt\Tests;
+namespace Joomla\Crypt\Tests\Cipher;
 
-use Joomla\Crypt\Cipher_Sodium;
-use Joomla\Crypt\Crypt;
+use Joomla\Crypt\Cipher\Sodium;
+use Joomla\Crypt\Key;
 use ParagonIE\Sodium\Compat;
 use PHPUnit\Framework\TestCase;
 use Symfony\Polyfill\Util\Binary;
 
 /**
- * Test class for \Joomla\Crypt\Cipher_Sodium.
+ * Test class for \Joomla\Crypt\Cipher\Sodium.
  */
-class CipherSodiumTest extends TestCase
+class SodiumTest extends TestCase
 {
-	/**
-	 * Prepares the environment before running a test.
-	 *
-	 * @return  void
-	 */
-	protected function setUp()
-	{
-		// The real class can't be autoloaded
-		require_once __DIR__ . '/../../Cipher/Sodium.php';
-
-		parent::setUp();
-	}
-
 	/**
 	 * Test data for processing
 	 *
@@ -54,13 +41,13 @@ class CipherSodiumTest extends TestCase
 	 *
 	 * @param   string  $data  The decrypted data to validate
 	 *
-	 * @covers        Cipher_Sodium::decrypt
-	 * @covers        Cipher_Sodium::encrypt
+	 * @covers        Sodium::decrypt
+	 * @covers        Sodium::encrypt
 	 * @dataProvider  dataStrings
 	 */
 	public function testDataEncryptionAndDecryption($data)
 	{
-		$cipher = new Cipher_Sodium;
+		$cipher = new Sodium;
 		$key    = $cipher->generateKey();
 
 		$cipher->setNonce(Compat::randombytes_buf(Compat::CRYPTO_BOX_NONCEBYTES));
@@ -79,21 +66,21 @@ class CipherSodiumTest extends TestCase
 	/**
 	 * @testdox  Validates keys are correctly generated
 	 *
-	 * @covers   Cipher_Sodium::generateKey
+	 * @covers   Sodium::generateKey
 	 */
 	public function testGenerateKey()
 	{
-		$cipher = new Cipher_Sodium;
+		$cipher = new Sodium;
 		$key    = $cipher->generateKey();
 
 		// Assert that the key is the correct type.
-		$this->assertInstanceOf('Joomla\\Crypt\\Key', $key);
+		$this->assertInstanceOf(Key::class, $key);
 
 		// Assert the keys pass validation
-		$this->assertSame(Binary::strlen($key->private), 32);
-		$this->assertSame(Binary::strlen($key->public), 32);
+		$this->assertSame(Binary::strlen($key->getPrivate()), 32);
+		$this->assertSame(Binary::strlen($key->getPublic()), 32);
 
 		// Assert the key is of the correct type.
-		$this->assertAttributeEquals('sodium', 'type', $key);
+		$this->assertSame('sodium', $key->getType());
 	}
 }
