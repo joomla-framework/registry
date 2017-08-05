@@ -39,7 +39,7 @@ class InputTest extends TestCase
 	{
 		parent::setUp();
 
-		$this->filterMock = $this->getMock('Joomla\Filter\InputFilter');
+		$this->filterMock = $this->getMockBuilder(InputFilter::class)->getMock();
 	}
 
 	/**

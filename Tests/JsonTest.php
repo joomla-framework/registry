@@ -6,6 +6,7 @@
 
 namespace Joomla\Input\Tests;
 
+use Joomla\Filter\InputFilter;
 use Joomla\Input\Json;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +36,7 @@ class JsonTest extends TestCase
 	public function test__constructDependencyInjection()
 	{
 		$src        = ['foo' => 'bar'];
-		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Json($src, ['filter' => $mockFilter]);
 

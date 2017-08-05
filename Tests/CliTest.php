@@ -6,6 +6,7 @@
 
 namespace Joomla\Input\Tests;
 
+use Joomla\Filter\InputFilter;
 use Joomla\Input\Cli;
 use PHPUnit\Framework\TestCase;
 
@@ -38,7 +39,7 @@ class CliTest extends TestCase
 	public function test__constructDependencyInjection()
 	{
 		$_SERVER['argv'] = ['/dev/null', '--foo=bar', '-ab', 'blah', '-g', 'flower sakura'];
-		$mockFilter      = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter      = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Cli([], ['filter' => $mockFilter]);
 
@@ -104,7 +105,7 @@ class CliTest extends TestCase
 	 */
 	public function testGetFromServer()
 	{
-		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Cli([], ['filter' => $mockFilter]);
 
@@ -233,7 +234,7 @@ class CliTest extends TestCase
 	public function testParseArguments($inputArgv, $expectedData, $expectedArgs)
 	{
 		$_SERVER['argv'] = $inputArgv;
-		$mockFilter      = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter      = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Cli([], ['filter' => $mockFilter]);
 
@@ -252,7 +253,7 @@ class CliTest extends TestCase
 	public function testSerialize()
 	{
 		$_SERVER['argv'] = array('/dev/null', '--foo=bar');
-		$mockFilter      = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter      = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Cli([], ['filter' => $mockFilter]);
 
@@ -270,7 +271,7 @@ class CliTest extends TestCase
 	public function testUnserialize()
 	{
 		$serialized = 'a:5:{i:0;s:9:"/dev/null";i:1;a:1:{s:3:"foo";s:3:"bar";}i:2;a:1:{s:6:"filter";s:3:"raw";}i:3;s:4:"data";i:4;a:1:{s:7:"request";s:4:"keep";}}';
-		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Cli([], ['filter' => $mockFilter]);
 

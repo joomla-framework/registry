@@ -6,6 +6,7 @@
 
 namespace Joomla\Input\Tests;
 
+use Joomla\Filter\InputFilter;
 use Joomla\Input\Cookie;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +36,7 @@ class CookieTest extends TestCase
 	public function test__constructDependencyInjection()
 	{
 		$src        = ['foo' => 'bar'];
-		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Cookie($src, ['filter' => $mockFilter]);
 
@@ -51,7 +52,7 @@ class CookieTest extends TestCase
 	 */
 	public function testSet()
 	{
-		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Cookie([], ['filter' => $mockFilter]);
 		$instance->set('foo', 'bar');

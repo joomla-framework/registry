@@ -6,6 +6,7 @@
 
 namespace Joomla\Input\Tests;
 
+use Joomla\Filter\InputFilter;
 use Joomla\Input\Files;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +36,7 @@ class FilesTest extends TestCase
 	public function test__constructDependencyInjection()
 	{
 		$src        = ['foo' => 'bar'];
-		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Files($src, ['filter' => $mockFilter]);
 
@@ -69,7 +70,7 @@ class FilesTest extends TestCase
 			]
 		];
 
-		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Files($data, ['filter' => $mockFilter]);
 
@@ -107,7 +108,7 @@ class FilesTest extends TestCase
 			]
 		];
 
-		$mockFilter = $this->getMock('Joomla\Filter\InputFilter');
+		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Files($data, ['filter' => $mockFilter]);
 
