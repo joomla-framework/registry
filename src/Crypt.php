@@ -120,7 +120,6 @@ class Crypt
 	 */
 	public static function genRandomBytes($length = 16)
 	{
-		// This method is backported by the paragonie/random_compat library and native in PHP 7
 		return random_bytes($length);
 	}
 }
