@@ -30,8 +30,8 @@ class Json implements FormatInterface
 	 */
 	public function objectToString($object, array $options = [])
 	{
-		$bitMask = isset($options['bitmask']) ? $options['bitmask'] : 0;
-		$depth   = isset($options['depth']) ? $options['depth'] : 512;
+		$bitMask = $options['bitmask'] ?? 0;
+		$depth   = $options['depth'] ?? 512;
 
 		return json_encode($object, $bitMask, $depth);
 	}

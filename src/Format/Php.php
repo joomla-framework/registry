@@ -31,7 +31,7 @@ class Php implements FormatInterface
 	public function objectToString($object, array $params = [])
 	{
 		// A class must be provided
-		$class = !empty($params['class']) ? $params['class'] : 'Registry';
+		$class = $params['class'] ?? 'Registry';
 
 		// Build the object variables string
 		$vars = '';
