@@ -104,7 +104,7 @@ class Cli extends Input
 		list($this->executable, $this->args, $this->options, $this->data, $this->inputs) = unserialize($input);
 
 		// Load the filter.
-		$this->filter = isset($this->options['filter']) ? $this->options['filter'] : new Filter\InputFilter;
+		$this->filter = $this->options['filter'] ?? new Filter\InputFilter;
 	}
 
 	/**

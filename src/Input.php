@@ -92,7 +92,7 @@ class Input implements \Serializable, \Countable
 	public function __construct(array $source = [], array $options = [])
 	{
 		$this->data    = empty($source) ? $_REQUEST : $source;
-		$this->filter  = isset($options['filter']) ? $options['filter'] : new Filter\InputFilter;
+		$this->filter  = $options['filter'] ?? new Filter\InputFilter;
 		$this->options = $options;
 	}
 
@@ -356,7 +356,7 @@ class Input implements \Serializable, \Countable
 		list($this->options, $this->data, $this->inputs) = unserialize($input);
 
 		// Load the filter.
-		$this->filter = isset($this->options['filter']) ? $this->options['filter'] : new Filter\InputFilter;
+		$this->filter = $this->options['filter'] ?? new Filter\InputFilter;
 	}
 
 	/**
