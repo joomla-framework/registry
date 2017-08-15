@@ -157,7 +157,7 @@ class Language
 		$this->strings  = [];
 		$this->helper   = new LanguageHelper;
 
-		$this->lang = ($lang == null) ? $this->default : $lang;
+		$this->lang = $lang ?: $this->default;
 
 		$this->metadata = $this->helper->getMetadata($this->lang, $this->basePath);
 		$this->setDebug($debug);
@@ -352,8 +352,8 @@ class Language
 	 */
 	public function load($extension = 'joomla', $basePath = '', $lang = null, $reload = false, $default = true)
 	{
-		$lang     = !$lang ? $this->lang : $lang;
-		$basePath = empty($basePath) ? $this->basePath : $basePath;
+		$lang     = $lang ?: $this->lang;
+		$basePath = $basePath ?: $this->basePath;
 
 		$path = $this->helper->getLanguagePath($basePath, $lang);
 
@@ -579,7 +579,7 @@ class Language
 	 */
 	public function get($property, $default = null)
 	{
-		return isset($this->metadata[$property]) ? $this->metadata[$property] : $default;
+		return $this->metadata[$property] ?? $default;
 	}
 
 	/**
@@ -611,7 +611,7 @@ class Language
 			$class = @ $step['class'];
 
 			// We're looking for something outside of language.php
-			if ($class != '\\Joomla\\Language\\Language' && $class != '\\Joomla\\Language\\Text')
+			if ($class != __CLASS__ && $class != Text::class)
 			{
 				$info['function'] = @ $step['function'];
 				$info['class']    = $class;
@@ -653,7 +653,7 @@ class Language
 	{
 		if (isset($extension))
 		{
-			return isset($this->paths[$extension]) ? $this->paths[$extension] : null;
+			return $this->paths[$extension] ?? null;
 		}
 
 		return $this->paths;
@@ -868,7 +868,7 @@ class Language
 	{
 		if (!isset($this->locale))
 		{
-			$locale = str_replace(' ', '', isset($this->metadata['locale']) ? $this->metadata['locale'] : '');
+			$locale = str_replace(' ', '', $this->metadata['locale'] ?? '');
 
 			$this->locale = $locale ? explode(',', $locale) : false;
 		}
@@ -885,7 +885,7 @@ class Language
 	 */
 	public function getFirstDay()
 	{
-		return (int) (isset($this->metadata['firstDay']) ? $this->metadata['firstDay'] : 0);
+		return (int) ($this->metadata['firstDay'] ?? 0);
 	}
 
 	/**

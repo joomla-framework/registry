@@ -27,7 +27,7 @@ class LanguageHelper
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function exists($lang, $basePath)
+	public function exists(string $lang, string $basePath): bool
 	{
 		return is_dir($this->getLanguagePath($basePath, $lang));
 	}
@@ -42,7 +42,7 @@ class LanguageHelper
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getMetadata($lang, $path)
+	public function getMetadata(string $lang, string $path)
 	{
 		$path = $this->getLanguagePath($path, $lang);
 		$file = $lang . '.xml';
@@ -71,7 +71,7 @@ class LanguageHelper
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getKnownLanguages($basePath)
+	public function getKnownLanguages(string $basePath): array
 	{
 		return $this->parseLanguageFiles($this->getLanguagePath($basePath));
 	}
@@ -86,7 +86,7 @@ class LanguageHelper
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getLanguagePath($basePath, $language = null)
+	public function getLanguagePath(string $basePath, string $language = ''): string
 	{
 		$dir = $basePath . '/language';
 
@@ -107,7 +107,7 @@ class LanguageHelper
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function parseLanguageFiles($dir = null)
+	public function parseLanguageFiles(string $dir = ''): array
 	{
 		$languages = [];
 
@@ -152,7 +152,7 @@ class LanguageHelper
 	 * @since   __DEPLOY_VERSION__
 	 * @throws  \RuntimeException
 	 */
-	public function parseXMLLanguageFile($path)
+	public function parseXMLLanguageFile(string $path)
 	{
 		if (!is_readable($path))
 		{
