@@ -84,7 +84,7 @@ class LanguageFactory
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getLocalise($lang, $basePath = null)
+	public function getLocalise(string $lang, string $basePath = '')
 	{
 		/*
 		 * Look for a language specific localise class
@@ -168,7 +168,7 @@ class LanguageFactory
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getText(Language $language = null)
+	public function getText(Language $language = null): Text
 	{
 		$language = $language ?: $this->getLanguage();
 
@@ -200,7 +200,7 @@ class LanguageFactory
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function setLanguageDirectory($directory)
+	public function setLanguageDirectory(string $directory)
 	{
 		if (!is_dir($directory))
 		{

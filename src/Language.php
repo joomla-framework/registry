@@ -201,7 +201,7 @@ class Language
 	 */
 	public function _($string, $jsSafe = false, $interpretBackSlashes = true)
 	{
-		return $this->translate($string, $jsSafe, $interpretBackSlashes);
+		return $this->translate((string) $string, (bool) $jsSafe, (bool) $interpretBackSlashes);
 	}
 
 	/**
@@ -217,7 +217,7 @@ class Language
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function translate($string, $jsSafe = false, $interpretBackSlashes = true)
+	public function translate(string $string, bool $jsSafe = false, bool $interpretBackSlashes = true): string
 	{
 		// Detect empty string
 		if ($string == '')
@@ -478,7 +478,7 @@ class Language
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function debugFile($filename)
+	public function debugFile(string $filename): int
 	{
 		// Make sure our file actually exists
 		if (!file_exists($filename))

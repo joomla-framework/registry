@@ -42,7 +42,7 @@ class Text
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getLanguage()
+	public function getLanguage(): Language
 	{
 		return $this->language;
 	}
@@ -75,7 +75,7 @@ class Text
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function translate($string, array $parameters = [], $jsSafe = false, $interpretBackSlashes = true)
+	public function translate(string $string, array $parameters = [], bool $jsSafe = false, bool $interpretBackSlashes = true): string
 	{
 		$translated = $this->getLanguage()->translate($string, $jsSafe, $interpretBackSlashes);
 
