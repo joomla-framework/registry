@@ -8,6 +8,7 @@
 
 namespace Joomla\Keychain;
 
+use Joomla\Crypt\Crypt;
 use Joomla\Registry\Registry;
 
 /**
@@ -18,51 +19,26 @@ use Joomla\Registry\Registry;
 class Keychain extends Registry
 {
 	/**
-	 * Method to use for encryption.
+	 * The encryption handler.
 	 *
-	 * @var    string
-	 * @since  1.0
+	 * @var    Crypt
+	 * @since  __DEPLOY_VERSION__
 	 */
-	public $method = 'aes-128-cbc';
+	protected $crypt;
 
 	/**
-	 * Initialisation vector for encryption method.
+	 * Constructor
 	 *
-	 * @var    string
-	 * @since  1.0
+	 * @param   Crypt  $crypt  The encryption handler.
+	 * @param   mixed  $data   The data to bind to the new Registry object.
+	 *
+	 * @since   __DEPLOY_VERSION__
 	 */
-	public $iv = "1234567890123456";
-
-	/**
-	 * Create a passphrase file
-	 *
-	 * @param   string  $passphrase            The passphrase to store in the passphrase file.
-	 * @param   string  $passphraseFile        Path to the passphrase file to create.
-	 * @param   string  $privateKeyFile        Path to the private key file to encrypt the passphrase file.
-	 * @param   string  $privateKeyPassphrase  The passphrase for the private key.
-	 *
-	 * @return  boolean  Result of writing the passphrase file to disk.
-	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
-	 */
-	public function createPassphraseFile($passphrase, $passphraseFile, $privateKeyFile, $privateKeyPassphrase)
+	public function __construct(Crypt $crypt, $data = null)
 	{
-		$privateKey = openssl_get_privatekey(file_get_contents($privateKeyFile), $privateKeyPassphrase);
+		parent::__construct($data);
 
-		if (!$privateKey)
-		{
-			throw new \RuntimeException("Failed to load private key.");
-		}
-
-		$crypted = '';
-
-		if (!openssl_private_encrypt($passphrase, $crypted, $privateKey))
-		{
-			throw new \RuntimeException("Failed to encrypt data using private key.");
-		}
-
-		return file_put_contents($passphraseFile, $crypted);
+		$this->crypt = $crypt;
 	}
 
 	/**
@@ -108,30 +84,21 @@ class Keychain extends Registry
 	/**
 	 * Load a keychain file into this object.
 	 *
-	 * @param   string  $keychainFile    Path to the keychain file.
-	 * @param   string  $passphraseFile  The path to the passphrase file to decript the keychain.
-	 * @param   string  $publicKeyFile   The file containing the public key to decrypt the passphrase file.
+	 * @param   string  $keychainFile  Path to the keychain file.
 	 *
-	 * @return  boolean  Result of loading the object.
+	 * @return  $this
 	 *
 	 * @since   1.0
 	 * @throws  \RuntimeException
 	 */
-	public function loadKeychain($keychainFile, $passphraseFile, $publicKeyFile)
+	public function loadKeychain($keychainFile)
 	{
 		if (!file_exists($keychainFile))
 		{
 			throw new \RuntimeException('Attempting to load non-existent keychain file');
 		}
 
-		$passphrase = $this->getPassphraseFromFile($passphraseFile, $publicKeyFile);
-
-		$cleartext = openssl_decrypt(file_get_contents($keychainFile), $this->method, $passphrase, true, $this->iv);
-
-		if ($cleartext === false)
-		{
-			throw new \RuntimeException("Failed to decrypt keychain file");
-		}
+		$cleartext = $this->crypt->decrypt(file_get_contents($keychainFile));
 
 		return $this->loadObject(json_decode($cleartext));
 	}
@@ -139,72 +106,24 @@ class Keychain extends Registry
 	/**
 	 * Save this keychain to a file.
 	 *
-	 * @param   string  $keychainFile    The path to the keychain file.
-	 * @param   string  $passphraseFile  The path to the passphrase file to encrypt the keychain.
-	 * @param   string  $publicKeyFile   The file containing the public key to decrypt the passphrase file.
+	 * @param   string  $keychainFile  The path to the keychain file.
 	 *
 	 * @return  boolean  Result of storing the file.
 	 *
 	 * @since   1.0
 	 * @throws  \RuntimeException
 	 */
-	public function saveKeychain($keychainFile, $passphraseFile, $publicKeyFile)
+	public function saveKeychain($keychainFile)
 	{
 		if (empty($keychainFile))
 		{
 			throw new \RuntimeException('A keychain file must be specified');
 		}
 
-		$passphrase = $this->getPassphraseFromFile($passphraseFile, $publicKeyFile);
 		$data = $this->toString('JSON');
 
-		$encrypted = @openssl_encrypt($data, $this->method, $passphrase, true, $this->iv);
-
-		if ($encrypted === false)
-		{
-			throw new \RuntimeException('Unable to encrypt keychain');
-		}
+		$encrypted = $this->crypt->encrypt($data);
 
 		return file_put_contents($keychainFile, $encrypted);
-	}
-
-	/**
-	 * Get the passphrase for this keychain
-	 *
-	 * @param   string  $passphraseFile  The file containing the passphrase to encrypt and decrypt.
-	 * @param   string  $publicKeyFile   The file containing the public key to decrypt the passphrase file.
-	 *
-	 * @return  string  The passphrase in from passphraseFile
-	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
-	 */
-	protected function getPassphraseFromFile($passphraseFile, $publicKeyFile)
-	{
-		if (!file_exists($publicKeyFile))
-		{
-			throw new \RuntimeException('Missing public key file');
-		}
-
-		$publicKey = openssl_get_publickey(file_get_contents($publicKeyFile));
-
-		if (!$publicKey)
-		{
-			throw new \RuntimeException("Failed to load public key.");
-		}
-
-		if (!file_exists($passphraseFile))
-		{
-			throw new \RuntimeException('Missing passphrase file');
-		}
-
-		$passphrase = '';
-
-		if (!openssl_public_decrypt(file_get_contents($passphraseFile), $passphrase, $publicKey))
-		{
-			throw new \RuntimeException('Failed to decrypt passphrase file');
-		}
-
-		return $passphrase;
 	}
 }

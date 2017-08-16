@@ -7,15 +7,12 @@
     "license": "LGPL-2.1+",
     "require": {
         "php": "~7.0",
-        "joomla/registry": "^1.4.5|~2.0",
-        "ext-openssl": "*"
+        "joomla/crypt": "~2.0",
+        "joomla/registry": "^1.4.5|~2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~6.3",
         "squizlabs/php_codesniffer": "1.*"
-    },
-    "suggest": {
-        "joomla/application": "Install joomla/application if you would like to use the Keychain Management Utility."
     },
     "autoload": {
         "psr-4": {
