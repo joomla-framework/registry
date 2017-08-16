@@ -54,7 +54,7 @@ class LanguageFactory
 	 *
 	 * @since   1.3.0
 	 */
-	public function getLanguage($lang = null, $path = null, $debug = false)
+	public function getLanguage($lang = '', $path = '', $debug = false)
 	{
 		$path = $path ?: $this->getLanguageDirectory();
 		$lang = $lang ?: $this->getDefaultLanguage();
