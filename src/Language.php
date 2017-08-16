@@ -144,12 +144,12 @@ class Language
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($path, $lang = null, $debug = false)
+	public function __construct($path, $lang = '', $debug = false)
 	{
-		if ($path === null)
+		if ($path === '')
 		{
 			throw new \InvalidArgumentException(
-				'The $path variable cannot be null when creating a new Language object'
+				'The $path variable cannot be empty when creating a new Language object'
 			);
 		}
 
@@ -840,7 +840,7 @@ class Language
 	 * @since   1.0
 	 * @deprecated  3.0  Use LanguageHelper::getLanguagePath() instead
 	 */
-	public static function getLanguagePath($basePath = '', $language = null)
+	public static function getLanguagePath($basePath = '', $language = '')
 	{
 		return (new LanguageHelper)->getLanguagePath($basePath, $language);
 	}
