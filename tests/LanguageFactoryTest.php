@@ -59,7 +59,7 @@ class LanguageFactoryTest extends TestCase
 	 */
 	public function testTheDefaultReturnOfGetLanguageDirectory()
 	{
-		$this->assertNull($this->object->getLanguageDirectory());
+		$this->assertEmpty($this->object->getLanguageDirectory());
 	}
 
 	/**
