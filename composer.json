@@ -14,7 +14,7 @@
         "phpunit/phpunit": "~6.3",
         "squizlabs/php_codesniffer": "1.*",
         "symfony/polyfill-util": "~1.0",
-        "symfony/phpunit-bridge": "~2.8|~3.3"
+        "symfony/phpunit-bridge": "~3.3"
     },
     "suggest": {
         "defuse/php-encryption": "To use Crypto cipher",
