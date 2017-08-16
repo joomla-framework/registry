@@ -583,6 +583,18 @@ class Language
 	}
 
 	/**
+	 * Get the base path for the instance.
+	 *
+	 * @return  string
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function getBasePath(): string
+	{
+		return $this->basePath;
+	}
+
+	/**
 	 * Determine who called Language or Text.
 	 *
 	 * @return  array  Caller information.

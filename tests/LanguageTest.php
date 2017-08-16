@@ -317,6 +317,18 @@ class LanguageTest extends TestCase
 	}
 
 	/**
+	 * @testdox  Verify that Language::getBasePath() returns the correct path
+	 *
+	 * @covers   Joomla\Language\Language::getBasePath
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyThatGetBasePathReturnsTheCorrectPath()
+	{
+		$this->assertSame($this->testPath, $this->object->getBasePath());
+	}
+
+	/**
 	 * @testdox  Verify that Language::getCallerInfo() returns an array
 	 *
 	 * @covers   Joomla\Language\Language::getCallerInfo
