@@ -146,7 +146,7 @@ class Language
 	 */
 	public function __construct($path, $lang = '', $debug = false)
 	{
-		if ($path === '')
+		if (empty($path))
 		{
 			throw new \InvalidArgumentException(
 				'The $path variable cannot be empty when creating a new Language object'

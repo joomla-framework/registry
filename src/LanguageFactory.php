@@ -29,7 +29,7 @@ class LanguageFactory
 	 * @var    string
 	 * @since  __DEPLOY_VERSION__
 	 */
-	private $languageDirectory;
+	private $languageDirectory = '';
 
 	/**
 	 * Get the application's default language.
