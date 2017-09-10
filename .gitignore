@@ -4,3 +4,7 @@ vendor/
 composer.phar
 composer.lock
 phpunit.xml
+
+# Temporary test data
+Tests/data/tmp/*
+!Tests/data/tmp/.gitkeep
