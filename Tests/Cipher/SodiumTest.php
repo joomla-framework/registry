@@ -18,6 +18,20 @@ use Symfony\Polyfill\Util\Binary;
 class SodiumTest extends TestCase
 {
 	/**
+	 * This method is called before the first test of this test class is run.
+	 *
+	 * @return  void
+	 */
+	public static function setUpBeforeClass()
+	{
+		// Only run the test if the environment supports it.
+		if (!Sodium::isSupported())
+		{
+			self::markTestSkipped('The environment cannot safely perform encryption with this cipher.');
+		}
+	}
+
+	/**
 	 * Test data for processing
 	 *
 	 * @return  array

@@ -6,18 +6,14 @@
 
 namespace Joomla\Crypt\Tests\Cipher;
 
-use Defuse\Crypto\Key as DefuseKey;
-use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
-use Defuse\Crypto\RuntimeTests;
-use Joomla\Crypt\Cipher\Crypto as CryptoCipher;
-use PHPUnit\Framework\TestCase;
-use Symfony\Polyfill\Util\Binary;
+use Joomla\Crypt\Cipher\OpenSSL;
 use Joomla\Crypt\Key;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Test class for \Joomla\Crypt\Cipher\Crypto.
+ * Test class for \Joomla\Crypt\Cipher\OpenSSL.
  */
-class CryptoTest extends TestCase
+class OpenSSLTest extends TestCase
 {
 	/**
 	 * This method is called before the first test of this test class is run.
@@ -27,7 +23,7 @@ class CryptoTest extends TestCase
 	public static function setUpBeforeClass()
 	{
 		// Only run the test if the environment supports it.
-		if (!CryptoCipher::isSupported())
+		if (!OpenSSL::isSupported())
 		{
 			self::markTestSkipped('The environment cannot safely perform encryption with this cipher.');
 		}
@@ -57,14 +53,14 @@ class CryptoTest extends TestCase
 	 *
 	 * @param   string  $data  The decrypted data to validate
 	 *
-	 * @covers        \Joomla\Crypt\Cipher\Crypto::decrypt
-	 * @covers        \Joomla\Crypt\Cipher\Crypto::encrypt
+	 * @covers        Joomla\Crypt\Cipher\OpenSSL::decrypt
+	 * @covers        Joomla\Crypt\Cipher\OpenSSL::encrypt
 	 * @dataProvider  dataStrings
 	 */
 	public function testDataEncryptionAndDecryption($data)
 	{
-		$cipher = new CryptoCipher;
-		$key    = $cipher->generateKey();
+		$cipher = new OpenSSL('1234567890123456', 'aes-128-cbc');
+		$key    = $cipher->generateKey(['passphrase' => __DIR__ . '/stubs/openssl-passphrase.dat']);
 
 		$encrypted = $cipher->encrypt($data, $key);
 
@@ -80,20 +76,23 @@ class CryptoTest extends TestCase
 	/**
 	 * @testdox  Validates keys are correctly generated
 	 *
-	 * @covers   \Joomla\Crypt\Cipher\Crypto::generateKey
+	 * @covers   Joomla\Crypt\Cipher\OpenSSL::generateKey
 	 */
 	public function testGenerateKey()
 	{
-		$cipher = new CryptoCipher;
-		$key    = $cipher->generateKey();
+		$passphraseFile = __DIR__ . '/stubs/openssl-passphrase.dat';
+
+		$cipher = new OpenSSL('1234567890123456', 'aes-128-cbc');
+		$key    = $cipher->generateKey(['passphrase' => $passphraseFile]);
 
 		// Assert that the key is the correct type.
 		$this->assertInstanceOf(Key::class, $key);
 
-		// Assert the public key is the expected length
-		$this->assertSame(DefuseKey::KEY_BYTE_SIZE, Binary::strlen($key->getPublic()));
+		// Assert the keys pass validation
+		$this->assertSame($key->getPrivate(), $passphraseFile);
+		$this->assertSame($key->getPublic(), 'unused');
 
 		// Assert the key is of the correct type.
-		$this->assertSame('crypto', $key->getType());
+		$this->assertSame('openssl', $key->getType());
 	}
 }
