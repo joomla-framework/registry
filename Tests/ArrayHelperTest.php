@@ -2580,7 +2580,7 @@ class ArrayHelperTest extends TestCase
 	 *
 	 * @return  void
 	 *
-	 * @covers  Joomla\Utilities\ArrayHelper::arraySearch
+	 * @covers  Joomla\Utilities\ArrayHelper::mergeRecursive
 	 * @since   __DEPLOY_VERSION__
 	 */
 	public function testMergeRecursive()
