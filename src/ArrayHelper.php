@@ -748,7 +748,7 @@ final class ArrayHelper
 	/**
 	 * Merge array recursively.
 	 *
-	 * @param   array  ...$args  Array more to be merge.
+	 * @param   array  $args  Array list to be merge.
 	 *
 	 * @return  array  Merged array.
 	 *
