@@ -728,20 +728,22 @@ final class ArrayHelper
 			$array = get_object_vars($array);
 		}
 
+		$result = [];
+
 		foreach ($array as $k => $v)
 		{
 			$key = $prefix ? $prefix . $separator . $k : $k;
 
 			if (is_object($v) || is_array($v))
 			{
-				$array = array_merge($array, static::flatten($v, $separator, $key));
+				$result[] = static::flatten($v, $separator, $key);
 			}
 			else
 			{
-				$array[$key] = $v;
+				$result[] = [$key => $v];
 			}
 		}
 
-		return $array;
+		return array_merge(...$result);
 	}
 }
