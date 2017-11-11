@@ -2574,4 +2574,50 @@ class ArrayHelperTest extends TestCase
 
 		$this->assertEquals($flatted['pos1/sunflower'], 'love');
 	}
+
+	/**
+	 * Test mergeRecursive method.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Utilities\ArrayHelper::arraySearch
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function testMergeRecursive()
+	{
+		$a = [
+			'flower' => 'sakura',
+			'fruit' => [
+				'apple' => 'red',
+				'orange' => 'orange'
+			]
+		];
+
+		$b = [
+			'fruit' => [
+				'apple' => 'pen',
+				'pineapple' => 'pen'
+			],
+			'animal' => 'cat'
+		];
+
+		$c = [
+			'flower' => 'rose',
+			'animal' => 'pikachu'
+		];
+
+		$result = ArrayHelper::mergeRecursive($a, $b, $c);
+
+		$expected = [
+			'flower' => 'rose',
+			'fruit' => [
+				'apple' => 'pen',
+				'orange' => 'orange',
+				'pineapple' => 'pen'
+			],
+			'animal' => 'pikachu'
+		];
+
+		self::assertEquals($expected, $result);
+	}
 }
