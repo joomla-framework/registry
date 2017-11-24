@@ -85,7 +85,7 @@ class Language
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $strings = null;
+	protected $strings = array();
 
 	/**
 	 * An array of used text, used during debugging.
@@ -154,7 +154,6 @@ class Language
 		}
 
 		$this->basePath = $path;
-		$this->strings  = [];
 		$this->helper   = new LanguageHelper;
 
 		$this->lang = $lang ?: $this->default;
