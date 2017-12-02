@@ -15,9 +15,16 @@
     <exclude-pattern>*/vendor/*</exclude-pattern>
 
     <rule ref="Joomla">
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
         <!-- Required due to methods being named _ -->
         <exclude name="Joomla.NamingConventions.ValidFunctionName.MethodUnderscore"/>
         <!-- Required due to methods named with snake case -->
         <exclude name="Joomla.NamingConventions.ValidFunctionName.ScopeNotCamelCaps"/>
+    </rule>
+
+    <rule ref="Joomla.Classes.InstantiateNewClasses">
+        <properties>
+            <property name="shortArraySyntax" value="true"/>
+        </properties>
     </rule>
 </ruleset>

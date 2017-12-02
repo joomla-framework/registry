@@ -35,11 +35,7 @@ class Porteren implements StemmerInterface
 	 * @var    string
 	 * @since  __DEPLOY_VERSION__
 	 */
-<<<<<<< HEAD
-	private $regex_consonant = '(?:[bcdfghjklmnpqrstvwxz]|(?<=[aeiou])y|^y)';
-=======
-	private static $regexConsonant = '(?:[bcdfghjklmnpqrstvwxz]|(?<=[aeiou])y|^y)';
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
+	private $regexConsonant = '(?:[bcdfghjklmnpqrstvwxz]|(?<=[aeiou])y|^y)';
 
 	/**
 	 * Regex for matching a vowel
@@ -47,11 +43,7 @@ class Porteren implements StemmerInterface
 	 * @var    string
 	 * @since  __DEPLOY_VERSION__
 	 */
-<<<<<<< HEAD
-	private $regex_vowel = '(?:[aeiou]|(?<![aeiou])y)';
-=======
-	private static $regexVowel = '(?:[aeiou]|(?<![aeiou])y)';
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
+	private $regexVowel = '(?:[aeiou]|(?<![aeiou])y)';
 
 	/**
 	 * Method to stem a token and return the root.
@@ -110,61 +102,32 @@ class Porteren implements StemmerInterface
 		// Part a
 		if (substr($word, -1) == 's')
 		{
-<<<<<<< HEAD
-				$this->replace($word, 'sses', 'ss')
-			or $this->replace($word, 'ies', 'i')
-			or $this->replace($word, 'ss', 'ss')
-			or $this->replace($word, 's', '');
+			$this->replace($word, 'sses', 'ss')
+			|| $this->replace($word, 'ies', 'i')
+			|| $this->replace($word, 'ss', 'ss')
+			|| $this->replace($word, 's', '');
 		}
 
 		// Part b
-		if (substr($word, -2, 1) != 'e' or !$this->replace($word, 'eed', 'ee', 0))
+		if (substr($word, -2, 1) != 'e' || !$this->replace($word, 'eed', 'ee', 0))
 		{
 			// First rule
-			$v = $this->regex_vowel;
+			$v = $this->regexVowel;
 
 			// Check ing and ed
 			// Note use of && and OR, for precedence reasons
 			if (preg_match("#$v+#", substr($word, 0, -3)) && $this->replace($word, 'ing', '')
-				or preg_match("#$v+#", substr($word, 0, -2)) && $this->replace($word, 'ed', ''))
+				|| preg_match("#$v+#", substr($word, 0, -2)) && $this->replace($word, 'ed', ''))
 			{
 				// If one of above two test successful
-				if (!$this->replace($word, 'at', 'ate') and !$this->replace($word, 'bl', 'ble') and !$this->replace($word, 'iz', 'ize'))
+				if (!$this->replace($word, 'at', 'ate') && !$this->replace($word, 'bl', 'ble') && !$this->replace($word, 'iz', 'ize'))
 				{
 					// Double consonant ending
-					if ($this->doubleConsonant($word) and substr($word, -2) != 'll' and substr($word, -2) != 'ss' and substr($word, -2) != 'zz')
+					if ($this->doubleConsonant($word) && substr($word, -2) != 'll' && substr($word, -2) != 'ss' && substr($word, -2) != 'zz')
 					{
 						$word = substr($word, 0, -1);
 					}
-					elseif ($this->m($word) == 1 and $this->cvc($word))
-=======
-			self::replace($word, 'sses', 'ss')
-			|| self::replace($word, 'ies', 'i')
-			|| self::replace($word, 'ss', 'ss')
-			|| self::replace($word, 's', '');
-		}
-
-		// Part b
-		if (substr($word, -2, 1) != 'e' || !self::replace($word, 'eed', 'ee', 0))
-		{
-			// First rule
-			$v = self::$regexVowel;
-
-			// Check ing and ed
-			// Note use of && and OR, for precedence reasons
-			if (preg_match("#$v+#", substr($word, 0, -3)) && self::replace($word, 'ing', '')
-				|| preg_match("#$v+#", substr($word, 0, -2)) && self::replace($word, 'ed', ''))
-			{
-				// If one of above two test successful
-				if (!self::replace($word, 'at', 'ate') && !self::replace($word, 'bl', 'ble') && !self::replace($word, 'iz', 'ize'))
-				{
-					// Double consonant ending
-					if (self::doubleConsonant($word) && substr($word, -2) != 'll' && substr($word, -2) != 'ss' && substr($word, -2) != 'zz')
-					{
-						$word = substr($word, 0, -1);
-					}
-					elseif (self::m($word) == 1 && self::cvc($word))
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
+					elseif ($this->m($word) == 1 && $this->cvc($word))
 					{
 						$word .= 'e';
 					}
@@ -186,11 +149,7 @@ class Porteren implements StemmerInterface
 	 */
 	private function step1c($word)
 	{
-<<<<<<< HEAD
-		$v = $this->regex_vowel;
-=======
-		$v = self::$regexVowel;
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
+		$v = $this->regexVowel;
 
 		if (substr($word, -1) == 'y' && preg_match("#$v+#", substr($word, 0, -1)))
 		{
@@ -214,101 +173,56 @@ class Porteren implements StemmerInterface
 		switch (substr($word, -2, 1))
 		{
 			case 'a':
-<<<<<<< HEAD
-					$this->replace($word, 'ational', 'ate', 0)
-				or $this->replace($word, 'tional', 'tion', 0);
+				$this->replace($word, 'ational', 'ate', 0)
+				|| $this->replace($word, 'tional', 'tion', 0);
+
 				break;
 
 			case 'c':
-					$this->replace($word, 'enci', 'ence', 0)
-				or $this->replace($word, 'anci', 'ance', 0);
+				$this->replace($word, 'enci', 'ence', 0)
+				|| $this->replace($word, 'anci', 'ance', 0);
+
 				break;
 
 			case 'e':
 				$this->replace($word, 'izer', 'ize', 0);
+
 				break;
 
 			case 'g':
 				$this->replace($word, 'logi', 'log', 0);
-				break;
-
-			case 'l':
-					$this->replace($word, 'entli', 'ent', 0)
-				or $this->replace($word, 'ousli', 'ous', 0)
-				or $this->replace($word, 'alli', 'al', 0)
-				or $this->replace($word, 'bli', 'ble', 0)
-				or $this->replace($word, 'eli', 'e', 0);
-				break;
-
-			case 'o':
-					$this->replace($word, 'ization', 'ize', 0)
-				or $this->replace($word, 'ation', 'ate', 0)
-				or $this->replace($word, 'ator', 'ate', 0);
-				break;
-
-			case 's':
-					$this->replace($word, 'iveness', 'ive', 0)
-				or $this->replace($word, 'fulness', 'ful', 0)
-				or $this->replace($word, 'ousness', 'ous', 0)
-				or $this->replace($word, 'alism', 'al', 0);
-				break;
-
-			case 't':
-					$this->replace($word, 'biliti', 'ble', 0)
-				or $this->replace($word, 'aliti', 'al', 0)
-				or $this->replace($word, 'iviti', 'ive', 0);
-=======
-				self::replace($word, 'ational', 'ate', 0)
-				|| self::replace($word, 'tional', 'tion', 0);
-
-				break;
-
-			case 'c':
-				self::replace($word, 'enci', 'ence', 0)
-				|| self::replace($word, 'anci', 'ance', 0);
-
-				break;
-
-			case 'e':
-				self::replace($word, 'izer', 'ize', 0);
-
-				break;
-
-			case 'g':
-				self::replace($word, 'logi', 'log', 0);
 
 				break;
 
 			case 'l':
-				self::replace($word, 'entli', 'ent', 0)
-				|| self::replace($word, 'ousli', 'ous', 0)
-				|| self::replace($word, 'alli', 'al', 0)
-				|| self::replace($word, 'bli', 'ble', 0)
-				|| self::replace($word, 'eli', 'e', 0);
+				$this->replace($word, 'entli', 'ent', 0)
+				|| $this->replace($word, 'ousli', 'ous', 0)
+				|| $this->replace($word, 'alli', 'al', 0)
+				|| $this->replace($word, 'bli', 'ble', 0)
+				|| $this->replace($word, 'eli', 'e', 0);
 
 				break;
 
 			case 'o':
-				self::replace($word, 'ization', 'ize', 0)
-				|| self::replace($word, 'ation', 'ate', 0)
-				|| self::replace($word, 'ator', 'ate', 0);
+				$this->replace($word, 'ization', 'ize', 0)
+				|| $this->replace($word, 'ation', 'ate', 0)
+				|| $this->replace($word, 'ator', 'ate', 0);
 
 				break;
 
 			case 's':
-				self::replace($word, 'iveness', 'ive', 0)
-				|| self::replace($word, 'fulness', 'ful', 0)
-				|| self::replace($word, 'ousness', 'ous', 0)
-				|| self::replace($word, 'alism', 'al', 0);
+				$this->replace($word, 'iveness', 'ive', 0)
+				|| $this->replace($word, 'fulness', 'ful', 0)
+				|| $this->replace($word, 'ousness', 'ous', 0)
+				|| $this->replace($word, 'alism', 'al', 0);
 
 				break;
 
 			case 't':
-				self::replace($word, 'biliti', 'ble', 0)
-				|| self::replace($word, 'aliti', 'al', 0)
-				|| self::replace($word, 'iviti', 'ive', 0);
+				$this->replace($word, 'biliti', 'ble', 0)
+				|| $this->replace($word, 'aliti', 'al', 0)
+				|| $this->replace($word, 'iviti', 'ive', 0);
 
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
 				break;
 		}
 
@@ -329,59 +243,34 @@ class Porteren implements StemmerInterface
 		switch (substr($word, -2, 1))
 		{
 			case 'a':
-<<<<<<< HEAD
 				$this->replace($word, 'ical', 'ic', 0);
+
 				break;
 
 			case 's':
 				$this->replace($word, 'ness', '', 0);
+
 				break;
 
 			case 't':
-					$this->replace($word, 'icate', 'ic', 0)
-				or $this->replace($word, 'iciti', 'ic', 0);
+				$this->replace($word, 'icate', 'ic', 0)
+				|| $this->replace($word, 'iciti', 'ic', 0);
+
 				break;
 
 			case 'u':
 				$this->replace($word, 'ful', '', 0);
+
 				break;
 
 			case 'v':
 				$this->replace($word, 'ative', '', 0);
+
 				break;
 
 			case 'z':
 				$this->replace($word, 'alize', 'al', 0);
-=======
-				self::replace($word, 'ical', 'ic', 0);
 
-				break;
-
-			case 's':
-				self::replace($word, 'ness', '', 0);
-
-				break;
-
-			case 't':
-				self::replace($word, 'icate', 'ic', 0)
-				|| self::replace($word, 'iciti', 'ic', 0);
-
-				break;
-
-			case 'u':
-				self::replace($word, 'ful', '', 0);
-
-				break;
-
-			case 'v':
-				self::replace($word, 'ative', '', 0);
-
-				break;
-
-			case 'z':
-				self::replace($word, 'alize', 'al', 0);
-
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
 				break;
 		}
 
@@ -402,67 +291,38 @@ class Porteren implements StemmerInterface
 		switch (substr($word, -2, 1))
 		{
 			case 'a':
-<<<<<<< HEAD
 				$this->replace($word, 'al', '', 1);
+
 				break;
 
 			case 'c':
-					$this->replace($word, 'ance', '', 1)
-				or $this->replace($word, 'ence', '', 1);
+				$this->replace($word, 'ance', '', 1)
+				|| $this->replace($word, 'ence', '', 1);
+
 				break;
 
 			case 'e':
 				$this->replace($word, 'er', '', 1);
+
 				break;
 
 			case 'i':
 				$this->replace($word, 'ic', '', 1);
-				break;
-
-			case 'l':
-					$this->replace($word, 'able', '', 1)
-				or $this->replace($word, 'ible', '', 1);
-				break;
-
-			case 'n':
-					$this->replace($word, 'ant', '', 1)
-				or $this->replace($word, 'ement', '', 1)
-				or $this->replace($word, 'ment', '', 1)
-				or $this->replace($word, 'ent', '', 1);
-=======
-				self::replace($word, 'al', '', 1);
-
-				break;
-
-			case 'c':
-				self::replace($word, 'ance', '', 1)
-				|| self::replace($word, 'ence', '', 1);
-
-				break;
-
-			case 'e':
-				self::replace($word, 'er', '', 1);
-
-				break;
-
-			case 'i':
-				self::replace($word, 'ic', '', 1);
 
 				break;
 
 			case 'l':
-				self::replace($word, 'able', '', 1)
-				|| self::replace($word, 'ible', '', 1);
+				$this->replace($word, 'able', '', 1)
+				|| $this->replace($word, 'ible', '', 1);
 
 				break;
 
 			case 'n':
-				self::replace($word, 'ant', '', 1)
-				|| self::replace($word, 'ement', '', 1)
-				|| self::replace($word, 'ment', '', 1)
-				|| self::replace($word, 'ent', '', 1);
+				$this->replace($word, 'ant', '', 1)
+				|| $this->replace($word, 'ement', '', 1)
+				|| $this->replace($word, 'ment', '', 1)
+				|| $this->replace($word, 'ent', '', 1);
 
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
 				break;
 
 			case 'o':
@@ -478,50 +338,29 @@ class Porteren implements StemmerInterface
 				break;
 
 			case 's':
-<<<<<<< HEAD
 				$this->replace($word, 'ism', '', 1);
+
 				break;
 
 			case 't':
-					$this->replace($word, 'ate', '', 1)
-				or $this->replace($word, 'iti', '', 1);
+				$this->replace($word, 'ate', '', 1)
+				|| $this->replace($word, 'iti', '', 1);
+
 				break;
 
 			case 'u':
 				$this->replace($word, 'ous', '', 1);
+
 				break;
 
 			case 'v':
 				$this->replace($word, 'ive', '', 1);
+
 				break;
 
 			case 'z':
 				$this->replace($word, 'ize', '', 1);
-=======
-				self::replace($word, 'ism', '', 1);
 
-				break;
-
-			case 't':
-				self::replace($word, 'ate', '', 1)
-				|| self::replace($word, 'iti', '', 1);
-
-				break;
-
-			case 'u':
-				self::replace($word, 'ous', '', 1);
-
-				break;
-
-			case 'v':
-				self::replace($word, 'ive', '', 1);
-
-				break;
-
-			case 'z':
-				self::replace($word, 'ize', '', 1);
-
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
 				break;
 		}
 
@@ -556,11 +395,7 @@ class Porteren implements StemmerInterface
 		}
 
 		// Part b
-<<<<<<< HEAD
-		if ($this->m($word) > 1 and $this->doubleConsonant($word) and substr($word, -1) == 'l')
-=======
-		if (self::m($word) > 1 && self::doubleConsonant($word) && substr($word, -1) == 'l')
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
+		if ($this->m($word) > 1 && $this->doubleConsonant($word) && substr($word, -1) == 'l')
 		{
 			$word = substr($word, 0, -1);
 		}
@@ -591,11 +426,7 @@ class Porteren implements StemmerInterface
 		{
 			$substr = substr($str, 0, $len);
 
-<<<<<<< HEAD
-			if (is_null($m) or $this->m($substr) > $m)
-=======
-			if (is_null($m) || self::m($substr) > $m)
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
+			if (is_null($m) || $this->m($substr) > $m)
 			{
 				$str = $substr . $repl;
 			}
@@ -624,13 +455,8 @@ class Porteren implements StemmerInterface
 	 */
 	private function m($str)
 	{
-<<<<<<< HEAD
-		$c = $this->regex_consonant;
-		$v = $this->regex_vowel;
-=======
-		$c = self::$regexConsonant;
-		$v = self::$regexVowel;
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
+		$c = $this->regexConsonant;
+		$v = $this->regexVowel;
 
 		$str = preg_replace("#^$c+#", '', $str);
 		$str = preg_replace("#$v+$#", '', $str);
@@ -652,11 +478,7 @@ class Porteren implements StemmerInterface
 	 */
 	private function doubleConsonant($str)
 	{
-<<<<<<< HEAD
-		$c = $this->regex_consonant;
-=======
-		$c = self::$regexConsonant;
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
+		$c = $this->regexConsonant;
 
 		return preg_match("#$c{2}$#", $str, $matches) && $matches[0]{0} == $matches[0]{1};
 	}
@@ -672,13 +494,8 @@ class Porteren implements StemmerInterface
 	 */
 	private function cvc($str)
 	{
-<<<<<<< HEAD
-		$c = $this->regex_consonant;
-		$v = $this->regex_vowel;
-=======
-		$c = self::$regexConsonant;
-		$v = self::$regexVowel;
->>>>>>> dc9b87ed3893ab10750a8b7e70ff99a331a9df3d
+		$c = $this->regexConsonant;
+		$v = $this->regexVowel;
 
 		$result = preg_match("#($c$v$c)$#", $str, $matches)
 			&& strlen($matches[1]) == 3
