@@ -22,7 +22,7 @@ class Transliterate
 	 * @var    array
 	 * @since  __DEPLOY_VERSION__
 	 */
-	private $ut8LowerAccents = [
+	private static $utf8LowerAccents = array(
 		'à' => 'a',
 		'ô' => 'o',
 		'ď' => 'd',
@@ -127,8 +127,8 @@ class Transliterate
 		'æ' => 'ae',
 		'µ' => 'u',
 		'ĕ' => 'e',
-		'œ' => 'oe'
-	];
+		'œ' => 'oe',
+	);
 
 	/**
 	 * Map of uppercased UTF-8 characters with their latin equivalents
@@ -136,7 +136,7 @@ class Transliterate
 	 * @var    array
 	 * @since  __DEPLOY_VERSION__
 	 */
-	private $ut8UpperAccents = [
+	private static $utf8UpperAccents = array(
 		'À' => 'A',
 		'Ô' => 'O',
 		'Ď' => 'D',
@@ -239,8 +239,8 @@ class Transliterate
 		'Ð' => 'Dh',
 		'Æ' => 'Ae',
 		'Ĕ' => 'E',
-		'Œ' => 'Oe'
-	];
+		'Œ' => 'Oe',
+	);
 
 	/**
 	 * Returns strings transliterated from UTF-8 to Latin
@@ -256,12 +256,12 @@ class Transliterate
 	{
 		if ($case <= 0)
 		{
-			$string = str_replace(array_keys($this->ut8LowerAccents), array_values($this->ut8LowerAccents), $string);
+			$string = str_replace(array_keys(self::$utf8LowerAccents), array_values(self::$utf8LowerAccents), $string);
 		}
 
 		if ($case >= 0)
 		{
-			$string = str_replace(array_keys($this->ut8UpperAccents), array_values($this->ut8UpperAccents), $string);
+			$string = str_replace(array_keys(self::$utf8UpperAccents), array_values(self::$utf8UpperAccents), $string);
 		}
 
 		return $string;
