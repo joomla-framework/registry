@@ -200,6 +200,15 @@ class Language
 	 */
 	public function _($string, $jsSafe = false, $interpretBackSlashes = true)
 	{
+		@trigger_error(
+			sprintf(
+				'%1$s() is deprecated and will be removed in 3.0, use %2$s::translate() instead.',
+				__METHOD__,
+				Language::class
+			),
+			E_USER_DEPRECATED
+		);
+
 		return $this->translate((string) $string, (bool) $jsSafe, (bool) $interpretBackSlashes);
 	}
 
@@ -333,6 +342,15 @@ class Language
 	 */
 	public static function exists($lang, $basePath = '')
 	{
+		@trigger_error(
+			sprintf(
+				'%1$s() is deprecated and will be removed in 3.0, use %2$s::exists() instead.',
+				__METHOD__,
+				LanguageHelper::class
+			),
+			E_USER_DEPRECATED
+		);
+
 		return (new LanguageHelper)->exists($lang, $basePath);
 	}
 
@@ -820,6 +838,15 @@ class Language
 	 */
 	public static function getMetadata($lang, $basePath)
 	{
+		@trigger_error(
+			sprintf(
+				'%1$s() is deprecated and will be removed in 3.0, use %2$s::getMetadata() instead.',
+				__METHOD__,
+				LanguageHelper::class
+			),
+			E_USER_DEPRECATED
+		);
+
 		return (new LanguageHelper)->getMetadata($lang, $basePath);
 	}
 
@@ -836,6 +863,15 @@ class Language
 	 */
 	public static function getKnownLanguages($basePath = '')
 	{
+		@trigger_error(
+			sprintf(
+				'%1$s() is deprecated and will be removed in 3.0, use %2$s::getKnownLanguages() instead.',
+				__METHOD__,
+				LanguageHelper::class
+			),
+			E_USER_DEPRECATED
+		);
+
 		return (new LanguageHelper)->getKnownLanguages($basePath);
 	}
 
@@ -853,6 +889,15 @@ class Language
 	 */
 	public static function getLanguagePath($basePath = '', $language = '')
 	{
+		@trigger_error(
+			sprintf(
+				'%1$s() is deprecated and will be removed in 3.0, use %2$s::getLanguagePath() instead.',
+				__METHOD__,
+				LanguageHelper::class
+			),
+			E_USER_DEPRECATED
+		);
+
 		return (new LanguageHelper)->getLanguagePath($basePath, $language);
 	}
 
@@ -912,6 +957,15 @@ class Language
 	 */
 	public static function parseLanguageFiles($dir = null)
 	{
+		@trigger_error(
+			sprintf(
+				'%1$s() is deprecated and will be removed in 3.0, use %2$s::parseLanguageFiles() instead.',
+				__METHOD__,
+				LanguageHelper::class
+			),
+			E_USER_DEPRECATED
+		);
+
 		return (new LanguageHelper)->parseLanguageFiles($dir);
 	}
 
@@ -928,6 +982,15 @@ class Language
 	 */
 	public static function parseXmlLanguageFile($path)
 	{
+		@trigger_error(
+			sprintf(
+				'%1$s() is deprecated and will be removed in 3.0, use %2$s::parseXMLLanguageFile() instead.',
+				__METHOD__,
+				LanguageHelper::class
+			),
+			E_USER_DEPRECATED
+		);
+
 		return (new LanguageHelper)->parseXMLLanguageFile($path);
 	}
 }
