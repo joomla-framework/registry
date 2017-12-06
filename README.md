@@ -9,7 +9,7 @@ The Language package provides an interface for managing internationalisation sup
 
 ## Requirements
 
-* PHP 5.3.10 or later
+* PHP 7.0 or later
 * Joomla [String](https://github.com/joomla-framework/string) Package 1.3 or later
 
 ## Installation
