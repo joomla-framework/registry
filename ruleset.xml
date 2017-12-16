@@ -14,13 +14,21 @@
     <!-- Exclude 3rd party libraries. -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
 
-    <rule ref="Joomla" />
+    <rule ref="Joomla">
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+    </rule>
+
+    <rule ref="Joomla.Classes.InstantiateNewClasses">
+        <properties>
+            <property name="shortArraySyntax" value="true"/>
+        </properties>
+    </rule>
 
     <!-- Extend the line length to avoid the need for goofy concatenation or sprintf on unpack arguments -->
     <rule ref="Generic.Files.LineLength">
-   		<properties>
-   			<property name="lineLimit" value="175" />
-   			<property name="absoluteLineLimit" value="0" />
-   		</properties>
-   	</rule>
+        <properties>
+            <property name="lineLimit" value="175" />
+            <property name="absoluteLineLimit" value="0" />
+        </properties>
+    </rule>
 </ruleset>
