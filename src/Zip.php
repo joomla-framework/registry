@@ -160,7 +160,7 @@ class Zip implements ExtractableInterface
 	{
 		if (!is_file($archive))
 		{
-			throw new \RuntimeException('Archive does not exist');
+			throw new \RuntimeException('Archive does not exist at ' . $archive);
 		}
 
 		if (static::hasNativeSupport())
@@ -198,7 +198,7 @@ class Zip implements ExtractableInterface
 	/**
 	 * Checks to see if the data is a valid ZIP file.
 	 *
-	 * @param   string  &$data  ZIP archive data buffer.
+	 * @param   string  $data  ZIP archive data buffer.
 	 *
 	 * @return  boolean  True if valid, false if invalid.
 	 *
@@ -229,7 +229,7 @@ class Zip implements ExtractableInterface
 
 		if (!$this->data)
 		{
-			throw new \RuntimeException('Unable to read archive (zip)');
+			throw new \RuntimeException('Unable to read archive');
 		}
 
 		if (!$this->readZipInfo($this->data))
@@ -249,12 +249,12 @@ class Zip implements ExtractableInterface
 				// Make sure the destination folder exists
 				if (!Folder::create(dirname($path)))
 				{
-					throw new \RuntimeException('Unable to create destination');
+					throw new \RuntimeException('Unable to create destination folder ' . dirname($path));
 				}
 
 				if (!File::write($path, $buffer))
 				{
-					throw new \RuntimeException('Unable to write entry');
+					throw new \RuntimeException('Unable to write entry to file ' . $path);
 				}
 			}
 		}
@@ -285,7 +285,7 @@ class Zip implements ExtractableInterface
 		// Make sure the destination folder exists
 		if (!Folder::create($destination))
 		{
-			throw new \RuntimeException('Unable to create destination');
+			throw new \RuntimeException('Unable to create destination folder ' . dirname($path));
 		}
 
 		// Read files in the archive
@@ -293,7 +293,7 @@ class Zip implements ExtractableInterface
 		{
 			if (!zip_entry_open($zip, $file, 'r'))
 			{
-				throw new \RuntimeException('Unable to read entry');
+				throw new \RuntimeException('Unable to read ZIP entry');
 			}
 
 			if (substr(zip_entry_name($file), strlen(zip_entry_name($file)) - 1) != '/')
@@ -302,7 +302,7 @@ class Zip implements ExtractableInterface
 
 				if (File::write($destination . '/' . zip_entry_name($file), $buffer) === false)
 				{
-					throw new \RuntimeException('Unable to write entry');
+					throw new \RuntimeException('Unable to write ZIP entry to file ' . $destination . '/' . zip_entry_name($file));
 				}
 
 				zip_entry_close($file);
@@ -329,7 +329,7 @@ class Zip implements ExtractableInterface
 	 * 'type'  --  File type
 	 * </pre>
 	 *
-	 * @param   string  &$data  The ZIP archive buffer.
+	 * @param   string  $data  The ZIP archive buffer.
 	 *
 	 * @return  boolean True on success
 	 *
@@ -371,7 +371,7 @@ class Zip implements ExtractableInterface
 		{
 			if ($dataLength < $fhStart + 31)
 			{
-				throw new \RuntimeException('Invalid Zip Data');
+				throw new \RuntimeException('Invalid ZIP Data');
 			}
 
 			$info = unpack('vMethod/VTime/VCRC32/VCompressed/VUncompressed/vLength', substr($data, $fhStart + 10, 20));
@@ -416,7 +416,7 @@ class Zip implements ExtractableInterface
 
 			if ($dataLength < $lfhStart + 34)
 			{
-				throw new \RuntimeException('Invalid Zip Data');
+				throw new \RuntimeException('Invalid ZIP Data');
 			}
 
 			$info = unpack('vMethod/VTime/VCRC32/VCompressed/VUncompressed/vLength/vExtraLength', substr($data, $lfhStart + 8, 25));
@@ -498,9 +498,9 @@ class Zip implements ExtractableInterface
 	/**
 	 * Adds a "file" to the ZIP archive.
 	 *
-	 * @param   array  &$file      File data array to add
-	 * @param   array  &$contents  An array of existing zipped files.
-	 * @param   array  &$ctrldir   An array of central directory information.
+	 * @param   array  $file      File data array to add
+	 * @param   array  $contents  An array of existing zipped files.
+	 * @param   array  $ctrldir   An array of central directory information.
 	 *
 	 * @return  void
 	 *
@@ -512,7 +512,7 @@ class Zip implements ExtractableInterface
 		$data = &$file['data'];
 		$name = str_replace('\\', '/', $file['name']);
 
-		/* See if time/date information has been provided. */
+		// See if time/date information has been provided.
 		$ftime = null;
 
 		if (isset($file['time']))
@@ -525,81 +525,105 @@ class Zip implements ExtractableInterface
 		$hexdtime = chr(hexdec($dtime[6] . $dtime[7])) . chr(hexdec($dtime[4] . $dtime[5])) . chr(hexdec($dtime[2] . $dtime[3]))
 			. chr(hexdec($dtime[0] . $dtime[1]));
 
-		/* Begin creating the ZIP data. */
+		// Begin creating the ZIP data.
 		$fr = $this->fileHeader;
-		/* Version needed to extract. */
+
+		// Version needed to extract.
 		$fr .= "\x14\x00";
-		/* General purpose bit flag. */
+
+		// General purpose bit flag.
 		$fr .= "\x00\x00";
-		/* Compression method. */
+
+		// Compression method.
 		$fr .= "\x08\x00";
-		/* Last modification time/date. */
+
+		// Last modification time/date.
 		$fr .= $hexdtime;
 
-		/* "Local file header" segment. */
-		$unc_len = strlen($data);
-		$crc = crc32($data);
-		$zdata = gzcompress($data);
-		$zdata = substr(substr($zdata, 0, strlen($zdata) - 4), 2);
-		$c_len = strlen($zdata);
+		// "Local file header" segment.
+		$uncLen = strlen($data);
+		$crc    = crc32($data);
+		$zdata  = gzcompress($data);
+		$zdata  = substr(substr($zdata, 0, strlen($zdata) - 4), 2);
+		$cLen   = strlen($zdata);
 
-		/* CRC 32 information. */
+		// CRC 32 information.
 		$fr .= pack('V', $crc);
-		/* Compressed filesize. */
-		$fr .= pack('V', $c_len);
-		/* Uncompressed filesize. */
-		$fr .= pack('V', $unc_len);
-		/* Length of filename. */
+
+		// Compressed filesize.
+		$fr .= pack('V', $cLen);
+
+		// Uncompressed filesize.
+		$fr .= pack('V', $uncLen);
+
+		// Length of filename.
 		$fr .= pack('v', strlen($name));
-		/* Extra field length. */
+
+		// Extra field length.
 		$fr .= pack('v', 0);
-		/* File name. */
+
+		// File name.
 		$fr .= $name;
 
-		/* "File data" segment. */
+		// "File data" segment.
 		$fr .= $zdata;
 
-		/* Add this entry to array. */
-		$old_offset = strlen(implode('', $contents));
+		// Add this entry to array.
+		$oldOffset = strlen(implode('', $contents));
 		$contents[] = &$fr;
 
-		/* Add to central directory record. */
+		// Add to central directory record.
 		$cdrec = $this->ctrlDirHeader;
-		/* Version made by. */
-		$cdrec .= "\x00\x00";
-		/* Version needed to extract */
-		$cdrec .= "\x14\x00";
-		/* General purpose bit flag */
-		$cdrec .= "\x00\x00";
-		/* Compression method */
-		$cdrec .= "\x08\x00";
-		/* Last mod time/date. */
-		$cdrec .= $hexdtime;
-		/* CRC 32 information. */
-		$cdrec .= pack('V', $crc);
-		/* Compressed filesize. */
-		$cdrec .= pack('V', $c_len);
-		/* Uncompressed filesize. */
-		$cdrec .= pack('V', $unc_len);
-		/* Length of filename. */
-		$cdrec .= pack('v', strlen($name));
-		/* Extra field length. */
-		$cdrec .= pack('v', 0);
-		/* File comment length. */
-		$cdrec .= pack('v', 0);
-		/* Disk number start. */
-		$cdrec .= pack('v', 0);
-		/* Internal file attributes. */
-		$cdrec .= pack('v', 0);
-		/* External file attributes -'archive' bit set. */
-		$cdrec .= pack('V', 32);
-		/* Relative offset of local header. */
-		$cdrec .= pack('V', $old_offset);
-		/* File name. */
-		$cdrec .= $name;
-		/* Optional extra field, file comment goes here. */
 
-		/* Save to central directory array. */
+		// Version made by.
+		$cdrec .= "\x00\x00";
+
+		// Version needed to extract
+		$cdrec .= "\x14\x00";
+
+		// General purpose bit flag
+		$cdrec .= "\x00\x00";
+
+		// Compression method
+		$cdrec .= "\x08\x00";
+
+		// Last mod time/date.
+		$cdrec .= $hexdtime;
+
+		// CRC 32 information.
+		$cdrec .= pack('V', $crc);
+
+		// Compressed filesize.
+		$cdrec .= pack('V', $cLen);
+
+		// Uncompressed filesize.
+		$cdrec .= pack('V', $uncLen);
+
+		// Length of filename.
+		$cdrec .= pack('v', strlen($name));
+
+		// Extra field length.
+		$cdrec .= pack('v', 0);
+
+		// File comment length.
+		$cdrec .= pack('v', 0);
+
+		// Disk number start.
+		$cdrec .= pack('v', 0);
+
+		// Internal file attributes.
+		$cdrec .= pack('v', 0);
+
+		// External file attributes -'archive' bit set.
+		$cdrec .= pack('V', 32);
+
+		// Relative offset of local header.
+		$cdrec .= pack('V', $oldOffset);
+
+		// File name.
+		$cdrec .= $name;
+
+		// Save to central directory array.
 		$ctrldir[] = &$cdrec;
 	}
 
@@ -608,9 +632,9 @@ class Zip implements ExtractableInterface
 	 *
 	 * Official ZIP file format: http://www.pkware.com/appnote.txt
 	 *
-	 * @param   array   &$contents  An array of existing zipped files.
-	 * @param   array   &$ctrlDir   An array of central directory information.
-	 * @param   string  $path       The path to store the archive.
+	 * @param   array   $contents  An array of existing zipped files.
+	 * @param   array   $ctrlDir   An array of central directory information.
+	 * @param   string  $path      The path to store the archive.
 	 *
 	 * @return  boolean  True if successful
 	 *
@@ -622,11 +646,19 @@ class Zip implements ExtractableInterface
 		$data = implode('', $contents);
 		$dir = implode('', $ctrlDir);
 
-		$buffer = $data . $dir . $this->ctrlDirEnd . /* Total # of entries "on this disk". */
-		pack('v', count($ctrlDir)) . /* Total # of entries overall. */
-		pack('v', count($ctrlDir)) . /* Size of central directory. */
-		pack('V', strlen($dir)) . /* Offset to start of central dir. */
-		pack('V', strlen($data)) . /* ZIP file comment length. */
+		/*
+		 * Buffer data:
+		 * Total # of entries "on this disk".
+		 * Total # of entries overall.
+		 * Size of central directory.
+		 * Offset to start of central dir.
+		 * ZIP file comment length.
+		 */
+		$buffer = $data . $dir . $this->ctrlDirEnd .
+		pack('v', count($ctrlDir)) .
+		pack('v', count($ctrlDir)) .
+		pack('V', strlen($dir)) .
+		pack('V', strlen($data)) .
 		"\x00\x00";
 
 		return File::write($path, $buffer);
