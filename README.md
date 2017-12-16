@@ -16,7 +16,7 @@ Loading files of the `t*` archive type will uncompress the archive using the app
 
 ## Requirements
 
-- PHP 5.3+
+- PHP 7.0 or later
 - zlib extension for GZip support
 - bz2 extension for BZip2 support
 
