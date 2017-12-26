@@ -6,220 +6,130 @@
 
 namespace Joomla\Keychain\Tests;
 
+use Joomla\Crypt\Crypt;
 use Joomla\Keychain\Keychain;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests for the Joomla Framework Keychain Class
- *
- * @since  1.0
+ * Test class for \Joomla\Keychain\Keychain.
  */
 class KeychainTest extends TestCase
 {
 	/**
-	 * Set up the system by ensuring some files aren't there.
+	 * The mock Crypt object
+	 *
+	 * @var  Crypt|\PHPUnit_Framework_MockObject_MockObject
+	 */
+	private $crypt;
+
+	/**
+	 * The Keychain for testing
+	 *
+	 * @var  Keychain
+	 */
+	private $keychain;
+
+	/**
+	 * The temporary file used for validating a successful save
+	 *
+	 * @var  string
+	 */
+	private $tmpFile;
+
+	/**
+	 * Sets up the fixture, for example, open a network connection.
+	 * This method is called before a test is executed.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
-	public static function setUpBeforeClass()
+	protected function setUp()
 	{
-		// Clean up files
-		@unlink(__DIR__ . '/data/web-keychain.dat');
-		@unlink(__DIR__ . '/data/web-passphrase.dat');
+		parent::setUp();
 
-		parent::setUpBeforeClass();
+		$this->tmpFile = __DIR__ . '/data/tmp/' . uniqid() . '.json';
+
+		$this->crypt    = $this->getMockBuilder(Crypt::class)->getMock();
+		$this->keychain = new Keychain($this->crypt);
 	}
 
 	/**
-	 * Clean up afterwards.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * Tears down the fixture, for example, close a network connection.
+	 * This method is called after a test is executed.
 	 */
-	public static function tearDownAfterClass()
+	protected function tearDown()
 	{
-		// Clean up files
-		@unlink(__DIR__ . '/data/web-keychain.dat');
-		@unlink(__DIR__ . '/data/web-passphrase.dat');
+		if (file_exists($this->tmpFile))
+		{
+			@unlink($this->tmpFile);
+		}
 
-		parent::tearDownAfterClass();
+		parent::tearDown();
 	}
 
 	/**
-	 * Test loading a file created in the CLI client (Joomla! Framework)
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers  \Joomla\Keychain\Keychain::deleteValue
 	 */
-	public function testLoadCliKeychain()
+	public function testAValueIsDeletedFromTheKeychain()
 	{
-		$keychain = new Keychain;
+		$this->keychain->set('foo', 'bar');
 
-		$keychainFile = __DIR__ . '/data/cli-keychain.dat';
-		$passphraseFile = __DIR__ . '/data/cli-passphrase.dat';
-		$publicKeyFile = __DIR__ . '/data/publickey.pem';
-
-		$keychain->loadKeychain($keychainFile, $passphraseFile, $publicKeyFile);
-
-		$this->assertEquals('value', $keychain->get('test'));
+		$this->assertSame('bar', $this->keychain->deleteValue('foo'), 'When a key is deleted the value it had is returned');
 	}
 
 	/**
-	 * Test trying to create a new passphrase file
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers  \Joomla\Keychain\Keychain::deleteValue
 	 */
-	public function testCreatePassphraseFile()
+	public function testAKeychainIsLoadedFromAFile()
 	{
-		$keychainFile = __DIR__ . '/data/web-keychain.dat';
-		$privateKeyFile = __DIR__ . '/data/private.key';
-		$publicKeyFile = __DIR__ . '/data/publickey.pem';
-		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
+		$this->crypt->expects($this->once())
+			->method('decrypt')
+			->willReturnArgument(0);
 
-		$keychain = new Keychain;
-		$keychain->createPassphraseFile('testpassphrase', $passphraseFile, $privateKeyFile, 'password');
-
-		$this->assertTrue(file_exists($passphraseFile), 'Test passphrase file exists');
+		$this->assertSame(
+			$this->keychain,
+			$this->keychain->loadKeychain(__DIR__ . '/data/keychain.json'),
+			'When a file is loaded into the keychain the current instance is returned'
+		);
 	}
 
 	/**
-	 * Try to load a keychain that liaosn't exist (this shouldn't cause an error)
-	 *
-	 * @expectedException         RuntimeException
-	 * @expectedExceptionMessage  Attempting to load non-existent keychain file
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testLoadKeychainNonexistant()
-	{
-		$keychainFile = __DIR__ . '/data/fake-web-keychain.dat';
-		$publicKeyFile = __DIR__ . '/data/publickey.pem';
-		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
-
-		$keychain = new Keychain;
-
-		$keychain->loadKeychain($keychainFile, $passphraseFile, $publicKeyFile);
-	}
-
-	/**
-	 * Try to load a keychain that isn't a keychain
-	 *
-	 * @depends                   testCreatePassphraseFile
-	 * @expectedException         RuntimeException
-	 * @expectedExceptionMessage  Failed to decrypt keychain file
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testLoadKeychainInvalid()
-	{
-		$publicKeyFile = __DIR__ . '/data/publickey.pem';
-		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
-
-		$keychain = new Keychain;
-
-		$keychain->loadKeychain($passphraseFile, $passphraseFile, $publicKeyFile);
-	}
-
-	/**
-	 * Create a new keychain and persist it to a new file.
-	 *
-	 * @depends  testCreatePassphraseFile
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function testSaveKeychain()
-	{
-		$keychainFile = __DIR__ . '/data/web-keychain.dat';
-		$publicKeyFile = __DIR__ . '/data/publickey.pem';
-		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
-
-		$keychain = new Keychain;
-		$keychain->set('dennis', 'liao');
-		$this->assertTrue((bool) $keychain->saveKeychain($keychainFile, $passphraseFile, $publicKeyFile), 'Assert that saveKeychain returns true.');
-
-		$this->assertTrue(file_exists($keychainFile), 'Check that keychain file was created properly.');
-	}
-
-	/**
-	 * Create a new keychain and persist it to a new file.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers  \Joomla\Keychain\Keychain::deleteValue
 	 * @expectedException  \RuntimeException
+	 * @expectedExceptionMessage  Attempting to load non-existent keychain file
 	 */
-	public function testSaveKeychainThrowsException()
+	public function testAKeychainCannotBeLoadedFromANonExistingFile()
 	{
-		$publicKeyFile = __DIR__ . '/data/publickey.pem';
-		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
+		$this->crypt->expects($this->never())
+			->method('decrypt');
 
-		$keychain = new Keychain;
-		$keychain->saveKeychain('', $passphraseFile, $publicKeyFile);
+		$this->keychain->loadKeychain(__DIR__ . '/data/does-not-exist.json');
 	}
 
 	/**
-	 * Load a keychain file we just created
-	 *
-	 * @return  void
-	 *
-	 * @depends  testSaveKeychain
-	 * @since    1.0
+	 * @covers  \Joomla\Keychain\Keychain::deleteValue
 	 */
-	public function testLoadKeychain()
+	public function testAKeychainIsSavedToAFile()
 	{
-		$keychainFile = __DIR__ . '/data/web-keychain.dat';
-		$publicKeyFile = __DIR__ . '/data/publickey.pem';
-		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
+		$this->crypt->expects($this->once())
+			->method('encrypt')
+			->willReturnArgument(0);
 
-		$keychain = new Keychain;
-
-		$keychain->loadKeychain($keychainFile, $passphraseFile, $publicKeyFile);
-
-		$this->assertEquals('liao', $keychain->get('dennis'));
+		$this->assertNotFalse(
+			$this->keychain->saveKeychain($this->tmpFile),
+			'A keychain should be saved to the filesystem successfully'
+		);
 	}
 
 	/**
-	 * Delete a value from the keychain
-	 *
-	 * @return  void
-	 *
-	 * @depends  testSaveKeychain
-	 * @since    1.0
+	 * @covers  \Joomla\Keychain\Keychain::deleteValue
+	 * @expectedException  \RuntimeException
+	 * @expectedExceptionMessage  A keychain file must be specified
 	 */
-	public function testDeleteValue()
+	public function testAKeychainCannotBeSavedToTheFilesystemIfAnEmptyPathIsGiven()
 	{
-		$keychainFile = __DIR__ . '/data/web-keychain.dat';
-		$publicKeyFile = __DIR__ . '/data/publickey.pem';
-		$passphraseFile = __DIR__ . '/data/web-passphrase.dat';
+		$this->crypt->expects($this->never())
+			->method('encrypt');
 
-		$keychain = new Keychain;
-
-		$keychain->loadKeychain($keychainFile, $passphraseFile, $publicKeyFile);
-
-		$this->assertEquals('liao', $keychain->get('dennis'));
-
-		$keychain->deleteValue('dennis');
-
-		$this->assertFalse($keychain->exists('dennis'));
-
-		$keychain->saveKeychain($keychainFile, $passphraseFile, $publicKeyFile);
-
-		$keychain = new Keychain;
-
-		$keychain->loadKeychain($keychainFile, $passphraseFile, $publicKeyFile);
-
-		$this->assertFalse($keychain->exists('dennis'));
+		$this->keychain->saveKeychain('');
 	}
 }
