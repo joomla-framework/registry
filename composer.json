@@ -4,7 +4,7 @@
     "description": "Joomla Keychain Package",
     "keywords": ["joomla", "framework", "keychain"],
     "homepage": "https://github.com/joomla-framework/keychain",
-    "license": "LGPL-2.1+",
+    "license": "LGPL-2.1-or-later",
     "require": {
         "php": "~7.0",
         "joomla/crypt": "~2.0",
