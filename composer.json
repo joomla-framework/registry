@@ -4,7 +4,7 @@
     "description": "Joomla Crypt Package",
     "keywords": ["joomla", "framework", "crypt"],
     "homepage": "https://github.com/joomla-framework/crypt",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "require": {
         "php": "~7.0"
     },
