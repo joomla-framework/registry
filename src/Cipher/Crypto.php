@@ -15,7 +15,6 @@ use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 use Defuse\Crypto\RuntimeTests;
 use Joomla\Crypt\CipherInterface;
 use Joomla\Crypt\Key;
-
 use Joomla\Crypt\Exception\InvalidKeyTypeException;
 
 /**
@@ -42,11 +41,7 @@ class Crypto implements CipherInterface
 		// Validate key.
 		if ($key->getType() !== 'crypto')
 		{
-<<<<<<< HEAD:src/Cipher/Crypto.php
-			throw new \InvalidArgumentException('Invalid key of type: ' . $key->getType() . '.  Expected crypto.');
-=======
-			throw new InvalidKeyTypeException('crypto', $key->type);
->>>>>>> 5fa7c2b6832e767dbe2c25b485a74adfb5fbdb7e:Cipher/Crypto.php
+			throw new InvalidKeyTypeException('crypto', $key->getType());
 		}
 
 		// Decrypt the data.
@@ -81,11 +76,7 @@ class Crypto implements CipherInterface
 		// Validate key.
 		if ($key->getType() !== 'crypto')
 		{
-<<<<<<< HEAD:src/Cipher/Crypto.php
-			throw new \InvalidArgumentException('Invalid key of type: ' . $key->getType() . '.  Expected crypto.');
-=======
-			throw new InvalidKeyTypeException('crypto', $key->type);
->>>>>>> 5fa7c2b6832e767dbe2c25b485a74adfb5fbdb7e:Cipher/Crypto.php
+			throw new InvalidKeyTypeException('crypto', $key->getType());
 		}
 
 		// Encrypt the data.
