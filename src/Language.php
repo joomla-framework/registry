@@ -80,14 +80,6 @@ class Language
 	protected $errorfiles = array();
 
 	/**
-	 * Translations
-	 *
-	 * @var    array
-	 * @since  1.0
-	 */
-	protected $strings = array();
-
-	/**
 	 * An array of used text, used during debugging.
 	 *
 	 * @var    array
@@ -136,6 +128,14 @@ class Language
 	protected $basePath;
 
 	/**
+	 * MessageCatalogue object
+	 *
+	 * @var    MessageCatalogue
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $catalogue;
+
+	/**
 	 * Constructor activating the default information of the language.
 	 *
 	 * @param   string   $path   The base path to the language folder
@@ -179,6 +179,8 @@ class Language
 
 		// Grab a localisation file
 		$this->localise = (new LanguageFactory)->getLocalise($lang, $path);
+
+		$this->catalogue = new MessageCatalogue($this->lang);
 
 		$this->load();
 	}
@@ -235,9 +237,9 @@ class Language
 
 		$key = strtoupper($string);
 
-		if (isset($this->strings[$key]))
+		if ($this->catalogue->hasMessage($key))
 		{
-			$string = $this->debug ? '**' . $this->strings[$key] . '**' : $this->strings[$key];
+			$string = $this->debug ? '**' . $this->catalogue->getMessage($key) . '**' : $this->catalogue->getMessage($key);
 
 			// Store debug information
 			if ($this->debug)
@@ -437,8 +439,8 @@ class Language
 		{
 			if (is_array($strings) && count($strings))
 			{
-				$this->strings = array_replace($this->strings, $strings, $this->override);
-				$result        = true;
+				$this->catalogue->addMessages(array_replace($strings, $this->override));
+				$result = true;
 			}
 		}
 
@@ -819,9 +821,7 @@ class Language
 	 */
 	public function hasKey($string)
 	{
-		$key = strtoupper($string);
-
-		return isset($this->strings[$key]);
+		return $this->catalogue->hasMessage($string);
 	}
 
 	/**
@@ -911,6 +911,18 @@ class Language
 	public function getLanguage()
 	{
 		return $this->lang;
+	}
+
+	/**
+	 * Get the message catalogue for the language.
+	 *
+	 * @return  MessageCatalogue
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function getCatalogue(): MessageCatalogue
+	{
+		return $this->catalogue;
 	}
 
 	/**

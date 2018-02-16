@@ -36,6 +36,11 @@ The `getInstance()` method in `Language` has been removed.  Use `LanguageFactory
 The `setLanguage()` method in `Language` has been removed.  A new Language instance in the new language should be instantiated
 instead.
 
+### Language::$strings removed
+
+The `$strings` class member variable in `Language` has been removed.  Loaded translation strings are now stored in a `MessageCatalogue`
+instance.
+
 ### Abstract Stemmer removed
 
 The abstract `Stemmer` class has been removed. Stemmers are now defined by a new `StemmerInterface`. Use `LanguageFactory::getStemmer()`
@@ -70,3 +75,8 @@ version 1 however could optionally could have callback functions set if such a f
 
 Localise files now MUST implement the LocaliseInterface to be recognised. An base class is available and is suitable for
 many Western Languages.
+
+### Message Key Normalisation
+In 1.x, when retrieving translation strings from the internal store, the key was normalled to full uppercase when loaded, blocking
+use of mixed case strings. In 2.0, keys are normalised to uppercase both when messages are written to a catalogue and when read out
+of the catalogue. If desired, a catalogue allowing mixed case strings can be created by subclassing the `MessageCatalogue` class.
