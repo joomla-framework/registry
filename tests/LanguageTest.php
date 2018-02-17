@@ -698,8 +698,8 @@ class LanguageTest extends TestCase
 	 */
 	public function test_WithLoadedStringsAndDebug()
 	{
-		// Loading some strings.
-		TestHelper::setValue($this->object, 'strings', array('DEL' => 'Delete'));
+		$catalogue = TestHelper::getValue($this->object, 'catalogue');
+		$catalogue->addMessage('DEL', 'Delete');
 
 		$this->assertEquals(
 			"Delete",
