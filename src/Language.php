@@ -206,7 +206,7 @@ class Language
 			sprintf(
 				'%1$s() is deprecated and will be removed in 3.0, use %2$s::translate() instead.',
 				__METHOD__,
-				Language::class
+				self::class
 			),
 			E_USER_DEPRECATED
 		);
