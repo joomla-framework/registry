@@ -10,9 +10,9 @@
         "joomla/utilities": "^1.4.1|~2.0"
     },
     "require-dev": {
+        "joomla/coding-standards": "~2.0@alpha",
         "symfony/yaml": "~2.7|~3.0|~4.0",
-        "phpunit/phpunit": "~6.3",
-        "squizlabs/php_codesniffer": "1.*"
+        "phpunit/phpunit": "~6.3"
     },
     "suggest": {
         "symfony/yaml": "Install symfony/yaml if you require YAML support."
