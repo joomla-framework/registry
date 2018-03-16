@@ -12,6 +12,7 @@ use Joomla\Console\AbstractCommand;
 use Joomla\Crypt\Crypt;
 use Joomla\Keychain\Keychain;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -80,16 +81,41 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	{
 		$filename = $this->getApplication()->getConsoleInput()->getArgument('filename');
 
-		if (!$filename || !file_exists($filename))
+		if (!file_exists($filename))
 		{
 			throw new InvalidArgumentException(
 				sprintf(
-					'The filename argument is missing or there is no readable file at `%s`.',
+					'There is no readable file at `%s`.',
 					$filename
 				)
 			);
 		}
 
 		$this->keychain->loadKeychain($filename);
+	}
+
+	/**
+	 * Save the Keychain.
+	 *
+	 * @return  boolean
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 * @throws  RuntimeException
+	 */
+	protected function saveKeychain(): bool
+	{
+		$filename = $this->getApplication()->getConsoleInput()->getArgument('filename');
+
+		if (!is_writable($filename))
+		{
+			throw new RuntimeException(
+				sprintf(
+					'Cannot write the keychain to `%s` as the path is not writable.',
+					$filename
+				)
+			);
+		}
+
+		return $this->keychain->saveKeychain($filename);
 	}
 }
