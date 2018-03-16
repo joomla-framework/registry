@@ -8,7 +8,8 @@ All Framework packages now require PHP 7.0 or newer.
 
 ### Joomla\Keychain\KeychainManager class removed
 
-The `KeychainManager` class has been removed without replacement, this was the command line utility for managing keychains.
+The `KeychainManager` class has been removed.  A new set of commands is available when using the `joomla/console` package as a replacement.
+Please see the [Command Line Management](features/command-line-management.md) page for more information on how to configure these commands.
 
 ### Dependent upon `joomla/crypt`
 
