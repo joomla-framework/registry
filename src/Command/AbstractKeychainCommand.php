@@ -45,7 +45,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function __construct(Crypt $crypt, $data = null)
+	public function __construct(Crypt $crypt)
 	{
 		parent::__construct();
 
