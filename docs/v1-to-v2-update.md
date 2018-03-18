@@ -10,6 +10,11 @@ All Framework packages now require PHP 7.0 or newer.
 
 The `KeychainManager` class has been removed without replacement, this was the command line utility for managing keychains.
 
+### Joomla\Keychain\Keychain::deleteValue() removed
+
+As of `joomla/registry` 1.6 a `remove` method was added to the `Joomla\Registry\Registry` class the Keychain extends.  Therefore,
+the Keychain's `deleteValue` method has been removed in favor of the parent class' method.
+
 ### Dependent upon `joomla/crypt`
 
 In v1 the Keychain had a hardcoded dependency to PHP's `ext/openssl`.  The Keychain has been refactored to use the `joomla/crypt`

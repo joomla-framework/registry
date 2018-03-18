@@ -42,21 +42,6 @@ class Keychain extends Registry
 	}
 
 	/**
-	 * Delete a registry value (very simple method)
-	 *
-	 * @param   string  $path  Registry Path (e.g. joomla.content.showauthor)
-	 *
-	 * @return  mixed  Value of old value or boolean false if operation failed
-	 *
-	 * @since   1.0
-	 * @deprecated  2.0  Use `Registry::remove()` instead.
-	 */
-	public function deleteValue($path)
-	{
-		return $this->remove($path);
-	}
-
-	/**
 	 * Load a keychain file into this object.
 	 *
 	 * @param   string  $keychainFile  Path to the keychain file.

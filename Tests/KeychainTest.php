@@ -67,17 +67,7 @@ class KeychainTest extends TestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Keychain\Keychain::deleteValue
-	 */
-	public function testAValueIsDeletedFromTheKeychain()
-	{
-		$this->keychain->set('foo', 'bar');
-
-		$this->assertSame('bar', $this->keychain->deleteValue('foo'), 'When a key is deleted the value it had is returned');
-	}
-
-	/**
-	 * @covers  \Joomla\Keychain\Keychain::deleteValue
+	 * @covers  \Joomla\Keychain\Keychain::loadKeychain
 	 */
 	public function testAKeychainIsLoadedFromAFile()
 	{
@@ -93,7 +83,7 @@ class KeychainTest extends TestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Keychain\Keychain::deleteValue
+	 * @covers  \Joomla\Keychain\Keychain::loadKeychain
 	 * @expectedException  \RuntimeException
 	 * @expectedExceptionMessage  Attempting to load non-existent keychain file
 	 */
@@ -106,7 +96,7 @@ class KeychainTest extends TestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Keychain\Keychain::deleteValue
+	 * @covers  \Joomla\Keychain\Keychain::saveKeychain
 	 */
 	public function testAKeychainIsSavedToAFile()
 	{
@@ -121,7 +111,7 @@ class KeychainTest extends TestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Keychain\Keychain::deleteValue
+	 * @covers  \Joomla\Keychain\Keychain::saveKeychain
 	 * @expectedException  \RuntimeException
 	 * @expectedExceptionMessage  A keychain file must be specified
 	 */
