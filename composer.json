@@ -8,7 +8,7 @@
     "require": {
         "php": "~7.0",
         "joomla/crypt": "~2.0",
-        "joomla/registry": "^1.4.5|~2.0"
+        "joomla/registry": "~1.6|~2.0"
     },
     "require-dev": {
         "joomla/coding-standards": "~2.0@alpha",
