@@ -68,6 +68,38 @@ $registry->get('parent.child'); // return 'Foo'
 $registry->set('parent.child', $value);
 ```
 
+## Removing values from Registry
+
+``` php
+// Set value
+$registry->set('bar', $value);
+
+// Remove the key
+$registry->remove('bar');
+
+// Works for nested keys too
+$registry->set('nested.bar', $value);
+$registry->remove('nested.bar');
+```
+
+## Accessing a Registry as an Array
+
+The `Registry` class implements `ArrayAccess` so the properties of the registry can be accessed as an array. Consider the following examples:
+
+``` php
+// Set a value in the registry.
+$registry['foo'] = 'bar';
+
+// Get a value from the registry;
+$value = $registry['foo'];
+
+// Check if a key in the registry is set.
+if (isset($registry['foo']))
+{
+	echo 'Say bar.';
+}
+```
+
 ## Merge Registry
 
 #### Using load* methods to merge two config files.
