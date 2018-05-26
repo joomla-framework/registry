@@ -89,7 +89,7 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @since   1.0
 	 */
-	public function __construct(array $source = [], array $options = [])
+	public function __construct($source = null, array $options = [])
 	{
 		$this->data    = empty($source) ? $_REQUEST : $source;
 		$this->filter  = $options['filter'] ?? new Filter\InputFilter;
@@ -116,7 +116,7 @@ class Input implements \Serializable, \Countable
 
 		if (class_exists($className))
 		{
-			$this->inputs[$name] = new $className([], $this->options);
+			$this->inputs[$name] = new $className(null, $this->options);
 
 			return $this->inputs[$name];
 		}

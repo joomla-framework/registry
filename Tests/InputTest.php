@@ -49,7 +49,7 @@ class InputTest extends TestCase
 	 *
 	 * @return  Input
 	 */
-	protected function getInputObject(array $data = [])
+	protected function getInputObject($data = null)
 	{
 		return new Input($data, ['filter' => $this->filterMock]);
 	}

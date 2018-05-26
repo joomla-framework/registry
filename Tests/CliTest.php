@@ -41,7 +41,7 @@ class CliTest extends TestCase
 		$_SERVER['argv'] = ['/dev/null', '--foo=bar', '-ab', 'blah', '-g', 'flower sakura'];
 		$mockFilter      = $this->getMockBuilder(InputFilter::class)->getMock();
 
-		$instance = new Cli([], ['filter' => $mockFilter]);
+		$instance = new Cli(null, ['filter' => $mockFilter]);
 
 		$this->assertAttributeSame(
 			[
@@ -107,7 +107,7 @@ class CliTest extends TestCase
 	{
 		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
-		$instance = new Cli([], ['filter' => $mockFilter]);
+		$instance = new Cli(null, ['filter' => $mockFilter]);
 
 		// Check the object type.
 		$this->assertInstanceOf('Joomla\Input\Input', $instance->server);
@@ -236,7 +236,7 @@ class CliTest extends TestCase
 		$_SERVER['argv'] = $inputArgv;
 		$mockFilter      = $this->getMockBuilder(InputFilter::class)->getMock();
 
-		$instance = new Cli([], ['filter' => $mockFilter]);
+		$instance = new Cli(null, ['filter' => $mockFilter]);
 
 		$this->assertAttributeSame($expectedData, 'data', $instance);
 
@@ -252,10 +252,10 @@ class CliTest extends TestCase
 	 */
 	public function testSerialize()
 	{
-		$_SERVER['argv'] = array('/dev/null', '--foo=bar');
+		$_SERVER['argv'] = ['/dev/null', '--foo=bar'];
 		$mockFilter      = $this->getMockBuilder(InputFilter::class)->getMock();
 
-		$instance = new Cli([], ['filter' => $mockFilter]);
+		$instance = new Cli(null, ['filter' => $mockFilter]);
 
 		$this->assertGreaterThan(
 			0,
@@ -273,7 +273,7 @@ class CliTest extends TestCase
 		$serialized = 'a:5:{i:0;s:9:"/dev/null";i:1;a:1:{s:3:"foo";s:3:"bar";}i:2;a:1:{s:6:"filter";s:3:"raw";}i:3;s:4:"data";i:4;a:1:{s:7:"request";s:4:"keep";}}';
 		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
-		$instance = new Cli([], ['filter' => $mockFilter]);
+		$instance = new Cli(null, ['filter' => $mockFilter]);
 
 		$instance->unserialize($serialized);
 
