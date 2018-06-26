@@ -21,6 +21,7 @@ use Joomla\Filter;
  * @property-read    Input   $post
  * @property-read    Input   $request
  * @property-read    Input   $server
+ * @property-read    Input   $env
  * @property-read    Files   $files
  * @property-read    Cookie  $cookie
  *
@@ -40,6 +41,15 @@ use Joomla\Filter;
  */
 class Input implements \Serializable, \Countable
 {
+	/**
+	 * Container with allowed superglobals
+	 *
+	 * @var    array
+	 * @since  1.3.0
+	 * @note   Once PHP 7.1 is the minimum supported version this should become a private constant
+	 */
+	private static $allowedGlobals = ['REQUEST', 'GET', 'POST', 'FILES', 'SERVER', 'ENV'];
+
 	/**
 	 * Options array for the Input instance.
 	 *
@@ -123,7 +133,7 @@ class Input implements \Serializable, \Countable
 
 		$superGlobal = '_' . strtoupper($name);
 
-		if (isset($GLOBALS[$superGlobal]))
+		if (in_array(strtoupper($name), self::$allowedGlobals, true) && isset($GLOBALS[$superGlobal]))
 		{
 			$this->inputs[$name] = new Input($GLOBALS[$superGlobal], $this->options);
 
@@ -224,6 +234,29 @@ class Input implements \Serializable, \Countable
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Get the Input instance holding the data for the current request method
+	 *
+	 * @return  Input
+	 *
+	 * @since   1.3.0
+	 */
+	public function getInputForRequestMethod()
+	{
+		switch (strtoupper($this->getMethod()))
+		{
+			case 'GET':
+				return $this->get;
+
+			case 'POST':
+				return $this->post;
+
+			default:
+				// PUT, PATCH, etc. don't have superglobals
+				return $this;
+		}
 	}
 
 	/**
@@ -373,8 +406,8 @@ class Input implements \Serializable, \Countable
 			// Load up all the globals.
 			foreach ($GLOBALS as $global => $data)
 			{
-				// Check if the global starts with only a single underscore (required for checks against Composer or PHPUnit for example)
-				if (strpos($global, '_') === 0 && substr($global, 0, 2) !== '__')
+				// Check if the global starts with an underscore and is allowed.
+				if (strpos($global, '_') === 0 && in_array(substr($global, 1), self::$allowedGlobals, true))
 				{
 					// Convert global name to input name.
 					$global = strtolower($global);

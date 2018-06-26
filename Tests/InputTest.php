@@ -357,4 +357,21 @@ class InputTest extends TestCase
 		$this->assertAttributeSame(['filter' => 'raw'], 'options', $instance);
 		$this->assertAttributeSame('data', 'data', $instance);
 	}
+
+	/**
+	 * Test the JInput::get method disallows access to non-whitelisted globals.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.3.0
+	 */
+	public function testGetDoesNotSupportNonWhitelistedGlobals()
+	{
+		$this->markTestSkipped('Update to account for notice being raised.');
+
+		$this->assertNull(
+			$this->getInputObject()->_phpunit_configuration_file,
+			'Access to library defined globals is restricted'
+		);
+	}
 }
