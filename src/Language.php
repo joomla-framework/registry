@@ -167,7 +167,7 @@ class Language
 
 		if (file_exists($filename) && $contents = $this->parse($filename))
 		{
-			if (is_array($contents))
+			if (\is_array($contents))
 			{
 				// Sort the underlying heap by key values to optimize merging
 				ksort($contents, SORT_STRING);
@@ -437,7 +437,7 @@ class Language
 
 		if ($strings)
 		{
-			if (is_array($strings) && count($strings))
+			if (\is_array($strings) && \count($strings))
 			{
 				$this->catalogue->addMessages(array_replace($strings, $this->override));
 				$result = true;
@@ -527,7 +527,7 @@ class Language
 			$line = trim($line);
 
 			// Ignore comment lines.
-			if (!strlen($line) || $line['0'] == ';')
+			if (!\strlen($line) || $line[0] == ';')
 			{
 				continue;
 			}
@@ -564,14 +564,14 @@ class Language
 			// Check that the key is not in the blacklist.
 			$key = strtoupper(trim(substr($line, 0, strpos($line, '='))));
 
-			if (in_array($key, $blacklist))
+			if (\in_array($key, $blacklist))
 			{
 				$errors[] = $realNumber;
 			}
 		}
 
 		// Check if we encountered any errors.
-		if (count($errors))
+		if (\count($errors))
 		{
 			$this->errorfiles[$filename] = $filename . ' - error(s) in line(s) ' . implode(', ', $errors);
 		}
@@ -583,7 +583,7 @@ class Language
 
 		$this->setDebug($debug);
 
-		return count($errors);
+		return \count($errors);
 	}
 
 	/**

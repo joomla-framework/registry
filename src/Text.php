@@ -133,8 +133,8 @@ class Text
 	public function plural($string, $n)
 	{
 		$lang  = $this->getLanguage();
-		$args  = func_get_args();
-		$count = count($args);
+		$args  = \func_get_args();
+		$count = \count($args);
 
 		// Try the key from the language plural potential suffixes
 		$found    = false;
@@ -158,7 +158,7 @@ class Text
 			$key = $string;
 		}
 
-		if (is_array($args[$count - 1]))
+		if (\is_array($args[$count - 1]))
 		{
 			$args[0] = $lang->translate(
 				$key, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
@@ -170,7 +170,7 @@ class Text
 			$args[0] = $lang->translate($key);
 		}
 
-		return call_user_func_array('sprintf', $args);
+		return \call_user_func_array('sprintf', $args);
 	}
 
 	/**
@@ -195,10 +195,10 @@ class Text
 	public function sprintf($string)
 	{
 		$lang  = $this->getLanguage();
-		$args  = func_get_args();
-		$count = count($args);
+		$args  = \func_get_args();
+		$count = \count($args);
 
-		if (is_array($args[$count - 1]))
+		if (\is_array($args[$count - 1]))
 		{
 			$args[0] = $lang->translate(
 				$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
@@ -210,7 +210,7 @@ class Text
 			$args[0] = $lang->translate($string);
 		}
 
-		return call_user_func_array('sprintf', $args);
+		return \call_user_func_array('sprintf', $args);
 	}
 
 	/**
@@ -235,10 +235,10 @@ class Text
 	public function printf($string)
 	{
 		$lang  = $this->getLanguage();
-		$args  = func_get_args();
-		$count = count($args);
+		$args  = \func_get_args();
+		$count = \count($args);
 
-		if (is_array($args[$count - 1]))
+		if (\is_array($args[$count - 1]))
 		{
 			$args[0] = $lang->translate(
 				$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
@@ -250,6 +250,6 @@ class Text
 			$args[0] = $lang->translate($string);
 		}
 
-		return call_user_func_array('printf', $args);
+		return \call_user_func_array('printf', $args);
 	}
 }

@@ -58,7 +58,7 @@ class Porteren implements StemmerInterface
 	public function stem($token, $lang)
 	{
 		// Check if the token is long enough to merit stemming.
-		if (strlen($token) <= 2)
+		if (\strlen($token) <= 2)
 		{
 			return $token;
 		}
@@ -420,13 +420,13 @@ class Porteren implements StemmerInterface
 	 */
 	private function replace(&$str, $check, $repl, $m = null)
 	{
-		$len = 0 - strlen($check);
+		$len = 0 - \strlen($check);
 
 		if (substr($str, $len) == $check)
 		{
 			$substr = substr($str, 0, $len);
 
-			if (is_null($m) || $this->m($substr) > $m)
+			if (\is_null($m) || $this->m($substr) > $m)
 			{
 				$str = $substr . $repl;
 			}
@@ -463,7 +463,7 @@ class Porteren implements StemmerInterface
 
 		preg_match_all("#($v+$c+)#", $str, $matches);
 
-		return count($matches[1]);
+		return \count($matches[1]);
 	}
 
 	/**
@@ -498,7 +498,7 @@ class Porteren implements StemmerInterface
 		$v = $this->regexVowel;
 
 		$result = preg_match("#($c$v$c)$#", $str, $matches)
-			&& strlen($matches[1]) == 3
+			&& \strlen($matches[1]) == 3
 			&& $matches[1]{2} != 'w'
 			&& $matches[1]{2} != 'x'
 			&& $matches[1]{2} != 'y';
