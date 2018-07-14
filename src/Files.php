@@ -86,7 +86,7 @@ class Files extends Input
 	{
 		$result = [];
 
-		if (is_array($data[0]))
+		if (\is_array($data[0]))
 		{
 			foreach ($data[0] as $k => $v)
 			{

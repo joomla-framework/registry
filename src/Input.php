@@ -133,7 +133,7 @@ class Input implements \Serializable, \Countable
 
 		$superGlobal = '_' . strtoupper($name);
 
-		if (in_array(strtoupper($name), self::$allowedGlobals, true) && isset($GLOBALS[$superGlobal]))
+		if (\in_array(strtoupper($name), self::$allowedGlobals, true) && isset($GLOBALS[$superGlobal]))
 		{
 			$this->inputs[$name] = new Input($GLOBALS[$superGlobal], $this->options);
 
@@ -157,7 +157,7 @@ class Input implements \Serializable, \Countable
 	 */
 	public function count()
 	{
-		return count($this->data);
+		return \count($this->data);
 	}
 
 	/**
@@ -196,7 +196,7 @@ class Input implements \Serializable, \Countable
 	 */
 	public function getArray(array $vars = [], $datasource = null)
 	{
-		if (empty($vars) && is_null($datasource))
+		if (empty($vars) && \is_null($datasource))
 		{
 			$vars = $this->data;
 		}
@@ -205,9 +205,9 @@ class Input implements \Serializable, \Countable
 
 		foreach ($vars as $k => $v)
 		{
-			if (is_array($v))
+			if (\is_array($v))
 			{
-				if (is_null($datasource))
+				if (\is_null($datasource))
 				{
 					$results[$k] = $this->getArray($v, $this->get($k, null, 'array'));
 				}
@@ -218,7 +218,7 @@ class Input implements \Serializable, \Countable
 			}
 			else
 			{
-				if (is_null($datasource))
+				if (\is_null($datasource))
 				{
 					$results[$k] = $this->get($k, null, $v);
 				}
@@ -407,7 +407,7 @@ class Input implements \Serializable, \Countable
 			foreach ($GLOBALS as $global => $data)
 			{
 				// Check if the global starts with an underscore and is allowed.
-				if (strpos($global, '_') === 0 && in_array(substr($global, 1), self::$allowedGlobals, true))
+				if (strpos($global, '_') === 0 && \in_array(substr($global, 1), self::$allowedGlobals, true))
 				{
 					// Convert global name to input name.
 					$global = strtolower($global);

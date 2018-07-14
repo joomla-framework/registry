@@ -35,7 +35,7 @@ class Json extends Input
 	 */
 	public function __construct($source = null, array $options = [])
 	{
-		if (is_null($source))
+		if (\is_null($source))
 		{
 			$this->raw = file_get_contents('php://input');
 
@@ -48,7 +48,7 @@ class Json extends Input
 
 			$source = json_decode($this->raw, true);
 
-			if (!is_array($source))
+			if (!\is_array($source))
 			{
 				$source = [];
 			}
