@@ -77,7 +77,7 @@ class Tar implements ExtractableInterface
 	 */
 	public function __construct($options = [])
 	{
-		if (!is_array($options) && !($options instanceof \ArrayAccess))
+		if (!\is_array($options) && !($options instanceof \ArrayAccess))
 		{
 			throw new \InvalidArgumentException(
 				'The options param must be an array or implement the ArrayAccess interface.'
@@ -112,7 +112,7 @@ class Tar implements ExtractableInterface
 
 		$this->getTarInfo($this->data);
 
-		for ($i = 0, $n = count($this->metadata); $i < $n; $i++)
+		for ($i = 0, $n = \count($this->metadata); $i < $n; $i++)
 		{
 			$type = strtolower($this->metadata[$i]['type']);
 
@@ -173,7 +173,7 @@ class Tar implements ExtractableInterface
 		$position    = 0;
 		$returnArray = [];
 
-		while ($position < strlen($data))
+		while ($position < \strlen($data))
 		{
 			$info = @unpack(
 				"Z100filename/Z8mode/Z8uid/Z8gid/Z12size/Z12mtime/Z8checksum/Ctypeflag/Z100link/Z6magic/Z2version/Z32uname/Z32gname/Z8devmajor/Z8devminor",
@@ -227,7 +227,7 @@ class Tar implements ExtractableInterface
 						. (($mode & 0x002) ? 'w' : '-')
 						. (($mode & 0x001) ? 'x' : '-');
 				}
-				elseif (chr($info['typeflag']) == 'L' && $info['filename'] == '././@LongLink')
+				elseif (\chr($info['typeflag']) == 'L' && $info['filename'] == '././@LongLink')
 				{
 					// GNU tar ././@LongLink support - the filename is actually in the contents, set a variable here so we can test in the next loop
 					$longlinkfilename = $contents;
