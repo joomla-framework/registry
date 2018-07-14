@@ -77,7 +77,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 			if (is_callable($callback))
 			{
 				// Call the method for the object.
-				$return[$key] = call_user_func_array($callback, $arguments);
+				$return[$key] = \call_user_func_array($callback, $arguments);
 			}
 		}
 
@@ -136,7 +136,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 			$return[] = isset($object->$property);
 		}
 
-		return in_array(true, $return, true) ? true : false;
+		return \in_array(true, $return, true) ? true : false;
 	}
 
 	/**
@@ -217,7 +217,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 		{
 			$objectVars = json_decode(json_encode($object), true);
 
-			$keys = (is_null($keys)) ? $objectVars : $function($keys, $objectVars);
+			$keys = (\is_null($keys)) ? $objectVars : $function($keys, $objectVars);
 		}
 
 		return array_keys($keys);
@@ -235,7 +235,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 */
 	public function toArray($associative = true, $k = null)
 	{
-		$keys        = func_get_args();
+		$keys        = \func_get_args();
 		$associative = array_shift($keys);
 
 		if (empty($keys))
@@ -276,7 +276,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 */
 	public function count()
 	{
-		return count($this->objects);
+		return \count($this->objects);
 	}
 
 	/**
@@ -493,7 +493,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	{
 		if (!($object instanceof DataObject))
 		{
-			throw new \InvalidArgumentException(sprintf('%s("%s", *%s*)', __METHOD__, $offset, gettype($object)));
+			throw new \InvalidArgumentException(sprintf('%s("%s", *%s*)', __METHOD__, $offset, \gettype($object)));
 		}
 
 		// Set the offset.
@@ -593,7 +593,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	{
 		foreach ($input as $key => $object)
 		{
-			if (!is_null($object))
+			if (!\is_null($object))
 			{
 				$this->offsetSet($key, $object);
 			}
