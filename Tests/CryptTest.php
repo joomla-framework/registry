@@ -209,7 +209,7 @@ class CryptTest extends TestCase
 	{
 		$this->assertSame(
 			$length,
-			strlen(Crypt::genRandomBytes($length))
+			\strlen(Crypt::genRandomBytes($length))
 		);
 	}
 }
