@@ -2,7 +2,7 @@
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/input/v/stable)](https://packagist.org/packages/joomla/input) [![Total Downloads](https://poser.pugx.org/joomla/input/downloads)](https://packagist.org/packages/joomla/input) [![Latest Unstable Version](https://poser.pugx.org/joomla/input/v/unstable)](https://packagist.org/packages/joomla/input) [![License](https://poser.pugx.org/joomla/input/license)](https://packagist.org/packages/joomla/input)
 
-This package comprises of four classes, `Input\Input`and four sub-classes extended from it: `Input\Cli`, `Input\Cookie`, `Input\Files`, and `Input\Json`. An input object is generally owned by the application and explicitly added to an application class as a public property, such as can be found in `Application\AbstractApplication`.
+This package comprises of four classes, `Input\Input`and several sub-classes extended from it: `Input\Cookie`, `Input\Files`, and `Input\Json`. An input object is generally owned by the application and explicitly added to an application class as a public property, such as can be found in `Application\AbstractApplication`.
 
 The intent of this package is to abstract out the input source to allow code to be reused in different applications and in different contexts through dependency injection. For example, a controller could inspect the request variables directly using `JRequest`. But suppose there is a requirement to add a web service that carries input as a JSON payload. Instead of writing a second controller to handle the different input source, it would be much easier to inject an input object that is tailored for the type of input source, into the controller.
 
@@ -124,66 +124,6 @@ $host = $input->env->get('HOSTNAME');
 
 The `Input\Input` class implements the `Serializable` interface so that it can be safely serialized and unserialized. Note that when serializing the "ENV" and "SERVER" inputs are removed from the class as they may conflict or inappropriately overwrite settings during unserialization. This allows for `Input\Input` objects to be safely used with cached data.
 
-## Input\Cli
-
-The `Input\Cli` class is extended from `Input\Input` but is tailored to work with command line input. Once again the get method is used to get values of command line variables in short name format (one or more individual characters following a single dash) or long format (a variable name followed by two dashes). Additional arguments can be found be accessing the args property of the input object.
-
-An instance of `Input\Cli` will rarely be instantiated directly. Instead, it would be used implicitly as a part of an application built from `Application\AbstractCliApplication` as shown in the following example.
-
-```php
-#!/usr/bin/php
-/**
- * This file is saved as argv.php
- *
- * @package  Examples
- */
-
-/**
- * An example command line application.
- *
- * @package  Examples
- * @since    1.0
- */
-class Argv extends Joomla\Application\AbstractCliApplication
-{
-	/**
-	 * Execute the application.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function execute()
-	{
-		var_dump($this->input->get('a'));
-		var_dump($this->input->get('set'));
-		var_dump($this->input->args);
-	}
-}
-```
-
-```
-> ./argv.php
-bool(false)
-bool(false)
-array(0) {}
-
-> ./argv.php -a --set=match
-bool(true)
-string(5) "match"
-array(0) {}
-
-> ./argv.php -a value
-string(5) "value"
-bool(false)
-array(0) {}
-
-> ./argv.php -a foo bar
-string(3) "foo"
-bool(false)
-array(1) {[0] => string(3) "bar"}
-```
-
 ## Input\Cookie
 
 > Can you help improve this section of the README?
@@ -283,10 +223,6 @@ The following changes have been made to the `Input` package since 1.x.
 ### Pass By Reference
 
 `Input`, `Input\Cookie`, and `Input\Files` all use the source superglobal by reference in 1.x.  In 2.0, the reference is removed.
-
-### Input\Cli
-
-The `parseArguments` method of `Input\Cli` previously directly set the `$data` class variable.  In 2.0, it returns the results to the caller (typically the class constructor).
 
 ## Installation via Composer
 
