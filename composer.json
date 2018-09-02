@@ -7,7 +7,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "~7.0",
-        "joomla/filter": "~1.0"
+        "joomla/filter": "~1.0|~2.0"
     },
     "require-dev": {
         "joomla/coding-standards": "~2.0@alpha",
@@ -24,6 +24,7 @@
             "Joomla\\Input\\Tests\\": "Tests/"
         }
     },
+    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
 	        "dev-2.0-dev": "2.0-dev"
