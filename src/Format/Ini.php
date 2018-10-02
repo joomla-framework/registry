@@ -101,7 +101,7 @@ class Ini implements FormatInterface
 				}
 
 				// Add empty line after section if it is not the last one
-				if (0 !== --$last)
+				if (--$last !== 0)
 				{
 					$local[] = '';
 				}
@@ -181,6 +181,7 @@ class Ini implements FormatInterface
 				{
 					$section       = substr($line, 1, $length - 2);
 					$obj->$section = new \stdClass;
+
 					continue;
 				}
 			}
@@ -197,7 +198,7 @@ class Ini implements FormatInterface
 			}
 
 			// Get the key and value for the line.
-			list ($key, $value) = explode('=', $line, 2);
+			list($key, $value) = explode('=', $line, 2);
 
 			// If we have an array item
 			if (substr($key, -1) === ']' && ($openBrace = strpos($key, '[', 1)) !== false)
@@ -248,18 +249,18 @@ class Ini implements FormatInterface
 					$value = false;
 				}
 				elseif ($value === 'true')
-				// If the value is 'true' assume boolean true.
 				{
+					// If the value is 'true' assume boolean true.
 					$value = true;
 				}
 				elseif ($options['parseBooleanWords'] && \in_array(strtolower($value), ['yes', 'no'], true))
-				// If the value is 'yes' or 'no' and option is enabled assume appropriate boolean
 				{
+					// If the value is 'yes' or 'no' and option is enabled assume appropriate boolean
 					$value = (strtolower($value) === 'yes');
 				}
 				elseif (is_numeric($value))
-				// If the value is numeric than it is either a float or int.
 				{
+					// If the value is numeric than it is either a float or int.
 					// If there is a period then we assume a float.
 					if (strpos($value, '.') !== false)
 					{
@@ -347,15 +348,18 @@ class Ini implements FormatInterface
 			case 'integer':
 			case 'double':
 				$string = $value;
+
 				break;
 
 			case 'boolean':
 				$string = $value ? 'true' : 'false';
+
 				break;
 
 			case 'string':
 				// Sanitize any CRLF characters..
 				$string = '"' . str_replace(["\r\n", "\n"], '\\n', $value) . '"';
+
 				break;
 		}
 
