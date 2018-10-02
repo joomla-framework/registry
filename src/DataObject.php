@@ -138,7 +138,6 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 			$properties = iterator_to_array($properties);
 		}
 		elseif (\is_object($properties))
-		// Check if the object needs to be converted to an array.
 		{
 			// Convert properties to an array.
 			$properties = (array) $properties;
@@ -259,7 +258,6 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 				$value = $value->format('Y-m-d H:i:s');
 			}
 			elseif ($value instanceof Registry)
-			// Check if the object is a registry.
 			{
 				$value = $value->toObject();
 			}
@@ -307,7 +305,7 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 		 */
 		if (strpos($property, "\0") === 0)
 		{
-			return null;
+			return;
 		}
 
 		// Set the value.

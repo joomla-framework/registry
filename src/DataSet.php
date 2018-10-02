@@ -74,7 +74,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 			$callback = [$object, $method];
 
 			// Check if the callback is callable.
-			if (is_callable($callback))
+			if (\is_callable($callback))
 			{
 				// Call the method for the object.
 				$return[$key] = \call_user_func_array($callback, $arguments);
@@ -217,7 +217,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 		{
 			$objectVars = json_decode(json_encode($object), true);
 
-			$keys = (\is_null($keys)) ? $objectVars : $function($keys, $objectVars);
+			$keys = ($keys === null) ? $objectVars : $function($keys, $objectVars);
 		}
 
 		return array_keys($keys);
@@ -521,7 +521,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 		if ($offset == $this->current)
 		{
 			// Get the current position.
-			$keys = $this->keys();
+			$keys     = $this->keys();
 			$position = array_search($this->current, $keys);
 
 			// Check if there is an object before the current object.
@@ -556,7 +556,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 		}
 		else
 		{
-			$keys = $this->keys();
+			$keys          = $this->keys();
 			$this->current = array_shift($keys);
 		}
 	}
@@ -593,7 +593,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	{
 		foreach ($input as $key => $object)
 		{
-			if (!\is_null($object))
+			if ($object !== null)
 			{
 				$this->offsetSet($key, $object);
 			}
