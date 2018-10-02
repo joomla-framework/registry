@@ -45,7 +45,7 @@ class Language
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $metadata = null;
+	protected $metadata;
 
 	/**
 	 * Array holding the language locale or boolean null if none.
@@ -53,7 +53,7 @@ class Language
 	 * @var    array|boolean
 	 * @since  1.0
 	 */
-	protected $locale = null;
+	protected $locale;
 
 	/**
 	 * The language to load.
@@ -61,7 +61,7 @@ class Language
 	 * @var    string
 	 * @since  1.0
 	 */
-	protected $lang = null;
+	protected $lang;
 
 	/**
 	 * A nested array of language files that have been loaded
@@ -282,7 +282,7 @@ class Language
 			if (strpos($string, '\\') !== false)
 			{
 				// Interpret \n and \t characters
-				$string = str_replace(['\\\\', '\t', '\n'], ["\\", "\t", "\n"], $string);
+				$string = str_replace(['\\\\', '\t', '\n'], ['\\', "\t", "\n"], $string);
 			}
 		}
 
@@ -544,6 +544,7 @@ class Language
 			if (strpos($line, '_QQ_') !== false)
 			{
 				$errors[] = $realNumber;
+
 				continue;
 			}
 
@@ -551,6 +552,7 @@ class Language
 			if (substr_count($line, '"') % 2 != 0)
 			{
 				$errors[] = $realNumber;
+
 				continue;
 			}
 
@@ -558,6 +560,7 @@ class Language
 			if (!preg_match('#^[A-Z][A-Z0-9_\*\-\.]*\s*=\s*".*"(\s*;.*)?$#', $line))
 			{
 				$errors[] = $realNumber;
+
 				continue;
 			}
 
@@ -616,20 +619,18 @@ class Language
 	/**
 	 * Determine who called Language or Text.
 	 *
-	 * @return  array  Caller information.
+	 * @return  mixed  Caller information or null if unavailable
 	 *
 	 * @since   1.0
 	 */
 	protected function getCallerInfo()
 	{
 		// Try to determine the source if none was provided
-		// @codeCoverageIgnoreStart
-		if (!function_exists('debug_backtrace'))
+		if (!\function_exists('debug_backtrace'))
 		{
-			return null;
+			return;
 		}
 
-		// @codeCoverageIgnoreEnd
 		$backtrace = debug_backtrace();
 		$info      = [];
 
@@ -778,7 +779,7 @@ class Language
 	 */
 	public function setDefault($lang)
 	{
-		$previous = $this->default;
+		$previous      = $this->default;
 		$this->default = $lang;
 
 		return $previous;
@@ -986,7 +987,7 @@ class Language
 	 *
 	 * @param   string  $path  Path to the XML files.
 	 *
-	 * @return  array  Array holding the found metadata as a key => value pair.
+	 * @return  mixed  Array holding the found metadata as a key => value pair or null on an invalid XML file
 	 *
 	 * @see     LanguageHelper::parseXMLLanguageFile()
 	 * @since   1.0
