@@ -196,7 +196,7 @@ class Input implements \Serializable, \Countable
 	 */
 	public function getArray(array $vars = [], $datasource = null)
 	{
-		if (empty($vars) && \is_null($datasource))
+		if (empty($vars) && $datasource === null)
 		{
 			$vars = $this->data;
 		}
@@ -207,7 +207,7 @@ class Input implements \Serializable, \Countable
 		{
 			if (\is_array($v))
 			{
-				if (\is_null($datasource))
+				if ($datasource === null)
 				{
 					$results[$k] = $this->getArray($v, $this->get($k, null, 'array'));
 				}
@@ -218,7 +218,7 @@ class Input implements \Serializable, \Countable
 			}
 			else
 			{
-				if (\is_null($datasource))
+				if ($datasource === null)
 				{
 					$results[$k] = $this->get($k, null, $v);
 				}
@@ -367,8 +367,7 @@ class Input implements \Serializable, \Countable
 
 		// Remove $_ENV and $_SERVER from the inputs.
 		$inputs = $this->inputs;
-		unset($inputs['env']);
-		unset($inputs['server']);
+		unset($inputs['env'], $inputs['server']);
 
 		// Serialize the options, data, and inputs.
 		return serialize([$this->options, $this->data, $inputs]);
