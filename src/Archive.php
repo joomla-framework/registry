@@ -78,10 +78,12 @@ class Archive
 		{
 			case 'zip':
 				$result = $this->getAdapter('zip')->extract($archivename, $extractdir);
+
 				break;
 
 			case 'tar':
 				$result = $this->getAdapter('tar')->extract($archivename, $extractdir);
+
 				break;
 
 			case 'tgz':
@@ -107,7 +109,7 @@ class Archive
 				}
 				else
 				{
-					Folder::create($path);
+					Folder::create($extractdir);
 					$result = File::copy($tmpfname, $extractdir . '/' . $filename, null, 0);
 				}
 
@@ -138,7 +140,7 @@ class Archive
 				}
 				else
 				{
-					Folder::create($path);
+					Folder::create($extractdir);
 					$result = File::copy($tmpfname, $extractdir . '/' . $filename, null, 0);
 				}
 

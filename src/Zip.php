@@ -9,8 +9,8 @@
 namespace Joomla\Archive;
 
 use Joomla\Filesystem\File;
-use Joomla\Filesystem\Path;
 use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 
 /**
  * ZIP format adapter for the Archive package
@@ -50,7 +50,7 @@ class Zip implements ExtractableInterface
 		0x4 => 'Normal',
 		0x5 => 'Maximum',
 		0x6 => 'Imploded',
-		0x8 => 'Deflated'
+		0x8 => 'Deflated',
 	];
 
 	/**
@@ -83,7 +83,7 @@ class Zip implements ExtractableInterface
 	 * @var    string
 	 * @since  1.0
 	 */
-	private $data = null;
+	private $data;
 
 	/**
 	 * ZIP file metadata array
@@ -91,7 +91,7 @@ class Zip implements ExtractableInterface
 	 * @var    array
 	 * @since  1.0
 	 */
-	private $metadata = null;
+	private $metadata;
 
 	/**
 	 * Holds the options array.
@@ -180,7 +180,7 @@ class Zip implements ExtractableInterface
 	 */
 	public static function isSupported()
 	{
-		return self::hasNativeSupport() || extension_loaded('zlib');
+		return self::hasNativeSupport() || \extension_loaded('zlib');
 	}
 
 	/**
@@ -192,7 +192,7 @@ class Zip implements ExtractableInterface
 	 */
 	public static function hasNativeSupport()
 	{
-		return extension_loaded('zip');
+		return \extension_loaded('zip');
 	}
 
 	/**
@@ -222,7 +222,7 @@ class Zip implements ExtractableInterface
 	 */
 	protected function extractCustom($archive, $destination)
 	{
-		$this->data = null;
+		$this->data     = null;
 		$this->metadata = null;
 
 		$this->data = file_get_contents($archive);
@@ -244,12 +244,12 @@ class Zip implements ExtractableInterface
 			if ($lastPathCharacter !== '/' && $lastPathCharacter !== '\\')
 			{
 				$buffer = $this->getFileData($i);
-				$path = Path::clean($destination . '/' . $this->metadata[$i]['name']);
+				$path   = Path::clean($destination . '/' . $this->metadata[$i]['name']);
 
 				// Make sure the destination folder exists
-				if (!Folder::create(dirname($path)))
+				if (!Folder::create(\dirname($path)))
 				{
-					throw new \RuntimeException('Unable to create destination folder ' . dirname($path));
+					throw new \RuntimeException('Unable to create destination folder ' . \dirname($path));
 				}
 
 				if (!File::write($path, $buffer))
@@ -285,7 +285,7 @@ class Zip implements ExtractableInterface
 		// Make sure the destination folder exists
 		if (!Folder::create($destination))
 		{
-			throw new \RuntimeException('Unable to create destination folder ' . dirname($path));
+			throw new \RuntimeException('Unable to create destination folder ' . \dirname($path));
 		}
 
 		// Read files in the archive
@@ -347,7 +347,6 @@ class Zip implements ExtractableInterface
 		{
 			$last = $fhLast;
 		}
-
 		while (($fhLast = strpos($data, $this->ctrlDirEnd, $fhLast + 1)) !== false);
 
 		// Find the central directory offset
@@ -364,7 +363,7 @@ class Zip implements ExtractableInterface
 		}
 
 		// Get details from central directory structure.
-		$fhStart = strpos($data, $this->ctrlDirHeader, $offset);
+		$fhStart    = strpos($data, $this->ctrlDirHeader, $offset);
 		$dataLength = \strlen($data);
 
 		do
@@ -419,14 +418,13 @@ class Zip implements ExtractableInterface
 				throw new \RuntimeException('Invalid ZIP Data');
 			}
 
-			$info = unpack('vMethod/VTime/VCRC32/VCompressed/VUncompressed/vLength/vExtraLength', substr($data, $lfhStart + 8, 25));
-			$name = substr($data, $lfhStart + 30, $info['Length']);
+			$info                         = unpack('vMethod/VTime/VCRC32/VCompressed/VUncompressed/vLength/vExtraLength', substr($data, $lfhStart + 8, 25));
+			$name                         = substr($data, $lfhStart + 30, $info['Length']);
 			$entries[$name]['_dataStart'] = $lfhStart + 30 + $info['Length'] + $info['ExtraLength'];
 
 			// Bump the max execution time because not using the built in php zip libs makes this process slow.
 			@set_time_limit(ini_get('max_execution_time'));
 		}
-
 		while (($fhStart = strpos($data, $this->ctrlDirHeader, $fhStart + 46)) !== false);
 
 		$this->metadata = array_values($entries);
@@ -459,7 +457,7 @@ class Zip implements ExtractableInterface
 		if ($this->metadata[$key]['_method'] == 0x12)
 		{
 			// If bz2 extension is loaded use it
-			if (extension_loaded('bz2'))
+			if (\extension_loaded('bz2'))
 			{
 				return bzdecompress(substr($this->data, $this->metadata[$key]['_dataStart'], $this->metadata[$key]['csize']));
 			}
@@ -483,10 +481,10 @@ class Zip implements ExtractableInterface
 
 		if ($timearray['year'] < 1980)
 		{
-			$timearray['year'] = 1980;
-			$timearray['mon'] = 1;
-			$timearray['mday'] = 1;
-			$timearray['hours'] = 0;
+			$timearray['year']    = 1980;
+			$timearray['mon']     = 1;
+			$timearray['mday']    = 1;
+			$timearray['hours']   = 0;
 			$timearray['minutes'] = 0;
 			$timearray['seconds'] = 0;
 		}
@@ -521,7 +519,7 @@ class Zip implements ExtractableInterface
 		}
 
 		// Get the hex time.
-		$dtime = dechex($this->unix2DosTime($ftime));
+		$dtime    = dechex($this->unix2DosTime($ftime));
 		$hexdtime = \chr(hexdec($dtime[6] . $dtime[7])) . \chr(hexdec($dtime[4] . $dtime[5])) . \chr(hexdec($dtime[2] . $dtime[3]))
 			. \chr(hexdec($dtime[0] . $dtime[1]));
 
@@ -569,7 +567,7 @@ class Zip implements ExtractableInterface
 		$fr .= $zdata;
 
 		// Add this entry to array.
-		$oldOffset = \strlen(implode('', $contents));
+		$oldOffset  = \strlen(implode('', $contents));
 		$contents[] = &$fr;
 
 		// Add to central directory record.
@@ -644,7 +642,7 @@ class Zip implements ExtractableInterface
 	private function createZipFile(array &$contents, array &$ctrlDir, $path)
 	{
 		$data = implode('', $contents);
-		$dir = implode('', $ctrlDir);
+		$dir  = implode('', $ctrlDir);
 
 		/*
 		 * Buffer data:
