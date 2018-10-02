@@ -8,8 +8,8 @@
 
 namespace Joomla\Controller;
 
-use Joomla\Input\Input;
 use Joomla\Application\AbstractApplication;
+use Joomla\Input\Input;
 
 /**
  * Joomla Framework Base Controller Class
