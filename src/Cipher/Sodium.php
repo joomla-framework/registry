@@ -107,7 +107,7 @@ class Sodium implements CipherInterface
 	 * @since   1.4.0
 	 * @throws  RuntimeException
 	 */
-	public function generateKey(array $options = array())
+	public function generateKey(array $options = [])
 	{
 		// Generate the encryption key.
 		$pair = Compat::crypto_box_keypair();

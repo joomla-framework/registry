@@ -9,13 +9,13 @@
 namespace Joomla\Crypt\Cipher;
 
 use Defuse\Crypto\Crypto as DefuseCrypto;
-use Defuse\Crypto\Key as DefuseKey;
 use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
 use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
+use Defuse\Crypto\Key as DefuseKey;
 use Defuse\Crypto\RuntimeTests;
 use Joomla\Crypt\CipherInterface;
-use Joomla\Crypt\Key;
 use Joomla\Crypt\Exception\InvalidKeyTypeException;
+use Joomla\Crypt\Key;
 
 /**
  * Joomla cipher for encryption, decryption and key generation via the php-encryption library.
@@ -100,7 +100,7 @@ class Crypto implements CipherInterface
 	 * @since   __DEPLOY_VERSION__
 	 * @throws  \RuntimeException
 	 */
-	public function generateKey(array $options = array())
+	public function generateKey(array $options = [])
 	{
 		// Generate the encryption key.
 		try

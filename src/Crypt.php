@@ -88,7 +88,7 @@ class Crypt
 	 *
 	 * @since   1.0
 	 */
-	public function generateKey(array $options = array())
+	public function generateKey(array $options = [])
 	{
 		return $this->cipher->generateKey($options);
 	}

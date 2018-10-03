@@ -48,7 +48,7 @@ interface CipherInterface
 	 *
 	 * @since   1.0
 	 */
-	public function generateKey(array $options = array());
+	public function generateKey(array $options = []);
 
 	/**
 	 * Check if the cipher is supported in this environment.

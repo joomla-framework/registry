@@ -140,6 +140,6 @@ class OpenSSL implements CipherInterface
 	 */
 	public static function isSupported(): bool
 	{
-		return extension_loaded('openssl');
+		return \extension_loaded('openssl');
 	}
 }
