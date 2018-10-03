@@ -148,6 +148,7 @@ class Text
 			if ($lang->hasKey($key))
 			{
 				$found = true;
+
 				break;
 			}
 		}

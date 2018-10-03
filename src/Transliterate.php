@@ -22,7 +22,7 @@ class Transliterate
 	 * @var    array
 	 * @since  1.4.0
 	 */
-	private static $utf8LowerAccents = array(
+	private static $utf8LowerAccents = [
 		'à' => 'a',
 		'ô' => 'o',
 		'ď' => 'd',
@@ -128,7 +128,7 @@ class Transliterate
 		'µ' => 'u',
 		'ĕ' => 'e',
 		'œ' => 'oe',
-	);
+	];
 
 	/**
 	 * Map of uppercased UTF-8 characters with their latin equivalents
@@ -136,7 +136,7 @@ class Transliterate
 	 * @var    array
 	 * @since  1.4.0
 	 */
-	private static $utf8UpperAccents = array(
+	private static $utf8UpperAccents = [
 		'À' => 'A',
 		'Ô' => 'O',
 		'Ď' => 'D',
@@ -240,7 +240,7 @@ class Transliterate
 		'Æ' => 'Ae',
 		'Ĕ' => 'E',
 		'Œ' => 'Oe',
-	);
+	];
 
 	/**
 	 * Returns strings transliterated from UTF-8 to Latin

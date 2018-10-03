@@ -426,7 +426,7 @@ class Porteren implements StemmerInterface
 		{
 			$substr = substr($str, 0, $len);
 
-			if (\is_null($m) || $this->m($substr) > $m)
+			if ($m === null || $this->m($substr) > $m)
 			{
 				$str = $substr . $repl;
 			}

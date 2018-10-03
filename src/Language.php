@@ -37,7 +37,7 @@ class Language
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $orphans = array();
+	protected $orphans = [];
 
 	/**
 	 * Array holding the language metadata.
@@ -69,7 +69,7 @@ class Language
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $paths = array();
+	protected $paths = [];
 
 	/**
 	 * List of language files that are in error state
@@ -77,7 +77,7 @@ class Language
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $errorfiles = array();
+	protected $errorfiles = [];
 
 	/**
 	 * An array of used text, used during debugging.
@@ -85,7 +85,7 @@ class Language
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $used = array();
+	protected $used = [];
 
 	/**
 	 * Counter for number of loads.
@@ -101,7 +101,7 @@ class Language
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $override = array();
+	protected $override = [];
 
 	/**
 	 * The localisation object.
@@ -109,7 +109,7 @@ class Language
 	 * @var    LocaliseInterface
 	 * @since  __DEPLOY_VERSION__
 	 */
-	protected $localise = null;
+	protected $localise;
 
 	/**
 	 * LanguageHelper object
@@ -485,7 +485,7 @@ class Language
 			$this->debugFile($filename);
 		}
 
-		return is_array($strings) ? $strings : [];
+		return \is_array($strings) ? $strings : [];
 	}
 
 	/**

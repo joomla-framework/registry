@@ -56,7 +56,7 @@ class LanguageHelper
 
 		if (empty($result))
 		{
-			return null;
+			return;
 		}
 
 		return $result;
@@ -164,13 +164,13 @@ class LanguageHelper
 
 		if (!$xml)
 		{
-			return null;
+			return;
 		}
 
 		// Check that it's a metadata file
 		if ((string) $xml->getName() != 'metafile')
 		{
-			return null;
+			return;
 		}
 
 		$metadata = [];
