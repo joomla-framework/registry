@@ -381,7 +381,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 
 		if ($data === null)
 		{
-			return;
+			return null;
 		}
 
 		return new Registry($data);
