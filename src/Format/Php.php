@@ -88,7 +88,7 @@ class Php implements FormatInterface
 	 */
 	protected function formatValue($value)
 	{
-		switch (gettype($value))
+		switch (\gettype($value))
 		{
 			case 'string':
 				return "'" . addcslashes($value, '\\\'') . "'";

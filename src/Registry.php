@@ -54,7 +54,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 		$this->data = new \stdClass;
 
 		// Optionally load supplied data.
-		if ($data instanceof Registry)
+		if ($data instanceof self)
 		{
 			$this->merge($data);
 		}
@@ -379,9 +379,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	{
 		$data = $this->get($path);
 
-		if (null === $data)
+		if ($data === null)
 		{
-			return null;
+			return;
 		}
 
 		return new Registry($data);
@@ -663,13 +663,13 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 		switch (true)
 		{
 			case \is_object($node):
-				$result = isset($node->{$nodes[$i]}) ? $node->{$nodes[$i]} : null;
+				$result = $node->{$nodes[$i]} ?? null;
 				unset($parent->{$nodes[$i]});
 
 				break;
 
 			case \is_array($node):
-				$result = isset($node[$nodes[$i]]) ? $node[$nodes[$i]] : null;
+				$result = $node[$nodes[$i]] ?? null;
 				unset($parent[$nodes[$i]]);
 
 				break;
