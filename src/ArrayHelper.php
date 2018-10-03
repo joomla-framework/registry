@@ -209,7 +209,7 @@ final class ArrayHelper
 	 */
 	public static function addColumn(array $array, array $column, $colName, $keyCol = null)
 	{
-		$result = array();
+		$result = [];
 
 		foreach ($array as $i => $item)
 		{
@@ -269,7 +269,7 @@ final class ArrayHelper
 	 */
 	public static function dropColumn(array $array, $colName)
 	{
-		$result = array();
+		$result = [];
 
 		foreach ($array as $i => $item)
 		{
@@ -734,14 +734,14 @@ final class ArrayHelper
 
 		foreach ($args as $i => $array)
 		{
-			if (!is_array($array))
+			if (!\is_array($array))
 			{
 				throw new \InvalidArgumentException(sprintf('Argument #%d is not an array.', $i + 2));
 			}
 
 			foreach ($array as $key => &$value)
 			{
-				if (is_array($value) && isset($result[$key]) && is_array($result[$key]))
+				if (\is_array($value) && isset($result[$key]) && \is_array($result[$key]))
 				{
 					$result[$key] = static::mergeRecursive($result [$key], $value);
 				}
