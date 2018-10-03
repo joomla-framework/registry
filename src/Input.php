@@ -135,7 +135,7 @@ class Input implements \Serializable, \Countable
 
 		if (\in_array(strtoupper($name), self::$allowedGlobals, true) && isset($GLOBALS[$superGlobal]))
 		{
-			$this->inputs[$name] = new Input($GLOBALS[$superGlobal], $this->options);
+			$this->inputs[$name] = new self($GLOBALS[$superGlobal], $this->options);
 
 			return $this->inputs[$name];
 		}
