@@ -65,7 +65,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 */
 	public function __call($method, $arguments = [])
 	{
-		$return = array();
+		$return = [];
 
 		// Iterate through the objects.
 		foreach ($this->objects as $key => $object)
