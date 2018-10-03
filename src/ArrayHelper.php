@@ -345,7 +345,7 @@ final class ArrayHelper
 		}
 
 		// Handle the default case
-		if (\is_null($result))
+		if ($result === null)
 		{
 			$result = $default;
 		}
@@ -358,6 +358,7 @@ final class ArrayHelper
 				// Only use the first integer value
 				@preg_match('/-?[0-9]+/', $result, $matches);
 				$result = @(int) $matches[0];
+
 				break;
 
 			case 'FLOAT':
@@ -365,11 +366,13 @@ final class ArrayHelper
 				// Only use the first floating point value
 				@preg_match('/-?[0-9]+(\.[0-9]+)?/', $result, $matches);
 				$result = @(float) $matches[0];
+
 				break;
 
 			case 'BOOL':
 			case 'BOOLEAN':
 				$result = (bool) $result;
+
 				break;
 
 			case 'ARRAY':
@@ -377,14 +380,17 @@ final class ArrayHelper
 				{
 					$result = [$result];
 				}
+
 				break;
 
 			case 'STRING':
 				$result = (string) $result;
+
 				break;
 
 			case 'WORD':
 				$result = (string) preg_replace('#\W#', '', $result);
+
 				break;
 
 			case 'NONE':
@@ -562,7 +568,7 @@ final class ArrayHelper
 	 */
 	public static function sortObjects(array $a, $k, $direction = 1, $caseSensitive = true, $locale = false)
 	{
-		if (!\is_array($locale) || !is_array($locale[0]))
+		if (!\is_array($locale) || !\is_array($locale[0]))
 		{
 			$locale = [$locale];
 		}
