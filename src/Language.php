@@ -363,13 +363,12 @@ class Language
 	 * @param   string   $basePath   The basepath to use.
 	 * @param   string   $lang       The language to load, default null for the current language.
 	 * @param   boolean  $reload     Flag that will force a language to be reloaded if set to true.
-	 * @param   boolean  $default    Flag that force the default language to be loaded if the current does not exist.
 	 *
 	 * @return  boolean  True if the file has successfully loaded.
 	 *
 	 * @since   1.0
 	 */
-	public function load($extension = 'joomla', $basePath = '', $lang = null, $reload = false, $default = true)
+	public function load($extension = 'joomla', $basePath = '', $lang = null, $reload = false)
 	{
 		$lang     = $lang ?: $this->lang;
 		$basePath = $basePath ?: $this->basePath;
@@ -387,27 +386,7 @@ class Language
 		}
 
 		// Load the language file
-		$result = $this->loadLanguage($filename, $extension);
-
-		// Check whether there was a problem with loading the file
-		if ($result === false && $default)
-		{
-			// No strings, so either file doesn't exist or the file is invalid
-			$oldFilename = $filename;
-
-			// Check the standard file name
-			$path     = $this->helper->getLanguagePath($basePath, $this->default);
-			$filename = $internal ? $this->default : $this->default . '.' . $extension;
-			$filename = "$path/$filename.ini";
-
-			// If the one we tried is different than the new name, try again
-			if ($oldFilename != $filename)
-			{
-				$result = $this->loadLanguage($filename, $extension);
-			}
-		}
-
-		return $result;
+		return $this->loadLanguage($filename, $extension);
 	}
 
 	/**
@@ -924,6 +903,20 @@ class Language
 	public function getCatalogue(): MessageCatalogue
 	{
 		return $this->catalogue;
+	}
+
+	/**
+	 * Set the message catalogue for the language.
+	 *
+	 * @param   MessageCatalogue  $catalogue  The message catalogue to use.
+	 *
+	 * @return  void
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function setCatalogue(MessageCatalogue $catalogue)
+	{
+		$this->catalogue = $catalogue;
 	}
 
 	/**
