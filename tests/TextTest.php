@@ -7,6 +7,8 @@
 namespace Joomla\Language\Tests;
 
 use Joomla\Language\LanguageFactory;
+use Joomla\Language\Parser\IniParser;
+use Joomla\Language\ParserRegistry;
 use Joomla\Language\Text;
 use Joomla\Language\Language;
 use PHPUnit\Framework\TestCase;
@@ -29,6 +31,13 @@ class TextTest extends TestCase
 	 * @var  Text
 	 */
 	protected $object;
+
+	/**
+	 * File parser registry
+	 *
+	 * @var  ParserRegistry
+	 */
+	private $parserRegistry;
 
 	/**
 	 * Path to language folder used for testing
@@ -56,7 +65,10 @@ class TextTest extends TestCase
 	{
 		parent::setUp();
 
-		$language = new Language(self::$testPath, 'en-GB');
+		$this->parserRegistry = new ParserRegistry;
+		$this->parserRegistry->add(new IniParser);
+
+		$language = new Language($this->parserRegistry, self::$testPath, 'en-GB');
 		$language->load();
 		$this->object = new Text($language);
 	}
@@ -71,7 +83,7 @@ class TextTest extends TestCase
 	 */
 	public function testVerifyThatTextIsInstantiatedCorrectly()
 	{
-		$this->assertInstanceOf('Joomla\\Language\\Text', new Text(new Language(self::$testPath)));
+		$this->assertInstanceOf('Joomla\\Language\\Text', new Text(new Language($this->parserRegistry, self::$testPath)));
 	}
 
 	/**
@@ -97,7 +109,7 @@ class TextTest extends TestCase
 	 */
 	public function testVerifyThatSetLanguageReturnsSelf()
 	{
-		$this->assertSame($this->object, $this->object->setLanguage(new Language(self::$testPath, 'de-DE')));
+		$this->assertSame($this->object, $this->object->setLanguage(new Language($this->parserRegistry, self::$testPath, 'de-DE')));
 	}
 
 	/**

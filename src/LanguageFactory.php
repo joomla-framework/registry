@@ -59,7 +59,10 @@ class LanguageFactory
 		$path = $path ?: $this->getLanguageDirectory();
 		$lang = $lang ?: $this->getDefaultLanguage();
 
-		return new Language($path, $lang, $debug);
+		$loaderRegistry = new ParserRegistry;
+		$loaderRegistry->add(new Parser\IniParser);
+
+		return new Language($loaderRegistry, $path, $lang, $debug);
 	}
 
 	/**

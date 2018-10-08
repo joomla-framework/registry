@@ -136,15 +136,24 @@ class Language
 	protected $catalogue;
 
 	/**
+	 * Language parser registry
+	 *
+	 * @var    ParserRegistry
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $parserRegistry;
+
+	/**
 	 * Constructor activating the default information of the language.
 	 *
-	 * @param   string   $path   The base path to the language folder
-	 * @param   string   $lang   The language
-	 * @param   boolean  $debug  Indicates if language debugging is enabled.
+	 * @param   ParserRegistry  $parserRegistry  A registry containing the supported file parsers
+	 * @param   string          $path            The base path to the language folder
+	 * @param   string          $lang            The language
+	 * @param   boolean         $debug           Indicates if language debugging is enabled
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($path, $lang = '', $debug = false)
+	public function __construct(ParserRegistry $parserRegistry, string $path, $lang = '', $debug = false)
 	{
 		if (empty($path))
 		{
@@ -160,6 +169,8 @@ class Language
 
 		$this->metadata = $this->helper->getMetadata($this->lang, $this->basePath);
 		$this->setDebug($debug);
+
+		$this->parserRegistry = $parserRegistry;
 
 		$basePath = $this->helper->getLanguagePath($this->basePath);
 
@@ -454,7 +465,15 @@ class Language
 			ini_set('track_errors', true);
 		}
 
-		$strings = @parse_ini_file($filename);
+		try
+		{
+			$strings = $this->parserRegistry->get(pathinfo($filename, PATHINFO_EXTENSION))->loadFile($filename);
+		}
+		catch (\RuntimeException $exception)
+		{
+			// TODO - This shouldn't be absorbed
+			$strings = [];
+		}
 
 		if ($this->debug)
 		{
@@ -487,75 +506,22 @@ class Language
 		}
 
 		// Initialise variables for manually parsing the file for common errors.
-		$blacklist    = ['YES', 'NO', 'NULL', 'FALSE', 'ON', 'OFF', 'NONE', 'TRUE'];
 		$debug        = $this->setDebug(false);
-		$errors       = [];
 		$php_errormsg = null;
 
-		// Open the file as a stream.
-		$file = new \SplFileObject($filename);
+		$parser = $this->parserRegistry->get(pathinfo($filename, PATHINFO_EXTENSION));
 
-		foreach ($file as $lineNumber => $line)
+		if (!($parser instanceof DebugParserInterface))
 		{
-			// Avoid BOM error as BOM is OK when using parse_ini.
-			if ($lineNumber == 0)
-			{
-				$line = str_replace("\xEF\xBB\xBF", '', $line);
-			}
-
-			$line = trim($line);
-
-			// Ignore comment lines.
-			if (!\strlen($line) || $line[0] == ';')
-			{
-				continue;
-			}
-
-			// Ignore grouping tag lines, like: [group]
-			if (preg_match('#^\[[^\]]*\](\s*;.*)?$#', $line))
-			{
-				continue;
-			}
-
-			$realNumber = $lineNumber + 1;
-
-			// Check for any incorrect uses of _QQ_.
-			if (strpos($line, '_QQ_') !== false)
-			{
-				$errors[] = $realNumber;
-
-				continue;
-			}
-
-			// Check for odd number of double quotes.
-			if (substr_count($line, '"') % 2 != 0)
-			{
-				$errors[] = $realNumber;
-
-				continue;
-			}
-
-			// Check that the line passes the necessary format.
-			if (!preg_match('#^[A-Z][A-Z0-9_\*\-\.]*\s*=\s*".*"(\s*;.*)?$#', $line))
-			{
-				$errors[] = $realNumber;
-
-				continue;
-			}
-
-			// Check that the key is not in the blacklist.
-			$key = strtoupper(trim(substr($line, 0, strpos($line, '='))));
-
-			if (\in_array($key, $blacklist))
-			{
-				$errors[] = $realNumber;
-			}
+			return 0;
 		}
+
+		$errors = $parser->debugFile($filename);
 
 		// Check if we encountered any errors.
 		if (\count($errors))
 		{
-			$this->errorfiles[$filename] = $filename . ' - error(s) in line(s) ' . implode(', ', $errors);
+			$this->errorfiles[$filename] = $filename . ' - error(s) ' . implode(', ', $errors);
 		}
 		elseif ($php_errormsg)
 		{

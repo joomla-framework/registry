@@ -7,6 +7,8 @@
 namespace Joomla\Language\Tests;
 
 use Joomla\Language\Language;
+use Joomla\Language\Parser\IniParser;
+use Joomla\Language\ParserRegistry;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
 
@@ -21,6 +23,13 @@ class LanguageTest extends TestCase
 	 * @var  Language
 	 */
 	protected $object;
+
+	/**
+	 * File loader registry
+	 *
+	 * @var  ParserRegistry
+	 */
+	protected $parserRegistry;
 
 	/**
 	 * Path to language folder used for testing
@@ -39,8 +48,11 @@ class LanguageTest extends TestCase
 	{
 		parent::setUp();
 
+		$this->parserRegistry = new ParserRegistry;
+		$this->parserRegistry->add(new IniParser);
+
 		$this->testPath = __DIR__ . '/data';
-		$this->object   = new Language($this->testPath, 'en-GB');
+		$this->object   = new Language($this->parserRegistry, $this->testPath, 'en-GB');
 		$this->object->load();
 	}
 
@@ -53,7 +65,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyThatLanguageIsInstantiatedCorrectly()
 	{
-		$this->assertInstanceOf('Joomla\\Language\\Language', new Language($this->testPath));
+		$this->assertInstanceOf('Joomla\\Language\\Language', new Language($this->parserRegistry, $this->testPath));
 	}
 
 	/**
