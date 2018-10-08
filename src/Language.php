@@ -319,7 +319,7 @@ class Language
 		// The transliterate method can return false if there isn't a fully valid UTF-8 string entered
 		if ($string === false)
 		{
-			throw new \RuntimeException('Invalid UTF-8 was detected in the string "%s"', $lowercaseString);
+			throw new \RuntimeException('Invalid UTF-8 was detected in the string "%s"', $string);
 		}
 
 		return $string;
