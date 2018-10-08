@@ -601,6 +601,18 @@ class LanguageTest extends TestCase
 	}
 
 	/**
+	 * @testdox  Verify that Language::getWeekEnd() default returns an array
+	 *
+	 * @covers   Joomla\Language\Language::getWeekEnd
+	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageHelper
+	 */
+	public function testVerifyTheDefaultReturnForGetWeekEnd()
+	{
+		$this->assertSame('0,6', $this->object->getWeekEnd());
+	}
+
+	/**
 	 * @testdox  Verify that Language::parseLanguageFiles() proxies to LanguageHelper::parseLanguageFiles()
 	 *
 	 * @covers   Joomla\Language\Language::parseLanguageFiles

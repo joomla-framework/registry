@@ -917,6 +917,18 @@ class Language
 	}
 
 	/**
+	 * Get the weekends days for this language.
+	 *
+	 * @return  string  The weekend days of the week separated by a comma according to the language
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	public function getWeekEnd()
+	{
+		return $this->metadata['weekEnd'] ?? '0,6';
+	}
+
+	/**
 	 * Searches for language directories within a certain base dir.
 	 *
 	 * @param   string  $dir  directory of files.
