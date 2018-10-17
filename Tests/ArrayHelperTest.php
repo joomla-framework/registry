@@ -2555,24 +2555,46 @@ class ArrayHelperTest extends TestCase
 	 */
 	public function testFlatten()
 	{
-		$array = array(
+		$array = [
 			'flower' => 'sakura',
-			'olive' => 'peace',
-			'pos1' => array(
-				'sunflower' => 'love'
-			),
-			'pos2' => array(
-				'cornflower' => 'elegant'
-			)
+			'olive'  => 'peace',
+			'pos1'   => [
+				'sunflower' => 'love',
+			],
+			'pos2'   => [
+				'cornflower' => 'elegant',
+			],
+			'parent' => [
+				'child1' => 'you',
+				'child2' => 'me',
+			],
+		];
+
+		$this->assertEquals(
+			[
+				'flower'          => 'sakura',
+				'olive'           => 'peace',
+				'pos1.sunflower'  => 'love',
+				'pos2.cornflower' => 'elegant',
+				'parent.child1'   => 'you',
+				'parent.child2'   => 'me',
+			],
+			ArrayHelper::flatten($array),
+			'An array is flattened to a single dimension'
 		);
 
-		$flatted = ArrayHelper::flatten($array);
-
-		$this->assertEquals($flatted['pos1.sunflower'], 'love');
-
-		$flatted = ArrayHelper::flatten($array, '/');
-
-		$this->assertEquals($flatted['pos1/sunflower'], 'love');
+		$this->assertEquals(
+			[
+				'flower'          => 'sakura',
+				'olive'           => 'peace',
+				'pos1/sunflower'  => 'love',
+				'pos2/cornflower' => 'elegant',
+				'parent/child1'   => 'you',
+				'parent/child2'   => 'me',
+			],
+			ArrayHelper::flatten($array, '/'),
+			'An array is flattened to a single dimension with a custom separator'
+		);
 	}
 
 	/**
