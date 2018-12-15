@@ -104,16 +104,16 @@ class CryptTest extends TestCase
 	 */
 	public function dataStrings()
 	{
-		return array(
-			array('c-;3-(Is>{DJzOHMCv_<#yKuN/G`/Us{GkgicWG$M|HW;kI0BVZ^|FY/"Obt53?PNaWwhmRtH;lWkWE4vlG5CIFA!abu&F=Xo#Qw}gAp3;GL\'k])%D}C+W&ne6_F$3P5'),
-			array('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
+		return [
+			['c-;3-(Is>{DJzOHMCv_<#yKuN/G`/Us{GkgicWG$M|HW;kI0BVZ^|FY/"Obt53?PNaWwhmRtH;lWkWE4vlG5CIFA!abu&F=Xo#Qw}gAp3;GL\'k])%D}C+W&ne6_F$3P5'],
+			['Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
 					'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' .
 					'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ' .
-					'in culpa qui officia deserunt mollit anim id est laborum.'),
-			array('لا أحد يحب الألم بذاته، يسعى ورائه أو يبتغيه، ببساطة لأنه الألم...'),
-			array('Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства'),
-			array('The quick brown fox jumps over the lazy dog.')
-		);
+					'in culpa qui officia deserunt mollit anim id est laborum.'],
+			['لا أحد يحب الألم بذاته، يسعى ورائه أو يبتغيه، ببساطة لأنه الألم...'],
+			['Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства'],
+			['The quick brown fox jumps over the lazy dog.'],
+		];
 	}
 
 	/**
@@ -168,7 +168,7 @@ class CryptTest extends TestCase
 	public function testSetKey()
 	{
 		$keyMock = $this->getMockBuilder(Key::class)
-			->setConstructorArgs(array('test', 'private', 'public'))
+			->setConstructorArgs(['test', 'private', 'public'])
 			->getMock();
 
 		$this->object->setKey($keyMock);
@@ -188,13 +188,13 @@ class CryptTest extends TestCase
 	 */
 	public function dataRandomByteLength()
 	{
-		return array(
-			'8 bytes' => array(8),
-			'16 bytes' => array(16),
-			'24 bytes' => array(24),
-			'32 bytes' => array(32),
-			'40 bytes' => array(40),
-		);
+		return [
+			'8 bytes' => [8],
+			'16 bytes' => [16],
+			'24 bytes' => [24],
+			'32 bytes' => [32],
+			'40 bytes' => [40],
+		];
 	}
 
 	/**
