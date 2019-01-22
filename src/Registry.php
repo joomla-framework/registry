@@ -369,19 +369,20 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	/**
 	 * Method to extract a sub-registry from path
 	 *
-	 * @param   string  $path  Registry path (e.g. joomla.content.showauthor)
+	 * @param   string   $path  Registry path (e.g. joomla.content.showauthor)
+	 * @param   boolean  $safe  If true, will always return a Registry
 	 *
 	 * @return  Registry|null  Registry object if data is present
 	 *
 	 * @since   1.2.0
 	 */
-	public function extract($path)
+	public function extract($path, $safe = false)
 	{
 		$data = $this->get($path);
 
 		if ($data === null)
 		{
-			return null;
+			return $safe ? new Registry : null;
 		}
 
 		return new Registry($data);
