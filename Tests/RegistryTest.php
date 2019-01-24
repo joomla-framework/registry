@@ -464,15 +464,15 @@ class RegistryTest extends TestCase
 	}
 
 	/**
-	 * @testdox  A Registry cannot be extracted from null data
+	 * @testdox  A Registry can be extracted from null data
 	 *
 	 * @covers   Joomla\Registry\Registry::extract
 	 */
-	public function testARegistryCannotBeExtractedFromNullData()
+	public function testARegistryCanBeExtractedFromNullData()
 	{
 		$a = new Registry;
 
-		$this->assertNull($a->extract('foo'), 'A Registry cannot be extracted from null data.');
+		$this->assertInstanceOf(Registry::class, $a->extract('foo'), 'A Registry can be extracted from null data.');
 	}
 
 	/**
