@@ -371,18 +371,13 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @param   string  $path  Registry path (e.g. joomla.content.showauthor)
 	 *
-	 * @return  Registry|null  Registry object if data is present
+	 * @return  Registry  Registry object (empty if no data is present)
 	 *
 	 * @since   1.2.0
 	 */
 	public function extract($path)
 	{
 		$data = $this->get($path);
-
-		if ($data === null)
-		{
-			return null;
-		}
 
 		return new Registry($data);
 	}
