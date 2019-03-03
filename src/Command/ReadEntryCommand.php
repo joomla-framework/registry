@@ -9,6 +9,9 @@
 namespace Joomla\Keychain\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command class to read a single entry from a keychain
@@ -18,18 +21,29 @@ use Symfony\Component\Console\Input\InputArgument;
 class ReadEntryCommand extends AbstractKeychainCommand
 {
 	/**
-	 * Execute the command.
+	 * The default command name
 	 *
-	 * @return  integer  The exit code for the command.
+	 * @var    string|null
+	 * @since  __DEPLOY_VERSION__
 	 */
-	public function execute(): int
+	protected static $defaultName = 'keychain:read-entry';
+
+	/**
+	 * Internal function to execute the command.
+	 *
+	 * @param   InputInterface   $input   The input to inject into the command.
+	 * @param   OutputInterface  $output  The output to inject into the command.
+	 *
+	 * @return  integer  The command exit code
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	protected function doExecute(InputInterface $input, OutputInterface $output): int
 	{
-		$symfonyStyle = $this->createSymfonyStyle();
+		$symfonyStyle = new SymfonyStyle($input, $output);
 		$symfonyStyle->title('Read Keychain Entry');
 
-		$this->initialiseKeychain();
-
-		$entryName = $this->getApplication()->getConsoleInput()->getArgument('entry-name');
+		$entryName = $input->getArgument('entry-name');
 
 		if (!$this->keychain->exists($entryName))
 		{
@@ -49,17 +63,16 @@ class ReadEntryCommand extends AbstractKeychainCommand
 	}
 
 	/**
-	 * Initialise the command.
+	 * Configure the command.
 	 *
 	 * @return  void
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	protected function initialise()
+	protected function configure()
 	{
-		parent::initialise();
+		parent::configure();
 
-		$this->setName('keychain:read-entry');
 		$this->setDescription('Reads a single entry in the keychain');
 
 		$this->addArgument(

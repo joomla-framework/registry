@@ -8,12 +8,14 @@
 
 namespace Joomla\Keychain\Command;
 
-use Joomla\Console\AbstractCommand;
+use Joomla\Console\Command\AbstractCommand;
 use Joomla\Crypt\Crypt;
 use Joomla\Keychain\Keychain;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Base class for all keychain console commands.
@@ -29,6 +31,14 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 * @since  __DEPLOY_VERSION__
 	 */
 	protected $crypt;
+
+	/**
+	 * The path to the keychain file.
+	 *
+	 * @var    string
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $filename;
 
 	/**
 	 * The keychain being managed.
@@ -54,13 +64,13 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	}
 
 	/**
-	 * Initialise the command.
+	 * Configure the command.
 	 *
 	 * @return  void
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	protected function initialise()
+	protected function configure()
 	{
 		$this->addArgument(
 			'filename',
@@ -70,16 +80,33 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	}
 
 	/**
+	 * Internal hook to initialise the command after the input has been bound and before the input is validated.
+	 *
+	 * @param   InputInterface   $input   The input to inject into the command.
+	 * @param   OutputInterface  $output  The output to inject into the command.
+	 *
+	 * @return  void
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	protected function initialise(InputInterface $input, OutputInterface $output)
+	{
+		$this->initialiseKeychain($input);
+	}
+
+	/**
 	 * Initialise the Keychain.
+	 *
+	 * @param   InputInterface  $input  The input to inject into the command.
 	 *
 	 * @return  void
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 * @throws  InvalidArgumentException
 	 */
-	protected function initialiseKeychain()
+	protected function initialiseKeychain(InputInterface $input)
 	{
-		$filename = $this->getApplication()->getConsoleInput()->getArgument('filename');
+		$filename = $input->getArgument('filename');
 
 		if (!file_exists($filename))
 		{
@@ -90,6 +117,8 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 				)
 			);
 		}
+
+		$this->filename = $filename;
 
 		$this->keychain->loadKeychain($filename);
 	}
@@ -104,18 +133,16 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 */
 	protected function saveKeychain(): bool
 	{
-		$filename = $this->getApplication()->getConsoleInput()->getArgument('filename');
-
-		if (!is_writable($filename))
+		if (!is_writable($this->filename))
 		{
 			throw new RuntimeException(
 				sprintf(
 					'Cannot write the keychain to `%s` as the path is not writable.',
-					$filename
+					$this->filename
 				)
 			);
 		}
 
-		return $this->keychain->saveKeychain($filename);
+		return $this->keychain->saveKeychain($this->filename);
 	}
 }

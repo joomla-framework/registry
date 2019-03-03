@@ -9,6 +9,9 @@
 namespace Joomla\Keychain\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command class to add an entry to a keychain
@@ -18,19 +21,30 @@ use Symfony\Component\Console\Input\InputArgument;
 class AddEntryCommand extends AbstractKeychainCommand
 {
 	/**
-	 * Execute the command.
+	 * The default command name
 	 *
-	 * @return  integer  The exit code for the command.
+	 * @var    string|null
+	 * @since  __DEPLOY_VERSION__
 	 */
-	public function execute(): int
+	protected static $defaultName = 'keychain:add-entry';
+
+	/**
+	 * Internal function to execute the command.
+	 *
+	 * @param   InputInterface   $input   The input to inject into the command.
+	 * @param   OutputInterface  $output  The output to inject into the command.
+	 *
+	 * @return  integer  The command exit code
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	protected function doExecute(InputInterface $input, OutputInterface $output): int
 	{
-		$symfonyStyle = $this->createSymfonyStyle();
+		$symfonyStyle = new SymfonyStyle($input, $output);
 		$symfonyStyle->title('Add Keychain Entry');
 
-		$this->initialiseKeychain();
-
-		$entryName  = $this->getApplication()->getConsoleInput()->getArgument('entry-name');
-		$entryValue = $this->getApplication()->getConsoleInput()->getArgument('entry-value');
+		$entryName  = $input->getArgument('entry-name');
+		$entryValue = $input->getArgument('entry-value');
 
 		if ($this->keychain->exists($entryName))
 		{
@@ -59,17 +73,16 @@ class AddEntryCommand extends AbstractKeychainCommand
 	}
 
 	/**
-	 * Initialise the command.
+	 * Configure the command.
 	 *
 	 * @return  void
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	protected function initialise()
+	protected function configure()
 	{
-		parent::initialise();
+		parent::configure();
 
-		$this->setName('keychain:add-entry');
 		$this->setDescription('Adds an entry to the keychain');
 
 		$this->addArgument(
