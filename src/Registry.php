@@ -264,7 +264,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @param   boolean  $flattened  Load from a one-dimensional array
 	 * @param   string   $separator  The key separator
 	 *
-	 * @return  Registry  Return this object to support chaining.
+	 * @return  $this
 	 *
 	 * @since   1.0
 	 */
@@ -290,7 +290,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @param   object  $object  The object holding the publics to load
 	 *
-	 * @return  Registry  Return this object to support chaining.
+	 * @return  $this
 	 *
 	 * @since   1.0
 	 */
@@ -308,7 +308,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @param   string  $format   Format of the file [optional: defaults to JSON]
 	 * @param   array   $options  Options used by the formatter
 	 *
-	 * @return  Registry  Return this object to support chaining.
+	 * @return  $this
 	 *
 	 * @since   1.0
 	 */
@@ -326,7 +326,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @param   string  $format   Format of the string
 	 * @param   array   $options  Options used by the formatter
 	 *
-	 * @return  Registry  Return this object to support chaining.
+	 * @return  $this
 	 *
 	 * @since   1.0
 	 */
@@ -355,7 +355,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @param   Registry  $source     Source Registry object to merge.
 	 * @param   boolean   $recursive  True to support recursive merge the children values.
 	 *
-	 * @return  Registry  Return this object to support chaining.
+	 * @return  $this
 	 *
 	 * @since   1.0
 	 */
