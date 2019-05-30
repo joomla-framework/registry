@@ -11,7 +11,7 @@
     },
     "require-dev": {
         "joomla/coding-standards": "~2.0@alpha",
-        "symfony/yaml": "~2.7|~3.0|~4.0",
+        "symfony/yaml": "~3.4|~4.0",
         "phpunit/phpunit": "~6.3"
     },
     "suggest": {
