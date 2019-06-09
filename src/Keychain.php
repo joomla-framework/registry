@@ -9,6 +9,7 @@
 namespace Joomla\Keychain;
 
 use Joomla\Crypt\Crypt;
+use Joomla\Crypt\Exception\CryptExceptionInterface;
 use Joomla\Registry\Registry;
 
 /**
@@ -30,7 +31,7 @@ class Keychain extends Registry
 	 * Constructor
 	 *
 	 * @param   Crypt  $crypt  The encryption handler.
-	 * @param   mixed  $data   The data to bind to the new Registry object.
+	 * @param   mixed  $data   The data to bind to the new Keychain.
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
@@ -49,7 +50,8 @@ class Keychain extends Registry
 	 * @return  $this
 	 *
 	 * @since   1.0
-	 * @throws  \RuntimeException
+	 * @throws  \RuntimeException if the keychain file does not exist
+	 * @throws  CryptExceptionInterface if the keychain cannot be decrypted
 	 */
 	public function loadKeychain($keychainFile)
 	{
@@ -71,7 +73,8 @@ class Keychain extends Registry
 	 * @return  boolean  Result of storing the file.
 	 *
 	 * @since   1.0
-	 * @throws  \RuntimeException
+	 * @throws  \RuntimeException if the keychain file path is invalid
+	 * @throws  CryptExceptionInterface if the keychain cannot be encrypted
 	 */
 	public function saveKeychain($keychainFile)
 	{

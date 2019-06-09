@@ -4,13 +4,11 @@ The Keychain package provides a suite of commands to enable managing your keycha
 
 ### Prerequisites
 
-In order to use these commands, your application must use the `joomla/console` package.
+In order to use these commands, your application must use the [`joomla/console`](https://github.com/joomla-framework/console) package.
 
 ### Setup
 
-The command classes each have one required dependency, a configured `Joomla\Crypt\Crypt` instance which will be used to read the encrypted file,
-and if necessary encrypt the file when saving updates.  Once the `Crypt` instance is configured, commands can be added to the console application
-through its `addCommand` method.  A basic example is below.
+The command classes each have one required dependency, a configured `Joomla\Crypt\Crypt` instance which will be used to read the encrypted file, and if necessary encrypt the file when saving updates. Once the `Crypt` instance is configured, commands can be added to the console application through its `addCommand` method.
 
 ```php
 <?php
@@ -49,6 +47,4 @@ Available commands:
   keychain:read-entry    Reads a single entry in the keychain
 ```
 
-All of the provided commands have at least one required argument, a file path to the location the keychain file is stored on your filesystem.
-Other commands have additional required arguments and available options, by default these can be seen by passing the `--help` option to each command,
-i.e. `keychain:edit-entry --help`.
+All of the provided commands have at least one required argument, a file path to the location the keychain file is stored on your filesystem. Other commands have additional required arguments and available options, by default these can be seen by passing the `--help` option to each command, i.e. `keychain:edit-entry --help`.
