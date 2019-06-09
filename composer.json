@@ -17,8 +17,10 @@
         "symfony/phpunit-bridge": "~3.3"
     },
     "suggest": {
+        "ext-openssl": "To use the OpenSSL cipher",
+        "ext-sodium": "To use the Sodium cipher",
         "defuse/php-encryption": "To use Crypto cipher",
-        "paragonie/sodium_compat": "To use Sodium cipher"
+        "paragonie/sodium_compat": "To use Sodium cipher if neither ext/sodium or ext/libsodium are available"
     },
     "autoload": {
         "psr-4": {

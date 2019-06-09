@@ -12,6 +12,7 @@ use Joomla\Crypt\CipherInterface;
 use Joomla\Crypt\Exception\DecryptionException;
 use Joomla\Crypt\Exception\EncryptionException;
 use Joomla\Crypt\Exception\InvalidKeyTypeException;
+use Joomla\Crypt\Exception\UnsupportedCipherException;
 use Joomla\Crypt\Key;
 use ParagonIE\Sodium\Compat;
 
@@ -55,18 +56,73 @@ class Sodium implements CipherInterface
 			throw new DecryptionException('Missing nonce to decrypt data');
 		}
 
-		$decrypted = Compat::crypto_box_open(
-			$data,
-			$this->nonce,
-			Compat::crypto_box_keypair_from_secretkey_and_publickey($key->getPrivate(), $key->getPublic())
-		);
-
-		if ($decrypted === false)
+		// Use the sodium extension (PHP 7.2 native, PECL 2.x, or paragonie/sodium_compat) if able
+		if (\function_exists('sodium_crypto_box_open'))
 		{
-			throw new DecryptionException('Malformed message or invalid MAC');
+			try
+			{
+				$decrypted = sodium_crypto_box_open(
+					$data,
+					$this->nonce,
+					sodium_crypto_box_keypair_from_secretkey_and_publickey($key->getPrivate(), $key->getPublic())
+				);
+
+				if ($decrypted === false)
+				{
+					throw new DecryptionException('Malformed message or invalid MAC');
+				}
+			}
+			catch (\SodiumException $exception)
+			{
+				throw new DecryptionException('Malformed message or invalid MAC', $exception->getCode(), $exception);
+			}
+
+			return $decrypted;
 		}
 
-		return $decrypted;
+		// Use the sodium extension (PHP 7.2 native, PECL 2.x, or paragonie/sodium_compat) if able
+		if (\function_exists('sodium_crypto_box_open'))
+		{
+			try
+			{
+				$decrypted = sodium_crypto_box_open(
+					$data,
+					$this->nonce,
+					sodium_crypto_box_keypair_from_secretkey_and_publickey($key->getPrivate(), $key->getPublic())
+				);
+
+				if ($decrypted === false)
+				{
+					throw new DecryptionException('Malformed message or invalid MAC');
+				}
+			}
+			catch (\SodiumException $exception)
+			{
+				throw new DecryptionException('Malformed message or invalid MAC', $exception->getCode(), $exception);
+			}
+
+			return $decrypted;
+		}
+
+		// Use the libsodium extension (PECL 1.x) if able; purposefully skipping sodium_compat fallback here as that will match the above check
+		if (\extension_loaded('libsodium'))
+		{
+			$decrypted = \Sodium\crypto_box_open(
+				$data,
+				$this->nonce,
+				\Sodium\crypto_box_keypair_from_secretkey_and_publickey($key->getPrivate(), $key->getPublic())
+			);
+
+			if ($decrypted === false)
+			{
+				throw new DecryptionException('Malformed message or invalid MAC');
+			}
+
+			return $decrypted;
+		}
+
+		// Well this is awkward
+		throw new UnsupportedCipherException(static::class);
 	}
 
 	/**
@@ -94,11 +150,35 @@ class Sodium implements CipherInterface
 			throw new EncryptionException('Missing nonce to decrypt data');
 		}
 
-		return Compat::crypto_box(
-			$data,
-			$this->nonce,
-			Compat::crypto_box_keypair_from_secretkey_and_publickey($key->getPrivate(), $key->getPublic())
-		);
+		// Use the sodium extension (PHP 7.2 native, PECL 2.x, or paragonie/sodium_compat) if able
+		if (\function_exists('sodium_crypto_box'))
+		{
+			try
+			{
+				return sodium_crypto_box(
+					$data,
+					$this->nonce,
+					sodium_crypto_box_keypair_from_secretkey_and_publickey($key->getPrivate(), $key->getPublic())
+				);
+			}
+			catch (\SodiumException $exception)
+			{
+				throw new EncryptionException('Could not encrypt file.', $exception->getCode(), $exception);
+			}
+		}
+
+		// Use the libsodium extension (PECL 1.x) if able; purposefully skipping sodium_compat fallback here as that will match the above check
+		if (\extension_loaded('libsodium'))
+		{
+			return \Sodium\crypto_box(
+				$data,
+				$this->nonce,
+				\Sodium\crypto_box_keypair_from_secretkey_and_publickey($key->getPrivate(), $key->getPublic())
+			);
+		}
+
+		// Well this is awkward
+		throw new UnsupportedCipherException(static::class);
 	}
 
 	/**
@@ -113,10 +193,26 @@ class Sodium implements CipherInterface
 	 */
 	public function generateKey(array $options = [])
 	{
-		// Generate the encryption key.
-		$pair = Compat::crypto_box_keypair();
+		// Use the sodium extension (PHP 7.2 native, PECL 2.x, or paragonie/sodium_compat) if able
+		if (\function_exists('sodium_crypto_box_keypair'))
+		{
+			// Generate the encryption key.
+			$pair = sodium_crypto_box_keypair();
 
-		return new Key('sodium', Compat::crypto_box_secretkey($pair), Compat::crypto_box_publickey($pair));
+			return new Key('sodium', sodium_crypto_box_secretkey($pair), sodium_crypto_box_publickey($pair));
+		}
+
+		// Use the libsodium extension (PECL 1.x) if able; purposefully skipping sodium_compat fallback here as that will match the above check
+		if (\extension_loaded('libsodium'))
+		{
+			// Generate the encryption key.
+			$pair = \Sodium\crypto_box_keypair();
+
+			return new Key('sodium', \Sodium\crypto_box_secretkey($pair), \Sodium\crypto_box_publickey($pair));
+		}
+
+		// Well this is awkward
+		throw new UnsupportedCipherException(static::class);
 	}
 
 	/**
@@ -128,7 +224,8 @@ class Sodium implements CipherInterface
 	 */
 	public static function isSupported(): bool
 	{
-		return class_exists(Compat::class);
+		// Prefer ext/sodium, then ext/sodium, then presence of paragonie/sodium_compat
+		return \function_exists('sodium_crypto_box') || \extension_loaded('libsodium') || class_exists(Compat::class);
 	}
 
 	/**
