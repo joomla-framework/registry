@@ -7,8 +7,6 @@
 namespace Joomla\Crypt\Tests\Cipher;
 
 use Defuse\Crypto\Key as DefuseKey;
-use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
-use Defuse\Crypto\RuntimeTests;
 use Joomla\Crypt\Cipher\Crypto as CryptoCipher;
 use PHPUnit\Framework\TestCase;
 use Symfony\Polyfill\Util\Binary;
