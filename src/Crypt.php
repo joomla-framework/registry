@@ -9,6 +9,11 @@
 namespace Joomla\Crypt;
 
 use Joomla\Crypt\Cipher\Crypto;
+use Joomla\Crypt\Exception\DecryptionException;
+use Joomla\Crypt\Exception\EncryptionException;
+use Joomla\Crypt\Exception\InvalidKeyException;
+use Joomla\Crypt\Exception\InvalidKeyTypeException;
+use Joomla\Crypt\Exception\UnsupportedCipherException;
 
 /**
  * Crypt is a Joomla Framework class for handling basic encryption/decryption of data.
@@ -59,6 +64,9 @@ class Crypt
 	 * @return  string  The decrypted data string.
 	 *
 	 * @since   1.0
+	 * @throws  DecryptionException if the data cannot be decrypted
+	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
+	 * @throws  UnsupportedCipherException if the cipher is not supported on the current environment
 	 */
 	public function decrypt($data)
 	{
@@ -73,6 +81,9 @@ class Crypt
 	 * @return  string  The encrypted data string.
 	 *
 	 * @since   1.0
+	 * @throws  EncryptionException if the data cannot be encrypted
+	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
+	 * @throws  UnsupportedCipherException if the cipher is not supported on the current environment
 	 */
 	public function encrypt($data)
 	{
@@ -87,6 +98,8 @@ class Crypt
 	 * @return  Key
 	 *
 	 * @since   1.0
+	 * @throws  InvalidKeyException if the key cannot be generated
+	 * @throws  UnsupportedCipherException if the cipher is not supported on the current environment
 	 */
 	public function generateKey(array $options = [])
 	{
