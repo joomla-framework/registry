@@ -16,6 +16,7 @@ use Defuse\Crypto\RuntimeTests;
 use Joomla\Crypt\CipherInterface;
 use Joomla\Crypt\Exception\DecryptionException;
 use Joomla\Crypt\Exception\EncryptionException;
+use Joomla\Crypt\Exception\InvalidKeyException;
 use Joomla\Crypt\Exception\InvalidKeyTypeException;
 use Joomla\Crypt\Key;
 
@@ -100,7 +101,7 @@ class Crypto implements CipherInterface
 	 * @return  Key
 	 *
 	 * @since   __DEPLOY_VERSION__
-	 * @throws  \RuntimeException
+	 * @throws  InvalidKeyException if the key cannot be generated
 	 */
 	public function generateKey(array $options = [])
 	{
@@ -111,7 +112,7 @@ class Crypto implements CipherInterface
 		}
 		catch (EnvironmentIsBrokenException $ex)
 		{
-			throw new \RuntimeException('Cannot safely create a key', $ex->getCode(), $ex);
+			throw new InvalidKeyException('Cannot safely create a key', $ex->getCode(), $ex);
 		}
 
 		// Create the new encryption key object.

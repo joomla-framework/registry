@@ -10,6 +10,7 @@ namespace Joomla\Crypt;
 
 use Joomla\Crypt\Exception\DecryptionException;
 use Joomla\Crypt\Exception\EncryptionException;
+use Joomla\Crypt\Exception\InvalidKeyException;
 use Joomla\Crypt\Exception\InvalidKeyTypeException;
 use Joomla\Crypt\Exception\UnsupportedCipherException;
 
@@ -58,6 +59,7 @@ interface CipherInterface
 	 * @return  Key
 	 *
 	 * @since   1.0
+	 * @throws  InvalidKeyException if the key cannot be generated
 	 * @throws  UnsupportedCipherException if the cipher is not supported on the current environment
 	 */
 	public function generateKey(array $options = []);

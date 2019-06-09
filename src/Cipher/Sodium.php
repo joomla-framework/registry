@@ -11,6 +11,7 @@ namespace Joomla\Crypt\Cipher;
 use Joomla\Crypt\CipherInterface;
 use Joomla\Crypt\Exception\DecryptionException;
 use Joomla\Crypt\Exception\EncryptionException;
+use Joomla\Crypt\Exception\InvalidKeyException;
 use Joomla\Crypt\Exception\InvalidKeyTypeException;
 use Joomla\Crypt\Exception\UnsupportedCipherException;
 use Joomla\Crypt\Key;
@@ -189,17 +190,25 @@ class Sodium implements CipherInterface
 	 * @return  Key
 	 *
 	 * @since   1.4.0
-	 * @throws  \RuntimeException
+	 * @throws  InvalidKeyException if the key cannot be generated
+	 * @throws  UnsupportedCipherException if the cipher is not supported on the current environment
 	 */
 	public function generateKey(array $options = [])
 	{
 		// Use the sodium extension (PHP 7.2 native, PECL 2.x, or paragonie/sodium_compat) if able
 		if (\function_exists('sodium_crypto_box_keypair'))
 		{
-			// Generate the encryption key.
-			$pair = sodium_crypto_box_keypair();
+			try
+			{
+				// Generate the encryption key.
+				$pair = sodium_crypto_box_keypair();
 
-			return new Key('sodium', sodium_crypto_box_secretkey($pair), sodium_crypto_box_publickey($pair));
+				return new Key('sodium', sodium_crypto_box_secretkey($pair), sodium_crypto_box_publickey($pair));
+			}
+			catch (\SodiumException $exception)
+			{
+				throw new InvalidKeyException('Could not generate encryption key.', $exception->getCode(), $exception);
+			}
 		}
 
 		// Use the libsodium extension (PECL 1.x) if able; purposefully skipping sodium_compat fallback here as that will match the above check

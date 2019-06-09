@@ -11,6 +11,7 @@ namespace Joomla\Crypt\Cipher;
 use Joomla\Crypt\CipherInterface;
 use Joomla\Crypt\Exception\DecryptionException;
 use Joomla\Crypt\Exception\EncryptionException;
+use Joomla\Crypt\Exception\InvalidKeyException;
 use Joomla\Crypt\Exception\InvalidKeyTypeException;
 use Joomla\Crypt\Key;
 
@@ -119,7 +120,7 @@ class OpenSSL implements CipherInterface
 	 * @return  Key
 	 *
 	 * @since   __DEPLOY_VERSION__
-	 * @throws  \RuntimeException
+	 * @throws  InvalidKeyException if the key cannot be generated
 	 */
 	public function generateKey(array $options = [])
 	{
@@ -127,7 +128,7 @@ class OpenSSL implements CipherInterface
 
 		if ($passphrase === false)
 		{
-			throw new \RuntimeException('Missing passphrase file');
+			throw new InvalidKeyException('Missing passphrase file');
 		}
 
 		return new Key('openssl', $passphrase, 'unused');
