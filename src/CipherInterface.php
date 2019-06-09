@@ -8,6 +8,10 @@
 
 namespace Joomla\Crypt;
 
+use Joomla\Crypt\Exception\DecryptionException;
+use Joomla\Crypt\Exception\EncryptionException;
+use Joomla\Crypt\Exception\InvalidKeyTypeException;
+
 /**
  * Joomla Framework Cipher interface.
  *
@@ -24,6 +28,8 @@ interface CipherInterface
 	 * @return  string  The decrypted data string.
 	 *
 	 * @since   1.0
+	 * @throws  DecryptionException if the data cannot be decrypted
+	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
 	public function decrypt($data, Key $key);
 
@@ -36,6 +42,8 @@ interface CipherInterface
 	 * @return  string  The encrypted data string.
 	 *
 	 * @since   1.0
+	 * @throws  EncryptionException if the data cannot be encrypted
+	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
 	public function encrypt($data, Key $key);
 

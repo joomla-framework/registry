@@ -9,6 +9,8 @@
 namespace Joomla\Crypt\Cipher;
 
 use Joomla\Crypt\CipherInterface;
+use Joomla\Crypt\Exception\DecryptionException;
+use Joomla\Crypt\Exception\EncryptionException;
 use Joomla\Crypt\Exception\InvalidKeyTypeException;
 use Joomla\Crypt\Key;
 
@@ -58,8 +60,8 @@ class OpenSSL implements CipherInterface
 	 * @return  string  The decrypted data string.
 	 *
 	 * @since   __DEPLOY_VERSION__
-	 * @throws  \InvalidArgumentException
-	 * @throws  \RuntimeException
+	 * @throws  DecryptionException if the data cannot be decrypted
+	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
 	public function decrypt($data, Key $key)
 	{
@@ -73,7 +75,7 @@ class OpenSSL implements CipherInterface
 
 		if ($cleartext === false)
 		{
-			throw new \RuntimeException('Failed to decrypt data');
+			throw new DecryptionException('Failed to decrypt data');
 		}
 
 		return $cleartext;
@@ -88,8 +90,8 @@ class OpenSSL implements CipherInterface
 	 * @return  string  The encrypted data string.
 	 *
 	 * @since   __DEPLOY_VERSION__
-	 * @throws  \InvalidArgumentException
-	 * @throws  \RuntimeException
+	 * @throws  EncryptionException if the data cannot be encrypted
+	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
 	public function encrypt($data, Key $key)
 	{
@@ -103,7 +105,7 @@ class OpenSSL implements CipherInterface
 
 		if ($encrypted === false)
 		{
-			throw new \RuntimeException('Unable to encrypt data');
+			throw new EncryptionException('Unable to encrypt data');
 		}
 
 		return $encrypted;

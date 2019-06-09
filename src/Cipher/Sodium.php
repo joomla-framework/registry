@@ -9,6 +9,8 @@
 namespace Joomla\Crypt\Cipher;
 
 use Joomla\Crypt\CipherInterface;
+use Joomla\Crypt\Exception\DecryptionException;
+use Joomla\Crypt\Exception\EncryptionException;
 use Joomla\Crypt\Exception\InvalidKeyTypeException;
 use Joomla\Crypt\Key;
 use ParagonIE\Sodium\Compat;
@@ -37,7 +39,8 @@ class Sodium implements CipherInterface
 	 * @return  string  The decrypted data string.
 	 *
 	 * @since   1.4.0
-	 * @throws  \RuntimeException
+	 * @throws  DecryptionException if the data cannot be decrypted
+	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
 	public function decrypt($data, Key $key)
 	{
@@ -49,7 +52,7 @@ class Sodium implements CipherInterface
 
 		if (!$this->nonce)
 		{
-			throw new \RuntimeException('Missing nonce to decrypt data');
+			throw new DecryptionException('Missing nonce to decrypt data');
 		}
 
 		$decrypted = Compat::crypto_box_open(
@@ -60,7 +63,7 @@ class Sodium implements CipherInterface
 
 		if ($decrypted === false)
 		{
-			throw new \RuntimeException('Malformed message or invalid MAC');
+			throw new DecryptionException('Malformed message or invalid MAC');
 		}
 
 		return $decrypted;
@@ -75,7 +78,8 @@ class Sodium implements CipherInterface
 	 * @return  string  The encrypted data string.
 	 *
 	 * @since   1.4.0
-	 * @throws  \RuntimeException
+	 * @throws  EncryptionException if the data cannot be encrypted
+	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
 	public function encrypt($data, Key $key)
 	{
@@ -87,7 +91,7 @@ class Sodium implements CipherInterface
 
 		if (!$this->nonce)
 		{
-			throw new \RuntimeException('Missing nonce to decrypt data');
+			throw new EncryptionException('Missing nonce to decrypt data');
 		}
 
 		return Compat::crypto_box(
@@ -105,7 +109,7 @@ class Sodium implements CipherInterface
 	 * @return  Key
 	 *
 	 * @since   1.4.0
-	 * @throws  RuntimeException
+	 * @throws  \RuntimeException
 	 */
 	public function generateKey(array $options = [])
 	{

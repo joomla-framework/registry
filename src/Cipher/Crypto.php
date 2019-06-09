@@ -14,6 +14,8 @@ use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 use Defuse\Crypto\Key as DefuseKey;
 use Defuse\Crypto\RuntimeTests;
 use Joomla\Crypt\CipherInterface;
+use Joomla\Crypt\Exception\DecryptionException;
+use Joomla\Crypt\Exception\EncryptionException;
 use Joomla\Crypt\Exception\InvalidKeyTypeException;
 use Joomla\Crypt\Key;
 
@@ -33,8 +35,8 @@ class Crypto implements CipherInterface
 	 * @return  string  The decrypted data string.
 	 *
 	 * @since   __DEPLOY_VERSION__
-	 * @throws  \InvalidArgumentException
-	 * @throws  \RuntimeException
+	 * @throws  DecryptionException if the data cannot be decrypted
+	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
 	public function decrypt($data, Key $key)
 	{
@@ -51,11 +53,11 @@ class Crypto implements CipherInterface
 		}
 		catch (WrongKeyOrModifiedCiphertextException $ex)
 		{
-			throw new \RuntimeException('DANGER! DANGER! The ciphertext has been tampered with!', $ex->getCode(), $ex);
+			throw new DecryptionException('DANGER! DANGER! The ciphertext has been tampered with!', $ex->getCode(), $ex);
 		}
 		catch (EnvironmentIsBrokenException $ex)
 		{
-			throw new \RuntimeException('Cannot safely perform decryption', $ex->getCode(), $ex);
+			throw new DecryptionException('Cannot safely perform decryption', $ex->getCode(), $ex);
 		}
 	}
 
@@ -68,8 +70,8 @@ class Crypto implements CipherInterface
 	 * @return  string  The encrypted data string.
 	 *
 	 * @since   __DEPLOY_VERSION__
-	 * @throws  \InvalidArgumentException
-	 * @throws  \RuntimeException
+	 * @throws  EncryptionException if the data cannot be encrypted
+	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
 	public function encrypt($data, Key $key)
 	{
@@ -86,7 +88,7 @@ class Crypto implements CipherInterface
 		}
 		catch (EnvironmentIsBrokenException $ex)
 		{
-			throw new \RuntimeException('Cannot safely perform encryption', $ex->getCode(), $ex);
+			throw new EncryptionException('Cannot safely perform encryption', $ex->getCode(), $ex);
 		}
 	}
 
