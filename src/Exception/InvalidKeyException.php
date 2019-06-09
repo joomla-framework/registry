@@ -13,6 +13,6 @@ namespace Joomla\Crypt\Exception;
  *
  * @since  __DEPLOY_VERSION__
  */
-class InvalidKeyException extends \RuntimeException
+class InvalidKeyException extends \RuntimeException implements CryptExceptionInterface
 {
 }

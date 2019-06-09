@@ -13,7 +13,7 @@ namespace Joomla\Crypt\Exception;
  *
  * @since  1.4.0
  */
-class InvalidKeyTypeException extends \InvalidArgumentException
+class InvalidKeyTypeException extends \InvalidArgumentException implements CryptExceptionInterface
 {
 	/**
 	 * InvalidKeyTypeException constructor.

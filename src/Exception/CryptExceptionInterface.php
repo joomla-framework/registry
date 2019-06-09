@@ -9,10 +9,10 @@
 namespace Joomla\Crypt\Exception;
 
 /**
- * Exception representing an error decrypting data
+ * Interface defining all crypt package exceptions
  *
  * @since  __DEPLOY_VERSION__
  */
-class DecryptionException extends \RuntimeException implements CryptExceptionInterface
+interface CryptExceptionInterface extends \Throwable
 {
 }

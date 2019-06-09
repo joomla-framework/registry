@@ -13,6 +13,6 @@ namespace Joomla\Crypt\Exception;
  *
  * @since  __DEPLOY_VERSION__
  */
-class EncryptionException extends \RuntimeException
+class EncryptionException extends \RuntimeException implements CryptExceptionInterface
 {
 }

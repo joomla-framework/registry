@@ -13,7 +13,7 @@ namespace Joomla\Crypt\Exception;
  *
  * @since  __DEPLOY_VERSION__
  */
-class UnsupportedCipherException extends \LogicException
+class UnsupportedCipherException extends \LogicException implements CryptExceptionInterface
 {
 	/**
 	 * UnsupportedCipherException constructor.
