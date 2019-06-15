@@ -45,17 +45,33 @@ class CookieTest extends TestCase
 	}
 
 	/**
-	 * @testdox  Tests that data is correctly set
+	 * @testdox  Tests that data is correctly set with the legacy signature
 	 *
 	 * @covers   Joomla\Input\Cookie::set
 	 * @uses     Joomla\Input\Cookie::__construct
 	 */
-	public function testSet()
+	public function testSetWithLegacySignature()
 	{
 		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Cookie([], ['filter' => $mockFilter]);
-		$instance->set('foo', 'bar');
+		$instance->set('foo', 'bar', 15);
+
+		$this->assertAttributeContains('bar', 'data', $instance);
+	}
+
+	/**
+	 * @testdox  Tests that data is correctly set with the new signature
+	 *
+	 * @covers   Joomla\Input\Cookie::set
+	 * @uses     Joomla\Input\Cookie::__construct
+	 */
+	public function testSetWithNewSignature()
+	{
+		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
+
+		$instance = new Cookie([], ['filter' => $mockFilter]);
+		$instance->set('foo', 'bar', array('expire' => 15, 'samesite' => 'Strict'));
 
 		$this->assertAttributeContains('bar', 'data', $instance);
 	}
@@ -64,22 +80,43 @@ class CookieTest extends TestCase
 // Stub for setcookie
 namespace Joomla\Input;
 
-/**
- * Stub.
- *
- * @param   string  $name      Name
- * @param   string  $value     Value
- * @param   int     $expire    Expire
- * @param   string  $path      Path
- * @param   string  $domain    Domain
- * @param   bool    $secure    Secure
- * @param   bool    $httpOnly  HttpOnly
- *
- * @return  void
- *
- * @since   1.1.4
- */
-function setcookie($name, $value, $expire = 0, $path = '', $domain = '', $secure = false, $httpOnly = false)
+if (version_compare(PHP_VERSION, '7.3', '>='))
 {
-	return true;
+	/**
+	 * Stub.
+	 *
+	 * @param   string  $name     Name
+	 * @param   string  $value    Value
+	 * @param   array   $options  Expire
+	 *
+	 * @return  bool
+	 *
+	 * @since   1.1.4
+	 */
+	function setcookie($name, $value, $options = array())
+	{
+		return true;
+	}
+}
+else
+{
+	/**
+	 * Stub.
+	 *
+	 * @param   string  $name      Name
+	 * @param   string  $value     Value
+	 * @param   int     $expire    Expire
+	 * @param   string  $path      Path
+	 * @param   string  $domain    Domain
+	 * @param   bool    $secure    Secure
+	 * @param   bool    $httpOnly  HttpOnly
+	 *
+	 * @return  bool
+	 *
+	 * @since   1.1.4
+	 */
+	function setcookie($name, $value, $expire = 0, $path = '', $domain = '', $secure = false, $httpOnly = false)
+	{
+		return true;
+	}
 }
