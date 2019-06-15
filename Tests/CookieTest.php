@@ -25,7 +25,7 @@ class CookieTest extends TestCase
 		$instance = new Cookie;
 
 		$this->assertAttributeSame($_COOKIE, 'data', $instance);
-		$this->assertAttributeInstanceOf('Joomla\Filter\InputFilter', 'filter', $instance);
+		$this->assertAttributeInstanceOf(InputFilter::class, 'filter', $instance);
 	}
 
 	/**
@@ -71,7 +71,7 @@ class CookieTest extends TestCase
 		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
 
 		$instance = new Cookie([], ['filter' => $mockFilter]);
-		$instance->set('foo', 'bar', array('expire' => 15, 'samesite' => 'Strict'));
+		$instance->set('foo', 'bar', ['expire' => 15, 'samesite' => 'Strict']);
 
 		$this->assertAttributeContains('bar', 'data', $instance);
 	}
@@ -93,7 +93,7 @@ if (version_compare(PHP_VERSION, '7.3', '>='))
 	 *
 	 * @since   1.1.4
 	 */
-	function setcookie($name, $value, $options = array())
+	function setcookie($name, $value, $options = [])
 	{
 		return true;
 	}

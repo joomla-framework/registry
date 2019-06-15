@@ -56,20 +56,29 @@ class Cookie extends Input
 	 * @note    As of __DEPLOY_VERSION__, the (name, value, expire, path, domain, secure, httpOnly) signature is deprecated and will not be supported
 	 *          when support for PHP 7.2 and earlier is dropped
 	 */
-	public function set($name, $value, $options = array())
+	public function set($name, $value, $options = [])
 	{
 		// BC layer to convert old method parameters.
 		if (is_array($options) === false)
 		{
+			@trigger_error(
+				sprintf(
+					'The %1$s($name, $value, $expire, $path, $domain, $secure, $httpOnly) signature is deprecated and will not be supported'
+						. ' once support for PHP 7.2 and earlier is dropped, use the %1$s($name, $value, $options) signature instead.',
+					__METHOD__
+				),
+				E_USER_DEPRECATED
+			);
+
 			$argList = func_get_args();
 
-			$options = array(
-				'expires'  => isset($argList[2]) === true ? $argList[2] : 0,
-				'path'     => isset($argList[3]) === true ? $argList[3] : '',
-				'domain'   => isset($argList[4]) === true ? $argList[4] : '',
-				'secure'   => isset($argList[5]) === true ? $argList[5] : false,
-				'httponly' => isset($argList[6]) === true ? $argList[6] : false,
-			);
+			$options = [
+				'expires'  => $argList[2] ?? 0,
+				'path'     => $argList[3] ?? '',
+				'domain'   => $argList[4] ?? '',
+				'secure'   => $argList[5] ?? false,
+				'httponly' => $argList[6] ?? false,
+			];
 		}
 
 		// Set the cookie
