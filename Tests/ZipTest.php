@@ -25,7 +25,7 @@ class ZipTest extends ArchiveTestCase
 
 		$this->assertAttributeEmpty('options', $object);
 
-		$options = array('use_streams' => false);
+		$options = ['use_streams' => false];
 		$object  = new ArchiveZip($options);
 
 		$this->assertAttributeSame($options, 'options', $object);
@@ -45,10 +45,12 @@ class ZipTest extends ArchiveTestCase
 
 		$result = $object->create(
 			$this->outputPath . '/logo.zip',
-			array(array(
-				'name' => 'logo.png',
-				'data' => file_get_contents($this->inputPath . '/logo.png'),
-			))
+			[
+				[
+					'name' => 'logo.png',
+					'data' => file_get_contents($this->inputPath . '/logo.png'),
+				],
+			]
 		);
 
 		$this->assertTrue($result);

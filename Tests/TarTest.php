@@ -24,8 +24,8 @@ class TarTest extends ArchiveTestCase
 
 		$this->assertAttributeEmpty('options', $object);
 
-		$options = array('foo' => 'bar');
-		$object = new ArchiveTar($options);
+		$options = ['foo' => 'bar'];
+		$object  = new ArchiveTar($options);
 
 		$this->assertAttributeSame($options, 'options', $object);
 	}

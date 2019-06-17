@@ -31,7 +31,7 @@ class Tar implements ExtractableInterface
 	 * @var    array
 	 * @since  1.0
 	 */
-	private $types = [
+	private const TYPES = [
 		0x0  => 'Unix file',
 		0x30 => 'File',
 		0x31 => 'Link',
@@ -207,7 +207,7 @@ class Tar implements ExtractableInterface
 					'date' => octdec($info['mtime']),
 					'name' => trim($info['filename']),
 					'size' => octdec($info['size']),
-					'type' => isset($this->types[$info['typeflag']]) ? $this->types[$info['typeflag']] : null,
+					'type' => self::TYPES[$info['typeflag']] ?? null,
 				];
 
 				if (($info['typeflag'] == 0) || ($info['typeflag'] == 0x30) || ($info['typeflag'] == 0x35))

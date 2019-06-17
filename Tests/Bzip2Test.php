@@ -24,7 +24,7 @@ class Bzip2Test extends ArchiveTestCase
 
 		$this->assertAttributeEmpty('options', $object);
 
-		$options = array('use_streams' => false);
+		$options = ['use_streams' => false];
 		$object  = new ArchiveBzip2($options);
 
 		$this->assertAttributeSame($options, 'options', $object);
@@ -72,7 +72,7 @@ class Bzip2Test extends ArchiveTestCase
 			$this->markTestSkipped('Bzip2 files can not be extracted.');
 		}
 
-		$object = new ArchiveBzip2(array('use_streams' => true));
+		$object = new ArchiveBzip2(['use_streams' => true]);
 		$object->extract(
 			$this->inputPath . '/logo.png.bz2',
 			$this->outputPath . '/logo-bz2.png'

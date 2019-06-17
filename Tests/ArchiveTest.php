@@ -34,38 +34,33 @@ class ArchiveTest extends ArchiveTestCase
 	/**
 	 * Data provider for retrieving adapters.
 	 *
-	 * @return  array
+	 * @return  \Generator
 	 */
-	public function dataAdapters()
+	public function dataAdapters(): \Generator
 	{
 		// Adapter Type, Expected Exception
-		return array(
-			array('Zip', false),
-			array('Tar', false),
-			array('Gzip', false),
-			array('Bzip2', false),
-			array('Unknown', true),
-		);
+		yield 'Zip Adapter' => ['Zip', false];
+		yield 'Tar Adapter' => ['Tar', false];
+		yield 'Gzip Adapter' => ['Gzip', false];
+		yield 'Bzip2 Adapter' => ['Bzip2', false];
+		yield 'Unknown Adapter' => ['Unknown', true];
 	}
 
 	/**
 	 * Data provider for extracting archives.
 	 *
-	 * @return  array
+	 * @return  \Generator
 	 */
-	public function dataExtract()
+	public function dataExtract(): \Generator
 	{
 		// Filename, Adapter Type, Extracted Filename, Output is a File
-		return array(
-			// See https://github.com/joomla-framework/archive/issues/17
-			array('Caps-Logo.ZIP', 'Zip', 'logo-zip.png'),
-			array('logo.zip', 'Zip', 'logo-zip.png'),
-			array('logo.tar', 'Tar', 'logo-tar.png'),
-			array('logo.png.gz', 'Gzip', 'logo.png'),
-			array('logo.png.bz2', 'Bzip2', 'logo.png'),
-			array('logo.tar.gz', 'Gzip', 'logo-tar-gz.png'),
-			array('logo.tar.bz2', 'Bzip2', 'logo-tar-bz2.png'),
-		);
+		yield 'Zip adapter with capitalised file extension' => ['Caps-Logo.ZIP', 'Zip', 'logo-zip.png'];
+		yield 'Zip adapter' => ['logo.zip', 'Zip', 'logo-zip.png'];
+		yield 'Tar adapter' => ['logo.tar', 'Zip', 'logo-tar.png'];
+		yield 'Gzip adapter with .gz file type' => ['logo.png.gz', 'Gzip', 'logo.png'];
+		yield 'Bzip2 adapter with .bz2 file type' => ['logo.png.bz2', 'Bzip2', 'logo.png'];
+		yield 'Gzip adapter with .tar.gz file type' => ['logo.tar.gz', 'Gzip', 'logo-tar-gz.png'];
+		yield 'Bzip2 adapter with .tar.bz2 file type' => ['logo.tar.bz2', 'Bzip2', 'logo-tar-bz2.png'];
 	}
 
 	/**
@@ -75,7 +70,7 @@ class ArchiveTest extends ArchiveTestCase
 	 */
 	public function test__construct()
 	{
-		$options = array('tmp_path' => __DIR__);
+		$options = ['tmp_path' => __DIR__];
 
 		$fixture = new Archive($options);
 

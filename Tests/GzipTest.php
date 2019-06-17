@@ -25,7 +25,7 @@ class GzipTest extends ArchiveTestCase
 
 		$this->assertAttributeEmpty('options', $object);
 
-		$options = array('use_streams' => false);
+		$options = ['use_streams' => false];
 		$object  = new ArchiveGzip($options);
 
 		$this->assertAttributeSame($options, 'options', $object);
@@ -76,7 +76,7 @@ class GzipTest extends ArchiveTestCase
 			$this->markTestSkipped('Gzip files can not be extracted.');
 		}
 
-		$object = new ArchiveGzip(array('use_streams' => true));
+		$object = new ArchiveGzip(['use_streams' => true]);
 		$object->extract(
 			$this->inputPath . '/logo.png.gz',
 			$this->outputPath . '/logo-gz.png'

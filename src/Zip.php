@@ -42,7 +42,7 @@ class Zip implements ExtractableInterface
 	 * @var    array
 	 * @since  1.0
 	 */
-	private $methods = [
+	private const METHODS = [
 		0x0 => 'None',
 		0x1 => 'Shrunk',
 		0x2 => 'Super Fast',
@@ -59,7 +59,7 @@ class Zip implements ExtractableInterface
 	 * @var    string
 	 * @since  1.0
 	 */
-	private $ctrlDirHeader = "\x50\x4b\x01\x02";
+	private const CTRL_DIR_HEADER = "\x50\x4b\x01\x02";
 
 	/**
 	 * End of central directory record.
@@ -67,7 +67,7 @@ class Zip implements ExtractableInterface
 	 * @var    string
 	 * @since  1.0
 	 */
-	private $ctrlDirEnd = "\x50\x4b\x05\x06\x00\x00\x00\x00";
+	private const CTRL_DIR_END = "\x50\x4b\x05\x06\x00\x00\x00\x00";
 
 	/**
 	 * Beginning of file contents.
@@ -75,7 +75,7 @@ class Zip implements ExtractableInterface
 	 * @var    string
 	 * @since  1.0
 	 */
-	private $fileHeader = "\x50\x4b\x03\x04";
+	private const FILE_HEADER = "\x50\x4b\x03\x04";
 
 	/**
 	 * ZIP file data buffer
@@ -206,7 +206,7 @@ class Zip implements ExtractableInterface
 	 */
 	public function checkZipData(&$data)
 	{
-		return strpos($data, $this->fileHeader) !== false;
+		return strpos($data, self::FILE_HEADER) !== false;
 	}
 
 	/**
@@ -336,18 +336,18 @@ class Zip implements ExtractableInterface
 	 * @since   1.0
 	 * @throws  \RuntimeException
 	 */
-	private function readZipInfo(&$data)
+	private function readZipInfo(string &$data): bool
 	{
 		$entries = [];
 
 		// Find the last central directory header entry
-		$fhLast = strpos($data, $this->ctrlDirEnd);
+		$fhLast = strpos($data, self::CTRL_DIR_END);
 
 		do
 		{
 			$last = $fhLast;
 		}
-		while (($fhLast = strpos($data, $this->ctrlDirEnd, $fhLast + 1)) !== false);
+		while (($fhLast = strpos($data, self::CTRL_DIR_END, $fhLast + 1)) !== false);
 
 		// Find the central directory offset
 		$offset = 0;
@@ -363,7 +363,7 @@ class Zip implements ExtractableInterface
 		}
 
 		// Get details from central directory structure.
-		$fhStart    = strpos($data, $this->ctrlDirHeader, $offset);
+		$fhStart    = strpos($data, self::CTRL_DIR_HEADER, $offset);
 		$dataLength = \strlen($data);
 
 		do
@@ -383,7 +383,7 @@ class Zip implements ExtractableInterface
 				'date'       => null,
 				'_dataStart' => null,
 				'name'       => $name,
-				'method'     => $this->methods[$info['Method']],
+				'method'     => self::METHODS[$info['Method']],
 				'_method'    => $info['Method'],
 				'size'       => $info['Uncompressed'],
 				'type'       => null,
@@ -411,7 +411,7 @@ class Zip implements ExtractableInterface
 			$entries[$name]['offset'] = $info['Offset'];
 
 			// Get details from local file header since we have the offset
-			$lfhStart = strpos($data, $this->fileHeader, $entries[$name]['offset']);
+			$lfhStart = strpos($data, self::FILE_HEADER, $entries[$name]['offset']);
 
 			if ($dataLength < $lfhStart + 34)
 			{
@@ -425,7 +425,7 @@ class Zip implements ExtractableInterface
 			// Bump the max execution time because not using the built in php zip libs makes this process slow.
 			@set_time_limit(ini_get('max_execution_time'));
 		}
-		while (($fhStart = strpos($data, $this->ctrlDirHeader, $fhStart + 46)) !== false);
+		while (($fhStart = strpos($data, self::CTRL_DIR_HEADER, $fhStart + 46)) !== false);
 
 		$this->metadata = array_values($entries);
 
@@ -441,7 +441,7 @@ class Zip implements ExtractableInterface
 	 *
 	 * @since   1.0
 	 */
-	private function getFileData($key)
+	private function getFileData(int $key): string
 	{
 		if ($this->metadata[$key]['_method'] == 0x8)
 		{
@@ -505,7 +505,7 @@ class Zip implements ExtractableInterface
 	 * @since   1.0
 	 * @todo    Review and finish implementation
 	 */
-	private function addToZipFile(array &$file, array &$contents, array &$ctrldir)
+	private function addToZipFile(array &$file, array &$contents, array &$ctrldir): void
 	{
 		$data = &$file['data'];
 		$name = str_replace('\\', '/', $file['name']);
@@ -524,7 +524,7 @@ class Zip implements ExtractableInterface
 			. \chr(hexdec($dtime[0] . $dtime[1]));
 
 		// Begin creating the ZIP data.
-		$fr = $this->fileHeader;
+		$fr = self::FILE_HEADER;
 
 		// Version needed to extract.
 		$fr .= "\x14\x00";
@@ -571,7 +571,7 @@ class Zip implements ExtractableInterface
 		$contents[] = &$fr;
 
 		// Add to central directory record.
-		$cdrec = $this->ctrlDirHeader;
+		$cdrec = self::CTRL_DIR_HEADER;
 
 		// Version made by.
 		$cdrec .= "\x00\x00";
@@ -634,12 +634,12 @@ class Zip implements ExtractableInterface
 	 * @param   array   $ctrlDir   An array of central directory information.
 	 * @param   string  $path      The path to store the archive.
 	 *
-	 * @return  boolean  True if successful
+	 * @return  boolean
 	 *
 	 * @since   1.0
 	 * @todo	Review and finish implementation
 	 */
-	private function createZipFile(array &$contents, array &$ctrlDir, $path)
+	private function createZipFile(array &$contents, array &$ctrlDir, string $path): bool
 	{
 		$data = implode('', $contents);
 		$dir  = implode('', $ctrlDir);
@@ -652,7 +652,7 @@ class Zip implements ExtractableInterface
 		 * Offset to start of central dir.
 		 * ZIP file comment length.
 		 */
-		$buffer = $data . $dir . $this->ctrlDirEnd .
+		$buffer = $data . $dir . self::CTRL_DIR_END .
 		pack('v', \count($ctrlDir)) .
 		pack('v', \count($ctrlDir)) .
 		pack('V', \strlen($dir)) .
