@@ -4,7 +4,7 @@ The following changes were made to the Registry package between v1 and v2.
 
 ### Minimum supported PHP version raised
 
-All Framework packages now require PHP 7.0 or newer.
+All Framework packages now require PHP 7.2 or newer.
 
 ### Object caching removed
 
