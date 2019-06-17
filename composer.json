@@ -6,7 +6,7 @@
     "homepage": "https://github.com/joomla-framework/crypt",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "~7.0"
+        "php": "~7.2"
     },
     "require-dev": {
         "defuse/php-encryption": "~2.0",
