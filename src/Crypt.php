@@ -47,7 +47,7 @@ class Crypt
 	 *
 	 * @since   1.0
 	 */
-	public function __construct(CipherInterface $cipher = null, Key $key = null)
+	public function __construct(?CipherInterface $cipher = null, ?Key $key = null)
 	{
 		// Set the encryption cipher.
 		$this->cipher = $cipher ?: new Crypto;
