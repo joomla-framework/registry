@@ -42,7 +42,7 @@ abstract class AbstractController implements ControllerInterface
 	 *
 	 * @since  1.0
 	 */
-	public function __construct(Input $input = null, AbstractApplication $app = null)
+	public function __construct(?Input $input = null, ?AbstractApplication $app = null)
 	{
 		$this->input = $input;
 		$this->app   = $app;
