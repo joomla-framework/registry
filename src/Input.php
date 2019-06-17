@@ -46,9 +46,8 @@ class Input implements \Serializable, \Countable
 	 *
 	 * @var    array
 	 * @since  1.3.0
-	 * @note   Once PHP 7.1 is the minimum supported version this should become a private constant
 	 */
-	private static $allowedGlobals = ['REQUEST', 'GET', 'POST', 'FILES', 'SERVER', 'ENV'];
+	private const ALLOWED_GLOBALS = ['REQUEST', 'GET', 'POST', 'FILES', 'SERVER', 'ENV'];
 
 	/**
 	 * Options array for the Input instance.
@@ -133,7 +132,7 @@ class Input implements \Serializable, \Countable
 
 		$superGlobal = '_' . strtoupper($name);
 
-		if (\in_array(strtoupper($name), self::$allowedGlobals, true) && isset($GLOBALS[$superGlobal]))
+		if (\in_array(strtoupper($name), self::ALLOWED_GLOBALS, true) && isset($GLOBALS[$superGlobal]))
 		{
 			$this->inputs[$name] = new self($GLOBALS[$superGlobal], $this->options);
 
@@ -406,7 +405,7 @@ class Input implements \Serializable, \Countable
 			foreach ($GLOBALS as $global => $data)
 			{
 				// Check if the global starts with an underscore and is allowed.
-				if (strpos($global, '_') === 0 && \in_array(substr($global, 1), self::$allowedGlobals, true))
+				if (strpos($global, '_') === 0 && \in_array(substr($global, 1), self::ALLOWED_GLOBALS, true))
 				{
 					// Convert global name to input name.
 					$global = strtolower($global);
