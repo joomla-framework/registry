@@ -6,7 +6,7 @@
     "homepage": "https://github.com/joomla-framework/controller",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "~7.0"
+        "php": "~7.2"
     },
     "require-dev": {
         "joomla/application": "~1.0|~2.0",
