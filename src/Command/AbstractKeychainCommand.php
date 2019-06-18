@@ -70,7 +70,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	protected function configure()
+	protected function configure(): void
 	{
 		$this->addArgument(
 			'filename',
@@ -89,7 +89,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	protected function initialise(InputInterface $input, OutputInterface $output)
+	protected function initialise(InputInterface $input, OutputInterface $output): void
 	{
 		$this->initialiseKeychain($input);
 	}
@@ -104,7 +104,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 * @since   __DEPLOY_VERSION__
 	 * @throws  InvalidArgumentException
 	 */
-	protected function initialiseKeychain(InputInterface $input)
+	protected function initialiseKeychain(InputInterface $input): void
 	{
 		$filename = $input->getArgument('filename');
 

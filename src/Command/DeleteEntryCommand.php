@@ -78,7 +78,7 @@ class DeleteEntryCommand extends AbstractKeychainCommand
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	protected function configure()
+	protected function configure(): void
 	{
 		parent::configure();
 
