@@ -87,7 +87,7 @@ class LanguageFactory
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getLocalise(string $lang, string $basePath = '')
+	public function getLocalise(string $lang, string $basePath = ''): LocaliseInterface
 	{
 		/*
 		 * Look for a language specific localise class
@@ -165,13 +165,13 @@ class LanguageFactory
 	/**
 	 * Retrieves a new Text object for a Language instance
 	 *
-	 * @param   Language  $language  An optional Language object to inject, otherwise the default object is loaded
+	 * @param   Language|null  $language  An optional Language object to inject, otherwise the default object is loaded
 	 *
 	 * @return  Text
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getText(Language $language = null): Text
+	public function getText(?Language $language = null): Text
 	{
 		$language = $language ?: $this->getLanguage();
 
@@ -203,7 +203,7 @@ class LanguageFactory
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function setLanguageDirectory(string $directory)
+	public function setLanguageDirectory(string $directory): self
 	{
 		if (!is_dir($directory))
 		{

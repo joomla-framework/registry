@@ -56,7 +56,7 @@ class Text
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function setLanguage(Language $language)
+	public function setLanguage(Language $language): self
 	{
 		$this->language = $language;
 

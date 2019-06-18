@@ -62,7 +62,7 @@ class MessageCatalogue
 	 *
 	 * @return  void
 	 */
-	public function addMessage(string $key, string $message)
+	public function addMessage(string $key, string $message): void
 	{
 		$this->addMessages([$key => $message]);
 	}
@@ -76,7 +76,7 @@ class MessageCatalogue
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function addMessages(array $messages)
+	public function addMessages(array $messages): void
 	{
 		$this->messages = array_replace($this->messages, array_change_key_case($messages, CASE_UPPER));
 	}
@@ -102,7 +102,7 @@ class MessageCatalogue
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getFallbackCatalogue(): string
+	public function getFallbackCatalogue(): ?MessageCatalogue
 	{
 		return $this->fallbackCatalogue;
 	}
@@ -189,7 +189,7 @@ class MessageCatalogue
 	 * @since   __DEPLOY_VERSION__
 	 * @throws  \LogicException
 	 */
-	public function mergeCatalogue(MessageCatalogue $messageCatalogue)
+	public function mergeCatalogue(MessageCatalogue $messageCatalogue): void
 	{
 		if ($messageCatalogue->getLanguage() !== $this->getLanguage())
 		{
@@ -208,7 +208,7 @@ class MessageCatalogue
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function setFallbackCatalogue(MessageCatalogue $messageCatalogue)
+	public function setFallbackCatalogue(MessageCatalogue $messageCatalogue): void
 	{
 		$this->fallbackCatalogue = $messageCatalogue;
 	}

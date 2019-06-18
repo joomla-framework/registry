@@ -32,7 +32,7 @@ class ParserRegistry
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function add(ParserInterface $parser)
+	public function add(ParserInterface $parser): void
 	{
 		$this->parserMap[$parser->getType()] = $parser;
 	}

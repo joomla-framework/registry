@@ -42,7 +42,7 @@ class LanguageHelper
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getMetadata(string $lang, string $path)
+	public function getMetadata(string $lang, string $path): ?array
 	{
 		$path = $this->getLanguagePath($path, $lang);
 		$file = $lang . '.xml';
@@ -147,12 +147,12 @@ class LanguageHelper
 	 *
 	 * @param   string  $path  Path to the XML files.
 	 *
-	 * @return  array  Array holding the found metadata as a key => value pair.
+	 * @return  array|null  Array holding the found metadata as a key => value pair.
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 * @throws  \RuntimeException
 	 */
-	public function parseXMLLanguageFile(string $path)
+	public function parseXMLLanguageFile(string $path): ?array
 	{
 		if (!is_readable($path))
 		{

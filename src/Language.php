@@ -153,7 +153,7 @@ class Language
 	 *
 	 * @since   1.0
 	 */
-	public function __construct(ParserRegistry $parserRegistry, string $path, $lang = '', $debug = false)
+	public function __construct(ParserRegistry $parserRegistry, string $path, string $lang = '', bool $debug = false)
 	{
 		if (empty($path))
 		{
@@ -880,7 +880,7 @@ class Language
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function setCatalogue(MessageCatalogue $catalogue)
+	public function setCatalogue(MessageCatalogue $catalogue): void
 	{
 		$this->catalogue = $catalogue;
 	}
@@ -923,7 +923,7 @@ class Language
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	public function getWeekEnd()
+	public function getWeekEnd(): string
 	{
 		return $this->metadata['weekEnd'] ?? '0,6';
 	}
