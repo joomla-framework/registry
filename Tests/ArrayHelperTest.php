@@ -4,2118 +4,2178 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
+namespace Joomla\Utilities\Tests;
+
 use Joomla\Utilities\ArrayHelper;
 use PHPUnit\Framework\TestCase;
 
 /**
- * ArrayHelperTest
- *
- * @since  1.0
+ * Test class for \Joomla\Utilities\ArrayHelper
  */
 class ArrayHelperTest extends TestCase
 {
 	/**
 	 * Data provider for testArrayUnique.
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function seedTestArrayUnique()
+	public function seedTestArrayUnique(): \Generator
 	{
-		return array(
-			'Case 1' => array(
-				// Input
-				array(
-					array(1, 2, 3, array(4)),
-					array(2, 2, 3, array(4)),
-					array(3, 2, 3, array(4)),
-					array(2, 2, 3, array(4)),
-					array(3, 2, 3, array(4)),
-				),
-				// Expected
-				array(
-					array(1, 2, 3, array(4)),
-					array(2, 2, 3, array(4)),
-					array(3, 2, 3, array(4)),
-				),
-			)
-		);
+		yield 'Case 1' => [
+			// Input
+			[
+				[1, 2, 3, [4]],
+				[2, 2, 3, [4]],
+				[3, 2, 3, [4]],
+				[2, 2, 3, [4]],
+				[3, 2, 3, [4]],
+			],
+			// Expected
+			[
+				[1, 2, 3, [4]],
+				[2, 2, 3, [4]],
+				[3, 2, 3, [4]],
+			],
+		];
 	}
 
 	/**
 	 * Data provider for from object inputs
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function seedTestFromObject()
+	public function seedTestFromObject(): \Generator
 	{
 		// Define a common array.
-		$common = array('integer' => 12, 'float' => 1.29999, 'string' => 'A Test String');
+		$common = ['integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'];
 
-		return array(
-			'Invalid input' => array(
-				// Array    The array being input
-				null,
-				// Boolean  Recurse through multiple dimensions
-				null,
-				// String   Regex to select only some attributes
-				null,
-				// String   The expected return value
-				array(),
-				// Boolean  Use function defaults (true) or full argument list
-				true
-			),
-			'To single dimension array' => array(
-				(object) $common,
-				null,
-				null,
-				$common,
-				true
-			),
-			'Object with nested arrays and object.' => array(
-				(object) array(
-					'foo' => $common,
-					'bar' => (object) array(
-						'goo' => $common,
-					),
-				),
-				null,
-				null,
-				array(
-					'foo' => $common,
-					'bar' => array(
-						'goo' => $common,
-					),
-				),
-				true
-			),
-			'To single dimension array with recursion' => array(
-				(object) $common,
-				true,
-				null,
-				$common,
-				false
-			),
-			'To single dimension array using regex on keys' => array(
-				(object) $common,
-				true,
-				// Only get the 'integer' and 'float' keys.
-				'/^(integer|float)/',
-				array(
-					'integer' => 12, 'float' => 1.29999
-				),
-				false
-			),
-			'Nested objects to single dimension array' => array(
-				(object) array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				null,
-				null,
-				array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				false
-			),
-			'Nested objects into multiple dimension array' => array(
-				(object) array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				null,
-				null,
-				array(
-					'first' => $common,
-					'second' => $common,
-					'third' => $common,
-				),
-				true
-			),
-			'Nested objects into multiple dimension array 2' => array(
-				(object) array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				true,
-				null,
-				array(
-					'first' => $common,
-					'second' => $common,
-					'third' => $common,
-				),
-				true
-			),
-			'Nested objects into multiple dimension array 3' => array(
-				(object) array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				false,
-				null,
-				array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				false
-			),
-			'multiple 4' => array(
-				(object) array(
-					'first' => 'Me',
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				false,
-				null,
-				array(
-					'first' => 'Me',
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				false
-			),
-			'Nested objects into multiple dimension array of int and string' => array(
-				(object) array(
-					'first' => (object) $common,
-					'second' => (object) $common,
-					'third' => (object) $common,
-				),
-				true,
-				'/(first|second|integer|string)/',
-				array(
-					'first' => array(
-						'integer' => 12, 'string' => 'A Test String'
-					), 'second' => array(
-					'integer' => 12, 'string' => 'A Test String'
-				),
-				),
-				false
-			),
-			'multiple 6' => array(
-				(object) array(
-					'first' => array(
-						'integer' => 12,
-						'float' => 1.29999,
-						'string' => 'A Test String',
-						'third' => (object) $common,
-					),
-					'second' => $common,
-				),
-				null,
-				null,
-				array(
-					'first' => array(
-						'integer' => 12,
-						'float' => 1.29999,
-						'string' => 'A Test String',
-						'third' => $common,
-					),
-					'second' => $common,
-				),
-				true
-			),
-			'Array with nested arrays and object.' => array(
-				array(
-					'foo' => $common,
-					'bar' => (object) array(
-						'goo' => $common,
-					),
-				),
-				null,
-				null,
-				array(
-					'foo' => $common,
-					'bar' => array(
-						'goo' => $common,
-					),
-				),
-				true
-			),
-		);
+		yield 'Invalid input' => [
+			// Array    The array being input
+			null,
+			// Boolean  Recurse through multiple dimensions
+			null,
+			// String   Regex to select only some attributes
+			null,
+			// String   The expected return value
+			[],
+			// Boolean  Use function defaults (true) or full argument list
+			true,
+		];
+
+		yield 'To single dimension array' => [
+			(object) $common,
+			null,
+			null,
+			$common,
+			true,
+		];
+
+		yield 'Object with nested arrays and object.' => [
+			(object) [
+				'foo' => $common,
+				'bar' => (object) [
+					'goo' => $common,
+				],
+			],
+			null,
+			null,
+			[
+				'foo' => $common,
+				'bar' => [
+					'goo' => $common,
+				],
+			],
+			true,
+		];
+
+		yield 'To single dimension array with recursion' => [
+			(object) $common,
+			true,
+			null,
+			$common,
+			false,
+		];
+
+		yield 'To single dimension array using regex on keys' => [
+			(object) $common,
+			true,
+			// Only get the 'integer' and 'float' keys.
+			'/^(integer|float)/',
+			[
+				'integer' => 12, 'float' => 1.29999,
+			],
+			false,
+		];
+
+		yield 'Nested objects to single dimension array' => [
+			(object) [
+				'first'  => (object) $common,
+				'second' => (object) $common,
+				'third'  => (object) $common,
+			],
+			null,
+			null,
+			[
+				'first'  => (object) $common,
+				'second' => (object) $common,
+				'third'  => (object) $common,
+			],
+			false,
+		];
+
+		yield 'Nested objects into multiple dimension array' => [
+			(object) [
+				'first'  => (object) $common,
+				'second' => (object) $common,
+				'third'  => (object) $common,
+			],
+			null,
+			null,
+			[
+				'first'  => $common,
+				'second' => $common,
+				'third'  => $common,
+			],
+			true,
+		];
+
+		yield 'Nested objects into multiple dimension array 2' => [
+			(object) [
+				'first'  => (object) $common,
+				'second' => (object) $common,
+				'third'  => (object) $common,
+			],
+			true,
+			null,
+			[
+				'first'  => $common,
+				'second' => $common,
+				'third'  => $common,
+			],
+			true,
+		];
+
+		yield 'Nested objects into multiple dimension array 3' => [
+			(object) [
+				'first'  => (object) $common,
+				'second' => (object) $common,
+				'third'  => (object) $common,
+			],
+			false,
+			null,
+			[
+				'first'  => (object) $common,
+				'second' => (object) $common,
+				'third'  => (object) $common,
+			],
+			false,
+		];
+
+		yield 'multiple 4' => [
+			(object) [
+				'first'  => 'Me',
+				'second' => (object) $common,
+				'third'  => (object) $common,
+			],
+			false,
+			null,
+			[
+				'first'  => 'Me',
+				'second' => (object) $common,
+				'third'  => (object) $common,
+			],
+			false,
+		];
+
+		yield 'Nested objects into multiple dimension array of int and string' => [
+			(object) [
+				'first'  => (object) $common,
+				'second' => (object) $common,
+				'third'  => (object) $common,
+			],
+			true,
+			'/(first|second|integer|string)/',
+			[
+				'first'     => [
+					'integer' => 12, 'string' => 'A Test String',
+				], 'second' => [
+				'integer' => 12, 'string' => 'A Test String',
+			],
+			],
+			false,
+		];
+
+		yield 'multiple 6' => [
+			(object) [
+				'first'  => [
+					'integer' => 12,
+					'float'   => 1.29999,
+					'string'  => 'A Test String',
+					'third'   => (object) $common,
+				],
+				'second' => $common,
+			],
+			null,
+			null,
+			[
+				'first'  => [
+					'integer' => 12,
+					'float'   => 1.29999,
+					'string'  => 'A Test String',
+					'third'   => $common,
+				],
+				'second' => $common,
+			],
+			true,
+		];
+
+		yield 'Array with nested arrays and object.' => [
+			[
+				'foo' => $common,
+				'bar' => (object) [
+					'goo' => $common,
+				],
+			],
+			null,
+			null,
+			[
+				'foo' => $common,
+				'bar' => [
+					'goo' => $common,
+				],
+			],
+			true,
+		];
 	}
 
 	/**
 	 * Data provider for add column
 	 *
-	 * @return  array
-	 *
-	 * @since   1.5.0
+	 * @return  \Generator
 	 */
-	public function seedTestAddColumn()
+	public function seedTestAddColumn(): \Generator
 	{
-		return array(
-			'generic array' => array(
-				array(
-					array(
-						1, 2, 3, 4, 5
-					), array(
-						6, 7, 8, 9, 10
-					), array(
-						11, 12, 13, 14, 15
-					), array(
-						16, 17, 18, 19, 20
-					)
-				),
-				array(101, 106, 111, 116),
-				null,
-				null,
-				array(
-					array(
-						1, 2, 3, 4, 5, 101
-					), array(
-						6, 7, 8, 9, 10, 106
-					), array(
-						11, 12, 13, 14, 15, 111
-					), array(
-						16, 17, 18, 19, 20, 116
-					)
-				),
-				'Should add column #5'
-			),
-			'associative array' => array(
-				array(
-					'a' => array(
-						1, 2, 3, 4, 5
-					),
-					'b' => array(
-						6, 7, 8, 9, 10
-					),
-					'c' => array(
-						11, 12, 13, 14, 15
-					),
-					'd' => array(
-						16, 17, 18, 19, 20
-					)
-				),
-				array('a' => 101, 'c' => 111, 'd' => 116, 'b' => 106),
-				null,
-				null,
-				array(
-					'a' => array(
-						1, 2, 3, 4, 5, 101
-					),
-					'b' => array(
-						6, 7, 8, 9, 10, 106
-					),
-					'c' => array(
-						11, 12, 13, 14, 15, 111
-					),
-					'd' => array(
-						16, 17, 18, 19, 20, 116
-					)
-				),
-				'Should add column #5 in correct associative order'
-			),
-			'generic array with lookup key' => array(
-				array(
-					array(
-						1, 2, 3, 4, 5
-					), array(
-						6, 7, 8, 9, 10
-					), array(
-						11, 12, 13, 14, 15
-					), array(
-						16, 17, 18, 19, 20
-					)
-				),
-				array(11 => 111, 1 => 101, 6 => 106, 16 => 116),
-				null,
-				0,
-				array(
-					array(
-						1, 2, 3, 4, 5, 101
-					), array(
-						6, 7, 8, 9, 10, 106
-					), array(
-						11, 12, 13, 14, 15, 111
-					), array(
-						16, 17, 18, 19, 20, 116
-					)
-				),
-				'Should add column #5 [101, 106, 111, 116] with column #0 as matching keys'
-			),
-			'generic array with existing key as column name' => array(
-				array(
-					array(
-						1, 2, 3, 4, 5
-					), array(
-						6, 7, 8, 9, 10
-					), array(
-						11, 12, 13, 14, 15
-					), array(
-						16, 17, 18, 19, 20
-					)
-				),
-				array(11 => 111, 1 => 101, 6 => 106, 16 => 116),
-				3,
-				0,
-				array(
-					array(
-						1, 2, 3, 101, 5,
-					), array(
-						6, 7, 8, 106, 10,
-					), array(
-						11, 12, 13, 111, 15,
-					), array(
-						16, 17, 18, 116, 20,
-					)
-				),
-				'Should replace column #3 [4, 9, 14, 19] with [101, 106, 111, 116] respective to column #0 as matching keys'
-			),
-			'array of associative arrays' => array(
-				array(
-					array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				array(104, 109, 114, 119),
-				'six',
-				null,
-				array(
-					array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 104
-					),
-					array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => 109
-					),
-					array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 114
-					),
-					array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 119
-					)
-				),
-				'Should add column \'six\''
-			),
-			'array of associative array with key' => array(
-				array(
-					array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				array(4 => 104, 9 => 109, 14 => 114, 19 => 119),
-				'six',
-				'four',
-				array(
-					array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 104
-					),
-					array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => 109
-					),
-					array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 114
-					),
-					array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 119
-					)
-				),
-				'Should add column \'six\' with respective match from column \'four\''
-			),
-			'object array' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				array(104, 109, 114, 119),
-				'six',
-				null,
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 104
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => 109
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 114
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 119
-					)
-				),
-				'Should add column \'six\''
-			),
-			'object array with key' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				array(4 => 104, 9 => 109, 14 => 114, 19 => 119),
-				'six',
-				'four',
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 104
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => 109
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 114
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 119
-					)
-				),
-				'Should add column \'six\' with respective match from column \'four\''
-			),
-			'object array with invalid key' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => array('array is invalid for key'), 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				array(1 => 101, 6 => 106, 11 => 111, 16 => 116),
-				'six',
-				'one',
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 101
-					),
-					(object) array(
-						'one' => array('array is invalid for key'), 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => null
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 111
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 116
-					)
-				),
-				'Should add column \'six\' with keys from column \'one\' and invalid key should introduce an null value added in the new column'
-			),
-			'object array with one missing key' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				array(1 => 101, 6 => 106, 11 => 111, 16 => 116),
-				'six',
-				'one',
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 101
-					),
-					(object) array(
-						'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => null
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 111
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 116
-					)
-				),
-				'Should add column \'six\' with keys from column \'one\' and the missing key should add a null value in the new column'
-			),
-			'object array with one non matching value' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => -9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				array(4 => 104, 9 => 109, 14 => 114, 19 => 119),
-				'six',
-				'four',
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 104
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => -9, 'five' => 10, 'six' => null,
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 114
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 119
-					)
-				),
-				'Should get column \'six\' with keys from column \'four\' and item with missing referenced value should set null in new column'
-			),
-			'object array with null column name' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				array(1 => 101,6 => 102, 11 => 103, 16 => 104),
-				null,
-				'one',
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'Should skip entire set and return the original value as automatic key is not possible with objects'
-			),
-		);
+		yield 'generic array' => [
+			[
+				[
+					1, 2, 3, 4, 5,
+				],
+				[
+					6, 7, 8, 9, 10,
+				],
+				[
+					11, 12, 13, 14, 15,
+				],
+				[
+					16, 17, 18, 19, 20,
+				],
+			],
+			[101, 106, 111, 116],
+			null,
+			null,
+			[
+				[
+					1, 2, 3, 4, 5, 101,
+				],
+				[
+					6, 7, 8, 9, 10, 106,
+				],
+				[
+					11, 12, 13, 14, 15, 111,
+				],
+				[
+					16, 17, 18, 19, 20, 116,
+				],
+			],
+			'Should add column #5',
+		];
+
+		yield 'associative array' => [
+			[
+				'a' => [
+					1, 2, 3, 4, 5,
+				],
+				'b' => [
+					6, 7, 8, 9, 10,
+				],
+				'c' => [
+					11, 12, 13, 14, 15,
+				],
+				'd' => [
+					16, 17, 18, 19, 20,
+				],
+			],
+			['a' => 101, 'c' => 111, 'd' => 116, 'b' => 106],
+			null,
+			null,
+			[
+				'a' => [
+					1, 2, 3, 4, 5, 101,
+				],
+				'b' => [
+					6, 7, 8, 9, 10, 106,
+				],
+				'c' => [
+					11, 12, 13, 14, 15, 111,
+				],
+				'd' => [
+					16, 17, 18, 19, 20, 116,
+				],
+			],
+			'Should add column #5 in correct associative order',
+		];
+
+		yield 'generic array with lookup key' => [
+			[
+				[
+					1, 2, 3, 4, 5,
+				],
+				[
+					6, 7, 8, 9, 10,
+				],
+				[
+					11, 12, 13, 14, 15,
+				],
+				[
+					16, 17, 18, 19, 20,
+				],
+			],
+			[11 => 111, 1 => 101, 6 => 106, 16 => 116],
+			null,
+			0,
+			[
+				[
+					1, 2, 3, 4, 5, 101,
+				],
+				[
+					6, 7, 8, 9, 10, 106,
+				],
+				[
+					11, 12, 13, 14, 15, 111,
+				],
+				[
+					16, 17, 18, 19, 20, 116,
+				],
+			],
+			'Should add column #5 [101, 106, 111, 116] with column #0 as matching keys',
+		];
+
+		yield 'generic array with existing key as column name' => [
+			[
+				[
+					1, 2, 3, 4, 5,
+				],
+				[
+					6, 7, 8, 9, 10,
+				],
+				[
+					11, 12, 13, 14, 15,
+				],
+				[
+					16, 17, 18, 19, 20,
+				],
+			],
+			[11 => 111, 1 => 101, 6 => 106, 16 => 116],
+			3,
+			0,
+			[
+				[
+					1, 2, 3, 101, 5,
+				],
+				[
+					6, 7, 8, 106, 10,
+				],
+				[
+					11, 12, 13, 111, 15,
+				],
+				[
+					16, 17, 18, 116, 20,
+				],
+			],
+			'Should replace column #3 [4, 9, 14, 19] with [101, 106, 111, 116] respective to column #0 as matching keys',
+		];
+
+		yield 'array of associative arrays' => [
+			[
+				[
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				[
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				[
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				[
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			[104, 109, 114, 119],
+			'six',
+			null,
+			[
+				[
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 104,
+				],
+				[
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => 109,
+				],
+				[
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 114,
+				],
+				[
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 119,
+				],
+			],
+			"Should add column 'six'",
+		];
+
+		yield 'array of associative array with key' => [
+			[
+				[
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				[
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				[
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				[
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			[4 => 104, 9 => 109, 14 => 114, 19 => 119],
+			'six',
+			'four',
+			[
+				[
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 104,
+				],
+				[
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => 109,
+				],
+				[
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 114,
+				],
+				[
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 119,
+				],
+			],
+			"Should add column 'six' with respective match from column 'four'",
+		];
+
+		yield 'object array' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			[104, 109, 114, 119],
+			'six',
+			null,
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 104,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => 109,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 114,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 119,
+				],
+			],
+			"Should add column 'six'",
+		];
+
+		yield 'object array with key' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			[4 => 104, 9 => 109, 14 => 114, 19 => 119],
+			'six',
+			'four',
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 104,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => 109,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 114,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 119,
+				],
+			],
+			"Should add column 'six' with respective match from column 'four'",
+		];
+
+		yield 'object array with invalid key' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => ['array is invalid for key'], 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			[1 => 101, 6 => 106, 11 => 111, 16 => 116],
+			'six',
+			'one',
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 101,
+				],
+				(object) [
+					'one' => ['array is invalid for key'], 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => null,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 111,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 116,
+				],
+			],
+			"Should add column 'six' with keys from column 'one' and invalid key should introduce an null value added in the new column",
+		];
+
+		yield 'object array with one missing key' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			[1 => 101, 6 => 106, 11 => 111, 16 => 116],
+			'six',
+			'one',
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 101,
+				],
+				(object) [
+					'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10, 'six' => null,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 111,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 116,
+				],
+			],
+			"Should add column 'six' with keys from column 'one' and the missing key should add a null value in the new column",
+		];
+
+		yield 'object array with one non matching value' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => -9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			[4 => 104, 9 => 109, 14 => 114, 19 => 119],
+			'six',
+			'four',
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 104,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => -9, 'five' => 10, 'six' => null,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15, 'six' => 114,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20, 'six' => 119,
+				],
+			],
+			"Should get column 'six' with keys from column 'four' and item with missing referenced value should set null in new column",
+		];
+
+		yield 'object array with null column name' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			[1 => 101, 6 => 102, 11 => 103, 16 => 104],
+			null,
+			'one',
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'Should skip entire set and return the original value as automatic key is not possible with objects',
+		];
 	}
 
 	/**
-	 * Data provider for add column
+	 * Data provider for drop column
 	 *
-	 * @return  array
-	 *
-	 * @since   1.5.0
+	 * @return  \Generator
 	 */
-	public function seedTestDropColumn()
+	public function seedTestDropColumn(): \Generator
 	{
-		return array(
-			'generic array' => array(
-				array(
-					array(
-						1, 2, 3, 4, 5
-					), array(
-						6, 7, 8, 9, 10
-					), array(
-						11, 12, 13, 14, 15
-					), array(
-						16, 17, 18, 19, 20
-					)
-				),
-				4,
-				array(
-					array(
-						1, 2, 3, 4,
-					), array(
-						6, 7, 8, 9,
-					), array(
-						11, 12, 13, 14,
-					), array(
-						16, 17, 18, 19,
-					)
-				),
-				'Should drop column #4'
-			),
-			'associative array' => array(
-				array(
-					array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'one',
-				array(
-					array(
-						'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
-					),
-					array(
-						'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
-					),
-					array(
-						'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
-					),
-					array(
-						'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
-					)
-				),
-				'Should drop column \'one\''
-			),
-			'object array' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'one',
-				array(
-					(object) array(
-						'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
-					),
-					(object) array(
-						'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
-					),
-					(object) array(
-						'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
-					),
-					(object) array(
-						'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
-					)
-				),
-				'Should drop column \'one\''
-			),
-			'array with non existing column' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'seven',
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'Should not drop any column when target column does not exist'
-			),
-		);
+		yield 'generic array' => [
+			[
+				[
+					1, 2, 3, 4, 5,
+				],
+				[
+					6, 7, 8, 9, 10,
+				],
+				[
+					11, 12, 13, 14, 15,
+				],
+				[
+					16, 17, 18, 19, 20,
+				],
+			],
+			4,
+			[
+				[
+					1, 2, 3, 4,
+				],
+				[
+					6, 7, 8, 9,
+				],
+				[
+					11, 12, 13, 14,
+				],
+				[
+					16, 17, 18, 19,
+				],
+			],
+			'Should drop column #4',
+		];
+
+		yield 'associative array' => [
+			[
+				[
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				[
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				[
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				[
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'one',
+			[
+				[
+					'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				[
+					'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				[
+					'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				[
+					'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			"Should drop column 'one'",
+		];
+
+		yield 'object array' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'one',
+			[
+				(object) [
+					'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			"Should drop column 'one'",
+		];
+
+		yield 'array with non existing column' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'seven',
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'Should not drop any column when target column does not exist',
+		];
 	}
 
 	/**
 	 * Data provider for get column
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function seedTestGetColumn()
+	public function seedTestGetColumn(): \Generator
 	{
-		return array(
-			'generic array' => array(
-				array(
-					array(
-						1, 2, 3, 4, 5
-					), array(
-					6, 7, 8, 9, 10
-				), array(
-					11, 12, 13, 14, 15
-				), array(
-					16, 17, 18, 19, 20
-				)
-				),
-				2,
-				null,
-				array(
-					3, 8, 13, 18
-				),
-				'Should get column #2'
-			),
-			'generic array with key' => array(
-				array(
-					array(
-						1, 2, 3, 4, 5
-					), array(
-					6, 7, 8, 9, 10
-				), array(
-					11, 12, 13, 14, 15
-				), array(
-					16, 17, 18, 19, 20
-				)
-				),
-				2,
-				0,
-				array(
-					1 => 3, 6 => 8, 11 => 13, 16 => 18
-				),
-				'Should get column #2 with column #0 as keys'
-			),
-			'associative array' => array(
-				array(
-					array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'four',
-				null,
-				array(
-					4, 9, 14, 19
-				),
-				'Should get column \'four\''
-			),
-			'associative array with key' => array(
-				array(
-					array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'four',
-				'one',
-				array(
-					1 => 4, 6 => 9, 11 => 14, 16 => 19
-				),
-				'Should get column \'four\' with keys from column \'one\''
-			),
-			'object array' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'four',
-				null,
-				array(
-					4, 9, 14, 19
-				),
-				'Should get column \'four\''
-			),
-			'object array with key' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'four',
-				'one',
-				array(
-					1 => 4, 6 => 9, 11 => 14, 16 => 19
-				),
-				'Should get column \'four\' with keys from column \'one\''
-			),
-			'object array with invalid key' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => array('array is invalid for key'), 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'four',
-				'one',
-				array(
-					1 => 4, 9, 11 => 14, 16 => 19
-				),
-				'Should get column \'four\' with keys from column \'one\' and invalid key should introduce an automatic index'
-			),
-			'object array with one missing key' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'four',
-				'one',
-				array(
-					1 => 4, 9, 11 => 14, 16 => 19
-				),
-				'Should get column \'four\' with keys from column \'one\' and the missing key should introduce an automatic index'
-			),
-			'object array with one missing value' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'four',
-				'one',
-				array(
-					1 => 4, 11 => 14, 16 => 19
-				),
-				'Should get column \'four\' with keys from column \'one\' and item with missing value should be skipped'
-			),
-			'object array with null value-col' => array(
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'five' => 10
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				null,
-				'one',
-				array(
-					1 => (object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					6 => (object) array(
-						'one' => 6, 'two' => 7, 'three' => 8, 'five' => 10
-					),
-					11 => (object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					16 => (object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'Should get whole objects with keys from column \'one\''
-			),
-			'object array with null value-col and key-col' => array(
-				array(
-					'a' => (object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					'b' => (object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					'c' => (object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				null,
-				null,
-				array(
-					(object) array(
-						'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5
-					),
-					(object) array(
-						'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15
-					),
-					(object) array(
-						'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20
-					)
-				),
-				'Should get whole objects with automatic indexes'
-			),
-		);
+		yield 'generic array' => [
+			[
+				[
+					1, 2, 3, 4, 5,
+				],
+				[
+					6, 7, 8, 9, 10,
+				],
+				[
+					11, 12, 13, 14, 15,
+				],
+				[
+					16, 17, 18, 19, 20,
+				],
+			],
+			2,
+			null,
+			[
+				3, 8, 13, 18,
+			],
+			'Should get column #2',
+		];
+
+		yield 'generic array with key' => [
+			[
+				[
+					1, 2, 3, 4, 5,
+				],
+				[
+					6, 7, 8, 9, 10,
+				],
+				[
+					11, 12, 13, 14, 15,
+				],
+				[
+					16, 17, 18, 19, 20,
+				],
+			],
+			2,
+			0,
+			[
+				1 => 3, 6 => 8, 11 => 13, 16 => 18,
+			],
+			'Should get column #2 with column #0 as keys',
+		];
+
+		yield 'associative array' => [
+			[
+				[
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				[
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				[
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				[
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'four',
+			null,
+			[
+				4, 9, 14, 19,
+			],
+			"Should get column 'four'",
+		];
+
+		yield 'associative array with key' => [
+			[
+				[
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				[
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				[
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				[
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'four',
+			'one',
+			[
+				1 => 4, 6 => 9, 11 => 14, 16 => 19,
+			],
+			"Should get column \'four\' with keys from column 'one'",
+		];
+
+		yield 'object array' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'four',
+			null,
+			[
+				4, 9, 14, 19,
+			],
+			"Should get column 'four'",
+		];
+
+		yield 'object array with key' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'four',
+			'one',
+			[
+				1 => 4, 6 => 9, 11 => 14, 16 => 19,
+			],
+			"Should get column 'four' with keys from column 'one'",
+		];
+
+		yield 'object array with invalid key' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => ['array is invalid for key'], 'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'four',
+			'one',
+			[
+				1 => 4, 9, 11 => 14, 16 => 19,
+			],
+			"Should get column 'four' with keys from column 'one' and invalid key should introduce an automatic index",
+		];
+
+		yield 'object array with one missing key' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'two' => 7, 'three' => 8, 'four' => 9, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'four',
+			'one',
+			[
+				1 => 4, 9, 11 => 14, 16 => 19,
+			],
+			"Should get column 'four' with keys from column 'one' and the missing key should introduce an automatic index",
+		];
+
+		yield 'object array with one missing value' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'four',
+			'one',
+			[
+				1 => 4, 11 => 14, 16 => 19,
+			],
+			"Should get column 'four' with keys from column 'one' and item with missing value should be skipped",
+		];
+
+		yield 'object array with null value-col' => [
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'five' => 10,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			null,
+			'one',
+			[
+				1  => (object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				6  => (object) [
+					'one' => 6, 'two' => 7, 'three' => 8, 'five' => 10,
+				],
+				11 => (object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				16 => (object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			"Should get whole objects with keys from column 'one'",
+		];
+
+		yield 'object array with null value-col and key-col' => [
+			[
+				'a' => (object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				'b' => (object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				'c' => (object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			null,
+			null,
+			[
+				(object) [
+					'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+				],
+				(object) [
+					'one' => 11, 'two' => 12, 'three' => 13, 'four' => 14, 'five' => 15,
+				],
+				(object) [
+					'one' => 16, 'two' => 17, 'three' => 18, 'four' => 19, 'five' => 20,
+				],
+			],
+			'Should get whole objects with automatic indexes',
+		];
 	}
 
 	/**
 	 * Data provider for get value
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function seedTestGetValue()
+	public function seedTestGetValue(): \Generator
 	{
-		$input = array(
-			'one' => 1,
-			'two' => 2,
-			'three' => 3,
-			'four' => 4,
-			'five' => 5,
-			'six' => 6,
-			'seven' => 7,
-			'eight' => 8,
-			'nine' => 'It\'s nine',
-			'ten' => 10,
-			'eleven' => 11,
-			'twelve' => 12,
-			'thirteen' => 13,
-			'fourteen' => 14,
-			'fifteen' => 15,
-			'sixteen' => 16,
+		$input = [
+			'one'       => 1,
+			'two'       => 2,
+			'three'     => 3,
+			'four'      => 4,
+			'five'      => 5,
+			'six'       => 6,
+			'seven'     => 7,
+			'eight'     => 8,
+			'nine'      => "It's nine",
+			'ten'       => 10,
+			'eleven'    => 11,
+			'twelve'    => 12,
+			'thirteen'  => 13,
+			'fourteen'  => 14,
+			'fifteen'   => 15,
+			'sixteen'   => 16,
 			'seventeen' => 17,
 			'eightteen' => 'eighteen ninety-five',
-			'nineteen' => 19,
-			'twenty' => 20,
-			'level' => array(
+			'nineteen'  => 19,
+			'twenty'    => 20,
+			'level'     => [
 				'a' => 'Level 2 A',
 				'b' => 'Level 2 B',
-			),
-			'level.b' => 'Index with dot',
-		);
+			],
+			'level.b'   => 'Index with dot',
+		];
 
-		return array(
-			'defaults' => array(
-				$input, 'five', null, null, 5, 'Should get 5', true
-			),
-			'get non-value' => array(
-				$input, 'fiveio', 198, null, 198, 'Should get the default value', false
-			),
-			'get int 5' => array(
-				$input, 'five', 198, 'int', (int) 5, 'Should get an int', false
-			),
-			'get float six' => array(
-				$input, 'six', 198, 'float', (float) 6, 'Should get a float', false
-			),
-			'get get boolean seven' => array(
-				$input, 'seven', 198, 'bool', (bool) 7, 'Should get a boolean', false
-			),
-			'get array eight' => array(
-				$input, 'eight', 198, 'array', array(
-					8
-				), 'Should get an array', false
-			),
-			'get string nine' => array(
-				$input, 'nine', 198, 'string', 'It\'s nine', 'Should get string', false
-			),
-			'get word' => array(
-				$input, 'eightteen', 198, 'word', 'eighteenninetyfive', 'Should get it as a single word', false
-			),
-			'get level 2' => array(
-				$input, 'level.a', 'default level a', 'string', 'Level 2 A', 'Should get the value from 2nd level', false
-			),
-			'get level 1 skip level 2' => array(
-				$input, 'level.b', 'default level b', 'string', 'Index with dot', 'Should get the value from 1st level if exists ignoring 2nd', false
-			),
-			'get default if path invalid' => array(
-				$input, 'level.c', 'default level c', 'string', 'default level c', 'Should get the default value if index or path not found', false
-			),
-		);
+		yield 'defaults' => [
+			$input, 'five', null, null, 5, 'Should get 5', true,
+		];
+
+		yield 'get non-value' => [
+			$input, 'fiveio', 198, null, 198, 'Should get the default value', false,
+		];
+
+		yield 'get int 5' => [
+			$input, 'five', 198, 'int', (int) 5, 'Should get an int', false,
+		];
+
+		yield 'get float six' => [
+			$input, 'six', 198, 'float', (float) 6, 'Should get a float', false,
+		];
+
+		yield 'get get boolean seven' => [
+			$input, 'seven', 198, 'bool', (bool) 7, 'Should get a boolean', false,
+		];
+
+		yield 'get array eight' => [
+			$input, 'eight', 198, 'array', [8], 'Should get an array', false,
+		];
+
+		yield 'get string nine' => [
+			$input, 'nine', 198, 'string', "It's nine", 'Should get string', false,
+		];
+
+		yield 'get word' => [
+			$input, 'eightteen', 198, 'word', 'eighteenninetyfive', 'Should get it as a single word', false,
+		];
+
+		yield 'get level 2' => [
+			$input, 'level.a', 'default level a', 'string', 'Level 2 A', 'Should get the value from 2nd level', false,
+		];
+
+		yield 'get level 1 skip level 2' => [
+			$input, 'level.b', 'default level b', 'string', 'Index with dot', 'Should get the value from 1st level if exists ignoring 2nd', false,
+		];
+
+		yield 'get default if path invalid' => [
+			$input, 'level.c', 'default level c', 'string', 'default level c', 'Should get the default value if index or path not found', false,
+		];
 	}
 
 	/**
 	 * Data provider for invert
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function seedTestInvert()
+	public function seedTestInvert(): \Generator
 	{
-		return array(
-			'Case 1' => array(
-				// Input
-				array(
-					'New' => array('1000', '1500', '1750'),
-					'Used' => array('3000', '4000', '5000', '6000')
-				),
-				// Expected
-				array(
-					'1000' => 'New',
-					'1500' => 'New',
-					'1750' => 'New',
-					'3000' => 'Used',
-					'4000' => 'Used',
-					'5000' => 'Used',
-					'6000' => 'Used'
-				)
-			),
-			'Case 2' => array(
-				// Input
-				array(
-					'New' => array(1000, 1500, 1750),
-					'Used' => array(2750, 3000, 4000, 5000, 6000),
-					'Refurbished' => array(2000, 2500),
-					'Unspecified' => array()
-				),
-				// Expected
-				array(
-					'1000' => 'New',
-					'1500' => 'New',
-					'1750' => 'New',
-					'2750' => 'Used',
-					'3000' => 'Used',
-					'4000' => 'Used',
-					'5000' => 'Used',
-					'6000' => 'Used',
-					'2000' => 'Refurbished',
-					'2500' => 'Refurbished'
-				)
-			),
-			'Case 3' => array(
-				// Input
-				array(
-					'New' => array(1000, 1500, 1750),
-					'valueNotAnArray' => 2750,
-					'withNonScalarValue' => array(2000, array(1000 , 3000))
-				),
-				// Expected
-				array(
-					'1000' => 'New',
-					'1500' => 'New',
-					'1750' => 'New',
-					'2000' => 'withNonScalarValue'
-				)
-			)
-		);
+		yield 'Case 1' => [
+			// Input
+			[
+				'New'  => ['1000', '1500', '1750'],
+				'Used' => ['3000', '4000', '5000', '6000'],
+			],
+			// Expected
+			[
+				'1000' => 'New',
+				'1500' => 'New',
+				'1750' => 'New',
+				'3000' => 'Used',
+				'4000' => 'Used',
+				'5000' => 'Used',
+				'6000' => 'Used',
+			],
+		];
+
+		yield 'Case 2' => [
+			// Input
+			[
+				'New'         => [1000, 1500, 1750],
+				'Used'        => [2750, 3000, 4000, 5000, 6000],
+				'Refurbished' => [2000, 2500],
+				'Unspecified' => [],
+			],
+			// Expected
+			[
+				'1000' => 'New',
+				'1500' => 'New',
+				'1750' => 'New',
+				'2750' => 'Used',
+				'3000' => 'Used',
+				'4000' => 'Used',
+				'5000' => 'Used',
+				'6000' => 'Used',
+				'2000' => 'Refurbished',
+				'2500' => 'Refurbished',
+			],
+		];
+
+		yield 'Case 3' => [
+			// Input
+			[
+				'New'                => [1000, 1500, 1750],
+				'valueNotAnArray'    => 2750,
+				'withNonScalarValue' => [2000, [1000, 3000]],
+			],
+			// Expected
+			[
+				'1000' => 'New',
+				'1500' => 'New',
+				'1750' => 'New',
+				'2000' => 'withNonScalarValue',
+			],
+		];
 	}
 
 	/**
 	 * Data provider for testPivot
 	 *
-	 * @return  array
+	 * @return  \Generator
 	 *
 	 * @since   1.0
 	 */
-	public function seedTestPivot()
+	public function seedTestPivot(): \Generator
 	{
-		return array(
-			'A scalar array' => array(
-				// Source
-				array(
-					1 => 'a',
-					2 => 'b',
-					3 => 'b',
-					4 => 'c',
-					5 => 'a',
-					6 => 'a',
-				),
-				// Key
-				null,
-				// Expected
-				array(
-					'a' => array(
-						1, 5, 6
-					),
-					'b' => array(
-						2, 3
-					),
-					'c' => 4,
-				)
-			),
-			'An array of associative arrays' => array(
-				// Source
-				array(
-					1 => array('id' => 41, 'title' => 'boo'),
-					2 => array('id' => 42, 'title' => 'boo'),
-					3 => array('title' => 'boo'),
-					4 => array('id' => 42, 'title' => 'boo'),
-					5 => array('id' => 43, 'title' => 'boo'),
-				),
-				// Key
-				'id',
-				// Expected
-				array(
-					41 => array('id' => 41, 'title' => 'boo'),
-					42 => array(
-						array('id' => 42, 'title' => 'boo'),
-						array('id' => 42, 'title' => 'boo'),
-					),
-					43 => array('id' => 43, 'title' => 'boo'),
-				)
-			),
-			'An array of objects' => array(
-				// Source
-				array(
-					1 => (object) array('id' => 41, 'title' => 'boo'),
-					2 => (object) array('id' => 42, 'title' => 'boo'),
-					3 => (object) array('title' => 'boo'),
-					4 => (object) array('id' => 42, 'title' => 'boo'),
-					5 => (object) array('id' => 43, 'title' => 'boo'),
-				),
-				// Key
-				'id',
-				// Expected
-				array(
-					41 => (object) array('id' => 41, 'title' => 'boo'),
-					42 => array(
-						(object) array('id' => 42, 'title' => 'boo'),
-						(object) array('id' => 42, 'title' => 'boo'),
-					),
-					43 => (object) array('id' => 43, 'title' => 'boo'),
-				)
-			),
-		);
+		yield 'A scalar array' => [
+			// Source
+			[
+				1 => 'a',
+				2 => 'b',
+				3 => 'b',
+				4 => 'c',
+				5 => 'a',
+				6 => 'a',
+			],
+			// Key
+			null,
+			// Expected
+			[
+				'a' => [
+					1, 5, 6,
+				],
+				'b' => [
+					2, 3,
+				],
+				'c' => 4,
+			],
+		];
+
+		yield 'An array of associative arrays' => [
+			// Source
+			[
+				1 => ['id' => 41, 'title' => 'boo'],
+				2 => ['id' => 42, 'title' => 'boo'],
+				3 => ['title' => 'boo'],
+				4 => ['id' => 42, 'title' => 'boo'],
+				5 => ['id' => 43, 'title' => 'boo'],
+			],
+			// Key
+			'id',
+			// Expected
+			[
+				41 => ['id' => 41, 'title' => 'boo'],
+				42 => [
+					['id' => 42, 'title' => 'boo'],
+					['id' => 42, 'title' => 'boo'],
+				],
+				43 => ['id' => 43, 'title' => 'boo'],
+			],
+		];
+
+		yield 'An array of objects' => [
+			// Source
+			[
+				1 => (object) ['id' => 41, 'title' => 'boo'],
+				2 => (object) ['id' => 42, 'title' => 'boo'],
+				3 => (object) ['title' => 'boo'],
+				4 => (object) ['id' => 42, 'title' => 'boo'],
+				5 => (object) ['id' => 43, 'title' => 'boo'],
+			],
+			// Key
+			'id',
+			// Expected
+			[
+				41 => (object) ['id' => 41, 'title' => 'boo'],
+				42 => [
+					(object) ['id' => 42, 'title' => 'boo'],
+					(object) ['id' => 42, 'title' => 'boo'],
+				],
+				43 => (object) ['id' => 43, 'title' => 'boo'],
+			],
+		];
 	}
 
 	/**
 	 * Data provider for sorting objects
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function seedTestSortObject()
+	public function seedTestSortObject(): \Generator
 	{
-		$input1 = array(
-			(object) array(
-				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-			),
-			(object) array(
-				'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-			),
-			(object) array(
-				'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-			),
-			(object) array(
-				'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-			),
-			(object) array(
-				'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-			),
-			(object) array(
-				'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-			),
-			(object) array(
-				'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-			),
-			(object) array(
-				'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-			),
-		);
-		$input2 = array(
-			(object) array(
-				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-			),
-			(object) array(
-				'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-			),
-			(object) array(
-				'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-			),
-			(object) array(
-				'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-			),
-			(object) array(
-				'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-			),
-			(object) array(
-				'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-			),
-			(object) array(
-				'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-			),
-			(object) array(
-				'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-			),
-		);
+		$input1 = [
+			(object) [
+				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+			],
+			(object) [
+				'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+			],
+			(object) [
+				'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+			],
+			(object) [
+				'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+			],
+			(object) [
+				'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String',
+			],
+			(object) [
+				'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+			],
+			(object) [
+				'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String',
+			],
+			(object) [
+				'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+			],
+		];
+		$input2 = [
+			(object) [
+				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+			],
+			(object) [
+				'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+			],
+			(object) [
+				'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+			],
+			(object) [
+				'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+			],
+			(object) [
+				'integer' => 5, 'float' => 1.29999, 'string' => 't Test String',
+			],
+			(object) [
+				'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+			],
+			(object) [
+				'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String',
+			],
+			(object) [
+				'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+			],
+		];
 
-		if (substr(php_uname(), 0, 6) != 'Darwin')
+		if (PHP_OS_FAMILY !== 'Darwin')
 		{
-			$input3 = array(
-				(object) array(
+			$input3 = [
+				(object) [
 					'string' => 'A Test String', 'integer' => 1,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'é Test String', 'integer' => 2,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'è Test String', 'integer' => 3,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'É Test String', 'integer' => 4,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'È Test String', 'integer' => 5,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'Œ Test String', 'integer' => 6,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'œ Test String', 'integer' => 7,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'L Test String', 'integer' => 8,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'P Test String', 'integer' => 9,
-				),
-				(object) array(
+				],
+				(object) [
 					'string' => 'p Test String', 'integer' => 10,
-				),
-			);
+				],
+			];
 		}
 		else
 		{
-			$input3 = array();
+			$input3 = [];
 		}
 
-		return array(
-			'by int defaults' => array(
-				$input1,
-				'integer',
-				null,
-				false,
-				false,
-				array(
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-				),
-				'Should be sorted by the integer field in ascending order',
-				true
-			),
-			'by int ascending' => array(
-				$input1,
-				'integer',
-				1,
-				false,
-				false,
-				array(
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-				),
-				'Should be sorted by the integer field in ascending order full argument list',
-				false
-			),
-			'by int descending' => array(
-				$input1,
-				'integer',
-				-1,
-				false,
-				false,
-				array(
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-					),
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-				),
-				'Should be sorted by the integer field in descending order',
-				false
-			),
-			'by string ascending' => array(
-				$input1,
-				'string',
-				1,
-				false,
-				false,
-				array(
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-					),
-				),
-				'Should be sorted by the string field in ascending order full argument list',
-				false,
-				array(1, 2)
-			),
-			'by string descending' => array(
-				$input1,
-				'string',
-				-1,
-				false,
-				false,
-				array(
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String'
-					),
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				'Should be sorted by the string field in descending order',
-				false,
-				array(5, 6)
-			),
-			'by casesensitive string ascending' => array(
-				$input2,
-				'string',
-				1,
-				true,
-				false,
-				array(
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-				),
-				'Should be sorted by the string field in ascending order with casesensitive comparisons',
-				false,
-				array(1, 2)
-			),
-			'by casesensitive string descending' => array(
-				$input2,
-				'string',
-				-1,
-				true,
-				false,
-				array(
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				'Should be sorted by the string field in descending order with casesensitive comparisons',
-				false,
-				array(5, 6)
-			),
-			'by casesensitive string,integer ascending' => array(
-				$input2,
-				array(
-					'string', 'integer'
-				),
-				1,
-				true,
-				false,
-				array(
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-				),
-				'Should be sorted by the string,integer field in descending order with casesensitive comparisons',
-				false
-			),
-			'by casesensitive string,integer descending' => array(
-				$input2,
-				array(
-					'string', 'integer'
-				),
-				-1,
-				true,
-				false,
-				array(
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				'Should be sorted by the string,integer field in descending order with casesensitive comparisons',
-				false
-			),
-			'by casesensitive string,integer ascending,descending' => array(
-				$input2,
-				array(
-					'string', 'integer'
-				),
-				array(
-					1, -1
-				),
-				true,
-				false,
-				array(
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-				),
-				'Should be sorted by the string,integer field in ascending,descending order with casesensitive comparisons',
-				false
-			),
-			'by casesensitive string,integer descending,ascending' => array(
-				$input2,
-				array(
-					'string', 'integer'
-				),
-				array(
-					-1, 1
-				),
-				true,
-				false,
-				array(
-					(object) array(
-						'integer' => 5, 'float' => 1.29999, 'string' => 't Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String'
-					),
-					(object) array(
-						'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String'
-					),
-					(object) array(
-						'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String'
-					),
-					(object) array(
-						'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String'
-					),
-					(object) array(
-						'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String'
-					),
-					(object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				'Should be sorted by the string,integer field in descending,ascending order with casesensitive comparisons',
-				false
-			),
-			'by casesensitive string ascending' => array(
-				$input3,
-				'string',
-				1,
-				true,
-				array(
-					'fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'
-				),
-				array(
-					(object) array(
-						'string' => 'A Test String', 'integer' => 1,
-					),
-					(object) array(
-						'string' => 'é Test String', 'integer' => 2,
-					),
-					(object) array(
-						'string' => 'É Test String', 'integer' => 4,
-					),
-					(object) array(
-						'string' => 'è Test String', 'integer' => 3,
-					),
-					(object) array(
-						'string' => 'È Test String', 'integer' => 5,
-					),
-					(object) array(
-						'string' => 'L Test String', 'integer' => 8,
-					),
-					(object) array(
-						'string' => 'œ Test String', 'integer' => 7,
-					),
-					(object) array(
-						'string' => 'Œ Test String', 'integer' => 6,
-					),
-					(object) array(
-						'string' => 'p Test String', 'integer' => 10,
-					),
-					(object) array(
-						'string' => 'P Test String', 'integer' => 9,
-					),
-				),
-				'Should be sorted by the string field in ascending order with casesensitive comparisons and fr_FR locale',
-				false
-			),
-			'by caseinsensitive string, integer ascending' => array(
-				$input3,
-				array(
-					'string', 'integer'
-				),
-				1,
-				false,
-				array(
-					'fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR'
-				),
-				array(
-					(object) array(
-						'string' => 'A Test String', 'integer' => 1,
-					),
-					(object) array(
-						'string' => 'é Test String', 'integer' => 2,
-					),
-					(object) array(
-						'string' => 'É Test String', 'integer' => 4,
-					),
-					(object) array(
-						'string' => 'è Test String', 'integer' => 3,
-					),
-					(object) array(
-						'string' => 'È Test String', 'integer' => 5,
-					),
-					(object) array(
-						'string' => 'L Test String', 'integer' => 8,
-					),
-					(object) array(
-						'string' => 'Œ Test String', 'integer' => 6,
-					),
-					(object) array(
-						'string' => 'œ Test String', 'integer' => 7,
-					),
-					(object) array(
-						'string' => 'P Test String', 'integer' => 9,
-					),
-					(object) array(
-						'string' => 'p Test String', 'integer' => 10,
-					),
-				),
-				'Should be sorted by the string,integer field in ascending order with caseinsensitive comparisons and fr_FR locale',
-				false
-			),
-		);
+		yield 'by int defaults' => [
+			$input1,
+			'integer',
+			null,
+			false,
+			false,
+			[
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+			],
+			'Should be sorted by the integer field in ascending order',
+			true,
+		];
+
+		yield 'by int ascending' => [
+			$input1,
+			'integer',
+			1,
+			false,
+			false,
+			[
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+			],
+			'Should be sorted by the integer field in ascending order full argument list',
+			false,
+		];
+
+		yield 'by int descending' => [
+			$input1,
+			'integer',
+			-1,
+			false,
+			false,
+			[
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String',
+				],
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+			],
+			'Should be sorted by the integer field in descending order',
+			false,
+		];
+
+		yield 'by string ascending' => [
+			$input1,
+			'string',
+			1,
+			false,
+			false,
+			[
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String',
+				],
+			],
+			'Should be sorted by the string field in ascending order full argument list',
+			false,
+			[1, 2],
+		];
+
+		yield 'by string descending' => [
+			$input1,
+			'string',
+			-1,
+			false,
+			false,
+			[
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 'T Test String',
+				],
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'G Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			'Should be sorted by the string field in descending order',
+			false,
+			[5, 6],
+		];
+
+		yield 'by casesensitive string ascending' => [
+			$input2,
+			'string',
+			1,
+			true,
+			false,
+			[
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String',
+				],
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 't Test String',
+				],
+			],
+			'Should be sorted by the string field in ascending order with casesensitive comparisons',
+			false,
+			[1, 2],
+		];
+
+		yield 'by casesensitive string descending' => [
+			$input2,
+			'string',
+			-1,
+			true,
+			false,
+			[
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 't Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String',
+				],
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			'Should be sorted by the string field in descending order with casesensitive comparisons',
+			false,
+			[5, 6],
+		];
+
+		yield 'by casesensitive string,integer ascending' => [
+			$input2,
+			[
+				'string', 'integer',
+			],
+			1,
+			true,
+			false,
+			[
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String',
+				],
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 't Test String',
+				],
+			],
+			'Should be sorted by the string,integer field in descending order with casesensitive comparisons',
+			false,
+		];
+
+		yield 'by casesensitive string,integer descending' => [
+			$input2,
+			[
+				'string', 'integer',
+			],
+			-1,
+			true,
+			false,
+			[
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 't Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String',
+				],
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			'Should be sorted by the string,integer field in descending order with casesensitive comparisons',
+			false,
+		];
+
+		yield 'by casesensitive string,integer ascending,descending' => [
+			$input2,
+			[
+				'string', 'integer',
+			],
+			[
+				1, -1,
+			],
+			true,
+			false,
+			[
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String',
+				],
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 't Test String',
+				],
+			],
+			'Should be sorted by the string,integer field in ascending,descending order with casesensitive comparisons',
+			false,
+		];
+
+		yield 'by casesensitive string,integer descending,ascending' => [
+			$input2,
+			[
+				'string', 'integer',
+			],
+			[
+				-1, 1,
+			],
+			true,
+			false,
+			[
+				(object) [
+					'integer' => 5, 'float' => 1.29999, 'string' => 't Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'g Test String',
+				],
+				(object) [
+					'integer' => 1, 'float' => 1.29999, 'string' => 'N Test String',
+				],
+				(object) [
+					'integer' => 6, 'float' => 1.29999, 'string' => 'L Test String',
+				],
+				(object) [
+					'integer' => 22, 'float' => 1.29999, 'string' => 'E Test String',
+				],
+				(object) [
+					'integer' => 15, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 35, 'float' => 1.29999, 'string' => 'C Test String',
+				],
+				(object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			'Should be sorted by the string,integer field in descending,ascending order with casesensitive comparisons',
+			false,
+		];
+
+		yield 'by casesensitive string ascending, french' => [
+			$input3,
+			'string',
+			1,
+			true,
+			[
+				'fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR',
+			],
+			[
+				(object) [
+					'string' => 'A Test String', 'integer' => 1,
+				],
+				(object) [
+					'string' => 'é Test String', 'integer' => 2,
+				],
+				(object) [
+					'string' => 'É Test String', 'integer' => 4,
+				],
+				(object) [
+					'string' => 'è Test String', 'integer' => 3,
+				],
+				(object) [
+					'string' => 'È Test String', 'integer' => 5,
+				],
+				(object) [
+					'string' => 'L Test String', 'integer' => 8,
+				],
+				(object) [
+					'string' => 'œ Test String', 'integer' => 7,
+				],
+				(object) [
+					'string' => 'Œ Test String', 'integer' => 6,
+				],
+				(object) [
+					'string' => 'p Test String', 'integer' => 10,
+				],
+				(object) [
+					'string' => 'P Test String', 'integer' => 9,
+				],
+			],
+			'Should be sorted by the string field in ascending order with casesensitive comparisons and fr_FR locale',
+			false,
+		];
+
+		yield 'by caseinsensitive string, integer ascending' => [
+			$input3,
+			[
+				'string', 'integer',
+			],
+			1,
+			false,
+			[
+				'fr_FR.utf8', 'fr_FR.UTF-8', 'fr_FR.UTF-8@euro', 'French_Standard', 'french', 'fr_FR', 'fre_FR',
+			],
+			[
+				(object) [
+					'string' => 'A Test String', 'integer' => 1,
+				],
+				(object) [
+					'string' => 'é Test String', 'integer' => 2,
+				],
+				(object) [
+					'string' => 'É Test String', 'integer' => 4,
+				],
+				(object) [
+					'string' => 'è Test String', 'integer' => 3,
+				],
+				(object) [
+					'string' => 'È Test String', 'integer' => 5,
+				],
+				(object) [
+					'string' => 'L Test String', 'integer' => 8,
+				],
+				(object) [
+					'string' => 'Œ Test String', 'integer' => 6,
+				],
+				(object) [
+					'string' => 'œ Test String', 'integer' => 7,
+				],
+				(object) [
+					'string' => 'P Test String', 'integer' => 9,
+				],
+				(object) [
+					'string' => 'p Test String', 'integer' => 10,
+				],
+			],
+			'Should be sorted by the string,integer field in ascending order with caseinsensitive comparisons and fr_FR locale',
+			false,
+		];
 	}
 
 	/**
 	 * Data provider for numeric inputs
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function seedTestToInteger()
+	public function seedTestToInteger(): \Generator
 	{
-		return array(
-			'floating with single argument' => array(
-				array(
-					0.9, 3.2, 4.9999999, 7.5
-				), null, array(
-					0, 3, 4, 7
-				), 'Should truncate numbers in array'
-			),
-			'floating with default array' => array(
-				array(
-					0.9, 3.2, 4.9999999, 7.5
-				), array(
-					1, 2, 3
-				), array(
-					0, 3, 4, 7
-				), 'Supplied default should not be used'
-			),
-			'non-array with single argument' => array(
-				12, null, array(), 'Should replace non-array input with empty array'
-			),
-			'non-array with default array' => array(
-				12, array(
-					1.5, 2.6, 3
-				), array(
-					1, 2, 3
-				), 'Should replace non-array input with array of truncated numbers'
-			),
-			'non-array with default single' => array(
-				12, 3.5, array(
-					3
-				), 'Should replace non-array with single-element array of truncated number'
-			),
-		);
+		yield 'floating with single argument' => [
+			[
+				0.9, 3.2, 4.9999999, 7.5,
+			],
+			null,
+			[
+				0, 3, 4, 7,
+			],
+			'Should truncate numbers in array',
+		];
+
+		yield 'floating with default array' => [
+			[
+				0.9, 3.2, 4.9999999, 7.5,
+			],
+			[
+				1, 2, 3,
+			],
+			[
+				0, 3, 4, 7,
+			],
+			'Supplied default should not be used',
+		];
+
+		yield 'non-array with single argument' => [
+			12, null, [], 'Should replace non-array input with empty array',
+		];
+
+		yield 'non-array with default array' => [
+			12,
+			[
+				1.5, 2.6, 3,
+			],
+			[
+				1, 2, 3,
+			],
+			'Should replace non-array input with array of truncated numbers',
+		];
+
+		yield 'non-array with default single' => [
+			12, 3.5, [3], 'Should replace non-array with single-element array of truncated number',
+		];
 	}
 
 	/**
 	 * Data provider for object inputs
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function seedTestToObject()
+	public function seedTestToObject(): \Generator
 	{
-		return array(
-			'single object' => array(
-				array(
-					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
-				null,
-				(object) array(
-					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
-				'Should turn array into single object'
-			),
-			'multiple objects' => array(
-				array(
-					'first' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				null,
-				(object) array(
-					'first' => (object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => (object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => (object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				'Should turn multiple dimension array into nested objects'
-			),
-			'single object with class' => array(
-				array(
-					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
-				'stdClass',
-				(object) array(
-					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
-				'Should turn array into single object'
-			),
-			'multiple objects with class' => array(
-				array(
-					'first' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				'stdClass',
-				(object) array(
-					'first' => (object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => (object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => (object) array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				'Should turn multiple dimension array into nested objects'
-			),
-		);
+		yield 'single object' => [
+			[
+				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+			],
+			null,
+			(object) [
+				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+			],
+			'Should turn array into single object',
+		];
+
+		yield 'multiple objects' => [
+			[
+				'first'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'second' => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'third'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			null,
+			(object) [
+				'first'  => (object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'second' => (object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'third'  => (object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			'Should turn multiple dimension array into nested objects',
+		];
+
+		yield 'single object with class' => [
+			[
+				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+			],
+			'stdClass',
+			(object) [
+				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+			],
+			'Should turn array into single object',
+		];
+
+		yield 'multiple objects with class' => [
+			[
+				'first'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'second' => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'third'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			'stdClass',
+			(object) [
+				'first'  => (object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'second' => (object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'third'  => (object) [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			'Should turn multiple dimension array into nested objects',
+		];
 	}
 
 	/**
 	 * Data provider for string inputs
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function seedTestToString()
+	public function seedTestToString(): \Generator
 	{
-		return array(
-			'single dimension 1' => array(
-				array(
-					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
-				null,
-				null,
-				false,
-				'integer="12" float="1.29999" string="A Test String"',
-				'Should turn array into single string with defaults',
-				true
-			),
-			'single dimension 2' => array(
-				array(
-					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
-				" = ",
-				null,
-				true,
-				'integer = "12"float = "1.29999"string = "A Test String"',
-				'Should turn array into single string with " = " and no spaces',
-				false
-			),
-			'single dimension 3' => array(
-				array(
-					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-				),
-				' = ',
-				' then ',
-				true,
-				'integer = "12" then float = "1.29999" then string = "A Test String"',
-				'Should turn array into single string with " = " and then between elements',
-				false
-			),
-			'multiple dimensions 1' => array(
-				array(
-					'first' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				null,
-				null,
-				false,
-				'integer="12" float="1.29999" string="A Test String" ' . 'integer="12" float="1.29999" string="A Test String" '
-					. 'integer="12" float="1.29999" string="A Test String"',
-				'Should turn multiple dimension array into single string',
-				true
-			),
-			'multiple dimensions 2' => array(
-				array(
-					'first' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				' = ',
-				null,
-				false,
-				'integer = "12"float = "1.29999"string = "A Test String"' . 'integer = "12"float = "1.29999"string = "A Test String"'
-					. 'integer = "12"float = "1.29999"string = "A Test String"',
-				'Should turn multiple dimension array into single string with " = " and no spaces',
-				false
-			),
-			'multiple dimensions 3' => array(
-				array(
-					'first' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				' = ',
-				' ',
-				false,
-				'integer = "12" float = "1.29999" string = "A Test String" ' . 'integer = "12" float = "1.29999" string = "A Test String" '
-					. 'integer = "12" float = "1.29999" string = "A Test String"',
-				'Should turn multiple dimension array into single string with " = " and a space',
-				false
-			),
-			'multiple dimensions 4' => array(
-				array(
-					'first' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'second' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-					'third' => array(
-						'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String'
-					),
-				),
-				' = ',
-				null,
-				true,
-				'firstinteger = "12"float = "1.29999"string = "A Test String"' . 'secondinteger = "12"float = "1.29999"string = "A Test String"'
-					. 'thirdinteger = "12"float = "1.29999"string = "A Test String"',
-				'Should turn multiple dimension array into single string with " = " and no spaces with outer key',
-				false
-			),
-		);
+		yield 'single dimension 1' => [
+			[
+				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+			],
+			null,
+			null,
+			false,
+			'integer="12" float="1.29999" string="A Test String"',
+			'Should turn array into single string with defaults',
+			true,
+		];
+
+		yield 'single dimension 2' => [
+			[
+				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+			],
+			" = ",
+			null,
+			true,
+			'integer = "12"float = "1.29999"string = "A Test String"',
+			'Should turn array into single string with " = " and no spaces',
+			false,
+		];
+
+		yield 'single dimension 3' => [
+			[
+				'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+			],
+			' = ',
+			' then ',
+			true,
+			'integer = "12" then float = "1.29999" then string = "A Test String"',
+			'Should turn array into single string with " = " and then between elements',
+			false,
+		];
+
+		yield 'multiple dimensions 1' => [
+			[
+				'first'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'second' => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'third'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			null,
+			null,
+			false,
+			'integer="12" float="1.29999" string="A Test String" integer="12" float="1.29999" string="A Test String" integer="12" float="1.29999" string="A Test String"',
+			'Should turn multiple dimension array into single string',
+			true,
+		];
+
+		yield 'multiple dimensions 2' => [
+			[
+				'first'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'second' => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'third'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			' = ',
+			null,
+			false,
+			'integer = "12"float = "1.29999"string = "A Test String"integer = "12"float = "1.29999"string = "A Test String"integer = "12"float = "1.29999"string = "A Test String"',
+			'Should turn multiple dimension array into single string with " = " and no spaces',
+			false,
+		];
+
+		yield 'multiple dimensions 3' => [
+			[
+				'first'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'second' => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'third'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			' = ',
+			' ',
+			false,
+			'integer = "12" float = "1.29999" string = "A Test String" integer = "12" float = "1.29999" string = "A Test String" integer = "12" float = "1.29999" string = "A Test String"',
+			'Should turn multiple dimension array into single string with " = " and a space',
+			false,
+		];
+
+		yield 'multiple dimensions 4' => [
+			[
+				'first'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'second' => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+				'third'  => [
+					'integer' => 12, 'float' => 1.29999, 'string' => 'A Test String',
+				],
+			],
+			' = ',
+			null,
+			true,
+			'firstinteger = "12"float = "1.29999"string = "A Test String"secondinteger = "12"float = "1.29999"string = "A Test String"thirdinteger = "12"float = "1.29999"string = "A Test String"',
+			'Should turn multiple dimension array into single string with " = " and no spaces with outer key',
+			false,
+		];
 	}
 
 	/**
@@ -2124,17 +2184,13 @@ class ArrayHelperTest extends TestCase
 	 * @param   array   $input     The array being input.
 	 * @param   string  $expected  The expected return value.
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestArrayUnique
-	 * @covers        Joomla\Utilities\ArrayHelper::arrayUnique
-	 * @since         1.0
 	 */
 	public function testArrayUnique($input, $expected)
 	{
-		$this->assertThat(
-			ArrayHelper::arrayUnique($input),
-			$this->equalTo($expected)
+		$this->assertEquals(
+			$expected,
+			ArrayHelper::arrayUnique($input)
 		);
 	}
 
@@ -2147,12 +2203,7 @@ class ArrayHelperTest extends TestCase
 	 * @param   string   $expect    The expected return value
 	 * @param   boolean  $defaults  Use function defaults (true) or full argument list
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestFromObject
-	 * @covers        Joomla\Utilities\ArrayHelper::fromObject
-	 * @covers        Joomla\Utilities\ArrayHelper::arrayFromObject
-	 * @since         1.0
 	 */
 	public function testFromObject($input, $recurse, $regex, $expect, $defaults)
 	{
@@ -2178,11 +2229,7 @@ class ArrayHelperTest extends TestCase
 	 * @param   array   $expect   The expected results
 	 * @param   string  $message  The failure message
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestAddColumn
-	 * @covers        Joomla\Utilities\ArrayHelper::addColumn
-	 * @since         1.5.0
 	 */
 	public function testAddColumn($input, $column, $colName, $keyCol, $expect, $message)
 	{
@@ -2197,11 +2244,7 @@ class ArrayHelperTest extends TestCase
 	 * @param   array   $expect   The expected results
 	 * @param   string  $message  The failure message
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestDropColumn
-	 * @covers        Joomla\Utilities\ArrayHelper::dropColumn
-	 * @since         1.5.0
 	 */
 	public function testDropColumn($input, $colName, $expect, $message)
 	{
@@ -2217,11 +2260,7 @@ class ArrayHelperTest extends TestCase
 	 * @param   array   $expect    The expected results
 	 * @param   string  $message   The failure message
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestGetColumn
-	 * @covers        Joomla\Utilities\ArrayHelper::getColumn
-	 * @since         1.0
 	 */
 	public function testGetColumn($input, $valueCol, $keyCol, $expect, $message)
 	{
@@ -2239,11 +2278,7 @@ class ArrayHelperTest extends TestCase
 	 * @param   string  $message   The failure message
 	 * @param   bool    $defaults  Use the defaults (true) or full argument list
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestGetValue
-	 * @covers        Joomla\Utilities\ArrayHelper::getValue
-	 * @since         1.0
 	 */
 	public function testGetValue($input, $index, $default, $type, $expect, $message, $defaults)
 	{
@@ -2261,35 +2296,28 @@ class ArrayHelperTest extends TestCase
 
 	/**
 	 * Test get value from an array.
-	 *
-	 * @return  void
-	 *
-	 * @covers        Joomla\Utilities\ArrayHelper::getValue
-	 * @since         1.3.1
 	 */
 	public function testGetValueWithObjectImplementingArrayAccess()
 	{
-		$array = array(
-			'name' => 'Joe',
+		$array = [
+			'name'    => 'Joe',
 			'surname' => 'Blogs',
-			'age' => 20,
+			'age'     => 20,
 			'address' => null,
-		);
+		];
 
-		$arrayObject = new ArrayObject($array);
+		$arrayObject = new \ArrayObject($array);
 
 		$this->assertEquals('Joe', ArrayHelper::getValue($arrayObject, 'name'), 'An object implementing \ArrayAccess should succesfully retrieve the value of an object');
 	}
 
 	/**
 	 * @testdox  Verify that getValue() throws an \InvalidArgumentException when an object is given that doesn't implement \ArrayAccess
-	 *
-	 * @covers             Joomla\Utilities\ArrayHelper::getValue
-	 * @expectedException  \InvalidArgumentException
-	 * @since              1.3.1
 	 */
 	public function testInvalidArgumentExceptionWithAnObjectNotImplementingArrayAccess()
 	{
+		$this->expectException(\InvalidArgumentException::class);
+
 		$object = new \stdClass;
 		$object->name = "Joe";
 		$object->surname = "Blogs";
@@ -2305,57 +2333,40 @@ class ArrayHelperTest extends TestCase
 	 * @param   array   $input     The array being input.
 	 * @param   string  $expected  The expected return value.
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestInvert
-	 * @since         1.0
 	 */
 	public function testInvert($input, $expected)
 	{
-		$this->assertThat(
-			ArrayHelper::invert($input),
-			$this->equalTo($expected)
+		$this->assertEquals(
+			$expected,
+			ArrayHelper::invert($input)
 		);
 	}
 
-	/**
-	 * Test the ArrayHelper::isAssociate method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 * @sovers  ArrayHelper::isAssociative
-	 */
 	public function testIsAssociative()
 	{
-		$this->assertThat(
+		$this->assertFalse(
 			ArrayHelper::isAssociative(
-				array(
-					1, 2, 3
-				)
-			),
-			$this->isFalse(),
-			'Line: ' . __LINE__ . ' This array should not be associative.'
+				[
+					1, 2, 3,
+				]
+			)
 		);
 
-		$this->assertThat(
+		$this->assertTrue(
 			ArrayHelper::isAssociative(
-				array(
-					'a' => 1, 'b' => 2, 'c' => 3
-				)
-			),
-			$this->isTrue(),
-			'Line: ' . __LINE__ . ' This array should be associative.'
+				[
+					'a' => 1, 'b' => 2, 'c' => 3,
+				]
+			)
 		);
 
-		$this->assertThat(
+		$this->assertTrue(
 			ArrayHelper::isAssociative(
-				array(
-					'a' => 1, 2, 'c' => 3
-				)
-			),
-			$this->isTrue(),
-			'Line: ' . __LINE__ . ' This array should be associative.'
+				[
+					'a' => 1, 2, 'c' => 3,
+				]
+			)
 		);
 	}
 
@@ -2366,17 +2377,13 @@ class ArrayHelperTest extends TestCase
 	 * @param   string  $key       Where the elements of the source array are objects or arrays, the key to pivot on.
 	 * @param   array   $expected  The expected result.
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestPivot
-	 * @covers        Joomla\Utilities\ArrayHelper::pivot
-	 * @since         1.0
 	 */
 	public function testPivot($source, $key, $expected)
 	{
-		$this->assertThat(
-			ArrayHelper::pivot($source, $key),
-			$this->equalTo($expected)
+		$this->assertEquals(
+			$expected,
+			ArrayHelper::pivot($source, $key)
 		);
 	}
 
@@ -2392,11 +2399,7 @@ class ArrayHelperTest extends TestCase
 	 * @param   string   $message        The failure message
 	 * @param   boolean  $defaults       Use the defaults (true) or full argument list
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestSortObject
-	 * @covers        Joomla\Utilities\ArrayHelper::sortObjects
-	 * @since         1.0
 	 */
 	public function testSortObjects($input, $key, $direction, $casesensitive, $locale, $expect, $message, $defaults, $swappable_keys = array())
 	{
@@ -2409,15 +2412,12 @@ class ArrayHelperTest extends TestCase
 		if (empty($input))
 		{
 			$this->markTestSkipped('Skip for MAC until PHP sort bug is fixed');
-
-			return;
 		}
-		elseif ($locale != false && !setlocale(LC_COLLATE, $locale))
+
+		if ($locale != false && !setlocale(LC_COLLATE, $locale))
 		{
 			// If the locale is not available, we can't have to transcode the string and can't reliably compare it.
 			$this->markTestSkipped("Locale {$locale} is not available.");
-
-			return;
 		}
 
 		if ($defaults)
@@ -2431,10 +2431,11 @@ class ArrayHelperTest extends TestCase
 
 		// The ordering of elements that compare equal according to
 		// $key is undefined (implementation dependent).
-		if ($expect != $output && $swappable_keys) {
+		if ($expect != $output && $swappable_keys)
+		{
 			list($k1, $k2) = $swappable_keys;
-			$e1 = $output[$k1];
-			$e2 = $output[$k2];
+			$e1          = $output[$k1];
+			$e2          = $output[$k2];
 			$output[$k1] = $e2;
 			$output[$k2] = $e1;
 		}
@@ -2450,18 +2451,13 @@ class ArrayHelperTest extends TestCase
 	 * @param   string  $expect   The expected return value
 	 * @param   string  $message  The failure message
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestToInteger
-	 * @covers        Joomla\Utilities\ArrayHelper::toInteger
-	 * @since         1.0
 	 */
 	public function testToInteger($input, $default, $expect, $message)
 	{
-		$result = ArrayHelper::toInteger($input, $default);
 		$this->assertEquals(
 			$expect,
-			$result,
+			ArrayHelper::toInteger($input, $default),
 			$message
 		);
 	}
@@ -2474,11 +2470,7 @@ class ArrayHelperTest extends TestCase
 	 * @param   string  $expect     The expected return value
 	 * @param   string  $message    The failure message
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestToObject
-	 * @covers        Joomla\Utilities\ArrayHelper::toObject
-	 * @since         1.0
 	 */
 	public function testToObject($input, $className, $expect, $message)
 	{
@@ -2500,11 +2492,7 @@ class ArrayHelperTest extends TestCase
 	 * @param   string   $message   The failure message
 	 * @param   boolean  $defaults  Use function defaults (true) or full argument list
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  seedTestToString
-	 * @covers        Joomla\Utilities\ArrayHelper::toString
-	 * @since         1.0
 	 */
 	public function testToString($input, $inner, $outer, $keepKey, $expect, $message, $defaults)
 	{
@@ -2520,20 +2508,12 @@ class ArrayHelperTest extends TestCase
 		$this->assertEquals($expect, $output, $message);
 	}
 
-	/**
-	 * Tests the arraySearch method.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Utilities\ArrayHelper::arraySearch
-	 * @since   1.0
-	 */
 	public function testArraySearch()
 	{
-		$array = array(
-			'name' => 'Foo',
-			'email' => 'foobar@example.com'
-		);
+		$array = [
+			'name'  => 'Foo',
+			'email' => 'foobar@example.com',
+		];
 
 		// Search case sensitive.
 		$this->assertEquals('name', ArrayHelper::arraySearch('Foo', $array));
@@ -2545,14 +2525,6 @@ class ArrayHelperTest extends TestCase
 		$this->assertEquals(false, ArrayHelper::arraySearch('barfoo', $array));
 	}
 
-	/**
-	 * testFlatten
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Utilities\ArrayHelper::flatten
-	 * @since   1.0
-	 */
 	public function testFlatten()
 	{
 		$array = [
@@ -2597,14 +2569,6 @@ class ArrayHelperTest extends TestCase
 		);
 	}
 
-	/**
-	 * Test mergeRecursive method.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Utilities\ArrayHelper::mergeRecursive
-	 * @since   __DEPLOY_VERSION__
-	 */
 	public function testMergeRecursive()
 	{
 		$a = [
@@ -2640,6 +2604,6 @@ class ArrayHelperTest extends TestCase
 			'animal' => 'pikachu'
 		];
 
-		self::assertEquals($expected, $result);
+		$this->assertEquals($expected, $result);
 	}
 }
