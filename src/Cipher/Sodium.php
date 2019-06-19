@@ -81,30 +81,6 @@ class Sodium implements CipherInterface
 			return $decrypted;
 		}
 
-		// Use the sodium extension (PHP 7.2 native, PECL 2.x, or paragonie/sodium_compat) if able
-		if (\function_exists('sodium_crypto_box_open'))
-		{
-			try
-			{
-				$decrypted = sodium_crypto_box_open(
-					$data,
-					$this->nonce,
-					sodium_crypto_box_keypair_from_secretkey_and_publickey($key->getPrivate(), $key->getPublic())
-				);
-
-				if ($decrypted === false)
-				{
-					throw new DecryptionException('Malformed message or invalid MAC');
-				}
-			}
-			catch (\SodiumException $exception)
-			{
-				throw new DecryptionException('Malformed message or invalid MAC', $exception->getCode(), $exception);
-			}
-
-			return $decrypted;
-		}
-
 		// Use the libsodium extension (PECL 1.x) if able; purposefully skipping sodium_compat fallback here as that will match the above check
 		if (\extension_loaded('libsodium'))
 		{
@@ -233,7 +209,7 @@ class Sodium implements CipherInterface
 	 */
 	public static function isSupported(): bool
 	{
-		// Prefer ext/sodium, then ext/sodium, then presence of paragonie/sodium_compat
+		// Prefer ext/sodium, then ext/libsodium, then presence of paragonie/sodium_compat
 		return \function_exists('sodium_crypto_box') || \extension_loaded('libsodium') || class_exists(Compat::class);
 	}
 
