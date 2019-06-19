@@ -6,7 +6,6 @@
 
 namespace Joomla\Controller\Tests;
 
-use Joomla\Input\Input;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -82,53 +81,6 @@ class AbstractControllerTest extends TestCase
 	public function testGetInputThrowsAnException()
 	{
 		$this->instance->getInput();
-	}
-
-	/**
-	 * @testdox  Tests the controller is serialized correctly
-	 *
-	 * @covers  Joomla\Controller\AbstractController::serialize
-	 * @uses    Joomla\Controller\AbstractController::setInput
-	 */
-	public function testSerialize()
-	{
-		$mockInput = $this->getMockBuilder('Joomla\Input\Input')
-			->enableOriginalConstructor()
-			->enableProxyingToOriginalMethods()
-			->getMock();
-
-		$this->instance->setInput($mockInput);
-
-		$this->assertContains('C:19:"Mock_Input_', $this->instance->serialize());
-	}
-
-	/**
-	 * @testdox  Tests the controller is unserialized correctly
-	 *
-	 * @covers  Joomla\Controller\AbstractController::unserialize
-	 * @uses    Joomla\Controller\AbstractController::getInput
-	 */
-	public function testUnserialize()
-	{
-		// Use a real Input object for this test
-		$input = new Input;
-
-		$serialized = serialize($input);
-
-		$this->assertSame($this->instance, $this->instance->unserialize($serialized), 'Checks chaining and target method.');
-
-		$this->assertInstanceOf('Joomla\Input\Input', $this->instance->getInput());
-	}
-
-	/**
-	 * @testdox  Tests the controller throws an UnexpectedValueException when the serialized string is not an Input object
-	 *
-	 * @covers  Joomla\Controller\AbstractController::unserialize
-	 * @expectedException  UnexpectedValueException
-	 */
-	public function testUnserializeThrowsAnException()
-	{
-		$this->instance->unserialize('s:7:"default";');
 	}
 
 	/**

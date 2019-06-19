@@ -85,18 +85,6 @@ abstract class AbstractController implements ControllerInterface
 	}
 
 	/**
-	 * Serialize the controller.
-	 *
-	 * @return  string  The serialized controller.
-	 *
-	 * @since   1.0
-	 */
-	public function serialize()
-	{
-		return serialize($this->getInput());
-	}
-
-	/**
 	 * Set the application object.
 	 *
 	 * @param   AbstractApplication  $app  The application object.
@@ -124,30 +112,6 @@ abstract class AbstractController implements ControllerInterface
 	public function setInput(Input $input)
 	{
 		$this->input = $input;
-
-		return $this;
-	}
-
-	/**
-	 * Unserialize the controller.
-	 *
-	 * @param   string  $input  The serialized controller.
-	 *
-	 * @return  AbstractController  Returns itself to support chaining.
-	 *
-	 * @since   1.0
-	 * @throws  \UnexpectedValueException if input is not the right class.
-	 */
-	public function unserialize($input)
-	{
-		$input = unserialize($input);
-
-		if (!($input instanceof Input))
-		{
-			throw new \UnexpectedValueException(sprintf('%s would not accept a `%s`.', __METHOD__, \gettype($this->input)));
-		}
-
-		$this->setInput($input);
 
 		return $this;
 	}
