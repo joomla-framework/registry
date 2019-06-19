@@ -22,7 +22,7 @@ class CryptoTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	public static function setUpBeforeClass()
+	public static function setUpBeforeClass(): void
 	{
 		// Only run the test if the environment supports it.
 		if (!CryptoCipher::isSupported())
@@ -34,20 +34,18 @@ class CryptoTest extends TestCase
 	/**
 	 * Test data for processing
 	 *
-	 * @return  array
+	 * @return  \Generator
 	 */
-	public function dataStrings()
+	public function dataStrings(): \Generator
 	{
-		return [
-			['c-;3-(Is>{DJzOHMCv_<#yKuN/G`/Us{GkgicWG$M|HW;kI0BVZ^|FY/"Obt53?PNaWwhmRtH;lWkWE4vlG5CIFA!abu&F=Xo#Qw}gAp3;GL\'k])%D}C+W&ne6_F$3P5'],
-			['Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
-					'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' .
-					'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ' .
-					'in culpa qui officia deserunt mollit anim id est laborum.'],
-			['لا أحد يحب الألم بذاته، يسعى ورائه أو يبتغيه، ببساطة لأنه الألم...'],
-			['Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства'],
-			['The quick brown fox jumps over the lazy dog.'],
-		];
+		yield ['c-;3-(Is>{DJzOHMCv_<#yKuN/G`/Us{GkgicWG$M|HW;kI0BVZ^|FY/"Obt53?PNaWwhmRtH;lWkWE4vlG5CIFA!abu&F=Xo#Qw}gAp3;GL\'k])%D}C+W&ne6_F$3P5'];
+		yield ['Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
+			. 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor '
+			. 'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt '
+			. 'in culpa qui officia deserunt mollit anim id est laborum.'];
+		yield ['لا أحد يحب الألم بذاته، يسعى ورائه أو يبتغيه، ببساطة لأنه الألم...'];
+		yield ['Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства'];
+		yield ['The quick brown fox jumps over the lazy dog.'];
 	}
 
 	/**
@@ -55,8 +53,6 @@ class CryptoTest extends TestCase
 	 *
 	 * @param   string  $data  The decrypted data to validate
 	 *
-	 * @covers        \Joomla\Crypt\Cipher\Crypto::decrypt
-	 * @covers        \Joomla\Crypt\Cipher\Crypto::encrypt
 	 * @dataProvider  dataStrings
 	 */
 	public function testDataEncryptionAndDecryption($data)
@@ -77,8 +73,6 @@ class CryptoTest extends TestCase
 
 	/**
 	 * @testdox  Validates keys are correctly generated
-	 *
-	 * @covers   \Joomla\Crypt\Cipher\Crypto::generateKey
 	 */
 	public function testGenerateKey()
 	{

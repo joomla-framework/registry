@@ -48,7 +48,7 @@ class KeyTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -57,18 +57,6 @@ class KeyTest extends TestCase
 		$this->private = 'private';
 
 		$this->object = new Key($this->type, $this->private, $this->public);
-	}
-
-	/**
-	 * @testdox  Validates the object is instantiated correctly
-	 *
-	 * @covers   \Joomla\Crypt\Key::__construct()
-	 */
-	public function test__construct()
-	{
-		$this->assertAttributeSame($this->type, 'type', $this->object);
-		$this->assertAttributeSame($this->public, 'public', $this->object);
-		$this->assertAttributeSame($this->private, 'private', $this->object);
 	}
 
 	/**

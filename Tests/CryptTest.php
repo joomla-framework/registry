@@ -6,33 +6,28 @@
 
 namespace Joomla\Crypt\Tests;
 
-use Defuse\Crypto\Key as DefuseKey;
-use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
-use Defuse\Crypto\RuntimeTests;
-use Joomla\Crypt\Cipher\Crypto;
+use Joomla\Crypt\CipherInterface;
 use Joomla\Crypt\Crypt;
 use Joomla\Crypt\Key;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Polyfill\Util\Binary;
 
 /**
  * Test class for \Joomla\Crypt\Crypt.
- *
- * @since  1.0
  */
 class CryptTest extends TestCase
 {
 	/**
 	 * Cipher used for testing
 	 *
-	 * @var  Crypto
+	 * @var  MockObject|CipherInterface
 	 */
 	private $cipher;
 
 	/**
 	 * Generated key for testing
 	 *
-	 * @var  Key
+	 * @var  MockObject|Key
 	 */
 	private $key;
 
@@ -44,157 +39,82 @@ class CryptTest extends TestCase
 	private $object;
 
 	/**
-	 * This method is called before the first test of this test class is run.
-	 *
-	 * @return  void
-	 */
-	public static function setUpBeforeClass()
-	{
-		// Only run the test if the environment supports it.
-		try
-		{
-			RuntimeTests::runtimeTest();
-		}
-		catch (EnvironmentIsBrokenException $e)
-		{
-			self::markTestSkipped('The environment cannot safely perform encryption with this cipher.');
-		}
-	}
-
-	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
 	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
-		$this->cipher = new Crypto;
-		$this->key    = $this->cipher->generateKey();
+		$this->cipher = $this->createMock(CipherInterface::class);
+		$this->key    = $this->createMock(Key::class);
 
 		$this->object = new Crypt($this->cipher, $this->key);
 	}
 
 	/**
-	 * @testdox  Validates the object is instantiated correctly
-	 *
-	 * @covers   \Joomla\Crypt\Crypt::__construct()
-	 */
-	public function test__construct()
-	{
-		$this->assertAttributeSame(
-			$this->cipher,
-			'cipher',
-			$this->object
-		);
-
-		$this->assertAttributeSame(
-			$this->key,
-			'key',
-			$this->object
-		);
-	}
-
-	/**
-	 * Test data for processing
-	 *
-	 * @return  array
-	 */
-	public function dataStrings()
-	{
-		return [
-			['c-;3-(Is>{DJzOHMCv_<#yKuN/G`/Us{GkgicWG$M|HW;kI0BVZ^|FY/"Obt53?PNaWwhmRtH;lWkWE4vlG5CIFA!abu&F=Xo#Qw}gAp3;GL\'k])%D}C+W&ne6_F$3P5'],
-			['Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
-					'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ' .
-					'in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt ' .
-					'in culpa qui officia deserunt mollit anim id est laborum.'],
-			['لا أحد يحب الألم بذاته، يسعى ورائه أو يبتغيه، ببساطة لأنه الألم...'],
-			['Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства'],
-			['The quick brown fox jumps over the lazy dog.'],
-		];
-	}
-
-	/**
 	 * @testdox  Validates data is encrypted and decrypted correctly
-	 *
-	 * @param   string  $data  The decrypted data to validate
-	 *
-	 * @covers        \Joomla\Crypt\Crypt::decrypt
-	 * @covers        \Joomla\Crypt\Crypt::encrypt
-	 * @dataProvider  dataStrings
 	 */
-	public function testDataEncryptionAndDecryption($data)
+	public function testDataEncryptionAndDecryption()
 	{
-		$cipher = new Crypto;
-		$key    = $cipher->generateKey();
+		$decrypted = 'decrypt';
+		$encrypted = 'encrypt';
 
-		$encrypted = $cipher->encrypt($data, $key);
+		$this->cipher->expects($this->once())
+			->method('encrypt')
+			->with($decrypted)
+			->willReturn($encrypted);
 
-		// Assert that the encrypted value is not the same as the clear text value.
-		$this->assertNotSame($data, $encrypted);
+		$this->cipher->expects($this->once())
+			->method('decrypt')
+			->with($encrypted)
+			->willReturn($decrypted);
 
-		$decrypted = $cipher->decrypt($encrypted, $key);
-
-		// Assert the decrypted string is the same value we started with
-		$this->assertSame($data, $decrypted);
+		$this->object->encrypt($decrypted);
+		$this->object->decrypt($encrypted);
 	}
 
 	/**
 	 * @testdox  Validates keys are correctly generated
-	 *
-	 * @covers   \Joomla\Crypt\Crypt::generateKey
 	 */
 	public function testGenerateKey()
 	{
-		$key = $this->object->generateKey();
+		$this->cipher->expects($this->once())
+			->method('generateKey')
+			->willReturn($this->createMock(Key::class));
 
-		// Assert that the key is the correct type.
-		$this->assertInstanceOf(Key::class, $key);
-
-		// Assert the public key is the expected length
-		$this->assertSame(DefuseKey::KEY_BYTE_SIZE, Binary::strlen($key->getPublic()));
-
-		// Assert the key is of the correct type.
-		$this->assertSame('crypto', $key->getType());
+		$this->object->generateKey();
 	}
 
 	/**
-	 * @testdox  Validates keys are correctly set
-	 *
-	 * @covers   \Joomla\Crypt\Crypt::setKey
+	 * @testdox  Validates a new key can be set
 	 */
 	public function testSetKey()
 	{
-		$keyMock = $this->getMockBuilder(Key::class)
-			->setConstructorArgs(['test', 'private', 'public'])
-			->getMock();
+		$key = $this->createMock(Key::class);
 
-		$this->object->setKey($keyMock);
+		$this->object->setKey($key);
 
-		$this->assertAttributeNotSame(
-			$this->key,
-			'key',
-			$this->object,
-			'The new key did not replace the existing key.'
-		);
+		$property = (new \ReflectionClass($this->object))->getProperty('key');
+		$property->setAccessible(true);
+
+		$this->assertSame($key, $property->getValue($this->object));
 	}
 
 	/**
 	 * Test data for processing
 	 *
-	 * @return  array
+	 * @return  \Generator
 	 */
-	public function dataRandomByteLength()
+	public function dataRandomByteLength(): \Generator
 	{
-		return [
-			'8 bytes' => [8],
-			'16 bytes' => [16],
-			'24 bytes' => [24],
-			'32 bytes' => [32],
-			'40 bytes' => [40],
-		];
+		yield '8 bytes' => [8];
+		yield '16 bytes' => [16];
+		yield '24 bytes' => [24];
+		yield '32 bytes' => [32];
+		yield '40 bytes' => [40];
 	}
 
 	/**
