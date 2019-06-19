@@ -12,7 +12,7 @@
         "joomla/application": "~1.0|~2.0",
         "joomla/coding-standards": "~2.0@alpha",
         "joomla/input": "~1.0|~2.0",
-        "phpunit/phpunit": "~6.3"
+        "phpunit/phpunit": "~8.2"
     },
     "suggest": {
         "joomla/application": "The joomla/application package is required to use Joomla\\Controller\\AbstractController",

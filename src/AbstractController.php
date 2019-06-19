@@ -40,7 +40,7 @@ abstract class AbstractController implements ControllerInterface
 	 * @param   Input                $input  The input object.
 	 * @param   AbstractApplication  $app    The application object.
 	 *
-	 * @since  1.0
+	 * @since   1.0
 	 */
 	public function __construct(?Input $input = null, ?AbstractApplication $app = null)
 	{
@@ -51,37 +51,25 @@ abstract class AbstractController implements ControllerInterface
 	/**
 	 * Get the application object.
 	 *
-	 * @return  AbstractApplication  The application object.
+	 * @return  AbstractApplication|null
 	 *
 	 * @since   1.0
-	 * @throws  \UnexpectedValueException if the application has not been set.
 	 */
 	public function getApplication()
 	{
-		if ($this->app)
-		{
-			return $this->app;
-		}
-
-		throw new \UnexpectedValueException('Application not set in ' . __CLASS__);
+		return $this->app;
 	}
 
 	/**
 	 * Get the input object.
 	 *
-	 * @return  Input  The input object.
+	 * @return  Input|null
 	 *
 	 * @since   1.0
-	 * @throws  \UnexpectedValueException
 	 */
 	public function getInput()
 	{
-		if ($this->input)
-		{
-			return $this->input;
-		}
-
-		throw new \UnexpectedValueException('Input not set in ' . __CLASS__);
+		return $this->input;
 	}
 
 	/**
@@ -89,7 +77,7 @@ abstract class AbstractController implements ControllerInterface
 	 *
 	 * @param   AbstractApplication  $app  The application object.
 	 *
-	 * @return  AbstractController  Returns itself to support chaining.
+	 * @return  $this
 	 *
 	 * @since   1.0
 	 */
@@ -105,7 +93,7 @@ abstract class AbstractController implements ControllerInterface
 	 *
 	 * @param   Input  $input  The input object.
 	 *
-	 * @return  AbstractController  Returns itself to support chaining.
+	 * @return  $this
 	 *
 	 * @since   1.0
 	 */

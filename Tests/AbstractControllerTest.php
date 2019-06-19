@@ -6,6 +6,10 @@
 
 namespace Joomla\Controller\Tests;
 
+use Joomla\Application\AbstractApplication;
+use Joomla\Controller\AbstractController;
+use Joomla\Input\Input;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,82 +20,49 @@ class AbstractControllerTest extends TestCase
 	/**
 	 * Object being tested
 	 *
-	 * @var  \Joomla\Controller\AbstractController
+	 * @var  MockObject|AbstractController
 	 */
 	private $instance;
 
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
-		$this->instance = $this->getMockForAbstractClass('Joomla\Controller\AbstractController');
+		$this->instance = $this->getMockForAbstractClass(AbstractController::class);
 	}
 
 	/**
 	 * @testdox  Tests the controller is instantiated correctly
-	 *
-	 * @covers  Joomla\Controller\AbstractController::__construct
 	 */
 	public function test__constructDefaultBehaviour()
 	{
-		$object = $this->getMockForAbstractClass('Joomla\Controller\AbstractController');
-
-		// Both class attributes should be null
-		$this->assertAttributeNotInstanceOf('Joomla\Application\AbstractApplication', 'app', $object);
-		$this->assertAttributeNotInstanceOf('Joomla\Input\Input', 'input', $object);
+		$this->assertNull($this->instance->getApplication());
+		$this->assertNull($this->instance->getInput());
 	}
 
 	/**
 	 * @testdox  Tests the controller is instantiated correctly
-	 *
-	 * @covers  Joomla\Controller\AbstractController::__construct
 	 */
 	public function test__constructDependencyInjection()
 	{
-		$mockInput = $this->getMockBuilder('Joomla\Input\Input')
-			->getMock();
+		$mockInput = $this->createMock(Input::class);
 
-		$mockApp = $this->getMockForAbstractClass('Joomla\Application\AbstractApplication');
-		$object  = $this->getMockForAbstractClass('Joomla\Controller\AbstractController', array($mockInput, $mockApp));
+		$mockApp = $this->getMockForAbstractClass(AbstractApplication::class);
+		$object  = $this->getMockForAbstractClass(AbstractController::class, [$mockInput, $mockApp]);
 
-		$this->assertAttributeSame($mockInput, 'input', $object);
-		$this->assertAttributeSame($mockApp, 'app', $object);
-	}
-
-	/**
-	 * @testdox  Tests the controller throws an UnexpectedValueException if the application is not registered
-	 *
-	 * @covers  Joomla\Controller\AbstractController::getApplication
-	 * @expectedException  \UnexpectedValueException
-	 */
-	public function testGetApplicationThrowsAnException()
-	{
-		$this->instance->getApplication();
-	}
-
-	/**
-	 * @testdox  Tests the controller throws an UnexpectedValueException if the input object is not registered
-	 *
-	 * @covers  Joomla\Controller\AbstractController::getInput
-	 * @expectedException  \UnexpectedValueException
-	 */
-	public function testGetInputThrowsAnException()
-	{
-		$this->instance->getInput();
+		$this->assertSame($mockApp, $object->getApplication());
+		$this->assertSame($mockInput, $object->getInput());
 	}
 
 	/**
 	 * @testdox  Tests an application object is injected into the controller and retrieved correctly
-	 *
-	 * @covers  Joomla\Controller\AbstractController::getApplication
-	 * @covers  Joomla\Controller\AbstractController::setApplication
 	 */
 	public function testSetAndGetApplication()
 	{
-		$mockApp = $this->getMockForAbstractClass('Joomla\Application\AbstractApplication');
+		$mockApp = $this->getMockForAbstractClass(AbstractApplication::class);
 
 		$this->instance->setApplication($mockApp);
 		$this->assertSame($mockApp, $this->instance->getApplication());
@@ -99,14 +70,10 @@ class AbstractControllerTest extends TestCase
 
 	/**
 	 * @testdox  Tests an input object is injected into the controller and retrieved correctly
-	 *
-	 * @covers  Joomla\Controller\AbstractController::getInput
-	 * @covers  Joomla\Controller\AbstractController::setInput
 	 */
 	public function testSetAndGetInput()
 	{
-		$mockInput = $this->getMockBuilder('Joomla\Input\Input')
-			->getMock();
+		$mockInput = $this->createMock(Input::class);
 
 		$this->instance->setInput($mockInput);
 		$this->assertSame($mockInput, $this->instance->getInput());
