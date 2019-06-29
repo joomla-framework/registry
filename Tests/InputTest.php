@@ -8,6 +8,8 @@ namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Input;
+use PHPUnit\Framework\Error\Error;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,7 +27,7 @@ class InputTest extends TestCase
 	/**
 	 * The mock filter object
 	 *
-	 * @var  InputFilter|\PHPUnit_Framework_MockObject_MockObject
+	 * @var  InputFilter|MockObject
 	 */
 	private $filterMock;
 
@@ -35,11 +37,11 @@ class InputTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
-		$this->filterMock = $this->getMockBuilder(InputFilter::class)->getMock();
+		$this->filterMock = $this->createMock(InputFilter::class);
 	}
 
 	/**
@@ -64,7 +66,7 @@ class InputTest extends TestCase
 		$instance = new Input;
 
 		$this->assertAttributeSame($_REQUEST, 'data', $instance);
-		$this->assertAttributeInstanceOf('Joomla\Filter\InputFilter', 'filter', $instance);
+		$this->assertAttributeInstanceOf(InputFilter::class, 'filter', $instance);
 	}
 
 	/**
@@ -104,17 +106,7 @@ class InputTest extends TestCase
 	 */
 	public function test__callThrowsAnErrorIfAnUndefinedMethodIsCalled()
 	{
-		$exceptionClass = class_exists('PHPUnit_Framework_Error') ? 'PHPUnit_Framework_Error' : 'PHPUnit\Framework\Error\Error';
-
-		// expectException was added in PHPUnit 5.2 and setExpectedException removed in 6.0
-		if (method_exists($this, 'expectException'))
-		{
-			$this->expectException($exceptionClass);
-		}
-		else
-		{
-			$this->setExpectedException($exceptionClass);
-		}
+		$this->expectException(Error::class);
 
 		$instance = $this->getInputObject()->setRaw();
 	}
@@ -139,17 +131,7 @@ class InputTest extends TestCase
 	 */
 	public function test__getThrowsAnErrorIfAnUndefinedPropertyIsCalled()
 	{
-		$exceptionClass = class_exists('PHPUnit_Framework_Error') ? 'PHPUnit_Framework_Error' : 'PHPUnit\Framework\Error\Error';
-
-		// expectException was added in PHPUnit 5.2 and setExpectedException removed in 6.0
-		if (method_exists($this, 'expectException'))
-		{
-			$this->expectException($exceptionClass);
-		}
-		else
-		{
-			$this->setExpectedException($exceptionClass);
-		}
+		$this->expectException(Error::class);
 
 		$instance = $this->getInputObject()->put;
 	}

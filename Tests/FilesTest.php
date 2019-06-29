@@ -24,8 +24,8 @@ class FilesTest extends TestCase
 	{
 		$instance = new Files;
 
-		$this->assertAttributeSame($_COOKIE, 'data', $instance);
-		$this->assertAttributeInstanceOf('Joomla\Filter\InputFilter', 'filter', $instance);
+		$this->assertAttributeSame($_FILES, 'data', $instance);
+		$this->assertAttributeInstanceOf(InputFilter::class, 'filter', $instance);
 	}
 
 	/**
@@ -36,7 +36,7 @@ class FilesTest extends TestCase
 	public function test__constructDependencyInjection()
 	{
 		$src        = ['foo' => 'bar'];
-		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
+		$mockFilter = $this->createMock(InputFilter::class);
 
 		$instance = new Files($src, ['filter' => $mockFilter]);
 
@@ -70,7 +70,7 @@ class FilesTest extends TestCase
 			]
 		];
 
-		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
+		$mockFilter = $this->createMock(InputFilter::class);
 
 		$instance = new Files($data, ['filter' => $mockFilter]);
 
@@ -108,7 +108,7 @@ class FilesTest extends TestCase
 			]
 		];
 
-		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
+		$mockFilter = $this->createMock(InputFilter::class);
 
 		$instance = new Files($data, ['filter' => $mockFilter]);
 

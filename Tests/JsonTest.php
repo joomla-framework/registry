@@ -25,7 +25,7 @@ class JsonTest extends TestCase
 		$instance = new Json;
 
 		$this->assertAttributeEmpty('data', $instance);
-		$this->assertAttributeInstanceOf('Joomla\Filter\InputFilter', 'filter', $instance);
+		$this->assertAttributeInstanceOf(InputFilter::class, 'filter', $instance);
 	}
 
 	/**
@@ -36,7 +36,7 @@ class JsonTest extends TestCase
 	public function test__constructDependencyInjection()
 	{
 		$src        = ['foo' => 'bar'];
-		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
+		$mockFilter = $this->createMock(InputFilter::class);
 
 		$instance = new Json($src, ['filter' => $mockFilter]);
 

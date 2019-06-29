@@ -36,7 +36,7 @@ class CookieTest extends TestCase
 	public function test__constructDependencyInjection()
 	{
 		$src        = ['foo' => 'bar'];
-		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
+		$mockFilter = $this->createMock(InputFilter::class);
 
 		$instance = new Cookie($src, ['filter' => $mockFilter]);
 
@@ -52,7 +52,7 @@ class CookieTest extends TestCase
 	 */
 	public function testSetWithLegacySignature()
 	{
-		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
+		$mockFilter = $this->createMock(InputFilter::class);
 
 		$instance = new Cookie([], ['filter' => $mockFilter]);
 		$instance->set('foo', 'bar', 15);
@@ -68,7 +68,7 @@ class CookieTest extends TestCase
 	 */
 	public function testSetWithNewSignature()
 	{
-		$mockFilter = $this->getMockBuilder(InputFilter::class)->getMock();
+		$mockFilter = $this->createMock(InputFilter::class);
 
 		$instance = new Cookie([], ['filter' => $mockFilter]);
 		$instance->set('foo', 'bar', ['expire' => 15, 'samesite' => 'Strict']);
