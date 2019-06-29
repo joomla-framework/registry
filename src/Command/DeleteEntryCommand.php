@@ -57,7 +57,7 @@ class DeleteEntryCommand extends AbstractKeychainCommand
 			return 0;
 		}
 
-		$this->keychain->deleteValue($entryName);
+		$this->keychain->remove($entryName);
 
 		if (!$this->saveKeychain())
 		{
