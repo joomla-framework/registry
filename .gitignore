@@ -4,6 +4,7 @@ vendor/
 composer.phar
 composer.lock
 phpunit.xml
+.phpunit.result.cache
 
 # Temporary test data
 Tests/data/tmp/*

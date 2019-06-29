@@ -8,6 +8,7 @@ namespace Joomla\Keychain\Tests;
 
 use Joomla\Crypt\Crypt;
 use Joomla\Keychain\Keychain;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -18,7 +19,7 @@ class KeychainTest extends TestCase
 	/**
 	 * The mock Crypt object
 	 *
-	 * @var  Crypt|\PHPUnit_Framework_MockObject_MockObject
+	 * @var  Crypt|MockObject
 	 */
 	private $crypt;
 
@@ -42,13 +43,13 @@ class KeychainTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
 		$this->tmpFile = __DIR__ . '/data/tmp/' . uniqid() . '.json';
 
-		$this->crypt    = $this->getMockBuilder(Crypt::class)->getMock();
+		$this->crypt    = $this->createMock(Crypt::class);
 		$this->keychain = new Keychain($this->crypt);
 	}
 
@@ -56,7 +57,7 @@ class KeychainTest extends TestCase
 	 * Tears down the fixture, for example, close a network connection.
 	 * This method is called after a test is executed.
 	 */
-	protected function tearDown()
+	protected function tearDown(): void
 	{
 		if (file_exists($this->tmpFile))
 		{
@@ -84,11 +85,12 @@ class KeychainTest extends TestCase
 
 	/**
 	 * @covers  \Joomla\Keychain\Keychain::loadKeychain
-	 * @expectedException  \RuntimeException
-	 * @expectedExceptionMessage  Attempting to load non-existent keychain file
 	 */
 	public function testAKeychainCannotBeLoadedFromANonExistingFile()
 	{
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('Attempting to load non-existent keychain file');
+
 		$this->crypt->expects($this->never())
 			->method('decrypt');
 
@@ -112,11 +114,12 @@ class KeychainTest extends TestCase
 
 	/**
 	 * @covers  \Joomla\Keychain\Keychain::saveKeychain
-	 * @expectedException  \RuntimeException
-	 * @expectedExceptionMessage  A keychain file must be specified
 	 */
 	public function testAKeychainCannotBeSavedToTheFilesystemIfAnEmptyPathIsGiven()
 	{
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('A keychain file must be specified');
+
 		$this->crypt->expects($this->never())
 			->method('encrypt');
 
