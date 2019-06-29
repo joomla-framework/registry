@@ -9,8 +9,7 @@
 namespace Joomla\Data;
 
 /**
- * DataSet is a collection class that allows the developer to operate on a set of DataObject objects as if they were in a
- * typical PHP array.
+ * DataSet is a collection class that allows the developer to operate on a set of DataObjects as if they were in a typical PHP array.
  *
  * @since  1.0
  */
@@ -38,7 +37,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 * @param   DataObject[]  $objects  An array of DataObject objects to bind to the data set.
 	 *
 	 * @since   1.0
-	 * @throws  \InvalidArgumentException if an object is not an instance of Data\Object.
+	 * @throws  \InvalidArgumentException if an object is not a DataObject.
 	 */
 	public function __construct(array $objects = [])
 	{
@@ -90,7 +89,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 * Example: $array = $dataSet->foo;
 	 *
 	 * This will return a column of the values of the 'foo' property in all the objects
-	 * (or values determined by custom property setters in the individual Data\Object's).
+	 * (or values determined by custom property setters in the individual DataObject's).
 	 * The result array will contain an entry for each object in the list (compared to __call which may not).
 	 * The keys of the objects and the result array are maintained.
 	 *
@@ -145,7 +144,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 * Example: $objectList->foo = 'bar';
 	 *
 	 * This will set the 'foo' property to 'bar' in all of the objects
-	 * (or a value determined by custom property setters in the Data\Object).
+	 * (or a value determined by custom property setters in the DataObject).
 	 *
 	 * @param   string  $property  The name of the property.
 	 * @param   mixed   $value     The value to give the data property.
@@ -169,7 +168,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 *
 	 * Example: unset($objectList->foo);
 	 *
-	 * This will unset all of the 'foo' properties in the list of Data\Object's.
+	 * This will unset all of the 'foo' properties in the list of DataObject's.
 	 *
 	 * @param   string  $property  The name of the property.
 	 *
@@ -227,17 +226,14 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 * Gets all objects as an array
 	 *
 	 * @param   boolean  $associative  Option to set return mode: associative or numeric array.
-	 * @param   string   $k            Unlimited optional property names to extract from objects.
+	 * @param   string   ...$keys      Unlimited optional property names to extract from objects.
 	 *
-	 * @return  array    Returns an array according to defined options.
+	 * @return  array  Returns an array according to defined options.
 	 *
 	 * @since   1.2.0
 	 */
-	public function toArray($associative = true, $k = null)
+	public function toArray($associative = true, ...$keys)
 	{
-		$keys        = \func_get_args();
-		$associative = array_shift($keys);
-
 		if (empty($keys))
 		{
 			$keys = $this->getObjectsKeys();
@@ -258,7 +254,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 			foreach ($keys as $property)
 			{
 				$propertyKey             = ($associative) ? $property : $j++;
-				$arrayItem[$propertyKey] = (isset($object->$property)) ? $object->$property : null;
+				$arrayItem[$propertyKey] = $object->$property ?? null;
 			}
 
 			$return[$key] = $arrayItem;
@@ -297,7 +293,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	/**
 	 * Get the current data object in the set.
 	 *
-	 * @return  DataObject  The current object, or false if the array is empty or the pointer is beyond the end of the elements.
+	 * @return  DataObject|false  The current object, or false if the array is empty or the pointer is beyond the end of the elements.
 	 *
 	 * @since   1.0
 	 */
@@ -351,7 +347,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 * Note that this method will not return an associative array, otherwise it would be encoded into an object.
 	 * JSON decoders do not consistently maintain the order of associative keys, whereas they do maintain the order of arrays.
 	 *
-	 * @return  array  An array that can be serialised by json_encode().
+	 * @return  array
 	 *
 	 * @since   1.0
 	 */
@@ -372,7 +368,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	/**
 	 * Gets the key of the current object in the iterator.
 	 *
-	 * @return  scalar  The object key on success; null on failure.
+	 * @return  integer|false  The object key on success; false on failure.
 	 *
 	 * @since   1.0
 	 */
@@ -455,7 +451,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 *
 	 * @param   mixed  $offset  The object offset.
 	 *
-	 * @return  boolean  True if the object exists, false otherwise.
+	 * @return  boolean
 	 *
 	 * @since   1.0
 	 */
@@ -469,13 +465,13 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 *
 	 * @param   mixed  $offset  The object offset.
 	 *
-	 * @return  DataObject  The object if it exists, null otherwise.
+	 * @return  DataObject|null
 	 *
 	 * @since   1.0
 	 */
 	public function offsetGet($offset)
 	{
-		return isset($this->objects[$offset]) ? $this->objects[$offset] : null;
+		return $this->objects[$offset] ?? null;
 	}
 
 	/**
@@ -487,7 +483,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 * @return  void
 	 *
 	 * @since   1.0
-	 * @throws  \InvalidArgumentException if an object is not an instance of Data\Object.
+	 * @throws  \InvalidArgumentException if an object is not an instance of DataObject.
 	 */
 	public function offsetSet($offset, $object)
 	{
@@ -564,7 +560,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	/**
 	 * Validates the iterator.
 	 *
-	 * @return  boolean  True if valid, false otherwise.
+	 * @return  boolean
 	 *
 	 * @since   1.0
 	 */
@@ -587,7 +583,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 * @return  void
 	 *
 	 * @since   1.0
-	 * @throws  \InvalidArgumentException if an object is not an instance of Data\DataObject.
+	 * @throws  \InvalidArgumentException if an object is not a DataObject.
 	 */
 	private function initialise(array $input = [])
 	{

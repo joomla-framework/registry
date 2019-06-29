@@ -11,8 +11,7 @@ namespace Joomla\Data;
 use Joomla\Registry\Registry;
 
 /**
- * DataObject is a class that is used to store data but allowing you to access the data
- * by mimicking the way PHP handles class properties.
+ * DataObject is a class that is used to store data but allowing you to access the data by mimicking the way PHP handles class properties.
  *
  * @since  1.0
  */
@@ -71,7 +70,7 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 	 *
 	 * @param   string  $property  The name of the data property.
 	 *
-	 * @return  boolean  True if set, otherwise false is returned.
+	 * @return  boolean
 	 *
 	 * @since   1.0
 	 */
@@ -118,7 +117,7 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 	 * @param   mixed    $properties   An associative array of properties or an object.
 	 * @param   boolean  $updateNulls  True to bind null values, false to ignore null values.
 	 *
-	 * @return  DataObject  Returns itself to allow chaining.
+	 * @return  $this
 	 *
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
@@ -160,14 +159,14 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 	}
 
 	/**
-	 * Dumps the data properties into a stdClass object, recursively if appropriate.
+	 * Dumps the data properties into an object, recursively if appropriate.
 	 *
 	 * @param   integer            $depth   The maximum depth of recursion (default = 3).
 	 *                                      For example, a depth of 0 will return a stdClass with all the properties in native
 	 *                                      form. A depth of 1 will recurse into the first level of properties only.
 	 * @param   \SplObjectStorage  $dumped  An array of already serialized objects that is used to avoid infinite loops.
 	 *
-	 * @return  \stdClass  The data properties as a simple PHP stdClass object.
+	 * @return  \stdClass
 	 *
 	 * @since   1.0
 	 */
@@ -200,7 +199,7 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 	 *
 	 * This allows the data properties to be access via a foreach statement.
 	 *
-	 * @return  \ArrayIterator  This object represented as an ArrayIterator.
+	 * @return  \ArrayIterator
 	 *
 	 * @see     IteratorAggregate::getIterator()
 	 * @since   1.0
@@ -213,7 +212,7 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 	/**
 	 * Gets the data properties in a form that can be serialised to JSON format.
 	 *
-	 * @return  string  An object that can be serialised by json_encode().
+	 * @return  string
 	 *
 	 * @since   1.0
 	 */
@@ -225,8 +224,8 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 	/**
 	 * Dumps a data property.
 	 *
-	 * If recursion is set, this method will dump any object implementing Data\Dumpable (like Data\Object and Data\Set); it will
-	 * convert a Date object to a string; and it will convert a Registry to an object.
+	 * If recursion is set, this method will dump any object implementing DumpableInterface (like DataObject and DataSet); it will
+	 * convert a DateTimeInterface object to a string; and it will convert a Joomla\Registry\Registry to an object.
 	 *
 	 * @param   string             $property  The name of the data property.
 	 * @param   integer            $depth     The current depth of recursion (a value of 0 will ignore recursion).
@@ -278,10 +277,7 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 	 */
 	protected function getProperty($property)
 	{
-		// Get the raw value.
-		$value = array_key_exists($property, $this->properties) ? $this->properties[$property] : null;
-
-		return $value;
+		return $this->properties[$property] ?? null;
 	}
 
 	/**
@@ -301,7 +297,7 @@ class DataObject implements DumpableInterface, \IteratorAggregate, \JsonSerializ
 	{
 		/*
 		 * Check if the property starts with a null byte. If so, discard it because a later attempt to try to access it
-		 * can cause a fatal error. See http://us3.php.net/manual/en/language.types.array.php#language.types.array.casting
+		 * can cause a fatal error. See http://www.php.net/manual/en/language.types.array.php#language.types.array.casting
 		 */
 		if (strpos($property, "\0") === 0)
 		{
