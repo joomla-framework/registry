@@ -6,36 +6,19 @@
 
 namespace Joomla\Keychain\Tests;
 
-use Joomla\Crypt\Crypt;
 use Joomla\Keychain\Keychain;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Keychain\Keychain.
  */
-class KeychainTest extends TestCase
+class KeychainTest extends KeychainTestCase
 {
-	/**
-	 * The mock Crypt object
-	 *
-	 * @var  Crypt|MockObject
-	 */
-	private $crypt;
-
 	/**
 	 * The Keychain for testing
 	 *
 	 * @var  Keychain
 	 */
 	private $keychain;
-
-	/**
-	 * The temporary file used for validating a successful save
-	 *
-	 * @var  string
-	 */
-	private $tmpFile;
 
 	/**
 	 * Sets up the fixture, for example, open a network connection.
@@ -47,24 +30,7 @@ class KeychainTest extends TestCase
 	{
 		parent::setUp();
 
-		$this->tmpFile = __DIR__ . '/data/tmp/' . uniqid() . '.json';
-
-		$this->crypt    = $this->createMock(Crypt::class);
 		$this->keychain = new Keychain($this->crypt);
-	}
-
-	/**
-	 * Tears down the fixture, for example, close a network connection.
-	 * This method is called after a test is executed.
-	 */
-	protected function tearDown(): void
-	{
-		if (file_exists($this->tmpFile))
-		{
-			@unlink($this->tmpFile);
-		}
-
-		parent::tearDown();
 	}
 
 	/**
