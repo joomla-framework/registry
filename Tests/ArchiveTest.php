@@ -24,7 +24,7 @@ class ArchiveTest extends ArchiveTestCase
 	/**
 	 * Sets up the fixture.
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -74,7 +74,7 @@ class ArchiveTest extends ArchiveTestCase
 
 		$fixture = new Archive($options);
 
-		$this->assertAttributeSame($options, 'options', $fixture);
+		$this->assertSame($options, $fixture->options);
 	}
 
 	/**
@@ -114,10 +114,11 @@ class ArchiveTest extends ArchiveTestCase
 	 * @testdox  Extracting an unknown archive type throws an Exception
 	 *
 	 * @covers   Joomla\Archive\Archive::extract
-	 * @expectedException  \InvalidArgumentException
 	 */
 	public function testExtractUnknown()
 	{
+		$this->expectException(\InvalidArgumentException::class);
+
 		$this->fixture->extract(
 			$this->inputPath . '/logo.dat',
 			$this->outputPath
@@ -162,11 +163,12 @@ class ArchiveTest extends ArchiveTestCase
 	/**
 	 * @testdox  Setting an unknown adapter throws an Exception
 	 *
-	 * @covers             Joomla\Archive\Archive::setAdapter
-	 * @expectedException  \InvalidArgumentException
+	 * @covers   Joomla\Archive\Archive::setAdapter
 	 */
 	public function testSetAdapterUnknownException()
 	{
+		$this->expectException(\InvalidArgumentException::class);
+
 		$this->fixture->setAdapter('unknown', 'unknown-class');
 	}
 }

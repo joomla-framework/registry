@@ -23,12 +23,12 @@ class ZipTest extends ArchiveTestCase
 	{
 		$object = new ArchiveZip;
 
-		$this->assertAttributeEmpty('options', $object);
+		$this->assertEmpty(TestHelper::getValue($object, 'options'));
 
 		$options = ['use_streams' => false];
 		$object  = new ArchiveZip($options);
 
-		$this->assertAttributeSame($options, 'options', $object);
+		$this->assertSame($options, TestHelper::getValue($object, 'options'));
 	}
 
 	/**
@@ -156,11 +156,12 @@ class ZipTest extends ArchiveTestCase
 	/**
 	 * @testdox  If the archive cannot be found an Exception is thrown
 	 *
-	 * @covers             Joomla\Archive\Zip::extract
-	 * @expectedException  \RuntimeException
+	 * @covers   Joomla\Archive\Zip::extract
 	 */
 	public function testExtractException()
 	{
+		$this->expectException(\RuntimeException::class);
+
 		$object = new ArchiveZip;
 
 		$object->extract(

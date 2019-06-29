@@ -30,7 +30,7 @@ abstract class ArchiveTestCase extends TestCase
 	/**
 	 * Sets up the fixture.
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 

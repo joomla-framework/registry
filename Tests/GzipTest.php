@@ -23,12 +23,12 @@ class GzipTest extends ArchiveTestCase
 	{
 		$object = new ArchiveGzip;
 
-		$this->assertAttributeEmpty('options', $object);
+		$this->assertEmpty(TestHelper::getValue($object, 'options'));
 
 		$options = ['use_streams' => false];
 		$object  = new ArchiveGzip($options);
 
-		$this->assertAttributeSame($options, 'options', $object);
+		$this->assertSame($options, TestHelper::getValue($object, 'options'));
 	}
 
 	/**

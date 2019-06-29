@@ -7,6 +7,7 @@
 namespace Joomla\Archive\Tests;
 
 use Joomla\Archive\Bzip2 as ArchiveBzip2;
+use Joomla\Test\TestHelper;
 
 /**
  * Test class for Joomla\Archive\Bzip2.
@@ -22,12 +23,12 @@ class Bzip2Test extends ArchiveTestCase
 	{
 		$object = new ArchiveBzip2;
 
-		$this->assertAttributeEmpty('options', $object);
+		$this->assertEmpty(TestHelper::getValue($object, 'options'));
 
 		$options = ['use_streams' => false];
 		$object  = new ArchiveBzip2($options);
 
-		$this->assertAttributeSame($options, 'options', $object);
+		$this->assertSame($options, TestHelper::getValue($object, 'options'));
 	}
 
 	/**

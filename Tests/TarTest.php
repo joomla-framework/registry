@@ -7,6 +7,7 @@
 namespace Joomla\Archive\Tests;
 
 use Joomla\Archive\Tar as ArchiveTar;
+use Joomla\Test\TestHelper;
 
 /**
  * Test class for Joomla\Archive\Tar.
@@ -22,12 +23,12 @@ class TarTest extends ArchiveTestCase
 	{
 		$object = new ArchiveTar;
 
-		$this->assertAttributeEmpty('options', $object);
+		$this->assertEmpty(TestHelper::getValue($object, 'options'));
 
 		$options = ['foo' => 'bar'];
 		$object  = new ArchiveTar($options);
 
-		$this->assertAttributeSame($options, 'options', $object);
+		$this->assertSame($options, TestHelper::getValue($object, 'options'));
 	}
 
 	/**
