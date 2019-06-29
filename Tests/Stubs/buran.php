@@ -10,8 +10,6 @@ use Joomla\Data\DataObject;
 
 /**
  * Derived Data\DataObject class for testing.
- *
- * @since  1.0
  */
 class JDataBuran extends DataObject
 {
@@ -22,9 +20,7 @@ class JDataBuran extends DataObject
 	 *
 	 * @param   string  $value  The test value.
 	 *
-	 * @return  Object  Chainable.
-	 *
-	 * @since   1.0
+	 * @return  $this
 	 */
 	protected function setTestValue($value)
 	{

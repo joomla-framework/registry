@@ -6,7 +6,8 @@
 
 namespace Joomla\Data\Tests;
 
-use Joomla\Data;
+use Joomla\Data\DataObject;
+use Joomla\Data\DataSet;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
 
@@ -15,35 +16,44 @@ require_once __DIR__ . '/Stubs/vostok.php';
 
 /**
  * Tests for the Joomla\Data\DataSet class.
- *
- * @since  1.0
  */
 class DataSetTest extends TestCase
 {
 	/**
 	 * An instance of the object to test.
 	 *
-	 * @var    \Joomla\Data\DataSet
-	 * @since  1.0
+	 * @var  DataSet
 	 */
 	private $instance;
 
 	/**
+	 * Sets up the fixture, for example, opens a network connection.
+	 */
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->instance = new DataSet(
+			[
+				new JDataBuran,
+				new JDataVostok(['mission' => 'Vostok 1', 'pilot' => 'Yuri Gagarin']),
+			]
+		);
+	}
+
+	/**
 	 * Tests the Joomla\Data\DataSet::__construct method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::__construct
-	 * @since   1.0
 	 */
 	public function test__construct()
 	{
-		$this->assertEmpty(TestHelper::getValue(new Data\DataSet, 'objects'), 'New list should have no objects.');
+		$this->assertEmpty(TestHelper::getValue(new DataSet, 'objects'), 'New list should have no objects.');
 
-		$input = array(
-			'key' => new Data\DataObject(array('foo' => 'bar'))
-		);
-		$new = new Data\DataSet($input);
+		$input = [
+			'key' => new DataObject(['foo' => 'bar']),
+		];
+		$new   = new DataSet($input);
 
 		$this->assertEquals($input, TestHelper::getValue($new, 'objects'), 'Check initialised object list.');
 	}
@@ -51,56 +61,45 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::__construct method with an array that does not contain Data objects.
 	 *
-	 * @return  void
-	 *
-	 * @covers             Joomla\Data\DataSet::__construct
-	 * @expectedException  \InvalidArgumentException
-	 * @since           1.0
+	 * @covers  Joomla\Data\DataSet::__construct
 	 */
 	public function test__construct_array()
 	{
-		new Data\DataSet(array('foo'));
+		$this->expectException(\InvalidArgumentException::class);
+
+		new DataSet(array('foo'));
 	}
 
 	/**
 	 * Tests the Joomla\Data\DataSet::__call method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::__call
-	 * @since   1.0
 	 */
 	public function test__call()
 	{
-		$this->assertThat(
-			$this->instance->launch('go'),
-			$this->equalTo(array(1 => 'go'))
+		$this->assertEquals(
+			[1 => 'go'],
+			$this->instance->launch('go')
 		);
 	}
 
 	/**
 	 * Tests the Joomla\Data\DataSet::__get method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::__get
-	 * @since   1.0
 	 */
 	public function test__get()
 	{
-		$this->assertThat(
-			$this->instance->pilot,
-			$this->equalTo(array(0 => null, 1 => 'Yuri Gagarin'))
+		$this->assertEquals(
+			[0 => null, 1 => 'Yuri Gagarin'],
+			$this->instance->pilot
 		);
 	}
 
 	/**
 	 * Tests the Joomla\Data\DataSet::__isset method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::__isset
-	 * @since   1.0
 	 */
 	public function test__isset()
 	{
@@ -112,28 +111,22 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::__set method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::__set
-	 * @since   1.0
 	 */
 	public function test__set()
 	{
 		$this->instance->successful = 'yes';
 
-		$this->assertThat(
-			$this->instance->successful,
-			$this->equalTo(array(0 => 'yes', 1 => 'YES'))
+		$this->assertEquals(
+			[0 => 'yes', 1 => 'YES'],
+			$this->instance->successful
 		);
 	}
 
 	/**
 	 * Tests the Joomla\Data\DataSet::__unset method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::__unset
-	 * @since   1.0
 	 */
 	public function test__unset()
 	{
@@ -143,89 +136,84 @@ class DataSetTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::toArray method.
+	 * Tests the Joomla\Data\DataSet::getObjectsKeys method.
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Data\DataSet::toArray
+	 * @covers  Joomla\Data\DataSet::getObjectsKeys
 	 * @since   1.2.0
 	 */
 	public function testGetObjectsKeys()
 	{
-		$instance = new Data\DataSet(
-			array(
-				'key1' => new Data\DataObject(array('foo' => 'var', 'bar' => 'var', 'baz' => 'var')),
-				'key2' => new Data\DataObject(array('foo' => 'var', 'quz' => 'var', 'baz' => 'var')),
-				'key3' => new Data\DataObject(array('foo' => 'var', 'bar' => 'var'))
-			)
+		$instance = new DataSet(
+			[
+				'key1' => new DataObject(['foo' => 'var', 'bar' => 'var', 'baz' => 'var']),
+				'key2' => new DataObject(['foo' => 'var', 'quz' => 'var', 'baz' => 'var']),
+				'key3' => new DataObject(['foo' => 'var', 'bar' => 'var']),
+			]
 		);
 
-		$this->assertThat(
-			$instance->getObjectsKeys(),
-			$this->equalTo(array('foo', 'bar', 'baz', 'quz'))
+		$this->assertEquals(
+			['foo', 'bar', 'baz', 'quz'],
+			$instance->getObjectsKeys()
 		);
 
-		$this->assertThat(
-			$instance->getObjectsKeys('common'),
-			$this->equalTo(array('foo'))
+		$this->assertEquals(
+			['foo'],
+			$instance->getObjectsKeys('common')
 		);
 	}
 
 	/**
 	 * Tests the Joomla\Data\DataSet::toArray method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::toArray
-	 * @since   1.0
 	 */
 	public function testToArray()
 	{
-		$instance = new Data\DataSet(
-			array(
-				'key1' => new Data\DataObject(array('date1' => '2014-08-29', 'date2' => '2014-09-16')),
-				'key2' => new Data\DataObject(array('date1' => '2014-07-06', 'date2' => '2014-08-05')),
-				'key3' => new Data\DataObject(array('date1' => '2013-12-01', 'date2' => '2014-06-26')),
-				'key4' => new Data\DataObject(array('date1' => '2013-10-07')),
-				'key5' => new Data\DataObject(array('date2' => '2010-04-01'))
-			)
+		$instance = new DataSet(
+			[
+				'key1' => new DataObject(['date1' => '2014-08-29', 'date2' => '2014-09-16']),
+				'key2' => new DataObject(['date1' => '2014-07-06', 'date2' => '2014-08-05']),
+				'key3' => new DataObject(['date1' => '2013-12-01', 'date2' => '2014-06-26']),
+				'key4' => new DataObject(['date1' => '2013-10-07']),
+				'key5' => new DataObject(['date2' => '2010-04-01']),
+			]
 		);
 
-		$array1 = $instance->toArray(true);
-		$expect1 = array(
-			'key1' => array('date1' => '2014-08-29', 'date2' => '2014-09-16'),
-			'key2' => array('date1' => '2014-07-06', 'date2' => '2014-08-05'),
-			'key3' => array('date1' => '2013-12-01', 'date2' => '2014-06-26'),
-			'key4' => array('date1' => '2013-10-07', 'date2' => null),
-			'key5' => array('date1' => null, 'date2' => '2010-04-01')
-		);
+		$array1  = $instance->toArray(true);
+		$expect1 = [
+			'key1' => ['date1' => '2014-08-29', 'date2' => '2014-09-16'],
+			'key2' => ['date1' => '2014-07-06', 'date2' => '2014-08-05'],
+			'key3' => ['date1' => '2013-12-01', 'date2' => '2014-06-26'],
+			'key4' => ['date1' => '2013-10-07', 'date2' => null],
+			'key5' => ['date1' => null, 'date2' => '2010-04-01'],
+		];
 
-		$array2 = $instance->toArray(false, 'date1');
-		$expect2 = array(
-			array('2014-08-29'),
-			array('2014-07-06'),
-			array('2013-12-01'),
-			array('2013-10-07'),
-			array(null)
-		);
+		$array2  = $instance->toArray(false, 'date1');
+		$expect2 = [
+			['2014-08-29'],
+			['2014-07-06'],
+			['2013-12-01'],
+			['2013-10-07'],
+			[null],
+		];
 
-		$array3 = $instance->toArray(false);
-		$expect3 = array(
-			array('2014-08-29','2014-09-16'),
-			array('2014-07-06','2014-08-05'),
-			array('2013-12-01','2014-06-26'),
-			array('2013-10-07', null),
-			array(null, '2010-04-01')
-		);
+		$array3  = $instance->toArray(false);
+		$expect3 = [
+			['2014-08-29', '2014-09-16'],
+			['2014-07-06', '2014-08-05'],
+			['2013-12-01', '2014-06-26'],
+			['2013-10-07', null],
+			[null, '2010-04-01'],
+		];
 
-		$array4 = $instance->toArray(true, 'date2');
-		$expect4 = array(
-			'key1' => array('date2' => '2014-09-16'),
-			'key2' => array('date2' => '2014-08-05'),
-			'key3' => array('date2' => '2014-06-26'),
-			'key4' => array('date2' => null),
-			'key5' => array('date2' => '2010-04-01')
-		);
+		$array4  = $instance->toArray(true, 'date2');
+		$expect4 = [
+			'key1' => ['date2' => '2014-09-16'],
+			'key2' => ['date2' => '2014-08-05'],
+			'key3' => ['date2' => '2014-06-26'],
+			'key4' => ['date2' => null],
+			'key5' => ['date2' => '2010-04-01'],
+		];
 
 		$this->assertEquals($expect1, $array1, 'Method should return uniform arrays');
 		$this->assertEquals($expect2, $array2);
@@ -236,10 +224,7 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::count method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::count
-	 * @since   1.0
 	 */
 	public function testCount()
 	{
@@ -249,10 +234,7 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::clear method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::clear
-	 * @since   1.0
 	 */
 	public function testClear()
 	{
@@ -264,46 +246,40 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::current method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::current
-	 * @since   1.0
 	 */
 	public function testCurrent()
 	{
 		$object = $this->instance[0];
 
-		$this->assertThat(
-			$this->instance->current(),
-			$this->equalTo($object)
+		$this->assertEquals(
+			$object,
+			$this->instance->current()
 		);
 
-		$new = new Data\DataSet(array('foo' => new Data\DataObject));
+		$new = new DataSet(['foo' => new DataObject]);
 
-		$this->assertThat(
-			$new->current(),
-			$this->equalTo(new Data\DataObject)
+		$this->assertEquals(
+			new DataObject,
+			$new->current()
 		);
 	}
 
 	/**
 	 * Tests the Joomla\Data\DataSet::dump method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::dump
-	 * @since   1.0
 	 */
 	public function testDump()
 	{
 		$this->assertEquals(
-			array(
+			[
 				new \stdClass,
-				(object) array(
+				(object) [
 					'mission' => 'Vostok 1',
-					'pilot' => 'Yuri Gagarin',
-				),
-			),
+					'pilot'   => 'Yuri Gagarin',
+				],
+			],
 			$this->instance->dump()
 		);
 	}
@@ -311,10 +287,7 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::jsonSerialize method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::jsonSerialize
-	 * @since   1.0
 	 */
 	public function testJsonSerialize()
 	{
@@ -334,10 +307,7 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::key method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::key
-	 * @since   1.0
 	 */
 	public function testKey()
 	{
@@ -347,36 +317,31 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::keys method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::keys
-	 * @since   1.0
 	 */
 	public function testKeys()
 	{
-		$instance = new Data\DataSet;
-		$instance['key1'] = new Data\DataObject;
-		$instance['key2'] = new Data\DataObject;
+		$instance         = new DataSet;
+		$instance['key1'] = new DataObject;
+		$instance['key2'] = new DataObject;
 
-		$this->assertEquals(array('key1', 'key2'), $instance->keys());
+		$this->assertEquals(['key1', 'key2'], $instance->keys());
 	}
 
 	/**
 	 * Tests the Joomla\Data\DataSet::walk method.
-	 *
-	 * @return  void
 	 *
 	 * @covers  Joomla\Data\DataSet::walk
 	 * @since   1.2.0
 	 */
 	public function testWalk()
 	{
-		$instance = new Data\DataSet;
-		$instance['key1'] = new Data\DataObject(array('foo' => 'bar'));
-		$instance['key2'] = new Data\DataObject(array('foo' => 'qux'));
+		$instance         = new DataSet;
+		$instance['key1'] = new DataObject(['foo' => 'bar']);
+		$instance['key2'] = new DataObject(['foo' => 'qux']);
 
 		$instance->walk(
-			function(&$object, $key)
+			function (&$object, $key)
 			{
 				$object->old = $object->foo;
 				$object->foo = 'new-value';
@@ -392,10 +357,7 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::next method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::next
-	 * @since   1.0
 	 */
 	public function testNext()
 	{
@@ -421,10 +383,7 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::offsetExists method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::offsetExists
-	 * @since   1.0
 	 */
 	public function testOffsetExists()
 	{
@@ -436,51 +395,43 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::offsetGet method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::offsetGet
-	 * @since   1.0
 	 */
 	public function testOffsetGet()
 	{
-		$this->assertInstanceOf('Joomla\Data\Tests\JDataBuran', $this->instance->offsetGet(0));
-		$this->assertInstanceOf('Joomla\Data\Tests\JDataVostok', $this->instance->offsetGet(1));
+		$this->assertInstanceOf(JDataBuran::class, $this->instance->offsetGet(0));
+		$this->assertInstanceOf(JDataVostok::class, $this->instance->offsetGet(1));
 		$this->assertNull($this->instance->offsetGet('foo'));
 	}
 
 	/**
 	 * Tests the Joomla\Data\DataSet::offsetSet method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::OffsetSet
-	 * @since   1.0
 	 */
 	public function testOffsetSet()
 	{
-		$this->instance->offsetSet(0, new Data\DataObject);
+		$this->instance->offsetSet(0, new DataObject);
 		$objects = TestHelper::getValue($this->instance, 'objects');
 
-		$this->assertEquals(new Data\DataObject, $objects[0], 'Checks explicit use of offsetSet.');
+		$this->assertEquals(new DataObject, $objects[0], 'Checks explicit use of offsetSet.');
 
-		$this->instance[] = new Data\DataObject;
-		$this->assertInstanceOf('Joomla\Data\DataObject', $this->instance[1], 'Checks the array push equivalent with [].');
+		$this->instance[] = new DataObject;
+		$this->assertInstanceOf(DataObject::class, $this->instance[1], 'Checks the array push equivalent with [].');
 
-		$this->instance['foo'] = new Data\DataObject;
-		$this->assertInstanceOf('Joomla\Data\DataObject', $this->instance['foo'], 'Checks implicit usage of offsetSet.');
+		$this->instance['foo'] = new DataObject;
+		$this->assertInstanceOf(DataObject::class, $this->instance['foo'], 'Checks implicit usage of offsetSet.');
 	}
 
 	/**
 	 * Tests the Joomla\Data\DataSet::offsetSet method for an expected exception
 	 *
-	 * @return  void
-	 *
-	 * @covers             Joomla\Data\DataSet::OffsetSet
-	 * @expectedException  InvalidArgumentException
-	 * @since           1.0
+	 * @covers  Joomla\Data\DataSet::OffsetSet
 	 */
 	public function testOffsetSet_exception1()
 	{
+		$this->expectException(\InvalidArgumentException::class);
+
 		// By implication, this will call offsetSet.
 		$this->instance['foo'] = 'bar';
 	}
@@ -488,10 +439,7 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::offsetUnset method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::OffsetUnset
-	 * @since   1.0
 	 */
 	public function testOffsetUnset()
 	{
@@ -514,10 +462,7 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::offsetRewind method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::rewind
-	 * @since   1.0
 	 */
 	public function testOffsetRewind()
 	{
@@ -533,10 +478,7 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests the Joomla\Data\DataSet::valid method.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::valid
-	 * @since   1.0
 	 */
 	public function testValid()
 	{
@@ -550,15 +492,12 @@ class DataSetTest extends TestCase
 	/**
 	 * Test that Data\DataSet::_initialise method indirectly.
 	 *
-	 * @return  void
-	 *
 	 * @covers  Joomla\Data\DataSet::_initialise
-	 * @since   1.0
 	 */
 	public function test_initialise()
 	{
-		$this->assertInstanceOf('Joomla\Data\Tests\JDataBuran', $this->instance[0]);
-		$this->assertInstanceOf('Joomla\Data\Tests\JDataVostok', $this->instance[1]);
+		$this->assertInstanceOf(JDataBuran::class, $this->instance[0]);
+		$this->assertInstanceOf(JDataVostok::class, $this->instance[1]);
 	}
 
 	/*
@@ -568,27 +507,24 @@ class DataSetTest extends TestCase
 	/**
 	 * Tests using Data\DataSet in a foreach statement.
 	 *
-	 * @return  void
-	 *
 	 * @coversNothing  Integration test.
-	 * @since          1.0
 	 */
 	public function test_foreach()
 	{
 		// Test multi-item list.
-		$tests = array();
+		$tests = [];
 
 		foreach ($this->instance as $key => $object)
 		{
 			$tests[] = $object->mission;
 		}
 
-		$this->assertEquals(array(null, 'Vostok 1'), $tests);
+		$this->assertEquals([null, 'Vostok 1'], $tests);
 
 		// Tests single item list.
 		$this->instance->clear();
-		$this->instance['1'] = new Data\DataObject;
-		$runs = 0;
+		$this->instance['1'] = new DataObject;
+		$runs                = 0;
 
 		foreach ($this->instance as $key => $object)
 		{
@@ -598,10 +534,10 @@ class DataSetTest extends TestCase
 		$this->assertEquals(1, $runs);
 
 		// Exhaustively testing unsetting within a foreach.
-		$this->instance['2'] = new Data\DataObject;
-		$this->instance['3'] = new Data\DataObject;
-		$this->instance['4'] = new Data\DataObject;
-		$this->instance['5'] = new Data\DataObject;
+		$this->instance['2'] = new DataObject;
+		$this->instance['3'] = new DataObject;
+		$this->instance['4'] = new DataObject;
+		$this->instance['5'] = new DataObject;
 
 		$runs = 0;
 
@@ -622,24 +558,5 @@ class DataSetTest extends TestCase
 		$this->assertFalse($this->instance->offsetExists(5), 'Index 5 should have been unset.');
 		$this->assertCount(1, $this->instance);
 		$this->assertEquals(5, $runs, 'Oops, the foreach ran too many times.');
-	}
-
-	/**
-	 * Setup the tests.
-	 *
-	 * @return  void
-	 *
-	 * @since  1.0
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->instance = new Data\DataSet(
-			array(
-				new JDataBuran,
-				new JDataVostok(array('mission' => 'Vostok 1', 'pilot' => 'Yuri Gagarin')),
-			)
-		);
 	}
 }

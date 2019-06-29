@@ -10,8 +10,6 @@ use Joomla\Data\DataObject;
 
 /**
  * Derived Data\DataObject class for testing.
- *
- * @since  1.0
  */
 class JDataVostok extends DataObject
 {
@@ -21,8 +19,6 @@ class JDataVostok extends DataObject
 	 * @param   string  $status  A method argument.
 	 *
 	 * @return  string  The return value for the method.
-	 *
-	 * @since   1.0
 	 */
 	public function launch($status)
 	{
@@ -36,8 +32,6 @@ class JDataVostok extends DataObject
 	 * @param   mixed   $value     The property value.
 	 *
 	 * @return  mixed  The property value.
-	 *
-	 * @since   1.0
 	 */
 	protected function setProperty($property, $value)
 	{

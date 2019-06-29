@@ -10,8 +10,6 @@ use Joomla\Data\DataObject;
 
 /**
  * Joomla Framework Capitaliser DataObject Class
- *
- * @since  1.0
  */
 class JDataCapitaliser extends DataObject
 {
@@ -22,8 +20,6 @@ class JDataCapitaliser extends DataObject
 	 * @param   mixed   $value     The property value.
 	 *
 	 * @return  mixed  The property value.
-	 *
-	 * @since   1.0
 	 */
 	protected function setProperty($property, $value)
 	{
