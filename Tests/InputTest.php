@@ -307,45 +307,9 @@ class InputTest extends TestCase
 	}
 
 	/**
-	 * @testdox  Tests that the object is correctly serialized
+	 * @testdox  Tests that the get method disallows access to non-whitelisted globals
 	 *
-	 * @covers   Joomla\Input\Input::loadAllInputs
-	 * @covers   Joomla\Input\Input::serialize
-	 *
-	 * @backupGlobals enabled
-	 */
-	public function testSerialize()
-	{
-		$instance = $this->getInputObject();
-
-		$this->assertGreaterThan(0, strlen($instance->serialize()));
-		$this->assertAttributeEquals(true, 'loaded', $instance);
-	}
-
-	/**
-	 * @testdox  Tests that the object is correctly unserialized
-	 *
-	 * @covers   Joomla\Input\Input::unserialize
-	 */
-	public function testUnserialize()
-	{
-		$serialized = 'a:3:{i:0;a:1:{s:6:"filter";s:3:"raw";}i:1;s:4:"data";i:2;a:1:{s:7:"request";s:4:"keep";}}';
-
-		$instance = $this->getInputObject();
-
-		$instance->unserialize($serialized);
-
-		$this->assertAttributeSame(['request' => 'keep'], 'inputs', $instance);
-		$this->assertAttributeSame(['filter' => 'raw'], 'options', $instance);
-		$this->assertAttributeSame('data', 'data', $instance);
-	}
-
-	/**
-	 * Test the JInput::get method disallows access to non-whitelisted globals.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.3.0
+	 * @covers   Joomla\Input\Input::get
 	 */
 	public function testGetDoesNotSupportNonWhitelistedGlobals()
 	{

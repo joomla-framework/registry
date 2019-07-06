@@ -39,7 +39,7 @@ use Joomla\Filter;
  * @method      string   getUsername($name, $default = null)  Get a username.
  * @method      mixed    getRaw($name, $default = null)       Get an unfiltered value.
  */
-class Input implements \Serializable, \Countable
+class Input implements \Countable
 {
 	/**
 	 * Container with allowed superglobals
@@ -350,44 +350,6 @@ class Input implements \Serializable, \Countable
 	public function getMethod()
 	{
 		return strtoupper($this->server->getRaw('REQUEST_METHOD'));
-	}
-
-	/**
-	 * Method to serialize the input.
-	 *
-	 * @return  string  The serialized input.
-	 *
-	 * @since   1.0
-	 */
-	public function serialize()
-	{
-		// Load all of the inputs.
-		$this->loadAllInputs();
-
-		// Remove $_ENV and $_SERVER from the inputs.
-		$inputs = $this->inputs;
-		unset($inputs['env'], $inputs['server']);
-
-		// Serialize the options, data, and inputs.
-		return serialize([$this->options, $this->data, $inputs]);
-	}
-
-	/**
-	 * Method to unserialize the input.
-	 *
-	 * @param   string  $input  The serialized input.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function unserialize($input)
-	{
-		// Unserialize the options, data, and inputs.
-		list($this->options, $this->data, $this->inputs) = unserialize($input);
-
-		// Load the filter.
-		$this->filter = $this->options['filter'] ?? new Filter\InputFilter;
 	}
 
 	/**
