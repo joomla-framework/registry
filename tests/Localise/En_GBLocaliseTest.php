@@ -8,14 +8,15 @@
 
 namespace Joomla\Language\Tests\Localise;
 
-use Joomla\Language\Localise;
+use Joomla\Language\Localise\En_GBLocalise;
+use PHPUnit\Framework\TestCase;
 
 /**
  * en-GB test class. Allows us to also test AbstractLocalise
  *
  * @since  __DEPLOY_VERSION__
  */
-class En_GBLocaliseTest
+class En_GBLocaliseTest extends TestCase
 {
 	/**
 	 * @testdox  Verify that En_GBLocalise::transliterate() calls defined transliterator
@@ -26,7 +27,7 @@ class En_GBLocaliseTest
 	 */
 	public function testTransliterateCallsDefinedTransliterator()
 	{
-		$this->assertSame('Así', $this->object->transliterate('Así'));
+		$this->assertSame('asi', (new En_GBLocalise())->transliterate('Así'));
 	}
 
 	/**
@@ -37,6 +38,6 @@ class En_GBLocaliseTest
 	 */
 	public function testGetPluralSuffixesCallsTheDefinedMethod()
 	{
-		$this->assertInternalType('array', $this->object->getPluralSuffixes(1));
+		$this->assertSame(['1'], (new En_GBLocalise())->getPluralSuffixes(1));
 	}
 }
