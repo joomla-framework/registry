@@ -27,7 +27,7 @@ class MessageCatalogueTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -170,11 +170,12 @@ class MessageCatalogueTest extends TestCase
 	 * @covers   Joomla\Language\MessageCatalogue::mergeCatalogue
 	 * @uses     Joomla\Language\MessageCatalogue::addMessage
 	 * @uses     Joomla\Language\MessageCatalogue::addMessages
-	 * @expectedException  \LogicException
-	 * @expectedExceptionMessage  Cannot merge a catalogue that does not have the same language code.
 	 */
 	public function testTwoCataloguesAreNotMergedWhenTheLanguageCodesDiffer()
 	{
+		$this->expectException(\LogicException::class);
+		$this->expectExceptionMessage('Cannot merge a catalogue that does not have the same language code.');
+
 		$this->object->addMessage('foo', 'bar');
 
 		$secondCatalogue = new MessageCatalogue('en-US', ['goo' => 'car']);

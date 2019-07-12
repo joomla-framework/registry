@@ -34,7 +34,7 @@ class LanguageHelperTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -132,12 +132,13 @@ class LanguageHelperTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parseXMLLanguageFile() throws an exception if the file is not found
 	 *
-	 * @covers             Joomla\Language\LanguageHelper::parseXMLLanguageFile
-	 * @uses               Joomla\Language\LanguageHelper
-	 * @expectedException  \RuntimeException
+	 * @covers   Joomla\Language\LanguageHelper::parseXMLLanguageFile
+	 * @uses     Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyParseXMLLanguageFileThrowsAnExceptionIfTheFileIsNotFound()
 	{
+		$this->expectException(\RuntimeException::class);
+
 		$this->object->parseXMLLanguageFile($this->testPath . '/xx-XX/xx-XX.xml');
 	}
 }

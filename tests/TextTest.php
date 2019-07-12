@@ -49,7 +49,7 @@ class TextTest extends TestCase
 	/**
 	 * This method is called before the first test of this test class is run.
 	 */
-	public static function setUpBeforeClass()
+	public static function setUpBeforeClass(): void
 	{
 		self::$testPath = __DIR__ . '/data';
 
@@ -61,7 +61,7 @@ class TextTest extends TestCase
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -83,7 +83,7 @@ class TextTest extends TestCase
 	 */
 	public function testVerifyThatTextIsInstantiatedCorrectly()
 	{
-		$this->assertInstanceOf('Joomla\\Language\\Text', new Text(new Language($this->parserRegistry, self::$testPath)));
+		$this->assertInstanceOf(Text::class, new Text(new Language($this->parserRegistry, self::$testPath)));
 	}
 
 	/**
@@ -96,7 +96,7 @@ class TextTest extends TestCase
 	 */
 	public function testVerifyThatGetLanguageReturnsALanguageInstance()
 	{
-		$this->assertInstanceOf('Joomla\\Language\\Language', $this->object->getLanguage());
+		$this->assertInstanceOf(Language::class, $this->object->getLanguage());
 	}
 
 	/**
@@ -148,7 +148,7 @@ class TextTest extends TestCase
 	 */
 	public function testTranslateReturnsTheCorrectStringForAKeyWithNamedParameters()
 	{
-		$this->assertSame('Bar None', $this->object->translate('Bar %value%', array('%value%' => 'None')));
+		$this->assertSame('Bar None', $this->object->translate('Bar %value%', ['%value%' => 'None']));
 	}
 
 	/**
@@ -161,7 +161,7 @@ class TextTest extends TestCase
 	 */
 	public function testTranslateReturnsAJavascriptSafeKey()
 	{
-		$this->assertSame('foobar\\\'s', $this->object->translate('foobar\'s', array(), true));
+		$this->assertSame('foobar\\\'s', $this->object->translate('foobar\'s', [], true));
 	}
 
 	/**
@@ -200,7 +200,7 @@ class TextTest extends TestCase
 	 */
 	public function testAltReturnsTheCorrectStringForAKeyWithAltAndNamedParameters()
 	{
-		$this->assertSame('Green Car', $this->object->alt('FOO', 'BOO', array('%description%' => 'Green')));
+		$this->assertSame('Green Car', $this->object->alt('FOO', 'BOO', ['%description%' => 'Green']));
 	}
 
 	/**

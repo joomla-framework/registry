@@ -44,7 +44,7 @@ class LanguageTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -65,7 +65,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyThatLanguageIsInstantiatedCorrectly()
 	{
-		$this->assertInstanceOf('Joomla\\Language\\Language', new Language($this->parserRegistry, $this->testPath));
+		$this->assertInstanceOf(Language::class, new Language($this->parserRegistry, $this->testPath));
 	}
 
 	/**
@@ -638,130 +638,5 @@ class LanguageTest extends TestCase
 	public function testVerifyParseXMLLanguageFileProxiesToLanguageHelper()
 	{
 		$this->assertInternalType('array', $this->object->parseXMLLanguageFile($this->testPath . '/language/en-GB/en-GB.xml'));
-	}
-
-	/**
-	 * Tests the _ method
-	 *
-	 * @covers  Joomla\Language\Language::_
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 */
-	public function test_()
-	{
-		$string1 = 'delete';
-		$string2 = "delete's";
-
-		$this->assertEquals(
-			'',
-			$this->object->_('', false),
-			'Line: ' . __LINE__ . ' Empty string should return as it is when javascript safe is false '
-		);
-
-		$this->assertEquals(
-			'',
-			$this->object->_('', true),
-			'Line: ' . __LINE__ . ' Empty string should return as it is when javascript safe is true '
-		);
-
-		$this->assertEquals(
-			'delete',
-			$this->object->_($string1, false),
-			'Line: ' . __LINE__ . ' Exact case should match when javascript safe is false '
-		);
-
-		$this->assertNotEquals(
-			'Delete',
-			$this->object->_($string1, false),
-			'Line: ' . __LINE__ . ' Should be case sensitive when javascript safe is false'
-		);
-
-		$this->assertEquals(
-			'delete',
-			$this->object->_($string1, true),
-			'Line: ' . __LINE__ . ' Exact case match should work when javascript safe is true'
-		);
-
-		$this->assertNotEquals(
-			'Delete',
-			$this->object->_($string1, true),
-			'Line: ' . __LINE__ . ' Should be case sensitive when javascript safe is true'
-		);
-
-		$this->assertEquals(
-			'delete\'s',
-			$this->object->_($string2, false),
-			'Line: ' . __LINE__ . ' Exact case should match when javascript safe is false '
-		);
-
-		$this->assertNotEquals(
-			'Delete\'s',
-			$this->object->_($string2, false),
-			'Line: ' . __LINE__ . ' Should be case sensitive when javascript safe is false'
-		);
-
-		$this->assertEquals(
-			"delete\'s",
-			$this->object->_($string2, true),
-			'Line: ' . __LINE__ . ' Exact case should match when javascript safe is true, also it calls addslashes (\' => \\\') '
-		);
-
-		$this->assertNotEquals(
-			"Delete\'s",
-			$this->object->_($string2, true),
-			'Line: ' . __LINE__ . ' Should be case sensitive when javascript safe is true,, also it calls addslashes (\' => \\\') '
-		);
-	}
-
-	/**
-	 * Tests the _ method with strings loaded and debug enabled
-	 *
-	 * @covers  Joomla\Language\Language::_
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 */
-	public function test_WithLoadedStringsAndDebug()
-	{
-		$catalogue = TestHelper::getValue($this->object, 'catalogue');
-		$catalogue->addMessage('DEL', 'Delete');
-
-		$this->assertEquals(
-			"Delete",
-			$this->object->_('del', true)
-		);
-
-		$this->assertEquals(
-			"Delete",
-			$this->object->_('DEL', true)
-		);
-
-		// Debug true tests
-		TestHelper::setValue($this->object, 'debug', true);
-
-		$this->assertArrayNotHasKey(
-			'DEL',
-			TestHelper::getValue($this->object, 'used')
-		);
-		$this->assertEquals(
-			"**Delete**",
-			$this->object->_('del', true)
-		);
-		$this->assertArrayHasKey(
-			'DEL',
-			TestHelper::getValue($this->object, 'used')
-		);
-
-		$this->assertArrayNotHasKey(
-			'DELET\\ED',
-			TestHelper::getValue($this->object, 'orphans')
-		);
-		$this->assertEquals(
-			"??Delet\\\\ed??",
-			$this->object->_('Delet\\ed', true)
-		);
-		$this->assertArrayHasKey(
-			'DELET\\ED',
-			TestHelper::getValue($this->object, 'orphans')
-		);
 	}
 }

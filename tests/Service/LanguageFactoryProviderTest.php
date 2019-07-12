@@ -7,6 +7,7 @@
 namespace Joomla\Language\Tests\Service;
 
 use Joomla\DI\Container;
+use Joomla\Language\LanguageFactory;
 use Joomla\Language\Service\LanguageFactoryProvider;
 use Joomla\Registry\Registry;
 use PHPUnit\Framework\TestCase;
@@ -36,7 +37,7 @@ class LanguageFactoryProviderTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -60,8 +61,8 @@ class LanguageFactoryProviderTest extends TestCase
 		$this->container->registerServiceProvider(new LanguageFactoryProvider);
 
 		$this->assertInstanceOf(
-			'\\Joomla\\Language\\LanguageFactory',
-			$this->container->get('Joomla\\Language\\LanguageFactory')
+			LanguageFactory::class,
+			$this->container->get(LanguageFactory::class)
 		);
 	}
 }
