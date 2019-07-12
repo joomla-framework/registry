@@ -113,19 +113,22 @@ class Text
 	/**
 	 * Pluralises a string in the current language
 	 *
-	 * The last argument can take an array of options:
+	 * The last argument can take an array of options to configure the call to `Joomla\Language\Language::translate()`:
 	 *
-	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean)
+	 * array(
+	 *   'jsSafe' => boolean,
+	 *   'interpretBackSlashes' =>boolean
+	 * )
 	 *
 	 * where:
 	 *
-	 * jsSafe is a boolean to generate a javascript safe strings.
-	 * interpretBackSlashes is a boolean to interpret backslashes \\->\, \n->new line, \t->tabulation.
+	 * jsSafe is a boolean to specify whether to make the result JavaScript safe.
+	 * interpretBackSlashes is a boolean to specify whether backslashes are interpreted (\\ -> \, \n -> new line, \t -> tab character).
 	 *
 	 * @param   string   $string  The format string.
 	 * @param   integer  $n       The number of items
 	 *
-	 * @return  string  The translated strings or the key if 'script' is true in the array of options
+	 * @return  string  The translated string
 	 *
 	 * @note    This method can take a mixed number of arguments for the sprintf function
 	 * @since   1.0
@@ -162,8 +165,9 @@ class Text
 		if (\is_array($args[$count - 1]))
 		{
 			$args[0] = $lang->translate(
-				$key, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
-				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
+				$key,
+				$args[$count - 1]['jsSafe'] ?? false,
+				$args[$count - 1]['interpretBackSlashes'] ?? true
 			);
 		}
 		else
@@ -171,24 +175,27 @@ class Text
 			$args[0] = $lang->translate($key);
 		}
 
-		return \call_user_func_array('sprintf', $args);
+		return \sprintf(...$args);
 	}
 
 	/**
 	 * Passes a string thru a sprintf.
 	 *
-	 * The last argument can take an array of options:
+	 * The last argument can take an array of options to configure the call to `Joomla\Language\Language::translate()`:
 	 *
-	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean)
+	 * array(
+	 *   'jsSafe' => boolean,
+	 *   'interpretBackSlashes' =>boolean
+	 * )
 	 *
 	 * where:
 	 *
-	 * jsSafe is a boolean to generate a javascript safe strings.
-	 * interpretBackSlashes is a boolean to interpret backslashes \\->\, \n->new line, \t->tabulation.
+	 * jsSafe is a boolean to specify whether to make the result JavaScript safe.
+	 * interpretBackSlashes is a boolean to specify whether backslashes are interpreted (\\ -> \, \n -> new line, \t -> tab character).
 	 *
 	 * @param   string  $string  The format string.
 	 *
-	 * @return  string|null  The translated strings or the key if 'script' is true in the array of options.
+	 * @return  string|null  The translated string
 	 *
 	 * @note    This method can take a mixed number of arguments for the sprintf function
 	 * @since   1.0
@@ -202,8 +209,9 @@ class Text
 		if (\is_array($args[$count - 1]))
 		{
 			$args[0] = $lang->translate(
-				$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
-				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
+				$string,
+				$args[$count - 1]['jsSafe'] ?? false,
+				$args[$count - 1]['interpretBackSlashes'] ?? true
 			);
 		}
 		else
@@ -211,24 +219,27 @@ class Text
 			$args[0] = $lang->translate($string);
 		}
 
-		return \call_user_func_array('sprintf', $args);
+		return \sprintf(...$args);
 	}
 
 	/**
 	 * Passes a string thru an printf.
 	 *
-	 * The last argument can take an array of options:
+	 * The last argument can take an array of options to configure the call to `Joomla\Language\Language::translate()`:
 	 *
-	 * array('jsSafe'=>boolean, 'interpretBackSlashes'=>boolean)
+	 * array(
+	 *   'jsSafe' => boolean,
+	 *   'interpretBackSlashes' =>boolean
+	 * )
 	 *
 	 * where:
 	 *
-	 * jsSafe is a boolean to generate a javascript safe strings.
-	 * interpretBackSlashes is a boolean to interpret backslashes \\->\, \n->new line, \t->tabulation.
+	 * jsSafe is a boolean to specify whether to make the result JavaScript safe.
+	 * interpretBackSlashes is a boolean to specify whether backslashes are interpreted (\\ -> \, \n -> new line, \t -> tab character).
 	 *
 	 * @param   string  $string  The format string.
 	 *
-	 * @return  string|null  The translated strings or the key if 'script' is true in the array of options.
+	 * @return  string|null  The translated string
 	 *
 	 * @note    This method can take a mixed number of arguments for the printf function
 	 * @since   1.0
@@ -242,8 +253,9 @@ class Text
 		if (\is_array($args[$count - 1]))
 		{
 			$args[0] = $lang->translate(
-				$string, array_key_exists('jsSafe', $args[$count - 1]) ? $args[$count - 1]['jsSafe'] : false,
-				array_key_exists('interpretBackSlashes', $args[$count - 1]) ? $args[$count - 1]['interpretBackSlashes'] : true
+				$string,
+				$args[$count - 1]['jsSafe'] ?? false,
+				$args[$count - 1]['interpretBackSlashes'] ?? true
 			);
 		}
 		else
@@ -251,6 +263,6 @@ class Text
 			$args[0] = $lang->translate($string);
 		}
 
-		return \call_user_func_array('printf', $args);
+		return \printf(...$args);
 	}
 }

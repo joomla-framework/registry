@@ -202,7 +202,7 @@ class Language
 	 * The function checks if $jsSafe is true, then if $interpretBackslashes is true.
 	 *
 	 * @param   string   $string                The string to translate
-	 * @param   boolean  $jsSafe                Make the result javascript safe
+	 * @param   boolean  $jsSafe                Make the result JavaScript safe
 	 * @param   boolean  $interpretBackSlashes  Interpret \t and \n
 	 *
 	 * @return  string  The translation of the string
@@ -231,7 +231,7 @@ class Language
 	 * The function checks if $jsSafe is true, then if $interpretBackslashes is true.
 	 *
 	 * @param   string   $string                The string to translate
-	 * @param   boolean  $jsSafe                Make the result javascript safe
+	 * @param   boolean  $jsSafe                Make the result JavaScript safe
 	 * @param   boolean  $interpretBackSlashes  Interpret \t and \n
 	 *
 	 * @return  string  The translation of the string
@@ -285,7 +285,7 @@ class Language
 
 		if ($jsSafe)
 		{
-			// Javascript filter
+			// JavaScript filter
 			$string = addslashes($string);
 		}
 		elseif ($interpretBackSlashes)
