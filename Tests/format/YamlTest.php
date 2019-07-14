@@ -8,6 +8,8 @@ namespace Joomla\Registry\Tests\Format;
 
 use Joomla\Registry\Format\Yaml;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Test class for \Joomla\Registry\Format\Yaml.
@@ -27,7 +29,7 @@ class YamlTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	public function setUp()
+	public function setUp(): void
 	{
 		$this->fixture = new Yaml;
 	}
@@ -39,8 +41,8 @@ class YamlTest extends TestCase
 	 */
 	public function testConstruct()
 	{
-		$this->assertAttributeInstanceOf('Symfony\Component\Yaml\Parser', 'parser', $this->fixture);
-		$this->assertAttributeInstanceOf('Symfony\Component\Yaml\Dumper', 'dumper', $this->fixture);
+		$this->assertAttributeInstanceOf(Parser::class, 'parser', $this->fixture);
+		$this->assertAttributeInstanceOf(Dumper::class, 'dumper', $this->fixture);
 	}
 
 	/**

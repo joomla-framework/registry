@@ -112,13 +112,12 @@ class JsonTest extends TestCase
 	 * @testdox  A malformed JSON string causes an Exception to be thrown
 	 *
 	 * @covers   Joomla\Registry\Format\Json::stringToObject
-	 * @expectedException  \RuntimeException
 	 */
 	public function testAMalformedJsonStringCausesAnExceptionToBeThrown()
 	{
-		$class = new Json;
+		$this->expectException(\RuntimeException::class);
 
-		$class->stringToObject('{key:\'value\'');
+		(new Json)->stringToObject('{key:\'value\'');
 	}
 
 	/**
@@ -145,8 +144,6 @@ class JsonTest extends TestCase
 	 */
 	public function testExceptionNotThrownWhenDecodedToNullWithoutError()
 	{
-		$class = new Json;
-
-		$this->assertInstanceOf('stdClass', $class->stringToObject('{}'));
+		$this->assertInstanceOf('stdClass', (new Json)->stringToObject('{}'));
 	}
 }

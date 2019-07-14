@@ -58,11 +58,12 @@ class FactoryTest extends TestCase
 	/**
 	 * @testdox  An exception is thrown if the requested format does not exist
 	 *
-	 * @covers             Joomla\Registry\Factory::getFormat
-	 * @expectedException  \InvalidArgumentException
+	 * @covers   Joomla\Registry\Factory::getFormat
 	 */
 	public function testGetInstanceNonExistent()
 	{
+		$this->expectException(\InvalidArgumentException::class);
+
 		Factory::getFormat('sql');
 	}
 }
