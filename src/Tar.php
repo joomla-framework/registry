@@ -150,11 +150,9 @@ class Tar implements ExtractableInterface
 	}
 
 	/**
-	 * Get the list of files/data from a Tar archive buffer.
+	 * Get the list of files/data from a Tar archive buffer and builds a metadata array.
 	 *
-	 * @param   string  $data  The Tar archive buffer.
-	 *
-	 * @return  array  Archive metadata array
+	 * Array structure:
 	 * <pre>
 	 * KEY: Position in the array
 	 * VALUES: 'attr'  --  File attributes
@@ -164,6 +162,10 @@ class Tar implements ExtractableInterface
 	 * 'size'  --  Original file size
 	 * 'type'  --  File type
 	 * </pre>
+	 *
+	 * @param   string  $data  The Tar archive buffer.
+	 *
+	 * @return  void
 	 *
 	 * @since   1.0
 	 * @throws  \RuntimeException
@@ -241,7 +243,5 @@ class Tar implements ExtractableInterface
 		}
 
 		$this->metadata = $returnArray;
-
-		return true;
 	}
 }
