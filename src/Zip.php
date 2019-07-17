@@ -285,7 +285,7 @@ class Zip implements ExtractableInterface
 		// Make sure the destination folder exists
 		if (!Folder::create($destination))
 		{
-			throw new \RuntimeException('Unable to create destination folder ' . \dirname($path));
+			throw new \RuntimeException('Unable to create destination folder ' . \dirname($destination));
 		}
 
 		// Read files in the archive
