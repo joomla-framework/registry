@@ -11,6 +11,7 @@ namespace Joomla\Registry\Format;
 use Joomla\Registry\FormatInterface;
 use Symfony\Component\Yaml\Dumper as SymfonyYamlDumper;
 use Symfony\Component\Yaml\Parser as SymfonyYamlParser;
+use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 
 /**
  * YAML format handler for Registry.
@@ -42,6 +43,16 @@ class Yaml implements FormatInterface
 	 */
 	public function __construct()
 	{
+		if (!class_exists(SymfonyYaml::class))
+		{
+			throw new \RuntimeException(
+				\sprintf(
+					'The "%s" class could not be found, make sure you have installed the "symfony/yaml" package.',
+					SymfonyYaml::class
+				)
+			);
+		}
+
 		$this->parser = new SymfonyYamlParser;
 		$this->dumper = new SymfonyYamlDumper;
 	}
