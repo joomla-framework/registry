@@ -349,7 +349,7 @@ class Input implements \Countable
 	 */
 	public function getMethod()
 	{
-		return strtoupper($this->server->getRaw('REQUEST_METHOD'));
+		return strtoupper($this->server->getCmd('REQUEST_METHOD'));
 	}
 
 	/**
