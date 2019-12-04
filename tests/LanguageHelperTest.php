@@ -61,7 +61,7 @@ class LanguageHelperTest extends TestCase
 	 */
 	public function testVerifyGetMetadataReturnsTheLanguageMetadata()
 	{
-		$this->assertInternalType('array', $this->object->getMetadata('en-GB', $this->testPath));
+		$this->assertIsArray($this->object->getMetadata('en-GB', $this->testPath));
 	}
 
 	/**
@@ -83,7 +83,7 @@ class LanguageHelperTest extends TestCase
 	 */
 	public function testVerifyGetKnownLanguagesReturnsAnArrayOfKnownLanguages()
 	{
-		$this->assertInternalType('array', $this->object->getKnownLanguages($this->testPath));
+		$this->assertIsArray($this->object->getKnownLanguages($this->testPath));
 	}
 
 	/**
@@ -105,7 +105,7 @@ class LanguageHelperTest extends TestCase
 	 */
 	public function testVerifyParseLanguageFilesReturnsAnArray()
 	{
-		$this->assertInternalType('array', $this->object->parseLanguageFiles($this->testPath));
+		$this->assertIsArray($this->object->parseLanguageFiles($this->testPath));
 	}
 
 	/**
@@ -115,7 +115,7 @@ class LanguageHelperTest extends TestCase
 	 */
 	public function testVerifyParseXMLLanguageFileReturnsAnArray()
 	{
-		$this->assertInternalType('array', $this->object->parseXMLLanguageFile($this->testPath . '/language/en-GB/en-GB.xml'));
+		$this->assertIsArray($this->object->parseXMLLanguageFile($this->testPath . '/language/en-GB/en-GB.xml'));
 	}
 
 	/**

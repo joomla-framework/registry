@@ -175,7 +175,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testGetPluralSuffixesCallsTheDefinedMethod()
 	{
-		$this->assertInternalType('array', $this->object->getPluralSuffixes(1));
+		$this->assertIsArray($this->object->getPluralSuffixes(1));
 	}
 
 	/**
@@ -349,7 +349,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyGetCallerInfoReturnsAnArray()
 	{
-		$this->assertInternalType('array', TestHelper::invoke($this->object, 'getCallerInfo'));
+		$this->assertIsArray(TestHelper::invoke($this->object, 'getCallerInfo'));
 	}
 
 	/**
@@ -373,7 +373,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyThatGetPathsDefaultReturnsAnArray()
 	{
-		$this->assertInternalType('array', $this->object->getPaths());
+		$this->assertIsArray($this->object->getPaths());
 	}
 
 	/**
@@ -399,7 +399,7 @@ class LanguageTest extends TestCase
 	{
 		$this->object->load('good');
 
-		$this->assertInternalType('array', $this->object->getPaths('good'));
+		$this->assertIsArray($this->object->getPaths('good'));
 	}
 
 	/**
@@ -411,7 +411,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyThatGetErrorFilesDefaultReturnsAnArray()
 	{
-		$this->assertInternalType('array', $this->object->getErrorFiles());
+		$this->assertIsArray($this->object->getErrorFiles());
 	}
 
 	/**
@@ -495,7 +495,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyThatGetOrphansDefaultReturnsAnArray()
 	{
-		$this->assertInternalType('array', $this->object->getOrphans());
+		$this->assertIsArray($this->object->getOrphans());
 	}
 
 	/**
@@ -507,7 +507,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyThatGetUsedDefaultReturnsAnArray()
 	{
-		$this->assertInternalType('array', $this->object->getUsed());
+		$this->assertIsArray($this->object->getUsed());
 	}
 
 	/**
@@ -533,7 +533,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyGetMetadataProxiesToLanguageHelper()
 	{
-		$this->assertInternalType('array', $this->object->getMetadata('en-GB', $this->testPath));
+		$this->assertIsArray($this->object->getMetadata('en-GB', $this->testPath));
 	}
 
 	/**
@@ -585,7 +585,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyTheDefaultReturnForGetLocale()
 	{
-		$this->assertInternalType('array', $this->object->getLocale());
+		$this->assertIsArray($this->object->getLocale());
 	}
 
 	/**
@@ -623,7 +623,7 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyParseLanguageFilesProxiesToLanguageHelper()
 	{
-		$this->assertInternalType('array', $this->object->parseLanguageFiles($this->testPath));
+		$this->assertIsArray($this->object->parseLanguageFiles($this->testPath));
 	}
 
 	/**
@@ -637,6 +637,6 @@ class LanguageTest extends TestCase
 	 */
 	public function testVerifyParseXMLLanguageFileProxiesToLanguageHelper()
 	{
-		$this->assertInternalType('array', $this->object->parseXMLLanguageFile($this->testPath . '/language/en-GB/en-GB.xml'));
+		$this->assertIsArray($this->object->parseXMLLanguageFile($this->testPath . '/language/en-GB/en-GB.xml'));
 	}
 }

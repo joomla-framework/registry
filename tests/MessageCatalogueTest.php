@@ -49,18 +49,20 @@ class MessageCatalogueTest extends TestCase
 	 *
 	 * @covers   Joomla\Language\MessageCatalogue::addMessage
 	 * @uses     Joomla\Language\MessageCatalogue::addMessages
+	 * @uses     Joomla\Language\MessageCatalogue::getMessages
 	 */
 	public function testASingleMessageIsAddedToTheCatalogue()
 	{
 		$this->object->addMessage('foo', 'bar');
 
-		$this->assertAttributeSame(['FOO' => 'bar'], 'messages', $this->object);
+		$this->assertSame(['FOO' => 'bar'], $this->object->getMessages());
 	}
 
 	/**
 	 * @testdox  Verify that multiple messages are added to the catalogue
 	 *
 	 * @covers   Joomla\Language\MessageCatalogue::addMessages
+	 * @uses     Joomla\Language\MessageCatalogue::getMessages
 	 */
 	public function testMultipleMessagesAreAddedToTheCatalogue()
 	{
@@ -71,7 +73,7 @@ class MessageCatalogueTest extends TestCase
 
 		$this->object->addMessages($messages);
 
-		$this->assertAttributeSame(array_change_key_case($messages, CASE_UPPER), 'messages', $this->object);
+		$this->assertSame(array_change_key_case($messages, CASE_UPPER), $this->object->getMessages());
 	}
 
 	/**
@@ -152,6 +154,7 @@ class MessageCatalogueTest extends TestCase
 	 * @covers   Joomla\Language\MessageCatalogue::mergeCatalogue
 	 * @uses     Joomla\Language\MessageCatalogue::addMessage
 	 * @uses     Joomla\Language\MessageCatalogue::addMessages
+	 * @uses     Joomla\Language\MessageCatalogue::getMessages
 	 */
 	public function testTwoCataloguesAreMerged()
 	{
@@ -161,7 +164,7 @@ class MessageCatalogueTest extends TestCase
 
 		$this->object->mergeCatalogue($secondCatalogue);
 
-		$this->assertAttributeSame(['FOO' => 'bar', 'GOO' => 'car'], 'messages', $this->object);
+		$this->assertSame(['FOO' => 'bar', 'GOO' => 'car'], $this->object->getMessages());
 	}
 
 	/**
