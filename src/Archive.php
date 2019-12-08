@@ -190,7 +190,12 @@ class Archive
 			if (!($object instanceof ExtractableInterface))
 			{
 				throw new UnsupportedArchiveException(
-					sprintf('The provided adapter "%s" (class "%s") must implement Joomla\\Archive\\ExtractableInterface', $type, $class)
+					sprintf(
+						'The provided adapter "%s" (class "%s") must implement %s',
+						$type,
+						$class,
+						ExtractableInterface::class
+					)
 				);
 			}
 
