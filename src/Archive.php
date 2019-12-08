@@ -2,12 +2,14 @@
 /**
  * Part of the Joomla Framework Archive Package
  *
- * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Archive;
 
+use Joomla\Archive\Exception\UnknownArchiveException;
+use Joomla\Archive\Exception\UnsupportedArchiveException;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 
@@ -66,13 +68,13 @@ class Archive
 	 * @return  boolean  True for success
 	 *
 	 * @since   1.0
-	 * @throws  \InvalidArgumentException
+	 * @throws  UnknownArchiveException if the archive type is not supported
 	 */
 	public function extract($archivename, $extractdir)
 	{
-		$ext      = pathinfo($archivename, PATHINFO_EXTENSION);
-		$path     = pathinfo($archivename, PATHINFO_DIRNAME);
-		$filename = pathinfo($archivename, PATHINFO_FILENAME);
+		$ext      = pathinfo($archivename, \PATHINFO_EXTENSION);
+		$path     = pathinfo($archivename, \PATHINFO_DIRNAME);
+		$filename = pathinfo($archivename, \PATHINFO_FILENAME);
 
 		switch (strtolower($ext))
 		{
@@ -149,7 +151,7 @@ class Archive
 				break;
 
 			default:
-				throw new \InvalidArgumentException(sprintf('Unsupported archive type: %s', $ext));
+				throw new UnknownArchiveException(sprintf('Unsupported archive type: %s', $ext));
 		}
 
 		return $result;
@@ -165,7 +167,7 @@ class Archive
 	 * @return  $this
 	 *
 	 * @since   1.0
-	 * @throws  \InvalidArgumentException
+	 * @throws  UnsupportedArchiveException if the adapter type is not supported
 	 */
 	public function setAdapter($type, $class, $override = true)
 	{
@@ -175,19 +177,19 @@ class Archive
 
 			if (!\is_object($class) && !class_exists($class))
 			{
-				throw new \InvalidArgumentException(sprintf('Archive adapter "%s" (class "%s") not found.', $type, $class));
+				throw new UnsupportedArchiveException(sprintf('Archive adapter "%s" (class "%s") not found.', $type, $class));
 			}
 
 			if (!$class::isSupported())
 			{
-				throw new \InvalidArgumentException(sprintf('Archive adapter "%s" (class "%s") not supported.', $type, $class));
+				throw new UnsupportedArchiveException(sprintf('Archive adapter "%s" (class "%s") not supported.', $type, $class));
 			}
 
 			$object = new $class($this->options);
 
 			if (!($object instanceof ExtractableInterface))
 			{
-				throw new \InvalidArgumentException(
+				throw new UnsupportedArchiveException(
 					sprintf('The provided adapter "%s" (class "%s") must implement Joomla\\Archive\\ExtractableInterface', $type, $class)
 				);
 			}
