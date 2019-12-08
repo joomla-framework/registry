@@ -386,7 +386,7 @@ class DataObjectTest extends TestCase
 	 * Test that Joomla\Data\DataObject::setProperty() will not set a property which starts with a null byte.
 	 *
 	 * @covers  Joomla\Data\DataObject::setProperty
-	 * @link    https://secure.php.net/manual/en/language.types.array.php#language.types.array.casting
+	 * @link    https://www.php.net/manual/en/language.types.array.php#language.types.array.casting
 	 */
 	public function testSetPropertySkipsPropertyWithNullBytes()
 	{
