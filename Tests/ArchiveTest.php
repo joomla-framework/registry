@@ -7,6 +7,7 @@
 namespace Joomla\Archive\Tests;
 
 use Joomla\Archive\Archive;
+use Joomla\Archive\Exception\UnknownArchiveException;
 use Joomla\Archive\Exception\UnsupportedArchiveException;
 use Joomla\Archive\Zip as ArchiveZip;
 
@@ -118,7 +119,7 @@ class ArchiveTest extends ArchiveTestCase
 	 */
 	public function testExtractUnknown()
 	{
-		$this->expectException(UnsupportedArchiveException::class);
+		$this->expectException(UnknownArchiveException::class);
 
 		$this->fixture->extract(
 			$this->inputPath . '/logo.dat',
