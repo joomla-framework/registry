@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Utilities Package
  *
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -97,7 +97,7 @@ final class IpHelper
 	 */
 	public static function isIPv6($ip)
 	{
-		return strstr($ip, ':');
+		return strpos($ip, ':') !== false;
 	}
 
 	/**
@@ -387,12 +387,12 @@ final class IpHelper
 	{
 		$ip = static::getIp();
 
-		if ($_SERVER['REMOTE_ADDR'] === $ip)
+		if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] === $ip)
 		{
 			return;
 		}
 
-		if (array_key_exists('REMOTE_ADDR', $_SERVER))
+		if (isset($_SERVER['REMOTE_ADDR']))
 		{
 			$_SERVER['JOOMLA_REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
 		}
@@ -473,19 +473,22 @@ final class IpHelper
 		if (isset($_SERVER))
 		{
 			// Do we have an x-forwarded-for HTTP header (e.g. NginX)?
-			if (self::$allowIpOverrides && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER))
+			if (self::$allowIpOverrides && isset($_SERVER['HTTP_X_FORWARDED_FOR']))
 			{
 				return $_SERVER['HTTP_X_FORWARDED_FOR'];
 			}
 
 			// Do we have a client-ip header (e.g. non-transparent proxy)?
-			if (self::$allowIpOverrides && array_key_exists('HTTP_CLIENT_IP', $_SERVER))
+			if (self::$allowIpOverrides && isset($_SERVER['HTTP_CLIENT_IP']))
 			{
 				return $_SERVER['HTTP_CLIENT_IP'];
 			}
 
 			// Normal, non-proxied server or server behind a transparent proxy
-			return $_SERVER['REMOTE_ADDR'];
+			if (isset($_SERVER['REMOTE_ADDR']))
+			{
+				return $_SERVER['REMOTE_ADDR'];
+			}
 		}
 
 		/*
