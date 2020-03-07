@@ -492,9 +492,9 @@ class DataSetTest extends TestCase
 	/**
 	 * Test that Data\DataSet::_initialise method indirectly.
 	 *
-	 * @covers  Joomla\Data\DataSet::_initialise
+	 * @covers  Joomla\Data\DataSet::initialise
 	 */
-	public function test_initialise()
+	public function testInitialise()
 	{
 		$this->assertInstanceOf(JDataBuran::class, $this->instance[0]);
 		$this->assertInstanceOf(JDataVostok::class, $this->instance[1]);
