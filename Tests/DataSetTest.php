@@ -8,11 +8,10 @@ namespace Joomla\Data\Tests;
 
 use Joomla\Data\DataObject;
 use Joomla\Data\DataSet;
+use Joomla\Data\Tests\Stubs\Buran;
+use Joomla\Data\Tests\Stubs\Vostok;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
-
-require_once __DIR__ . '/Stubs/buran.php';
-require_once __DIR__ . '/Stubs/vostok.php';
 
 /**
  * Tests for the Joomla\Data\DataSet class.
@@ -35,8 +34,8 @@ class DataSetTest extends TestCase
 
 		$this->instance = new DataSet(
 			[
-				new JDataBuran,
-				new JDataVostok(['mission' => 'Vostok 1', 'pilot' => 'Yuri Gagarin']),
+				new Buran,
+				new Vostok(['mission' => 'Vostok 1', 'pilot' => 'Yuri Gagarin']),
 			]
 		);
 	}
@@ -399,8 +398,8 @@ class DataSetTest extends TestCase
 	 */
 	public function testOffsetGet()
 	{
-		$this->assertInstanceOf(JDataBuran::class, $this->instance->offsetGet(0));
-		$this->assertInstanceOf(JDataVostok::class, $this->instance->offsetGet(1));
+		$this->assertInstanceOf(Buran::class, $this->instance->offsetGet(0));
+		$this->assertInstanceOf(Vostok::class, $this->instance->offsetGet(1));
 		$this->assertNull($this->instance->offsetGet('foo'));
 	}
 
@@ -496,8 +495,8 @@ class DataSetTest extends TestCase
 	 */
 	public function testInitialise()
 	{
-		$this->assertInstanceOf(JDataBuran::class, $this->instance[0]);
-		$this->assertInstanceOf(JDataVostok::class, $this->instance[1]);
+		$this->assertInstanceOf(Buran::class, $this->instance[0]);
+		$this->assertInstanceOf(Vostok::class, $this->instance[1]);
 	}
 
 	/*

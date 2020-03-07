@@ -4,15 +4,27 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Joomla\Data\Tests;
+namespace Joomla\Data\Tests\Stubs;
 
 use Joomla\Data\DataObject;
 
 /**
- * Joomla Framework Capitaliser DataObject Class
+ * Derived Data\DataObject class for testing.
  */
-class JDataCapitaliser extends DataObject
+class Vostok extends DataObject
 {
+	/**
+	 * An array method.
+	 *
+	 * @param   string  $status  A method argument.
+	 *
+	 * @return  string  The return value for the method.
+	 */
+	public function launch($status)
+	{
+		return $status;
+	}
+
 	/**
 	 * Set an object property.
 	 *
@@ -23,6 +35,13 @@ class JDataCapitaliser extends DataObject
 	 */
 	protected function setProperty($property, $value)
 	{
-		return parent::setProperty($property, strtoupper($value));
+		switch ($property)
+		{
+			case 'successful':
+				$value = strtoupper($value);
+				break;
+		}
+
+		return parent::setProperty($property, $value);
 	}
 }

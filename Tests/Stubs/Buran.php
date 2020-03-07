@@ -4,14 +4,14 @@
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
-namespace Joomla\Data\Tests;
+namespace Joomla\Data\Tests\Stubs;
 
 use Joomla\Data\DataObject;
 
 /**
  * Derived Data\DataObject class for testing.
  */
-class JDataBuran extends DataObject
+class Buran extends DataObject
 {
 	public $rocket = false;
 

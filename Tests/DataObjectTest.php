@@ -7,12 +7,11 @@
 namespace Joomla\Data\Tests;
 
 use Joomla\Data\DataObject;
+use Joomla\Data\Tests\Stubs\Buran;
+use Joomla\Data\Tests\Stubs\Capitaliser;
 use Joomla\Registry\Registry;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
-
-require_once __DIR__ . '/Stubs/buran.php';
-require_once __DIR__ . '/Stubs/capitaliser.php';
 
 /**
  * Tests for the Joomla\Data\Object class.
@@ -85,7 +84,7 @@ class DataObjectTest extends TestCase
 	 */
 	public function test__set_setter()
 	{
-		$instance = new JDataCapitaliser;
+		$instance = new Capitaliser;
 
 		// Set the property and assert that it is the expected value.
 		$instance->test_value = 'one';
@@ -363,7 +362,7 @@ class DataObjectTest extends TestCase
 		$this->instance->set_test = 'set_test_value';
 		$this->assertEquals('set_test_value', $this->instance->set_test);
 
-		$object = new JDataCapitaliser;
+		$object = new Capitaliser;
 		$object->test_value = 'upperCase';
 
 		$this->assertEquals('UPPERCASE', $object->test_value);
