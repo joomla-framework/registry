@@ -9,12 +9,15 @@
         "php": "^7.2.5"
     },
     "require-dev": {
-        "defuse/php-encryption": "~2.0",
-        "joomla/coding-standards": "~2.0@alpha",
-        "paragonie/sodium_compat": "~1.0",
-        "phpunit/phpunit": "~8.2",
-        "symfony/polyfill-util": "~1.0",
-        "symfony/phpunit-bridge": "~4.3"
+        "defuse/php-encryption": "^2.0",
+        "joomla/coding-standards": "^2.0@alpha",
+        "paragonie/sodium_compat": "^1.0",
+        "phpunit/phpunit": "^8.5|^9.0",
+        "symfony/polyfill-util": "^1.0",
+        "symfony/phpunit-bridge": "^4.4|^5.0"
+    },
+    "conflict": {
+        "defuse/php-encryption": "<2.0"
     },
     "suggest": {
         "ext-openssl": "To use the OpenSSL cipher",
