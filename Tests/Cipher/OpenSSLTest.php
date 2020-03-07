@@ -51,6 +51,9 @@ class OpenSSLTest extends TestCase
 	 *
 	 * @param   string  $data  The decrypted data to validate
 	 *
+	 * @covers   Joomla\Crypt\Cipher\OpenSSL
+	 * @uses     Joomla\Crypt\Key
+	 *
 	 * @dataProvider  dataStrings
 	 */
 	public function testDataEncryptionAndDecryption($data)
@@ -71,6 +74,9 @@ class OpenSSLTest extends TestCase
 
 	/**
 	 * @testdox  Validates keys are correctly generated
+	 *
+	 * @covers   Joomla\Crypt\Cipher\OpenSSL
+	 * @uses     Joomla\Crypt\Key
 	 */
 	public function testGenerateKey()
 	{

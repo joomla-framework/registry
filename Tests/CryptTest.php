@@ -56,6 +56,8 @@ class CryptTest extends TestCase
 
 	/**
 	 * @testdox  Validates data is encrypted and decrypted correctly
+	 *
+	 * @covers   Joomla\Crypt\Crypt
 	 */
 	public function testDataEncryptionAndDecryption()
 	{
@@ -78,6 +80,9 @@ class CryptTest extends TestCase
 
 	/**
 	 * @testdox  Validates keys are correctly generated
+	 *
+	 * @covers   Joomla\Crypt\Crypt
+	 * @uses     Joomla\Crypt\Key
 	 */
 	public function testGenerateKey()
 	{
@@ -90,6 +95,9 @@ class CryptTest extends TestCase
 
 	/**
 	 * @testdox  Validates a new key can be set
+	 *
+	 * @covers   Joomla\Crypt\Crypt
+	 * @uses     Joomla\Crypt\Key
 	 */
 	public function testSetKey()
 	{
@@ -122,7 +130,8 @@ class CryptTest extends TestCase
 	 *
 	 * @param    integer  $length  The length of the random string to generate
 	 *
-	 * @covers        Joomla\Crypt\Crypt::genRandomBytes
+	 * @covers   Joomla\Crypt\Crypt
+	 *
 	 * @dataProvider  dataRandomByteLength
 	 */
 	public function testGenRandomBytes($length)

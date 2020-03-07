@@ -62,7 +62,7 @@ class KeyTest extends TestCase
 	/**
 	 * @testdox  Validates the private key is returned
 	 *
-	 * @covers   \Joomla\Crypt\Key::getPrivate()
+	 * @covers   Joomla\Crypt\Key
 	 */
 	public function testGetPrivate()
 	{
@@ -72,7 +72,7 @@ class KeyTest extends TestCase
 	/**
 	 * @testdox  Validates the public key is returned
 	 *
-	 * @covers   \Joomla\Crypt\Key::getPublic()
+	 * @covers   Joomla\Crypt\Key
 	 */
 	public function testGetPublic()
 	{
@@ -82,7 +82,7 @@ class KeyTest extends TestCase
 	/**
 	 * @testdox  Validates the key type is returned
 	 *
-	 * @covers   \Joomla\Crypt\Key::getType()
+	 * @covers   Joomla\Crypt\Key
 	 */
 	public function testGetKeyType()
 	{
