@@ -68,7 +68,7 @@ class ArchiveTest extends ArchiveTestCase
 	/**
 	 * @testdox  The Archive object is instantiated correctly
 	 *
-	 * @covers   Joomla\Archive\Archive::__construct
+	 * @covers   Joomla\Archive\Archive
 	 */
 	public function test__construct()
 	{
@@ -86,7 +86,11 @@ class ArchiveTest extends ArchiveTestCase
 	 * @param   string   $adapterType        Type of adaptar that will be used
 	 * @param   string   $extractedFilename  Name of the file to extracted file
 	 *
-	 * @covers        Joomla\Archive\Archive::extract
+	 * @covers        Joomla\Archive\Archive
+	 * @uses          Joomla\Archive\Bzip2
+	 * @uses          Joomla\Archive\Gzip
+	 * @uses          Joomla\Archive\Tar
+	 * @uses          Joomla\Archive\Zip
 	 * @dataProvider  dataExtract
 	 */
 	public function testExtract($filename, $adapterType, $extractedFilename)
@@ -115,7 +119,7 @@ class ArchiveTest extends ArchiveTestCase
 	/**
 	 * @testdox  Extracting an unknown archive type throws an Exception
 	 *
-	 * @covers   Joomla\Archive\Archive::extract
+	 * @covers   Joomla\Archive\Archive
 	 */
 	public function testExtractUnknown()
 	{
@@ -133,7 +137,11 @@ class ArchiveTest extends ArchiveTestCase
 	 * @param   string   $adapterType        Type of adapter to load
 	 * @param   boolean  $expectedException  Flag if an Exception is expected
 	 *
-	 * @covers        Joomla\Archive\Archive::getAdapter
+	 * @covers        Joomla\Archive\Archive
+	 * @uses          Joomla\Archive\Bzip2
+	 * @uses          Joomla\Archive\Gzip
+	 * @uses          Joomla\Archive\Tar
+	 * @uses          Joomla\Archive\Zip
 	 * @dataProvider  dataAdapters
 	 */
 	public function testGetAdapter($adapterType, $expectedException)
@@ -151,7 +159,8 @@ class ArchiveTest extends ArchiveTestCase
 	/**
 	 * @testdox  Adapters can be set to the Archive
 	 *
-	 * @covers   Joomla\Archive\Archive::setAdapter
+	 * @covers   Joomla\Archive\Archive
+	 * @uses     Joomla\Archive\Zip
 	 */
 	public function testSetAdapter()
 	{
@@ -165,7 +174,7 @@ class ArchiveTest extends ArchiveTestCase
 	/**
 	 * @testdox  Setting an unknown adapter throws an Exception
 	 *
-	 * @covers   Joomla\Archive\Archive::setAdapter
+	 * @covers   Joomla\Archive\Archive
 	 */
 	public function testSetAdapterUnknownException()
 	{

@@ -17,7 +17,7 @@ class TarTest extends ArchiveTestCase
 	/**
 	 * @testdox  The tar adapter is instantiated correctly
 	 *
-	 * @covers   Joomla\Archive\Tar::__construct
+	 * @covers   Joomla\Archive\Tar
 	 */
 	public function test__construct()
 	{
@@ -34,8 +34,7 @@ class TarTest extends ArchiveTestCase
 	/**
 	 * @testdox  An archive can be extracted
 	 *
-	 * @covers   Joomla\Archive\Tar::extract
-	 * @covers   Joomla\Archive\Tar::getTarInfo
+	 * @covers   Joomla\Archive\Tar
 	 */
 	public function testExtract()
 	{
@@ -58,7 +57,7 @@ class TarTest extends ArchiveTestCase
 	/**
 	 * @testdox  The adapter detects if the environment is supported
 	 *
-	 * @covers   Joomla\Archive\Tar::isSupported
+	 * @covers   Joomla\Archive\Tar
 	 */
 	public function testIsSupported()
 	{

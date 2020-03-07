@@ -17,7 +17,7 @@ class GzipTest extends ArchiveTestCase
 	/**
 	 * @testdox  The gzip adapter is instantiated correctly
 	 *
-	 * @covers   Joomla\Archive\Gzip::__construct
+	 * @covers   Joomla\Archive\Gzip
 	 */
 	public function test__construct()
 	{
@@ -34,7 +34,7 @@ class GzipTest extends ArchiveTestCase
 	/**
 	 * @testdox  An archive can be extracted
 	 *
-	 * @covers   Joomla\Archive\Gzip::extract
+	 * @covers   Joomla\Archive\Gzip
 	 */
 	public function testExtract()
 	{
@@ -64,8 +64,7 @@ class GzipTest extends ArchiveTestCase
 	/**
 	 * @testdox  An archive can be extracted via streams
 	 *
-	 * @covers   Joomla\Archive\Gzip::extract
-	 * @uses     Joomla\Archive\Gzip::getFilePosition
+	 * @covers   Joomla\Archive\Gzip
 	 */
 	public function testExtractWithStreams()
 	{
@@ -94,7 +93,7 @@ class GzipTest extends ArchiveTestCase
 	/**
 	 * @testdox  The adapter detects if the environment is supported
 	 *
-	 * @covers   Joomla\Archive\Gzip::isSupported
+	 * @covers   Joomla\Archive\Gzip
 	 */
 	public function testIsSupported()
 	{
@@ -107,7 +106,7 @@ class GzipTest extends ArchiveTestCase
 	/**
 	 * @testdox  The file position is detected
 	 *
-	 * @covers   Joomla\Archive\Gzip::getFilePosition
+	 * @covers   Joomla\Archive\Gzip
 	 */
 	public function testGetFilePosition()
 	{

@@ -17,7 +17,7 @@ class ZipTest extends ArchiveTestCase
 	/**
 	 * @testdox  The zip adapter is instantiated correctly
 	 *
-	 * @covers   Joomla\Archive\Zip::__construct
+	 * @covers   Joomla\Archive\Zip
 	 */
 	public function test__construct()
 	{
@@ -34,10 +34,7 @@ class ZipTest extends ArchiveTestCase
 	/**
 	 * @testdox  An archive can be created
 	 *
-	 * @covers   Joomla\Archive\Zip::create
-	 * @covers   Joomla\Archive\Zip::addToZIPFile
-	 * @covers   Joomla\Archive\Zip::unix2DOSTime
-	 * @covers   Joomla\Archive\Zip::createZIPFile
+	 * @covers   Joomla\Archive\Zip
 	 */
 	public function testCreate()
 	{
@@ -66,7 +63,7 @@ class ZipTest extends ArchiveTestCase
 	/**
 	 * @testdox  An archive can be extracted natively
 	 *
-	 * @covers   Joomla\Archive\Zip::extractNative
+	 * @covers   Joomla\Archive\Zip
 	 */
 	public function testExtractNative()
 	{
@@ -95,9 +92,7 @@ class ZipTest extends ArchiveTestCase
 	/**
 	 * @testdox  An archive can be extracted with the custom interface
 	 *
-	 * @covers   Joomla\Archive\Zip::extractCustom
-	 * @covers   Joomla\Archive\Zip::readZipInfo
-	 * @covers   Joomla\Archive\Zip::getFileData
+	 * @covers   Joomla\Archive\Zip
 	 */
 	public function testExtractCustom()
 	{
@@ -126,7 +121,7 @@ class ZipTest extends ArchiveTestCase
 	/**
 	 * @testdox  An archive can be extracted
 	 *
-	 * @covers   Joomla\Archive\Zip::extract
+	 * @covers   Joomla\Archive\Zip
 	 */
 	public function testExtract()
 	{
@@ -156,7 +151,7 @@ class ZipTest extends ArchiveTestCase
 	/**
 	 * @testdox  If the archive cannot be found an Exception is thrown
 	 *
-	 * @covers   Joomla\Archive\Zip::extract
+	 * @covers   Joomla\Archive\Zip
 	 */
 	public function testExtractException()
 	{
@@ -186,7 +181,7 @@ class ZipTest extends ArchiveTestCase
 	/**
 	 * @testdox  The adapter detects if the environment is supported
 	 *
-	 * @covers   Joomla\Archive\Zip::isSupported
+	 * @covers   Joomla\Archive\Zip
 	 * @depends  testHasNativeSupport
 	 */
 	public function testIsSupported()
@@ -200,7 +195,7 @@ class ZipTest extends ArchiveTestCase
 	/**
 	 * @testdox  The adapter correctly checks ZIP data
 	 *
-	 * @covers   Joomla\Archive\Zip::checkZipData
+	 * @covers   Joomla\Archive\Zip
 	 */
 	public function testCheckZipData()
 	{

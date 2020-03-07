@@ -17,7 +17,7 @@ class Bzip2Test extends ArchiveTestCase
 	/**
 	 * @testdox  The bzip2 adapter is instantiated correctly
 	 *
-	 * @covers   Joomla\Archive\Bzip2::__construct
+	 * @covers   Joomla\Archive\Bzip2
 	 */
 	public function test__construct()
 	{
@@ -34,7 +34,7 @@ class Bzip2Test extends ArchiveTestCase
 	/**
 	 * @testdox  An archive can be extracted
 	 *
-	 * @covers   Joomla\Archive\Bzip2::extract
+	 * @covers   Joomla\Archive\Bzip2
 	 */
 	public function testExtract()
 	{
@@ -62,7 +62,7 @@ class Bzip2Test extends ArchiveTestCase
 	/**
 	 * @testdox  An archive can be extracted via streams
 	 *
-	 * @covers   Joomla\Archive\Bzip2::extract
+	 * @covers   Joomla\Archive\Bzip2
 	 */
 	public function testExtractWithStreams()
 	{
@@ -91,7 +91,7 @@ class Bzip2Test extends ArchiveTestCase
 	/**
 	 * @testdox  The adapter detects if the environment is supported
 	 *
-	 * @covers   Joomla\Archive\Bzip2::isSupported
+	 * @covers   Joomla\Archive\Bzip2
 	 */
 	public function testIsSupported()
 	{
