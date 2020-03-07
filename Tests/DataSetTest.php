@@ -41,9 +41,10 @@ class DataSetTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::__construct method.
+	 * @testdox  A DataSet can be created
 	 *
-	 * @covers  Joomla\Data\DataSet::__construct
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function test__construct()
 	{
@@ -52,80 +53,84 @@ class DataSetTest extends TestCase
 		$input = [
 			'key' => new DataObject(['foo' => 'bar']),
 		];
-		$new   = new DataSet($input);
 
-		$this->assertEquals($input, TestHelper::getValue($new, 'objects'), 'Check initialised object list.');
+		$this->assertEquals($input, TestHelper::getValue(new DataSet($input), 'objects'), 'Check initialised object list.');
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::__construct method with an array that does not contain Data objects.
+	 * @testdox  A DataSet only allows DataObjects to be injected
 	 *
-	 * @covers  Joomla\Data\DataSet::__construct
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function test__construct_array()
 	{
 		$this->expectException(\InvalidArgumentException::class);
 
-		new DataSet(array('foo'));
+		new DataSet(['foo']);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::__call method.
+	 * @testdox  Methods on supporting data objects can be called
 	 *
-	 * @covers  Joomla\Data\DataSet::__call
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function test__call()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			[1 => 'go'],
 			$this->instance->launch('go')
 		);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::__get method.
+	 * @testdox  Data can be retrieved from all objects
 	 *
-	 * @covers  Joomla\Data\DataSet::__get
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function test__get()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			[0 => null, 1 => 'Yuri Gagarin'],
 			$this->instance->pilot
 		);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::__isset method.
+	 * @testdox  Data can be checked for presence on an object
 	 *
-	 * @covers  Joomla\Data\DataSet::__isset
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function test__isset()
 	{
-		$this->assertTrue(isset($this->instance->pilot), 'Property exists.');
-
-		$this->assertFalse(isset($this->instance->duration), 'Unknown property');
+		$this->assertTrue(isset($this->instance->pilot));
+		$this->assertFalse(isset($this->instance->duration));
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::__set method.
+	 * @testdox  Data can be set to an object
 	 *
-	 * @covers  Joomla\Data\DataSet::__set
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function test__set()
 	{
 		$this->instance->successful = 'yes';
 
-		$this->assertEquals(
+		$this->assertSame(
 			[0 => 'yes', 1 => 'YES'],
 			$this->instance->successful
 		);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::__unset method.
+	 * @testdox  Data can be unset from an object
 	 *
-	 * @covers  Joomla\Data\DataSet::__unset
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function test__unset()
 	{
@@ -135,10 +140,10 @@ class DataSetTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::getObjectsKeys method.
+	 * @testdox  The object keys from the dataset can be retrieved
 	 *
-	 * @covers  Joomla\Data\DataSet::getObjectsKeys
-	 * @since   1.2.0
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testGetObjectsKeys()
 	{
@@ -162,9 +167,10 @@ class DataSetTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::toArray method.
+	 * @testdox  The dataset can be converted to an array
 	 *
-	 * @covers  Joomla\Data\DataSet::toArray
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testToArray()
 	{
@@ -221,9 +227,10 @@ class DataSetTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::count method.
+	 * @testdox  The dataset can be counted
 	 *
-	 * @covers  Joomla\Data\DataSet::count
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testCount()
 	{
@@ -231,43 +238,47 @@ class DataSetTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::clear method.
+	 * @testdox  The dataset can be cleared
 	 *
-	 * @covers  Joomla\Data\DataSet::clear
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testClear()
 	{
-		$this->assertGreaterThan(0, count($this->instance), 'Check there are objects set.');
+		$this->assertCount(2, $this->instance);
+
 		$this->instance->clear();
-		$this->assertCount(0, $this->instance, 'Check the objects were cleared.');
+
+		$this->assertCount(0, $this->instance);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::current method.
+	 * @testdox  The current object in the iterator can be retrieved
 	 *
-	 * @covers  Joomla\Data\DataSet::current
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testCurrent()
 	{
-		$object = $this->instance[0];
-
-		$this->assertEquals(
-			$object,
+		$this->assertSame(
+			$this->instance[0],
 			$this->instance->current()
 		);
 
+		$object = new DataObject;
 		$new = new DataSet(['foo' => new DataObject]);
 
-		$this->assertEquals(
-			new DataObject,
-			$new->current()
+		$this->assertSame(
+			$object,
+			(new DataSet(['foo' => $object]))->current()
 		);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::dump method.
+	 * @testdox  The dataset can be dumped
 	 *
-	 * @covers  Joomla\Data\DataSet::dump
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testDump()
 	{
@@ -284,54 +295,41 @@ class DataSetTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::jsonSerialize method.
+	 * @testdox  The dataset can be JSON encoded
 	 *
-	 * @covers  Joomla\Data\DataSet::jsonSerialize
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testJsonSerialize()
 	{
-		$objects = [];
-
-		foreach ($this->instance as $object)
-		{
-			$objects[] = $object;
-		}
-
-		$this->assertEquals(
-			$objects,
-			$this->instance->jsonSerialize()
+		$this->assertJson(
+			json_encode($this->instance)
 		);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::key method.
+	 * @testdox  The keys for the dataset can be retrieved
 	 *
-	 * @covers  Joomla\Data\DataSet::key
-	 */
-	public function testKey()
-	{
-		$this->assertEquals(0, $this->instance->key());
-	}
-
-	/**
-	 * Tests the Joomla\Data\DataSet::keys method.
-	 *
-	 * @covers  Joomla\Data\DataSet::keys
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testKeys()
 	{
-		$instance         = new DataSet;
-		$instance['key1'] = new DataObject;
-		$instance['key2'] = new DataObject;
+		$instance = new DataSet(
+			[
+				'key1' => new DataObject,
+				'key2' => new DataObject,
+			]
+		);
 
 		$this->assertEquals(['key1', 'key2'], $instance->keys());
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::walk method.
+	 * @testdox  The dataset can be walked over
 	 *
-	 * @covers  Joomla\Data\DataSet::walk
-	 * @since   1.2.0
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testWalk()
 	{
@@ -340,94 +338,83 @@ class DataSetTest extends TestCase
 		$instance['key2'] = new DataObject(['foo' => 'qux']);
 
 		$instance->walk(
-			function (&$object, $key)
+			static function (DataObject &$object, $key)
 			{
 				$object->old = $object->foo;
 				$object->foo = 'new-value';
 			}
 		);
 
-		$this->assertEquals('bar', $instance->old['key1']);
-		$this->assertEquals('qux', $instance->old['key2']);
-		$this->assertEquals('new-value', $instance->foo['key1']);
-		$this->assertEquals('new-value', $instance->foo['key2']);
+		$this->assertSame('bar', $instance->old['key1']);
+		$this->assertSame('qux', $instance->old['key2']);
+		$this->assertSame('new-value', $instance->foo['key1']);
+		$this->assertSame('new-value', $instance->foo['key2']);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::next method.
+	 * @testdox  The internal pointer correctly iterates
 	 *
-	 * @covers  Joomla\Data\DataSet::next
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testNext()
 	{
-		$this->instance->next();
-		$this->assertEquals(
-			1,
-			TestHelper::getValue($this->instance, 'current')
-		);
+		foreach ($this->instance as $object)
+		{
+			$this->assertNotNull($this->instance->key());
+		}
 
-		$this->instance->next();
-		$this->assertNull(
-			TestHelper::getValue($this->instance, 'current')
-		);
-
-		TestHelper::setValue($this->instance, 'current', false);
-		$this->instance->next();
-		$this->assertEquals(
-			0,
-			TestHelper::getValue($this->instance, 'current')
-		);
+		$this->assertNull($this->instance->key());
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::offsetExists method.
+	 * @testdox  Checking property presence as an array is supported
 	 *
-	 * @covers  Joomla\Data\DataSet::offsetExists
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testOffsetExists()
 	{
-		$this->assertTrue($this->instance->offsetExists(0));
-		$this->assertFalse($this->instance->offsetExists(2));
-		$this->assertFalse($this->instance->offsetExists('foo'));
+		$this->assertTrue(isset($this->instance[0]));
+		$this->assertFalse(isset($this->instance[2]));
+		$this->assertFalse(isset($this->instance['foo']));
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::offsetGet method.
+	 * @testdox  Retrieving data as an array is supported
 	 *
-	 * @covers  Joomla\Data\DataSet::offsetGet
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testOffsetGet()
 	{
-		$this->assertInstanceOf(Buran::class, $this->instance->offsetGet(0));
-		$this->assertInstanceOf(Vostok::class, $this->instance->offsetGet(1));
-		$this->assertNull($this->instance->offsetGet('foo'));
+		$this->assertInstanceOf(Buran::class, $this->instance[0]);
+		$this->assertInstanceOf(Vostok::class, $this->instance[1]);
+		$this->assertNull($this->instance['foo']);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::offsetSet method.
+	 * @testdox  Setting data as an array is supported
 	 *
-	 * @covers  Joomla\Data\DataSet::OffsetSet
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testOffsetSet()
 	{
-		$this->instance->offsetSet(0, new DataObject);
-		$objects = TestHelper::getValue($this->instance, 'objects');
-
-		$this->assertEquals(new DataObject, $objects[0], 'Checks explicit use of offsetSet.');
-
 		$this->instance[] = new DataObject;
-		$this->assertInstanceOf(DataObject::class, $this->instance[1], 'Checks the array push equivalent with [].');
+		$this->assertInstanceOf(DataObject::class, $this->instance[2], 'Checks the array push equivalent with [].');
 
 		$this->instance['foo'] = new DataObject;
 		$this->assertInstanceOf(DataObject::class, $this->instance['foo'], 'Checks implicit usage of offsetSet.');
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::offsetSet method for an expected exception
+	 * @testdox  Setting an invalid data type as an array throws an exception
 	 *
-	 * @covers  Joomla\Data\DataSet::OffsetSet
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
-	public function testOffsetSet_exception1()
+	public function testOffsetSetInvalidData()
 	{
 		$this->expectException(\InvalidArgumentException::class);
 
@@ -436,32 +423,25 @@ class DataSetTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::offsetUnset method.
+	 * @testdox  Unsetting data as an array is supported
 	 *
-	 * @covers  Joomla\Data\DataSet::OffsetUnset
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testOffsetUnset()
 	{
-		TestHelper::setValue($this->instance, 'current', 1);
+		$this->instance['foo'] = new DataObject;
 
-		$this->instance->offsetUnset(1);
-		$objects = TestHelper::getValue($this->instance, 'objects');
+		unset($this->instance['foo']);
 
-		$this->assertFalse(isset($objects[1]));
-
-		$this->instance->offsetUnset(0);
-		$objects = TestHelper::getValue($this->instance, 'objects');
-
-		$this->assertFalse(isset($objects[0]));
-
-		// Nonexistent offset
-		$this->instance->offsetUnset(-1);
+		$this->assertFalse(isset($this->instance['foo']));
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::offsetRewind method.
+	 * @testdox  The internal pointer can be rewound
 	 *
-	 * @covers  Joomla\Data\DataSet::rewind
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testOffsetRewind()
 	{
@@ -475,23 +455,25 @@ class DataSetTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataSet::valid method.
+	 * @testdox  The internal pointer can be validated
 	 *
-	 * @covers  Joomla\Data\DataSet::valid
+	 * @covers   Joomla\Data\DataSet
+	 * @uses     Joomla\Data\DataObject
 	 */
 	public function testValid()
 	{
 		$this->assertTrue($this->instance->valid());
 
-		TestHelper::setValue($this->instance, 'current', null);
+		$this->instance->clear();
 
 		$this->assertFalse($this->instance->valid());
 	}
 
 	/**
-	 * Test that Data\DataSet::_initialise method indirectly.
+	 * @testdox  The internal pointer can be validated
 	 *
-	 * @covers  Joomla\Data\DataSet::initialise
+	 * @covers  Joomla\Data\DataSet
+	 * @uses    Joomla\Data\DataObject
 	 */
 	public function testInitialise()
 	{
@@ -504,11 +486,11 @@ class DataSetTest extends TestCase
 	 */
 
 	/**
-	 * Tests using Data\DataSet in a foreach statement.
+	 * @testdox  The data set can be iterated over
 	 *
-	 * @coversNothing  Integration test.
+	 * @coversNothing
 	 */
-	public function test_foreach()
+	public function testIteration()
 	{
 		// Test multi-item list.
 		$tests = [];

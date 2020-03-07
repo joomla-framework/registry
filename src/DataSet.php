@@ -135,7 +135,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 			$return[] = isset($object->$property);
 		}
 
-		return \in_array(true, $return, true) ? true : false;
+		return \in_array(true, $return, true);
 	}
 
 	/**
@@ -492,14 +492,21 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 			throw new \InvalidArgumentException(
 				sprintf(
 					'The $object argument must be an instance of "%s", a %s was given.',
-					'Joomla\Data\DataObject',
+					DataObject::class,
 					\gettype($object) === 'object' ? \get_class($object) : \gettype($object)
 				)
 			);
 		}
 
 		// Set the offset.
-		$this->objects[$offset] = $object;
+		if ($offset === null)
+		{
+			$this->objects[] = $object;
+		}
+		else
+		{
+			$this->objects[$offset] = $object;
+		}
 	}
 
 	/**
@@ -513,7 +520,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 	 */
 	public function offsetUnset($offset)
 	{
-		if (!$this->offsetExists($offset))
+		if (!isset($this[$offset]))
 		{
 			// Do nothing if the offset does not exist.
 			return;
@@ -597,7 +604,7 @@ class DataSet implements DumpableInterface, \ArrayAccess, \Countable, \Iterator
 		{
 			if ($object !== null)
 			{
-				$this->offsetSet($key, $object);
+				$this[$key] = $object;
 			}
 		}
 

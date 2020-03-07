@@ -36,9 +36,9 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::object constructor.
+	 * @testdox  A DataObject can be created
 	 *
-	 * @covers	Joomla\Data\DataObject::__construct
+	 * @covers   Joomla\Data\DataObject
 	 */
 	public function test__construct()
 	{
@@ -51,9 +51,9 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::__get method.
+	 * @testdox  Data can be retrieved from an object
 	 *
-	 * @covers  Joomla\Data\DataObject::__get
+	 * @covers   Joomla\Data\DataObject
 	 */
 	public function test__get()
 	{
@@ -64,9 +64,9 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::__isset method.
+	 * @testdox  Data can be checked for presence on an object
 	 *
-	 * @covers  Joomla\Data\DataObject::__isset
+	 * @covers   Joomla\Data\DataObject
 	 */
 	public function test__isset()
 	{
@@ -78,11 +78,11 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::__set method where a custom setter is available.
+	 * @testdox  Data can be set to an object with a custom setter
 	 *
-	 * @covers  Joomla\Data\DataObject::__set
+	 * @covers   Joomla\Data\DataObject
 	 */
-	public function test__set_setter()
+	public function testCustomPropertySetter()
 	{
 		$instance = new Capitaliser;
 
@@ -95,9 +95,9 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::__unset method.
+	 * @testdox  Data can be removed from an object
 	 *
-	 * @covers  Joomla\Data\DataObject::__unset
+	 * @covers   Joomla\Data\DataObject
 	 */
 	public function test__unset()
 	{
@@ -111,11 +111,11 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::bind method.
+	 * @testdox  The bind method binds an array with null properties
 	 *
-	 * @covers  Joomla\Data\DataObject::bind
+	 * @covers   Joomla\Data\DataObject
 	 */
-	public function testBind()
+	public function testBindWithNullValues()
 	{
 		$properties = ['null' => null];
 
@@ -128,11 +128,11 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::bind method with array input.
+	 * @testdox  The bind method binds an array
 	 *
-	 * @covers  Joomla\Data\DataObject::bind
+	 * @covers   Joomla\Data\DataObject
 	 */
-	public function testBind_array()
+	public function testBindArray()
 	{
 		$properties = [
 			'property_1' => 'value_1',
@@ -153,11 +153,11 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::bind method with input that is a traverable object.
+	 * @testdox  The bind method binds an ArrayObject instance
 	 *
-	 * @covers  Joomla\Data\DataObject::bind
+	 * @covers   Joomla\Data\DataObject
 	 */
-	public function testBind_arrayObject()
+	public function testBindArrayObject()
 	{
 		$properties = [
 			'property_1' => 'value_1',
@@ -180,11 +180,11 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::bind method with object input.
+	 * @testdox  The bind method binds an object
 	 *
-	 * @covers  Joomla\Data\DataObject::bind
+	 * @covers   Joomla\Data\DataObject
 	 */
-	public function testBind_object()
+	public function testBindObject()
 	{
 		$properties             = new \stdClass;
 		$properties->property_1 = 'value_1';
@@ -204,21 +204,22 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::bind method for an expected exception.
+	 * @testdox  The bind method rejects unsupported data types
 	 *
-	 * @covers  Joomla\Data\DataObject::bind
+	 * @covers   Joomla\Data\DataObject
 	 */
-	public function testBind_exception()
+	public function testBindException()
 	{
 		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('The $properties argument must be an array or object, a string was given.');
 
 		$this->instance->bind('foobar');
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::count method.
+	 * @testdox  The object can be counted
 	 *
-	 * @covers  Joomla\Data\DataObject::count
+	 * @covers   Joomla\Data\DataObject
 	 */
 	public function testCount()
 	{
@@ -236,9 +237,9 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::dump method.
+	 * @testdox  The data object can be dumped
 	 *
-	 * @covers  Joomla\Data\DataObject::dump
+	 * @covers   Joomla\Data\DataObject
 	 */
 	public function testDump()
 	{
@@ -304,9 +305,9 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::getIterator method.
+	 * @testdox  An iterator for the object can be created
 	 *
-	 * @covers  Joomla\Data\DataObject::getIterator
+	 * @covers   Joomla\Data\DataObject
 	 */
 	public function testGetIterator()
 	{
@@ -314,78 +315,51 @@ class DataObjectTest extends TestCase
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::getProperty method.
+	 * @testdox  A property can be read
 	 *
-	 * @covers  Joomla\Data\DataObject::getProperty
+	 * @covers   Joomla\Data\DataObject
 	 */
 	public function testGetProperty()
 	{
 		$this->instance->bind(['get_test' => 'get_test_value']);
-		$this->assertEquals('get_test_value', $this->instance->get_test);
+		$this->assertSame('get_test_value', $this->instance->get_test);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::getProperty method.
+	 * @testdox  The data object can be JSON encoded
 	 *
-	 * @covers  Joomla\Data\DataObject::getProperty
-	 */
-	public function testGetProperty_exception()
-	{
-		$this->expectException(\InvalidArgumentException::class);
-
-		$this->instance->bind(['get_test' => 'get_test_value']);
-
-		// Get the reflection property. This should throw an exception.
-		$property = TestHelper::getValue($this->instance, 'get_test');
-	}
-
-	/**
-	 * Tests the Joomla\Data\DataObject::jsonSerialize method.
-	 *
-	 * @covers  Joomla\Data\DataObject::jsonSerialize
+	 * @covers   Joomla\Data\DataObject
 	 */
 	public function testJsonSerialize()
 	{
-		$this->assertEquals('{}', json_encode($this->instance->jsonSerialize()), 'Empty object.');
+		$this->assertJsonStringEqualsJsonString('{}', json_encode($this->instance->jsonSerialize()));
 
 		$this->instance->bind(['title' => 'Simple Object']);
-		$this->assertEquals('{"title":"Simple Object"}', json_encode($this->instance->jsonSerialize()), 'Simple object.');
+
+		$this->assertJsonStringEqualsJsonString('{"title":"Simple Object"}', json_encode($this->instance->jsonSerialize()));
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::setProperty method.
+	 * @testdox  A property can be set
 	 *
-	 * @covers  Joomla\Data\DataObject::setProperty
+	 * @covers   Joomla\Data\DataObject
 	 */
 	public function testSetProperty()
 	{
 		$this->instance->set_test = 'set_test_value';
-		$this->assertEquals('set_test_value', $this->instance->set_test);
+		$this->assertSame('set_test_value', $this->instance->set_test);
 
 		$object = new Capitaliser;
 		$object->test_value = 'upperCase';
 
-		$this->assertEquals('UPPERCASE', $object->test_value);
+		$this->assertSame('UPPERCASE', $object->test_value);
 	}
 
 	/**
-	 * Tests the Joomla\Data\DataObject::setProperty method.
+	 * @testdox  A property cannot be set which begins with a null byte
 	 *
-	 * @covers  Joomla\Data\DataObject::setProperty
-	 */
-	public function testSetProperty_exception()
-	{
-		$this->expectException(\InvalidArgumentException::class);
-
-		// Get the reflection property. This should throw an exception.
-		$property = TestHelper::getValue($this->instance, 'set_test');
-	}
-
-	/**
-	 * Test that Joomla\Data\DataObject::setProperty() will not set a property which starts with a null byte.
-	 *
-	 * @covers  Joomla\Data\DataObject::setProperty
-	 * @link    https://www.php.net/manual/en/language.types.array.php#language.types.array.casting
+	 * @covers   Joomla\Data\DataObject
+	 * @link     https://www.php.net/manual/en/language.types.array.php#language.types.array.casting
 	 */
 	public function testSetPropertySkipsPropertyWithNullBytes()
 	{
