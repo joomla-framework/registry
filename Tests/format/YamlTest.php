@@ -35,17 +35,6 @@ class YamlTest extends TestCase
 	}
 
 	/**
-	 * @testdox  The formatter is instantiated correctly
-	 *
-	 * @covers   Joomla\Registry\Format\Yaml::__construct
-	 */
-	public function testConstruct()
-	{
-		$this->assertAttributeInstanceOf(Parser::class, 'parser', $this->fixture);
-		$this->assertAttributeInstanceOf(Dumper::class, 'dumper', $this->fixture);
-	}
-
-	/**
 	 * @testdox  A data object is converted to a string
 	 *
 	 * @covers   Joomla\Registry\Format\Yaml::objectToString

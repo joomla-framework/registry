@@ -7,12 +7,15 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^7.2.5",
-        "joomla/utilities": "^1.4.1|~2.0"
+        "joomla/utilities": "^1.4.1|^2.0"
     },
     "require-dev": {
-        "joomla/coding-standards": "~2.0@alpha",
-        "symfony/yaml": "~3.4|~4.0|~5.0",
-        "phpunit/phpunit": "~8.2"
+        "joomla/coding-standards": "^2.0@alpha",
+        "symfony/yaml": "^3.4|^4.4|^5.0",
+        "phpunit/phpunit": "^8.5|^9.0"
+    },
+    "conflict": {
+        "symfony/yaml": "<3.4"
     },
     "suggest": {
         "symfony/yaml": "Install symfony/yaml if you require YAML support."
