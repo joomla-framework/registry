@@ -82,14 +82,6 @@ class Input implements \Countable
 	protected $inputs = [];
 
 	/**
-	 * Is all GLOBAL added
-	 *
-	 * @var    boolean
-	 * @since  1.1.4
-	 */
-	protected static $loaded = false;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param   array  $source   Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
@@ -350,35 +342,5 @@ class Input implements \Countable
 	public function getMethod()
 	{
 		return strtoupper($this->server->getCmd('REQUEST_METHOD'));
-	}
-
-	/**
-	 * Method to load all of the global inputs.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function loadAllInputs()
-	{
-		if (!self::$loaded)
-		{
-			// Load up all the globals.
-			foreach ($GLOBALS as $global => $data)
-			{
-				// Check if the global starts with an underscore and is allowed.
-				if (strpos($global, '_') === 0 && \in_array(substr($global, 1), self::ALLOWED_GLOBALS, true))
-				{
-					// Convert global name to input name.
-					$global = strtolower($global);
-					$global = substr($global, 1);
-
-					// Get the input.
-					$this->$global;
-				}
-			}
-
-			self::$loaded = true;
-		}
 	}
 }
