@@ -34,7 +34,9 @@ class KeychainTest extends KeychainTestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Keychain\Keychain::loadKeychain
+	 * @testdox  A keychain can be loaded from a file
+	 *
+	 * @covers   Joomla\Keychain\Keychain
 	 */
 	public function testAKeychainIsLoadedFromAFile()
 	{
@@ -50,7 +52,9 @@ class KeychainTest extends KeychainTestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Keychain\Keychain::loadKeychain
+	 * @testdox  The keychain fails when trying to load a non-existing file
+	 *
+	 * @covers   Joomla\Keychain\Keychain
 	 */
 	public function testAKeychainCannotBeLoadedFromANonExistingFile()
 	{
@@ -64,7 +68,9 @@ class KeychainTest extends KeychainTestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Keychain\Keychain::saveKeychain
+	 * @testdox  A keychain can be saved to a file
+	 *
+	 * @covers   Joomla\Keychain\Keychain
 	 */
 	public function testAKeychainIsSavedToAFile()
 	{
@@ -79,7 +85,9 @@ class KeychainTest extends KeychainTestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Keychain\Keychain::saveKeychain
+	 * @testdox  A keychain cannot be saved to a file when the file argument is empty
+	 *
+	 * @covers   Joomla\Keychain\Keychain
 	 */
 	public function testAKeychainCannotBeSavedToTheFilesystemIfAnEmptyPathIsGiven()
 	{

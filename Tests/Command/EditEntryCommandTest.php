@@ -28,7 +28,14 @@ class EditEntryCommandTest extends KeychainTestCase
 		parent::setUp();
 	}
 
-	public function testAKeyIsNotEditedInAKeychain()
+	/**
+	 * @testdox  An entry is edited in the keychain
+	 *
+	 * @covers   Joomla\Keychain\Command\EditEntryCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
+	public function testAKeyIsEditedInAKeychain()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) ['foo' => 'bar']));
 
@@ -61,6 +68,13 @@ class EditEntryCommandTest extends KeychainTestCase
 		$this->assertStringContainsString('The entry was edited in the keychain.', $screenOutput);
 	}
 
+	/**
+	 * @testdox  An entry is not edited in the keychain when saving the file fails
+	 *
+	 * @covers   Joomla\Keychain\Command\EditEntryCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testAKeyIsNotEditedInAKeychainWhenSavingTheUpdatedKeychainFails()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) ['foo' => 'bar']));

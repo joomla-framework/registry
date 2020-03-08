@@ -28,6 +28,13 @@ class DeleteEntryCommandTest extends KeychainTestCase
 		parent::setUp();
 	}
 
+	/**
+	 * @testdox  An entry is removed from the keychain
+	 *
+	 * @covers   Joomla\Keychain\Command\DeleteEntryCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testAKeyIsDeletedFromAKeychain()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) ['foo' => 'bar']));
@@ -60,6 +67,13 @@ class DeleteEntryCommandTest extends KeychainTestCase
 		$this->assertStringContainsString('The entry was removed from the keychain.', $screenOutput);
 	}
 
+	/**
+	 * @testdox  There is no error when removing a non-existing key from the keychain
+	 *
+	 * @covers   Joomla\Keychain\Command\DeleteEntryCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testTheCommandDoesNotFailIfTryingToDeleteANonExistingKeyFromTheKeychain()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) []));
@@ -91,6 +105,13 @@ class DeleteEntryCommandTest extends KeychainTestCase
 		$this->assertStringContainsString('There is no entry in the keychain', $screenOutput);
 	}
 
+	/**
+	 * @testdox  An entry is not removed from the keychain when saving the updated file fails
+	 *
+	 * @covers   Joomla\Keychain\Command\DeleteEntryCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testAKeyIsNotDeletedFromAKeychainWhenSavingTheUpdatedKeychainFails()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) ['foo' => 'bar']));

@@ -28,6 +28,13 @@ class ListEntriesCommandTest extends KeychainTestCase
 		parent::setUp();
 	}
 
+	/**
+	 * @testdox  The list of keys in the keychain can be listed
+	 *
+	 * @covers   Joomla\Keychain\Command\ListEntriesCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testTheListOfKeysInTheKeychainArePrinted()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) ['foo' => 'bar']));
@@ -63,6 +70,13 @@ EOF;
 		$this->assertStringContainsString($expected, $screenOutput);
 	}
 
+	/**
+	 * @testdox  The list of keys in the keychain and their values can be listed
+	 *
+	 * @covers   Joomla\Keychain\Command\ListEntriesCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testTheListOfKeysAndValuesInTheKeychainArePrinted()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) ['foo' => 'bar']));

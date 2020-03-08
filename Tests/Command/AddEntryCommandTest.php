@@ -28,6 +28,13 @@ class AddEntryCommandTest extends KeychainTestCase
 		parent::setUp();
 	}
 
+	/**
+	 * @testdox  An entry is added to the keychain
+	 *
+	 * @covers   Joomla\Keychain\Command\AddEntryCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testAKeyIsAddedToAKeychain()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) []));
@@ -61,6 +68,13 @@ class AddEntryCommandTest extends KeychainTestCase
 		$this->assertStringContainsString('The entry was added to the keychain.', $screenOutput);
 	}
 
+	/**
+	 * @testdox  An entry is not added to the keychain when the key already exists
+	 *
+	 * @covers   Joomla\Keychain\Command\AddEntryCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testAKeyIsNotAddedToAKeychainWhenItAlreadyExists()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) ['foo' => 'bar']));
@@ -93,6 +107,13 @@ class AddEntryCommandTest extends KeychainTestCase
 		$this->assertStringContainsString('An entry already exists', $screenOutput);
 	}
 
+	/**
+	 * @testdox  An entry is not added to the keychain when saving the file fails
+	 *
+	 * @covers   Joomla\Keychain\Command\AddEntryCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testAKeyIsNotAddedToAKeychainWhenSavingTheUpdatedKeychainFails()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) []));

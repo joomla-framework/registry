@@ -28,6 +28,13 @@ class ReadEntryCommandTest extends KeychainTestCase
 		parent::setUp();
 	}
 
+	/**
+	 * @testdox  The value for a key in a keychain can be listed
+	 *
+	 * @covers   Joomla\Keychain\Command\ReadEntryCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testTheValueOfAKeyInTheKeychainIsPrinted()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) ['foo' => 'bar']));
@@ -64,6 +71,13 @@ EOF;
 		$this->assertStringContainsString($expected, $screenOutput);
 	}
 
+	/**
+	 * @testdox  A message is shown when attempting to read a key from the keychain that does not exist
+	 *
+	 * @covers   Joomla\Keychain\Command\ReadEntryCommand
+	 * @uses     Joomla\Keychain\Command\AbstractKeychainCommand
+	 * @uses     Joomla\Keychain\Keychain
+	 */
 	public function testTheValueOfAKeyInTheKeychainIsNotPrintedWhenItDoesNotExist()
 	{
 		file_put_contents($this->tmpFile, json_encode((object) []));
