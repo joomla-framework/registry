@@ -19,7 +19,7 @@ class FactoryTest extends TestCase
 	/**
 	 * @testdox  A format object is returned from the local Joomla namespace
 	 *
-	 * @covers   Joomla\Registry\Factory::getFormat
+	 * @covers   Joomla\Registry\Factory
 	 */
 	public function testGetFormatFromLocalNamespace()
 	{
@@ -32,7 +32,7 @@ class FactoryTest extends TestCase
 	/**
 	 * @testdox  A format object is returned from the requested namespace
 	 *
-	 * @covers   Joomla\Registry\Factory::getFormat
+	 * @covers   Joomla\Registry\Factory
 	 */
 	public function testGetFormatFromRequestedNamespace()
 	{
@@ -45,7 +45,7 @@ class FactoryTest extends TestCase
 	/**
 	 * @testdox  A format object is returned from the local namespace when not found in the requested namespace
 	 *
-	 * @covers   Joomla\Registry\Factory::getFormat
+	 * @covers   Joomla\Registry\Factory
 	 */
 	public function testGetFormatFromLocalNamespaceWhenRequestedNamespaceDoesNotExist()
 	{
@@ -58,7 +58,7 @@ class FactoryTest extends TestCase
 	/**
 	 * @testdox  An exception is thrown if the requested format does not exist
 	 *
-	 * @covers   Joomla\Registry\Factory::getFormat
+	 * @covers   Joomla\Registry\Factory
 	 */
 	public function testGetInstanceNonExistent()
 	{

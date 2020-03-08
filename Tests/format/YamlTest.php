@@ -37,7 +37,7 @@ class YamlTest extends TestCase
 	/**
 	 * @testdox  A data object is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::objectToString
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
@@ -73,7 +73,7 @@ array:
 	/**
 	 * @testdox  An array is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::objectToString
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testAnArrayIsConvertedToAString()
 	{
@@ -109,7 +109,7 @@ array:
 	/**
 	 * @testdox  A string is converted to a data object
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::stringToObject
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
@@ -141,8 +141,7 @@ array:
 	/**
 	 * @testdox  Validate data equality in converted objects
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::objectToString
-	 * @covers   Joomla\Registry\Format\Yaml::stringToObject
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{
