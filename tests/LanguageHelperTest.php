@@ -45,8 +45,7 @@ class LanguageHelperTest extends TestCase
 	/**
 	 * @testdox  Verify that LanguageHelper::exists() locates the language directory
 	 *
-	 * @covers   Joomla\Language\LanguageHelper::exists
-	 * @uses     Joomla\Language\LanguageHelper
+	 * @covers   Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyExistsLocatesTheLanguageDirectory()
 	{
@@ -56,8 +55,7 @@ class LanguageHelperTest extends TestCase
 	/**
 	 * @testdox  Verify that LanguageHelper::getMetadata() returns the language metadata
 	 *
-	 * @covers   Joomla\Language\LanguageHelper::getMetadata
-	 * @uses     Joomla\Language\LanguageHelper
+	 * @covers   Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyGetMetadataReturnsTheLanguageMetadata()
 	{
@@ -67,8 +65,7 @@ class LanguageHelperTest extends TestCase
 	/**
 	 * @testdox  Verify that LanguageHelper::getMetadata() returns null if metadata does not exist
 	 *
-	 * @covers   Joomla\Language\LanguageHelper::getMetadata
-	 * @uses     Joomla\Language\LanguageHelper
+	 * @covers   Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyGetMetadataReturnsNullIfMetadataDoesNotExist()
 	{
@@ -78,8 +75,7 @@ class LanguageHelperTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getKnownLanguages() returns an array of known languages
 	 *
-	 * @covers   Joomla\Language\LanguageHelper::getKnownLanguages
-	 * @uses     Joomla\Language\LanguageHelper
+	 * @covers   Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyGetKnownLanguagesReturnsAnArrayOfKnownLanguages()
 	{
@@ -89,7 +85,7 @@ class LanguageHelperTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getLanguagePath() returns the correct language path
 	 *
-	 * @covers   Joomla\Language\LanguageHelper::getLanguagePath
+	 * @covers   Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyGetLanguagePathReturnsTheCorrectLanguagePath()
 	{
@@ -99,9 +95,7 @@ class LanguageHelperTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parseLanguageFiles() returns an array
 	 *
-	 * @covers   Joomla\Language\LanguageHelper::parseLanguageFiles
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @deprecated
+	 * @covers   Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyParseLanguageFilesReturnsAnArray()
 	{
@@ -111,7 +105,7 @@ class LanguageHelperTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parseXMLLanguageFile() returns an array
 	 *
-	 * @covers   Joomla\Language\LanguageHelper::parseXMLLanguageFile
+	 * @covers   Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyParseXMLLanguageFileReturnsAnArray()
 	{
@@ -121,8 +115,7 @@ class LanguageHelperTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parseXMLLanguageFile() returns null if the top XML tag is not metafile
 	 *
-	 * @covers   Joomla\Language\LanguageHelper::parseXMLLanguageFile
-	 * @uses     Joomla\Language\LanguageHelper
+	 * @covers   Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyParseXMLLanguageFileReturnsNullIfTheTopXMLTagIsNotMetafile()
 	{
@@ -132,8 +125,7 @@ class LanguageHelperTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parseXMLLanguageFile() throws an exception if the file is not found
 	 *
-	 * @covers   Joomla\Language\LanguageHelper::parseXMLLanguageFile
-	 * @uses     Joomla\Language\LanguageHelper
+	 * @covers   Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyParseXMLLanguageFileThrowsAnExceptionIfTheFileIsNotFound()
 	{

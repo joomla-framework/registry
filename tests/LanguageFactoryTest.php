@@ -49,7 +49,7 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify the default return of getDefaultLanguage()
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::getDefaultLanguage
+	 * @covers   Joomla\Language\LanguageFactory
 	 */
 	public function testTheDefaultReturnOfGetDefaultLanguage()
 	{
@@ -59,7 +59,7 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify the default return of getLanguageDirectory()
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::getLanguageDirectory
+	 * @covers   Joomla\Language\LanguageFactory
 	 */
 	public function testTheDefaultReturnOfGetLanguageDirectory()
 	{
@@ -69,7 +69,8 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify that getLocalise() returns the default localise class when none exists
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::getLocalise
+	 * @covers   Joomla\Language\LanguageFactory
+	 * @uses     Joomla\Language\LanguageHelper
 	 */
 	public function testVerifyGetLocaliseReturnsDefaultLocaliseWhenNoneExists()
 	{
@@ -79,7 +80,7 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify that getLocalise() returns the correct localise class when it exists
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::getLocalise
+	 * @covers   Joomla\Language\LanguageFactory
 	 */
 	public function testVerifyGetLocaliseReturnedWhenExists()
 	{
@@ -92,7 +93,7 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify that getLocalise() validates the cache when a localise object exists
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::getLocalise
+	 * @covers   Joomla\Language\LanguageFactory
 	 */
 	public function testVerifyGetLocaliseValidatesTheCacheWhenALocaliseObjectExists()
 	{
@@ -108,9 +109,12 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify that getLanguage() returns a Language object
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::getLanguage
+	 * @covers   Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyGetLanguageReturnsALanguageObject()
 	{
@@ -120,9 +124,11 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify that getLanguage() throws an \InvalidArgumentException when no path is given
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::getLanguage
+	 * @covers   Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyGetLanguageThrowsAnExceptionWhenNoPathIsGiven()
 	{
@@ -134,9 +140,12 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify that getText() returns a Text object
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::getText
+	 * @covers   Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\Language
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 * @uses     Joomla\Language\Text
 	 */
 	public function testVerifyThatGetTextReturnsATextObject()
@@ -148,7 +157,7 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify getInstance() returns an instance of the correct object
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::getStemmer
+	 * @covers   Joomla\Language\LanguageFactory
 	 */
 	public function testGetStemmerReturnsAnInstanceOfTheCorrectObject()
 	{
@@ -158,7 +167,7 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify getInstance() returns an instance of the correct object
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::getStemmer
+	 * @covers   Joomla\Language\LanguageFactory
 	 */
 	public function testGetStemmerThrowsAnExceptionIfTheObjectDoesNotExist()
 	{
@@ -170,7 +179,7 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify setDefaultLanguage() returns the current object
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::setDefaultLanguage
+	 * @covers   Joomla\Language\LanguageFactory
 	 */
 	public function testSetDefaultLanguageReturnsTheCurrentObject()
 	{
@@ -180,7 +189,7 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify setLanguageDirectory() returns the current object
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::setLanguageDirectory
+	 * @covers   Joomla\Language\LanguageFactory
 	 */
 	public function testSetLanguageDirectoryReturnsTheCurrentObject()
 	{
@@ -190,7 +199,7 @@ class LanguageFactoryTest extends TestCase
 	/**
 	 * @testdox  Verify setLanguageDirectory() throws an exception when a path does not exist
 	 *
-	 * @covers   Joomla\Language\LanguageFactory::setLanguageDirectory
+	 * @covers   Joomla\Language\LanguageFactory
 	 */
 	public function testSetLanguageDirectoryThrowsAnExceptionWhenAPathDoesNotExist()
 	{

@@ -159,8 +159,8 @@ class PorterenTest extends TestCase
 	 * @param   string  $result  The expected result
 	 * @param   string  $lang    The language of the token.
 	 *
-	 * @covers        Joomla\Language\Stemmer\Porteren::stem
-	 * @covers        Joomla\Language\Stemmer\Porteren::<!public>
+	 * @covers  Joomla\Language\Stemmer\Porteren
+	 *
 	 * @dataProvider  dataStemProvider
 	 */
 	public function testTheCorrectStemIsReturnedFromAGivenString($token, $result, $lang)

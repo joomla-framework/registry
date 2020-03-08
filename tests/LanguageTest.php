@@ -59,9 +59,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language is instantiated correctly
 	 *
-	 * @covers   Joomla\Language\Language::__construct
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatLanguageIsInstantiatedCorrectly()
 	{
@@ -71,9 +74,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::_() proxies to Language::translate()
 	 *
-	 * @covers   Joomla\Language\Language::_
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testUnderscoreMethodProxiesToTranslate()
 	{
@@ -83,9 +89,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::translate() returns an empty string when one is input
 	 *
-	 * @covers   Joomla\Language\Language::translate
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTranslateReturnsEmptyStringWhenGivenAnEmptyString()
 	{
@@ -95,9 +104,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::translate() returns the correct string for a key
 	 *
-	 * @covers   Joomla\Language\Language::translate
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTranslateReturnsTheCorrectStringForAKey()
 	{
@@ -107,9 +119,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::translate() returns the correct string for a key in debug mode
 	 *
-	 * @covers   Joomla\Language\Language::translate
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTranslateReturnsTheCorrectStringForAKeyInDebugMode()
 	{
@@ -120,9 +135,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::translate() identifies a key as unknown in debug mode
 	 *
-	 * @covers   Joomla\Language\Language::translate
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTranslateIdentifiesAKeyAsUnknownInDebugMode()
 	{
@@ -133,9 +151,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::translate() returns a JavaScript safe string
 	 *
-	 * @covers   Joomla\Language\Language::translate
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTranslateReturnsAJavascriptSafeKey()
 	{
@@ -145,9 +166,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::translate() returns a string without backslashes interpreted
 	 *
-	 * @covers   Joomla\Language\Language::translate
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTranslateReturnsAStringWithoutBackslashesInterpreted()
 	{
@@ -157,9 +181,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::transliterate() calls defined transliterator
 	 *
-	 * @covers   Joomla\Language\Language::transliterate
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTransliterateCallsDefinedTransliterator()
 	{
@@ -169,9 +196,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getPluralSuffixes() calls the defined method
 	 *
-	 * @covers   Joomla\Language\Language::getPluralSuffixes
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testGetPluralSuffixesCallsTheDefinedMethod()
 	{
@@ -181,11 +211,13 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::exists() proxies to LanguageHelper::exists()
 	 *
-	 * @covers   Joomla\Language\Language::exists
+	 * @covers   Joomla\Language\Language
 	 * @covers   Joomla\Language\LanguageHelper::exists
-	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @deprecated
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyExistsProxiesToLanguageHelper()
 	{
@@ -195,9 +227,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::load() successfully loads the main language file
 	 *
-	 * @covers   Joomla\Language\Language::load
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyLoadSuccessfullyLoadsTheMainLanguageFile()
 	{
@@ -205,11 +240,29 @@ class LanguageTest extends TestCase
 	}
 
 	/**
+	 * @testdox  Verify that Language::load() successfully loads a language file
+	 *
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
+	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
+	 */
+	public function testVerifyLoadSuccessfullyLoadsALanguageFile()
+	{
+		$this->assertTrue($this->object->load('good'));
+	}
+
+	/**
 	 * @testdox  Verify that Language::load() fails to load an extension language file with errors
 	 *
-	 * @covers   Joomla\Language\Language::load
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyLoadFailsToLoadAnExtensionLanguageFileWithErrors()
 	{
@@ -219,9 +272,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::load() successfully loads a language file
 	 *
-	 * @covers   Joomla\Language\Language::loadLanguage
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyLoadLanguageSuccessfullyLoadsALanguageFile()
 	{
@@ -231,9 +287,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parse() successfully parses a language file
 	 *
-	 * @covers   Joomla\Language\Language::parse
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyParseSuccessfullyParsesALanguageFile()
 	{
@@ -243,9 +302,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parse() successfully parses a language file in debug mode
 	 *
-	 * @covers   Joomla\Language\Language::parse
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyParseSuccessfullyParsesALanguageFileInDebugMode()
 	{
@@ -257,9 +319,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parse() fails to parse a language file with errors
 	 *
-	 * @covers   Joomla\Language\Language::parse
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyParseFailsToParseALanguageFileWithErrors()
 	{
@@ -269,9 +334,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parse() fails to parse a language file with errors in debug mode
 	 *
-	 * @covers   Joomla\Language\Language::parse
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyParseFailsToParseALanguageFileWithErrorsInDebugMode()
 	{
@@ -283,9 +351,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::debugFile() finds no errors in a good file
 	 *
-	 * @covers   Joomla\Language\Language::debugFile
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyDebugFileFindsNoErrorsInAGoodFile()
 	{
@@ -295,9 +366,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::debugFile() finds errors in a bad file
 	 *
-	 * @covers   Joomla\Language\Language::debugFile
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyDebugFileFindsErrorsInABadFile()
 	{
@@ -307,9 +381,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::get() returns the correct metadata
 	 *
-	 * @covers   Joomla\Language\Language::get
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetReturnsTheCorrectMetadata()
 	{
@@ -319,9 +396,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::get() returns the default if metadata does not exist
 	 *
-	 * @covers   Joomla\Language\Language::get
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetReturnsTheDefaultIfMetadataDoesNotExist()
 	{
@@ -331,9 +411,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getBasePath() returns the correct path
 	 *
-	 * @covers   Joomla\Language\Language::getBasePath
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetBasePathReturnsTheCorrectPath()
 	{
@@ -343,9 +426,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getCallerInfo() returns an array
 	 *
-	 * @covers   Joomla\Language\Language::getCallerInfo
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyGetCallerInfoReturnsAnArray()
 	{
@@ -355,9 +441,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getName() returns the correct metadata
 	 *
-	 * @covers   Joomla\Language\Language::getName
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetNameReturnsTheCorrectMetadata()
 	{
@@ -367,9 +456,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getPaths() default returns an array
 	 *
-	 * @covers   Joomla\Language\Language::getPaths
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetPathsDefaultReturnsAnArray()
 	{
@@ -379,9 +471,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getPaths() returns null for an unloaded extension
 	 *
-	 * @covers   Joomla\Language\Language::getPaths
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetPathsReturnsNullForAnUnloadedExtension()
 	{
@@ -391,9 +486,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getPaths() returns the extension path for a loaded extension
 	 *
-	 * @covers   Joomla\Language\Language::getPaths
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetPathsReturnsTheExtensionPathForALoadedExtension()
 	{
@@ -405,9 +503,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getErrorFiles() default returns an array
 	 *
-	 * @covers   Joomla\Language\Language::getErrorFiles
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetErrorFilesDefaultReturnsAnArray()
 	{
@@ -417,9 +518,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getTag() returns the correct metadata
 	 *
-	 * @covers   Joomla\Language\Language::getTag
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetTagReturnsTheCorrectMetadata()
 	{
@@ -429,9 +533,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::isRTL() default returns false
 	 *
-	 * @covers   Joomla\Language\Language::isRTL
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatIsRTLDefaultReturnsFalse()
 	{
@@ -441,9 +548,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::setDebug() returns the previous debug state
 	 *
-	 * @covers   Joomla\Language\Language::setDebug
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatSetDebugReturnsThePreviousDebugState()
 	{
@@ -453,9 +563,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getDebug() default returns false
 	 *
-	 * @covers   Joomla\Language\Language::getDebug
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetDebugDefaultReturnsFalse()
 	{
@@ -465,9 +578,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::setDefault() returns the previous default language
 	 *
-	 * @covers   Joomla\Language\Language::setDefault
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatSetDefaultReturnsThePreviousDefaultLanguage()
 	{
@@ -477,9 +593,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getDefault() default returns 'en-GB'
 	 *
-	 * @covers   Joomla\Language\Language::getDefault
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyTheDefaultReturnForGetDefault()
 	{
@@ -489,9 +608,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getOrphans() default returns an array
 	 *
-	 * @covers   Joomla\Language\Language::getOrphans
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetOrphansDefaultReturnsAnArray()
 	{
@@ -501,9 +623,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getUsed() default returns an array
 	 *
-	 * @covers   Joomla\Language\Language::getUsed
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatGetUsedDefaultReturnsAnArray()
 	{
@@ -513,9 +638,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::hasKey() returns false for a non-existing language key
 	 *
-	 * @covers   Joomla\Language\Language::hasKey
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyThatHasKeyReturnsFalseForANonExistingLanguageKey()
 	{
@@ -525,11 +653,13 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getMetadata() proxies to LanguageHelper::getMetadata()
 	 *
-	 * @covers   Joomla\Language\Language::getMetadata
+	 * @covers   Joomla\Language\Language
 	 * @covers   Joomla\Language\LanguageHelper::getMetadata
-	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @deprecated
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyGetMetadataProxiesToLanguageHelper()
 	{
@@ -539,11 +669,13 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getKnownLanguages() proxies to LanguageHelper::getKnownLanguages()
 	 *
-	 * @covers   Joomla\Language\Language::getKnownLanguages
+	 * @covers   Joomla\Language\Language
 	 * @covers   Joomla\Language\LanguageHelper::getKnownLanguages
-	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @deprecated
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyGetKnownLanguagesProxiesToLanguageHelper()
 	{
@@ -553,11 +685,13 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getLanguagePath() proxies to LanguageHelper::getLanguagePath()
 	 *
-	 * @covers   Joomla\Language\Language::getLanguagePath
+	 * @covers   Joomla\Language\Language
 	 * @covers   Joomla\Language\LanguageHelper::getLanguagePath
-	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @deprecated
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyGetLanguagePathProxiesToLanguageHelper()
 	{
@@ -567,9 +701,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getLanguage() default returns 'en-GB'
 	 *
-	 * @covers   Joomla\Language\Language::getLanguage
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyTheDefaultReturnForGetLanguage()
 	{
@@ -579,9 +716,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getLocale() default returns an array
 	 *
-	 * @covers   Joomla\Language\Language::getLocale
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyTheDefaultReturnForGetLocale()
 	{
@@ -589,11 +729,14 @@ class LanguageTest extends TestCase
 	}
 
 	/**
-	 * @testdox  Verify that Language::getFirstDay() default returns an array
+	 * @testdox  Verify that Language::getFirstDay() default returns an integer for the first day of the week
 	 *
-	 * @covers   Joomla\Language\Language::getFirstDay
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyTheDefaultReturnForGetFirstDay()
 	{
@@ -603,9 +746,12 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::getWeekEnd() default returns an array
 	 *
-	 * @covers   Joomla\Language\Language::getWeekEnd
-	 * @uses     Joomla\Language\Language
+	 * @covers   Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyTheDefaultReturnForGetWeekEnd()
 	{
@@ -615,11 +761,13 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parseLanguageFiles() proxies to LanguageHelper::parseLanguageFiles()
 	 *
-	 * @covers   Joomla\Language\Language::parseLanguageFiles
+	 * @covers   Joomla\Language\Language
 	 * @covers   Joomla\Language\LanguageHelper::parseLanguageFiles
-	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @deprecated
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyParseLanguageFilesProxiesToLanguageHelper()
 	{
@@ -629,11 +777,13 @@ class LanguageTest extends TestCase
 	/**
 	 * @testdox  Verify that Language::parseXMLLanguageFile() proxies to LanguageHelper::parseXMLLanguageFile()
 	 *
-	 * @covers   Joomla\Language\Language::parseXMLLanguageFile
+	 * @covers   Joomla\Language\Language
 	 * @covers   Joomla\Language\LanguageHelper::parseXMLLanguageFile
-	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @deprecated
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testVerifyParseXMLLanguageFileProxiesToLanguageHelper()
 	{

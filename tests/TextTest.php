@@ -76,49 +76,44 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text is instantiated correctly
 	 *
-	 * @covers   Joomla\Language\Text::__construct
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @covers   Joomla\Language\Text
+	 *
+	 * @doesNotPerformAssertions
 	 */
 	public function testVerifyThatTextIsInstantiatedCorrectly()
 	{
-		$this->assertInstanceOf(Text::class, new Text(new Language($this->parserRegistry, self::$testPath)));
+		new Text(new Language($this->parserRegistry, self::$testPath));
 	}
 
 	/**
-	 * @testdox  Verify that Text::getLanguage() returns an instance of Language
+	 * @testdox  Verify that the Language object can be managed
 	 *
-	 * @covers   Joomla\Language\Text::getLanguage
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
-	public function testVerifyThatGetLanguageReturnsALanguageInstance()
+	public function testSetGetLanguage()
 	{
-		$this->assertInstanceOf(Language::class, $this->object->getLanguage());
-	}
+		$language = new Language($this->parserRegistry, self::$testPath, 'de-DE');
 
-	/**
-	 * @testdox  Verify that Text::getLanguage() returns an instance of Language
-	 *
-	 * @covers   Joomla\Language\Text::setLanguage
-	 * @uses     Joomla\Language\Language
-	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
-	 */
-	public function testVerifyThatSetLanguageReturnsSelf()
-	{
-		$this->assertSame($this->object, $this->object->setLanguage(new Language($this->parserRegistry, self::$testPath, 'de-DE')));
+		$this->assertSame($this->object, $this->object->setLanguage($language), 'The setLanguage method has a fluent interface');
+		$this->assertSame($language, $this->object->getLanguage());
 	}
 
 	/**
 	 * @testdox  Verify that Text::translate() returns an empty string when one is input
 	 *
-	 * @covers   Joomla\Language\Text::translate
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTranslateReturnsEmptyStringWhenGivenAnEmptyString()
 	{
@@ -128,10 +123,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::translate() returns the correct string for a key
 	 *
-	 * @covers   Joomla\Language\Text::translate
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTranslateReturnsTheCorrectStringForAKey()
 	{
@@ -141,10 +139,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::translate() returns the correct string for a key with named parameters
 	 *
-	 * @covers   Joomla\Language\Text::translate
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTranslateReturnsTheCorrectStringForAKeyWithNamedParameters()
 	{
@@ -154,10 +155,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::translate() returns a JavaScript safe string
 	 *
-	 * @covers   Joomla\Language\Text::translate
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testTranslateReturnsAJavascriptSafeKey()
 	{
@@ -167,10 +171,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::alt() returns the correct string for a key with no alt
 	 *
-	 * @covers   Joomla\Language\Text::alt
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testAltReturnsTheCorrectStringForAKey()
 	{
@@ -180,10 +187,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::alt() returns the correct string for a key with an alt
 	 *
-	 * @covers   Joomla\Language\Text::alt
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testAltReturnsTheCorrectStringForAKeyWithAlt()
 	{
@@ -193,10 +203,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::alt() returns the correct string for a key with an alt and named parameters
 	 *
-	 * @covers   Joomla\Language\Text::alt
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testAltReturnsTheCorrectStringForAKeyWithAltAndNamedParameters()
 	{
@@ -206,10 +219,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::plural() returns the input key when no plural key is found
 	 *
-	 * @covers   Joomla\Language\Text::plural
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testPluralReturnsInputKeyWhenNoParamsPassed()
 	{
@@ -219,10 +235,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::plural() returns the translated string when the pluralised key is found
 	 *
-	 * @covers   Joomla\Language\Text::plural
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testPluralReturnsTranslatedStringWhenPluralisedKeyFound()
 	{
@@ -232,12 +251,15 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::sprintf() returns the input key when no key is found
 	 *
-	 * @covers   Joomla\Language\Text::sprintf
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
-	public function testSprintfReturnsEmptyStringWhenKeyNotFound()
+	public function testSprintfReturnsInputKeyWhenKeyNotFound()
 	{
 		$this->assertSame('BAR_NONE', $this->object->sprintf('BAR_NONE', 0));
 	}
@@ -245,10 +267,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::sprintf() returns the translated string when the specified key is found
 	 *
-	 * @covers   Joomla\Language\Text::sprintf
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testSprintfReturnsTranslatedStringWhenKeyFound()
 	{
@@ -258,10 +283,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::printf() returns the input key when no key is found
 	 *
-	 * @covers   Joomla\Language\Text::printf
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testPrintfReturnsEmptyStringWhenKeyNotFound()
 	{
@@ -275,10 +303,13 @@ class TextTest extends TestCase
 	/**
 	 * @testdox  Verify that Text::printf() returns the translated string when the specified key is found
 	 *
-	 * @covers   Joomla\Language\Text::printf
+	 * @covers   Joomla\Language\Text
 	 * @uses     Joomla\Language\Language
+	 * @uses     Joomla\Language\LanguageFactory
 	 * @uses     Joomla\Language\LanguageHelper
-	 * @uses     Joomla\Language\Text
+	 * @uses     Joomla\Language\MessageCatalogue
+	 * @uses     Joomla\Language\ParserRegistry
+	 * @uses     Joomla\Language\Parser\IniParser
 	 */
 	public function testPrintfReturnsTranslatedStringWhenKeyFound()
 	{

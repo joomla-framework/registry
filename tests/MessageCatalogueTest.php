@@ -37,7 +37,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify the catalogue's language is returned
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::getLanguage
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testTheCataloguesLanguageIsReturned()
 	{
@@ -47,9 +47,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that a single message is added to the catalogue
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::addMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessages
-	 * @uses     Joomla\Language\MessageCatalogue::getMessages
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testASingleMessageIsAddedToTheCatalogue()
 	{
@@ -61,8 +59,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that multiple messages are added to the catalogue
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::addMessages
-	 * @uses     Joomla\Language\MessageCatalogue::getMessages
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testMultipleMessagesAreAddedToTheCatalogue()
 	{
@@ -79,9 +76,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that the catalogue accurately reports key presence on this catalogue
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::definesMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessages
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testTheCatalogueAccuratelyReportsKeyPresenceOnThisCatalogue()
 	{
@@ -98,9 +93,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that a message is retrieved from the catalogue when the key is registered
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::getMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessages
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testAMessageIsRetrievedFromTheCatalogueWhenTheKeyIsRegistered()
 	{
@@ -112,9 +105,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that the key is returned when it does not exist in the catalogue
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::getMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessages
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testTheKeyIsReturnedWhenItDoesNotExistInTheCatalogue()
 	{
@@ -124,10 +115,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that a message is retrieved from the fallback catalogue when the key is registered
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::getMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessages
-	 * @uses     Joomla\Language\MessageCatalogue::setFallbackCatalogue
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testAMessageIsRetrievedFromTheFallbackCatalogueWhenTheKeyIsRegistered()
 	{
@@ -141,7 +129,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that the catalogue's messages are returned
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::getMessages
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testTheCataloguesMessagesAreReturned()
 	{
@@ -151,10 +139,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that two catalogues are merged
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::mergeCatalogue
-	 * @uses     Joomla\Language\MessageCatalogue::addMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessages
-	 * @uses     Joomla\Language\MessageCatalogue::getMessages
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testTwoCataloguesAreMerged()
 	{
@@ -170,9 +155,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that two catalogues are not merged when the language codes differ
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::mergeCatalogue
-	 * @uses     Joomla\Language\MessageCatalogue::addMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessages
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testTwoCataloguesAreNotMergedWhenTheLanguageCodesDiffer()
 	{
@@ -189,9 +172,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that the catalogue accurately reports key presence
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::hasMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessages
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testTheCatalogueAccuratelyReportsKeyPresence()
 	{
@@ -204,9 +185,7 @@ class MessageCatalogueTest extends TestCase
 	/**
 	 * @testdox  Verify that the catalogue accurately reports key presence from a fallback catalogue
 	 *
-	 * @covers   Joomla\Language\MessageCatalogue::hasMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessage
-	 * @uses     Joomla\Language\MessageCatalogue::addMessages
+	 * @covers   Joomla\Language\MessageCatalogue
 	 */
 	public function testTheCatalogueAccuratelyReportsKeyPresenceFromAFallbackCatalogue()
 	{

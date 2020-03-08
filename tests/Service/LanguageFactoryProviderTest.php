@@ -53,7 +53,7 @@ class LanguageFactoryProviderTest extends TestCase
 	/**
 	 * @testdox  Verify that the LanguageFactoryProvider returns a LanguageFactory object
 	 *
-	 * @covers   Joomla\Language\Service\LanguageFactoryProvider::register
+	 * @covers   Joomla\Language\Service\LanguageFactoryProvider
 	 * @uses     Joomla\Language\LanguageFactory
 	 */
 	public function testVerifyTheLanguageObjectIsRegisteredToTheContainer()

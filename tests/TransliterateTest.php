@@ -64,7 +64,8 @@ class TransliterateTest extends TestCase
 	 * @param   string   $result  Expected test result
 	 * @param   integer  $case    Optionally specify upper or lower case. Default to 0 (both).
 	 *
-	 * @covers        Joomla\Language\Transliterate::utf8_latin_to_ascii
+	 * @covers  Joomla\Language\Transliterate
+	 *
 	 * @dataProvider  dataProvider
 	 */
 	public function testVerifyAUTF8StringIsTransliteratedCorrectly($word, $result, $case)
