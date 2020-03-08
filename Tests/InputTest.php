@@ -8,7 +8,7 @@ namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Input;
-use PHPUnit\Framework\Error\Error;
+use Joomla\Test\TestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -65,8 +65,8 @@ class InputTest extends TestCase
 	{
 		$instance = new Input;
 
-		$this->assertAttributeSame($_REQUEST, 'data', $instance);
-		$this->assertAttributeInstanceOf(InputFilter::class, 'filter', $instance);
+		$this->assertSame($_REQUEST, TestHelper::getValue($instance, 'data'), 'The Input input defaults to the $_REQUEST superglobal');
+		$this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
 	}
 
 	/**
@@ -78,8 +78,8 @@ class InputTest extends TestCase
 	{
 		$instance = $this->getInputObject($_GET);
 
-		$this->assertAttributeSame($_GET, 'data', $instance);
-		$this->assertAttributeSame($this->filterMock, 'filter', $instance);
+		$this->assertSame($_GET, TestHelper::getValue($instance, 'data'));
+		$this->assertSame($this->filterMock, TestHelper::getValue($instance, 'filter'));
 	}
 
 	/**
@@ -106,7 +106,7 @@ class InputTest extends TestCase
 	 */
 	public function test__callThrowsAnErrorIfAnUndefinedMethodIsCalled()
 	{
-		$this->expectException(Error::class);
+		$this->expectError();
 
 		$instance = $this->getInputObject()->setRaw();
 	}
@@ -120,8 +120,8 @@ class InputTest extends TestCase
 	{
 		$instance = $this->getInputObject();
 
-		$this->assertAttributeEquals($_GET, 'data', $instance->get);
-		$this->assertAttributeContains($instance->get, 'inputs', $instance, 'An object retrieved via __get() should be cached internally');
+		$this->assertSame($_GET, TestHelper::getValue($instance->get, 'data'));
+		$this->assertArrayHasKey('get', TestHelper::getValue($instance, 'inputs'), 'An object retrieved via __get() should be cached internally');
 	}
 
 	/**
@@ -131,7 +131,7 @@ class InputTest extends TestCase
 	 */
 	public function test__getThrowsAnErrorIfAnUndefinedPropertyIsCalled()
 	{
-		$this->expectException(Error::class);
+		$this->expectError();
 
 		$instance = $this->getInputObject()->put;
 	}

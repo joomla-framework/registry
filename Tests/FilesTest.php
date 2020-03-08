@@ -8,6 +8,7 @@ namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Files;
+use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,8 +25,8 @@ class FilesTest extends TestCase
 	{
 		$instance = new Files;
 
-		$this->assertAttributeSame($_FILES, 'data', $instance);
-		$this->assertAttributeInstanceOf(InputFilter::class, 'filter', $instance);
+		$this->assertSame($_FILES, TestHelper::getValue($instance, 'data'), 'The Files input defaults to the $_FILES superglobal');
+		$this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
 	}
 
 	/**
@@ -40,8 +41,8 @@ class FilesTest extends TestCase
 
 		$instance = new Files($src, ['filter' => $mockFilter]);
 
-		$this->assertAttributeSame($src, 'data', $instance);
-		$this->assertAttributeSame($mockFilter, 'filter', $instance);
+		$this->assertSame($src, TestHelper::getValue($instance, 'data'));
+		$this->assertSame($mockFilter, TestHelper::getValue($instance, 'filter'));
 	}
 
 	/**

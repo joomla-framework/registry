@@ -8,6 +8,7 @@ namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Json;
+use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,8 +25,8 @@ class JsonTest extends TestCase
 	{
 		$instance = new Json;
 
-		$this->assertAttributeEmpty('data', $instance);
-		$this->assertAttributeInstanceOf(InputFilter::class, 'filter', $instance);
+		$this->assertEmpty(TestHelper::getValue($instance, 'data'), 'The JSON input defaults to php://input which should be empty in the test environment');
+		$this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
 	}
 
 	/**
@@ -40,8 +41,8 @@ class JsonTest extends TestCase
 
 		$instance = new Json($src, ['filter' => $mockFilter]);
 
-		$this->assertAttributeSame($src, 'data', $instance);
-		$this->assertAttributeSame($mockFilter, 'filter', $instance);
+		$this->assertSame($src, TestHelper::getValue($instance, 'data'));
+		$this->assertSame($mockFilter, TestHelper::getValue($instance, 'filter'));
 	}
 
 	/**
@@ -57,7 +58,8 @@ class JsonTest extends TestCase
 
 		$instance = new Json;
 
-		$this->assertAttributeSame(['a' => 1, 'b' => 2], 'data', $instance);
+		$this->assertSame(['a' => 1, 'b' => 2], TestHelper::getValue($instance, 'data'));
+		$this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
 	}
 
 	/**

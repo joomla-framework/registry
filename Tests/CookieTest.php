@@ -8,13 +8,41 @@ namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Cookie;
+use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
+
+abstract class CookieDataStore
+{
+	private static $store = [];
+
+	public static function reset(): void
+	{
+		self::$store = [];
+	}
+
+	public static function has(string $key): bool
+	{
+		return isset(self::$store[$key]);
+	}
+
+	public static function set(string $key, $value): void
+	{
+		self::$store[$key] = $value;
+	}
+}
 
 /**
  * Test class for \Joomla\Input\Cookie.
  */
 class CookieTest extends TestCase
 {
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		CookieDataStore::reset();
+	}
+
 	/**
 	 * @testdox  Tests the default constructor behavior
 	 *
@@ -24,8 +52,8 @@ class CookieTest extends TestCase
 	{
 		$instance = new Cookie;
 
-		$this->assertAttributeSame($_COOKIE, 'data', $instance);
-		$this->assertAttributeInstanceOf(InputFilter::class, 'filter', $instance);
+		$this->assertSame($_COOKIE, TestHelper::getValue($instance, 'data'), 'The Cookie input defaults to the $_COOKIE superglobal');
+		$this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
 	}
 
 	/**
@@ -40,8 +68,8 @@ class CookieTest extends TestCase
 
 		$instance = new Cookie($src, ['filter' => $mockFilter]);
 
-		$this->assertAttributeSame($src, 'data', $instance);
-		$this->assertAttributeSame($mockFilter, 'filter', $instance);
+		$this->assertSame($src, TestHelper::getValue($instance, 'data'));
+		$this->assertSame($mockFilter, TestHelper::getValue($instance, 'filter'));
 	}
 
 	/**
@@ -57,7 +85,7 @@ class CookieTest extends TestCase
 		$instance = new Cookie([], ['filter' => $mockFilter]);
 		$instance->set('foo', 'bar', 15);
 
-		$this->assertAttributeContains('bar', 'data', $instance);
+		$this->assertTrue(CookieDataStore::has('foo'));
 	}
 
 	/**
@@ -73,12 +101,14 @@ class CookieTest extends TestCase
 		$instance = new Cookie([], ['filter' => $mockFilter]);
 		$instance->set('foo', 'bar', ['expire' => 15, 'samesite' => 'Strict']);
 
-		$this->assertAttributeContains('bar', 'data', $instance);
+		$this->assertTrue(CookieDataStore::has('foo'));
 	}
 }
 
 // Stub for setcookie
 namespace Joomla\Input;
+
+use Joomla\Input\Tests\CookieDataStore;
 
 if (version_compare(PHP_VERSION, '7.3', '>='))
 {
@@ -95,6 +125,8 @@ if (version_compare(PHP_VERSION, '7.3', '>='))
 	 */
 	function setcookie($name, $value, $options = [])
 	{
+		CookieDataStore::set($name, $value);
+
 		return true;
 	}
 }
@@ -117,6 +149,8 @@ else
 	 */
 	function setcookie($name, $value, $expire = 0, $path = '', $domain = '', $secure = false, $httpOnly = false)
 	{
+		CookieDataStore::set($name, $value);
+
 		return true;
 	}
 }
