@@ -19,7 +19,8 @@ class FilesTest extends TestCase
 	/**
 	 * @testdox  Tests the default constructor behavior
 	 *
-	 * @covers   Joomla\Input\Files::__construct
+	 * @covers   Joomla\Input\Files
+	 * @uses     Joomla\Input\Input
 	 */
 	public function test__constructDefaultBehaviour()
 	{
@@ -32,7 +33,8 @@ class FilesTest extends TestCase
 	/**
 	 * @testdox  Tests the constructor with injected data
 	 *
-	 * @covers   Joomla\Input\Files::__construct
+	 * @covers   Joomla\Input\Files
+	 * @uses     Joomla\Input\Input
 	 */
 	public function test__constructDependencyInjection()
 	{
@@ -48,9 +50,8 @@ class FilesTest extends TestCase
 	/**
 	 * @testdox  Tests the data source is correctly read
 	 *
-	 * @covers   Joomla\Input\Files::get
-	 * @covers   Joomla\Input\Files::decodeData
-	 * @uses     Joomla\Input\Files::__construct
+	 * @covers   Joomla\Input\Files
+	 * @uses     Joomla\Input\Input
 	 */
 	public function testGet()
 	{
@@ -92,9 +93,8 @@ class FilesTest extends TestCase
 	/**
 	 * @testdox  Tests a multi-level data source is correctly read
 	 *
-	 * @covers   Joomla\Input\Files::get
-	 * @covers   Joomla\Input\Files::decodeData
-	 * @uses     Joomla\Input\Files::__construct
+	 * @covers   Joomla\Input\Files
+	 * @uses     Joomla\Input\Input
 	 */
 	public function testGetWithMultiLevelData()
 	{
@@ -137,11 +137,14 @@ class FilesTest extends TestCase
 	/**
 	 * @testdox  Tests the data source cannot be modified
 	 *
-	 * @covers   Joomla\Input\Files::set
-	 * @uses     Joomla\Input\Files::__construct
+	 * @covers   Joomla\Input\Files
+	 * @uses     Joomla\Input\Input
 	 */
 	public function testSet()
 	{
-		$this->assertNull((new Files)->set('foo', 'bar'));
+		$instance = new Files;
+		$instance->set('foo', 'bar');
+
+		$this->assertFalse($instance->exists('foo'));
 	}
 }

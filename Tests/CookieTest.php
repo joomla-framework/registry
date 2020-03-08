@@ -44,9 +44,10 @@ class CookieTest extends TestCase
 	}
 
 	/**
-	 * @testdox  Tests the default constructor behavior
+	 * @testdox  Tests the input creates itself properly
 	 *
-	 * @covers   Joomla\Input\Cookie::__construct
+	 * @covers   Joomla\Input\Cookie
+	 * @uses     Joomla\Input\Input
 	 */
 	public function test__constructDefaultBehaviour()
 	{
@@ -59,7 +60,8 @@ class CookieTest extends TestCase
 	/**
 	 * @testdox  Tests the constructor with injected data
 	 *
-	 * @covers   Joomla\Input\Cookie::__construct
+	 * @covers   Joomla\Input\Cookie
+	 * @uses     Joomla\Input\Input
 	 */
 	public function test__constructDependencyInjection()
 	{
@@ -75,8 +77,8 @@ class CookieTest extends TestCase
 	/**
 	 * @testdox  Tests that data is correctly set with the legacy signature
 	 *
-	 * @covers   Joomla\Input\Cookie::set
-	 * @uses     Joomla\Input\Cookie::__construct
+	 * @covers   Joomla\Input\Cookie
+	 * @uses     Joomla\Input\Input
 	 */
 	public function testSetWithLegacySignature()
 	{
@@ -91,8 +93,8 @@ class CookieTest extends TestCase
 	/**
 	 * @testdox  Tests that data is correctly set with the new signature
 	 *
-	 * @covers   Joomla\Input\Cookie::set
-	 * @uses     Joomla\Input\Cookie::__construct
+	 * @covers   Joomla\Input\Cookie
+	 * @uses     Joomla\Input\Input
 	 */
 	public function testSetWithNewSignature()
 	{

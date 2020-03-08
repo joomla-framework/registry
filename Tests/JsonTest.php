@@ -19,7 +19,8 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  Tests the default constructor behavior
 	 *
-	 * @covers   Joomla\Input\Json::__construct
+	 * @covers   Joomla\Input\Json
+	 * @uses     Joomla\Input\Input
 	 */
 	public function test__constructDefaultBehaviour()
 	{
@@ -32,7 +33,8 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  Tests the constructor with injected data
 	 *
-	 * @covers   Joomla\Input\Json::__construct
+	 * @covers   Joomla\Input\Json
+	 * @uses     Joomla\Input\Input
 	 */
 	public function test__constructDependencyInjection()
 	{
@@ -48,7 +50,8 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  Tests the constructor when reading data from the $GLOBALS
 	 *
-	 * @covers   Joomla\Input\Json::__construct
+	 * @covers   Joomla\Input\Json
+	 * @uses     Joomla\Input\Input
 	 *
 	 * @backupGlobals enabled
 	 */
@@ -65,8 +68,8 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  Tests the constructor when reading data from the $GLOBALS
 	 *
-	 * @covers   Joomla\Input\Json::getRaw
-	 * @uses     Joomla\Input\Json::__construct
+	 * @covers   Joomla\Input\Json
+	 * @uses     Joomla\Input\Input
 	 *
 	 * @backupGlobals enabled
 	 */

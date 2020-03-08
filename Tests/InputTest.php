@@ -59,7 +59,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests the default constructor behavior
 	 *
-	 * @covers   Joomla\Input\Input::__construct
+	 * @covers   Joomla\Input\Input
 	 */
 	public function test__constructDefaultBehaviour()
 	{
@@ -72,7 +72,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests the constructor with injected data
 	 *
-	 * @covers   Joomla\Input\Input::__construct
+	 * @covers   Joomla\Input\Input
 	 */
 	public function test__constructDependencyInjection()
 	{
@@ -85,8 +85,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests convenience methods are proxied
 	 *
-	 * @covers   Joomla\Input\Input::__call
-	 * @uses     Joomla\Input\Input::get
+	 * @covers   Joomla\Input\Input
 	 */
 	public function test__callProxiesToTheGetMethod()
 	{
@@ -102,7 +101,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests an error is thrown if an undefined method is called
 	 *
-	 * @covers   Joomla\Input\Input::__call
+	 * @covers   Joomla\Input\Input
 	 */
 	public function test__callThrowsAnErrorIfAnUndefinedMethodIsCalled()
 	{
@@ -114,7 +113,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox   Tests the magic get method correctly proxies to another global
 	 *
-	 * @covers    Joomla\Input\Input::__get
+	 * @covers   Joomla\Input\Input
 	 */
 	public function test__get()
 	{
@@ -125,9 +124,34 @@ class InputTest extends TestCase
 	}
 
 	/**
+	 * @testdox   Tests the magic get method correctly proxies to another global represented by the Input class and returns the same instance
+	 *
+	 * @covers   Joomla\Input\Input
+	 */
+	public function test__getCachedInstances()
+	{
+		$instance = $this->getInputObject();
+
+		$this->assertSame($instance->get, $instance->get, 'The same Input instance should be returned');
+	}
+
+	/**
+	 * @testdox   Tests the magic get method correctly proxies to another global represented by a Input subclass and returns the same instance
+	 *
+	 * @covers   Joomla\Input\Input
+	 * @uses     Joomla\Input\Files
+	 */
+	public function test__getCachedInstancesSubclasses()
+	{
+		$instance = $this->getInputObject();
+
+		$this->assertSame($instance->files, $instance->files, 'The same Files instance should be returned');
+	}
+
+	/**
 	 * @testdox   Tests an error is thrown if an undefined property is called
 	 *
-	 * @covers    Joomla\Input\Input::__get
+	 * @covers   Joomla\Input\Input
 	 */
 	public function test__getThrowsAnErrorIfAnUndefinedPropertyIsCalled()
 	{
@@ -139,7 +163,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox   Tests the data store is counted
 	 *
-	 * @covers    Joomla\Input\Input::count
+	 * @covers   Joomla\Input\Input
 	 */
 	public function testCount()
 	{
@@ -149,7 +173,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests the data source is correctly read
 	 *
-	 * @covers   Joomla\Input\Input::get
+	 * @covers   Joomla\Input\Input
 	 */
 	public function testGet()
 	{
@@ -165,8 +189,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests a key is not redefined if already present
 	 *
-	 * @covers   Joomla\Input\Input::def
-	 * @uses     Joomla\Input\Input::get
+	 * @covers   Joomla\Input\Input
 	 */
 	public function testDefNotReadWhenValueExists()
 	{
@@ -184,8 +207,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests a key is defined when not present
 	 *
-	 * @covers   Joomla\Input\Input::def
-	 * @uses     Joomla\Input\Input::get
+	 * @covers   Joomla\Input\Input
 	 */
 	public function testDefRead()
 	{
@@ -203,8 +225,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests a key is added or overwritten in the data source
 	 *
-	 * @covers   Joomla\Input\Input::set
-	 * @uses     Joomla\Input\Input::get
+	 * @covers   Joomla\Input\Input
 	 */
 	public function testSet()
 	{
@@ -222,7 +243,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests for a key's existence in the data source
 	 *
-	 * @covers   Joomla\Input\Input::exists
+	 * @covers   Joomla\Input\Input
 	 */
 	public function testExists()
 	{
@@ -234,8 +255,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests that an array of keys are read from the data source
 	 *
-	 * @covers   Joomla\Input\Input::getArray
-	 * @uses     Joomla\Input\Input::get
+	 * @covers   Joomla\Input\Input
 	 */
 	public function testGetArray()
 	{
@@ -263,8 +283,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests that the full data array is read from the data source
 	 *
-	 * @covers   Joomla\Input\Input::getArray
-	 * @uses     Joomla\Input\Input::get
+	 * @covers   Joomla\Input\Input
 	 */
 	public function testGetArrayWithoutSpecifiedVariables()
 	{
@@ -289,7 +308,7 @@ class InputTest extends TestCase
 	/**
 	 * @testdox  Tests that the request method is returned
 	 *
-	 * @covers   Joomla\Input\Input::getMethod
+	 * @covers   Joomla\Input\Input
 	 *
 	 * @backupGlobals enabled
 	 */
@@ -307,9 +326,72 @@ class InputTest extends TestCase
 	}
 
 	/**
+	 * @testdox  Tests that the Input object for the request method is returned on a GET request
+	 *
+	 * @covers   Joomla\Input\Input
+	 *
+	 * @backupGlobals enabled
+	 */
+	public function testGetInputForRequestMethodWithGetRequest()
+	{
+		$this->filterMock->expects($this->any())
+			->method('clean')
+			->willReturnArgument(0);
+
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+
+		$instance = $this->getInputObject();
+
+		$this->assertInstanceOf(Input::class, $instance->getInputForRequestMethod());
+		$this->assertSame($instance->get, $instance->getInputForRequestMethod(), 'A request method that does have its own superglobal returns the Input object for that global');
+	}
+
+	/**
+	 * @testdox  Tests that the Input object for the request method is returned on a POST request
+	 *
+	 * @covers   Joomla\Input\Input
+	 *
+	 * @backupGlobals enabled
+	 */
+	public function testGetInputForRequestMethodWithPostRequest()
+	{
+		$this->filterMock->expects($this->any())
+			->method('clean')
+			->willReturnArgument(0);
+
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+
+		$instance = $this->getInputObject();
+
+		$this->assertInstanceOf(Input::class, $instance->getInputForRequestMethod());
+		$this->assertSame($instance->post, $instance->getInputForRequestMethod(), 'A request method that does have its own superglobal returns the Input object for that global');
+	}
+
+	/**
+	 * @testdox  Tests that the Input object for the request method is returned on a PUT request
+	 *
+	 * @covers   Joomla\Input\Input
+	 *
+	 * @backupGlobals enabled
+	 */
+	public function testGetInputForRequestMethodWithPutRequest()
+	{
+		$this->filterMock->expects($this->any())
+			->method('clean')
+			->willReturnArgument(0);
+
+		$_SERVER['REQUEST_METHOD'] = 'PUT';
+
+		$instance = $this->getInputObject();
+
+		$this->assertInstanceOf(Input::class, $instance->getInputForRequestMethod());
+		$this->assertSame($instance, $instance->getInputForRequestMethod(), 'A request method that does not have its own superglobal returns the current Input object');
+	}
+
+	/**
 	 * @testdox  Tests that the get method disallows access to non-whitelisted globals
 	 *
-	 * @covers   Joomla\Input\Input::get
+	 * @covers   Joomla\Input\Input
 	 */
 	public function testGetDoesNotSupportNonWhitelistedGlobals()
 	{
