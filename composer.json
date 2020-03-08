@@ -7,13 +7,13 @@
     "license": "LGPL-2.1-or-later",
     "require": {
         "php": "^7.2.5",
-        "joomla/crypt": "~2.0",
-        "joomla/registry": "~1.6|~2.0"
+        "joomla/crypt": "^2.0",
+        "joomla/registry": "^1.6|^2.0"
     },
     "require-dev": {
-        "joomla/coding-standards": "~2.0@alpha",
-        "joomla/console": "~2.0",
-        "phpunit/phpunit": "~8.2"
+        "joomla/coding-standards": "^2.0@alpha",
+        "joomla/console": "^2.0",
+        "phpunit/phpunit": "^8.5|^9.0"
     },
     "suggest": {
         "joomla/console": "For managing a keychain through a command line interface"
