@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Keychain Package
  *
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    http://www.gnu.org/licenses/lgpl-2.1.txt GNU Lesser General Public License Version 2.1 or Later
  */
 
@@ -23,7 +23,7 @@ class Keychain extends Registry
 	 * The encryption handler.
 	 *
 	 * @var    Crypt
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-beta
 	 */
 	protected $crypt;
 
@@ -33,7 +33,7 @@ class Keychain extends Registry
 	 * @param   Crypt  $crypt  The encryption handler.
 	 * @param   mixed  $data   The data to bind to the new Keychain.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 */
 	public function __construct(Crypt $crypt, $data = null)
 	{

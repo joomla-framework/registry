@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Keychain Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    http://www.gnu.org/licenses/lgpl-2.1.txt GNU Lesser General Public License Version 2.1 or Later
  */
 
@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Base class for all keychain console commands.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  2.0.0-beta
  */
 abstract class AbstractKeychainCommand extends AbstractCommand
 {
@@ -28,7 +28,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 * The encryption handler.
 	 *
 	 * @var    Crypt
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-beta
 	 */
 	protected $crypt;
 
@@ -36,7 +36,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 * The path to the keychain file.
 	 *
 	 * @var    string
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-beta
 	 */
 	protected $filename;
 
@@ -44,7 +44,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 * The keychain being managed.
 	 *
 	 * @var    Keychain
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-beta
 	 */
 	protected $keychain;
 
@@ -53,7 +53,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @param   Crypt  $crypt  The encryption handler for use within the Keychain.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 */
 	public function __construct(Crypt $crypt)
 	{
@@ -68,7 +68,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 */
 	protected function configure(): void
 	{
@@ -87,7 +87,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 */
 	protected function initialise(InputInterface $input, OutputInterface $output): void
 	{
@@ -101,7 +101,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 * @throws  InvalidArgumentException
 	 */
 	protected function initialiseKeychain(InputInterface $input): void
@@ -128,7 +128,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @return  boolean
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 * @throws  RuntimeException
 	 */
 	protected function saveKeychain(): bool
