@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Crypt Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -18,7 +18,7 @@ use Joomla\Crypt\Key;
 /**
  * Joomla cipher for encryption, decryption and key generation via the openssl extension.
  *
- * @since  __DEPLOY_VERSION__
+ * @since  2.0.0-beta
  */
 class OpenSSL implements CipherInterface
 {
@@ -26,7 +26,7 @@ class OpenSSL implements CipherInterface
 	 * Initialisation vector for key generator method.
 	 *
 	 * @var    string
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-beta
 	 */
 	private $iv;
 
@@ -34,7 +34,7 @@ class OpenSSL implements CipherInterface
 	 * Method to use for encryption.
 	 *
 	 * @var    string
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-beta
 	 */
 	private $method;
 
@@ -44,7 +44,7 @@ class OpenSSL implements CipherInterface
 	 * @param   string  $iv      The initialisation vector to use
 	 * @param   string  $method  The encryption method to use
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 */
 	public function __construct(string $iv, string $method)
 	{
@@ -60,7 +60,7 @@ class OpenSSL implements CipherInterface
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 * @throws  DecryptionException if the data cannot be decrypted
 	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
@@ -90,7 +90,7 @@ class OpenSSL implements CipherInterface
 	 *
 	 * @return  string  The encrypted data string.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 * @throws  EncryptionException if the data cannot be encrypted
 	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
@@ -119,7 +119,7 @@ class OpenSSL implements CipherInterface
 	 *
 	 * @return  Key
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 * @throws  InvalidKeyException if the key cannot be generated
 	 */
 	public function generateKey(array $options = [])
@@ -139,7 +139,7 @@ class OpenSSL implements CipherInterface
 	 *
 	 * @return  boolean
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-beta
 	 */
 	public static function isSupported(): bool
 	{
