@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -15,7 +15,7 @@ use Joomla\Language\LanguageFactory;
 /**
  * LanguageFactory object service provider
  *
- * @since  __DEPLOY_VERSION__
+ * @since  2.0.0-alpha
  */
 class LanguageFactoryProvider implements ServiceProviderInterface
 {
@@ -26,7 +26,7 @@ class LanguageFactoryProvider implements ServiceProviderInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 * @throws  \RuntimeException
 	 */
 	public function register(Container $container)

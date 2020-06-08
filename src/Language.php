@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -107,7 +107,7 @@ class Language
 	 * The localisation object.
 	 *
 	 * @var    LocaliseInterface
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-alpha
 	 */
 	protected $localise;
 
@@ -115,7 +115,7 @@ class Language
 	 * LanguageHelper object
 	 *
 	 * @var    LanguageHelper
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-alpha
 	 */
 	protected $helper;
 
@@ -123,7 +123,7 @@ class Language
 	 * The base path to the language folder
 	 *
 	 * @var    string
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-alpha
 	 */
 	protected $basePath;
 
@@ -131,7 +131,7 @@ class Language
 	 * MessageCatalogue object
 	 *
 	 * @var    MessageCatalogue
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-alpha
 	 */
 	protected $catalogue;
 
@@ -139,7 +139,7 @@ class Language
 	 * Language parser registry
 	 *
 	 * @var    ParserRegistry
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-alpha
 	 */
 	protected $parserRegistry;
 
@@ -236,7 +236,7 @@ class Language
 	 *
 	 * @return  string  The translation of the string
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function translate(string $string, bool $jsSafe = false, bool $interpretBackSlashes = true): string
 	{
@@ -493,7 +493,7 @@ class Language
 	 *
 	 * @return  integer  A count of the number of parsing errors
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function debugFile(string $filename): int
 	{
@@ -554,7 +554,7 @@ class Language
 	 *
 	 * @return  string
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getBasePath(): string
 	{
@@ -864,7 +864,7 @@ class Language
 	 *
 	 * @return  MessageCatalogue
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getCatalogue(): MessageCatalogue
 	{
@@ -878,7 +878,7 @@ class Language
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function setCatalogue(MessageCatalogue $catalogue): void
 	{
@@ -921,7 +921,7 @@ class Language
 	 *
 	 * @return  string  The weekend days of the week separated by a comma according to the language
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getWeekEnd(): string
 	{

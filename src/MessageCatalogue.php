@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -11,7 +11,7 @@ namespace Joomla\Language;
 /**
  * Catalogue of loaded translation strings for a language
  *
- * @since  __DEPLOY_VERSION__
+ * @since  2.0.0-alpha
  */
 class MessageCatalogue
 {
@@ -19,7 +19,7 @@ class MessageCatalogue
 	 * A fallback for this catalogue
 	 *
 	 * @var    MessageCatalogue
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-alpha
 	 */
 	private $fallbackCatalogue;
 
@@ -27,7 +27,7 @@ class MessageCatalogue
 	 * The language of the messages in this catalogue
 	 *
 	 * @var    string
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-alpha
 	 */
 	private $language;
 
@@ -35,7 +35,7 @@ class MessageCatalogue
 	 * The messages stored to this catalogue
 	 *
 	 * @var    array
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-alpha
 	 */
 	private $messages = [];
 
@@ -45,7 +45,7 @@ class MessageCatalogue
 	 * @param   string  $language  The language of the messages in this catalogue
 	 * @param   array   $messages  The messages to seed this catalogue with
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function __construct(string $language, array $messages = [])
 	{
@@ -74,7 +74,7 @@ class MessageCatalogue
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function addMessages(array $messages): void
 	{
@@ -88,7 +88,7 @@ class MessageCatalogue
 	 *
 	 * @return  boolean
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function definesMessage(string $key): bool
 	{
@@ -100,7 +100,7 @@ class MessageCatalogue
 	 *
 	 * @return  MessageCatalogue|null
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getFallbackCatalogue(): ?MessageCatalogue
 	{
@@ -112,7 +112,7 @@ class MessageCatalogue
 	 *
 	 * @return  string
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getLanguage(): string
 	{
@@ -126,7 +126,7 @@ class MessageCatalogue
 	 *
 	 * @return  string  The message if one is set otherwise the key
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getMessage(string $key): string
 	{
@@ -148,7 +148,7 @@ class MessageCatalogue
 	 *
 	 * @return  array
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getMessages(): array
 	{
@@ -162,7 +162,7 @@ class MessageCatalogue
 	 *
 	 * @return  boolean
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function hasMessage(string $key): bool
 	{
@@ -186,7 +186,7 @@ class MessageCatalogue
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 * @throws  \LogicException
 	 */
 	public function mergeCatalogue(MessageCatalogue $messageCatalogue): void
@@ -206,7 +206,7 @@ class MessageCatalogue
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function setFallbackCatalogue(MessageCatalogue $messageCatalogue): void
 	{

@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -27,7 +27,7 @@ class LanguageFactory
 	 * Path to the directory containing the application's language folder
 	 *
 	 * @var    string
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-alpha
 	 */
 	private $languageDirectory = '';
 
@@ -85,7 +85,7 @@ class LanguageFactory
 	 *
 	 * @return  LocaliseInterface
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getLocalise(string $lang, string $basePath = ''): LocaliseInterface
 	{
@@ -169,7 +169,7 @@ class LanguageFactory
 	 *
 	 * @return  Text
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getText(?Language $language = null): Text
 	{
@@ -201,7 +201,7 @@ class LanguageFactory
 	 *
 	 * @return  $this
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function setLanguageDirectory(string $directory): self
 	{

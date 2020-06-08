@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -11,7 +11,7 @@ namespace Joomla\Language;
 /**
  * Helper class for the Language package
  *
- * @since  __DEPLOY_VERSION__
+ * @since  2.0.0-alpha
  */
 class LanguageHelper
 {
@@ -25,7 +25,7 @@ class LanguageHelper
 	 *
 	 * @return  boolean  True if the language exists.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function exists(string $lang, string $basePath): bool
 	{
@@ -40,7 +40,7 @@ class LanguageHelper
 	 *
 	 * @return  array|null  If $lang exists return key/value pair with the language metadata, otherwise return NULL.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getMetadata(string $lang, string $path): ?array
 	{
@@ -69,7 +69,7 @@ class LanguageHelper
 	 *
 	 * @return  array  key/value pair with the language file and real name.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getKnownLanguages(string $basePath): array
 	{
@@ -84,7 +84,7 @@ class LanguageHelper
 	 *
 	 * @return  string  Path to the language folder
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getLanguagePath(string $basePath, string $language = ''): string
 	{
@@ -105,7 +105,7 @@ class LanguageHelper
 	 *
 	 * @return  array  Array holding the found languages as filename => real name pairs.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function parseLanguageFiles(string $dir = ''): array
 	{
@@ -149,7 +149,7 @@ class LanguageHelper
 	 *
 	 * @return  array|null  Array holding the found metadata as a key => value pair.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 * @throws  \RuntimeException
 	 */
 	public function parseXMLLanguageFile(string $path): ?array

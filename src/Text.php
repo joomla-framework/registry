@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -28,7 +28,7 @@ class Text
 	 *
 	 * @param   Language  $language  Language instance to use in translations
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function __construct(Language $language)
 	{
@@ -40,7 +40,7 @@ class Text
 	 *
 	 * @return  Language
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getLanguage(): Language
 	{
@@ -54,7 +54,7 @@ class Text
 	 *
 	 * @return  $this
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function setLanguage(Language $language): self
 	{
@@ -73,7 +73,7 @@ class Text
 	 *
 	 * @return  string  The translated string or the key if $script is true
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function translate(string $string, array $parameters = [], bool $jsSafe = false, bool $interpretBackSlashes = true): string
 	{

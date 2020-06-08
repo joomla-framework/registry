@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -15,7 +15,7 @@ use Joomla\String\StringHelper;
 /**
  * Abstract localisation handler class
  *
- * @since  __DEPLOY_VERSION__
+ * @since  2.0.0-alpha
  */
 abstract class AbstractLocalise implements LocaliseInterface
 {
@@ -28,7 +28,7 @@ abstract class AbstractLocalise implements LocaliseInterface
 	 *
 	 * @return  string|boolean  The transliterated string or boolean false on a failure
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function transliterate($string)
 	{
@@ -44,7 +44,7 @@ abstract class AbstractLocalise implements LocaliseInterface
 	 *
 	 * @return  string[]  The array of suffixes.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function getPluralSuffixes($count)
 	{

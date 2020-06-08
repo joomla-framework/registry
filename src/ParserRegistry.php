@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Language Package
  *
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -11,7 +11,7 @@ namespace Joomla\Language;
 /**
  * Registry of file parsers
  *
- * @since  __DEPLOY_VERSION__
+ * @since  2.0.0-alpha
  */
 class ParserRegistry
 {
@@ -19,7 +19,7 @@ class ParserRegistry
 	 * A map of the registered parsers
 	 *
 	 * @var    ParserInterface[]
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-alpha
 	 */
 	private $parserMap = [];
 
@@ -30,7 +30,7 @@ class ParserRegistry
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function add(ParserInterface $parser): void
 	{
@@ -44,7 +44,7 @@ class ParserRegistry
 	 *
 	 * @return  ParserInterface
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function get(string $type): ParserInterface
 	{
@@ -63,7 +63,7 @@ class ParserRegistry
 	 *
 	 * @return  boolean
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0-alpha
 	 */
 	public function has(string $type): bool
 	{
