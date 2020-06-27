@@ -152,7 +152,7 @@ class LanguageHelper
 	 * @since   2.0.0-alpha
 	 * @throws  \RuntimeException
 	 */
-	public function parseXMLLanguageFile(string $path): ?array
+	public function parseXmlLanguageFile(string $path): ?array
 	{
 		if (!is_readable($path))
 		{
