@@ -63,7 +63,7 @@ class Key
 	 *
 	 * @return  string
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	public function getPrivate(): string
 	{
@@ -75,7 +75,7 @@ class Key
 	 *
 	 * @return  string
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	public function getPublic(): string
 	{
@@ -87,7 +87,7 @@ class Key
 	 *
 	 * @return  string
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	public function getType(): string
 	{

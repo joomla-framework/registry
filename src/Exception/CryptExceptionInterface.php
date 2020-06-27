@@ -11,7 +11,7 @@ namespace Joomla\Crypt\Exception;
 /**
  * Interface defining all crypt package exceptions
  *
- * @since  2.0.0-beta
+ * @since  2.0.0
  */
 interface CryptExceptionInterface extends \Throwable
 {

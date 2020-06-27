@@ -23,7 +23,7 @@ use Joomla\Crypt\Key;
 /**
  * Joomla cipher for encryption, decryption and key generation via the php-encryption library.
  *
- * @since  2.0.0-beta
+ * @since  2.0.0
  */
 class Crypto implements CipherInterface
 {
@@ -35,7 +35,7 @@ class Crypto implements CipherInterface
 	 *
 	 * @return  string  The decrypted data string.
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 * @throws  DecryptionException if the data cannot be decrypted
 	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
@@ -70,7 +70,7 @@ class Crypto implements CipherInterface
 	 *
 	 * @return  string  The encrypted data string.
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 * @throws  EncryptionException if the data cannot be encrypted
 	 * @throws  InvalidKeyTypeException if the key is not valid for the cipher
 	 */
@@ -100,7 +100,7 @@ class Crypto implements CipherInterface
 	 *
 	 * @return  Key
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 * @throws  InvalidKeyException if the key cannot be generated
 	 */
 	public function generateKey(array $options = [])
@@ -124,7 +124,7 @@ class Crypto implements CipherInterface
 	 *
 	 * @return  boolean
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	public static function isSupported(): bool
 	{

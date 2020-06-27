@@ -11,7 +11,7 @@ namespace Joomla\Crypt\Exception;
 /**
  * Exception representing an error generating an encryption key
  *
- * @since  2.0.0-beta
+ * @since  2.0.0
  */
 class InvalidKeyException extends \RuntimeException implements CryptExceptionInterface
 {

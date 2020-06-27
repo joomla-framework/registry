@@ -11,7 +11,7 @@ namespace Joomla\Crypt\Exception;
 /**
  * Exception representing an error decrypting data
  *
- * @since  2.0.0-beta
+ * @since  2.0.0
  */
 class DecryptionException extends \RuntimeException implements CryptExceptionInterface
 {

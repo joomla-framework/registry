@@ -205,7 +205,7 @@ class Sodium implements CipherInterface
 	 *
 	 * @return  boolean
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	public static function isSupported(): bool
 	{
