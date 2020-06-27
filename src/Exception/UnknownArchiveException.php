@@ -11,7 +11,7 @@ namespace Joomla\Archive\Exception;
 /**
  * Exception class defining an unknown archive type
  *
- * @since  2.0.0-beta
+ * @since  2.0.0
  */
 class UnknownArchiveException extends \InvalidArgumentException
 {

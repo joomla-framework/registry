@@ -11,7 +11,7 @@ namespace Joomla\Archive\Exception;
 /**
  * Exception class defining an unsupported archive adapter
  *
- * @since  2.0.0-beta
+ * @since  2.0.0
  */
 class UnsupportedArchiveException extends \InvalidArgumentException
 {
