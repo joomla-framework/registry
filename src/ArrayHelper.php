@@ -725,7 +725,7 @@ final class ArrayHelper
 	 *
 	 * @return  array  Merged array.
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 * @throws  \InvalidArgumentException
 	 */
 	public static function mergeRecursive(...$args): array
