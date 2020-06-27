@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Base class for all keychain console commands.
  *
- * @since  2.0.0-beta
+ * @since  2.0.0
  */
 abstract class AbstractKeychainCommand extends AbstractCommand
 {
@@ -28,7 +28,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 * The encryption handler.
 	 *
 	 * @var    Crypt
-	 * @since  2.0.0-beta
+	 * @since  2.0.0
 	 */
 	protected $crypt;
 
@@ -36,7 +36,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 * The path to the keychain file.
 	 *
 	 * @var    string
-	 * @since  2.0.0-beta
+	 * @since  2.0.0
 	 */
 	protected $filename;
 
@@ -44,7 +44,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 * The keychain being managed.
 	 *
 	 * @var    Keychain
-	 * @since  2.0.0-beta
+	 * @since  2.0.0
 	 */
 	protected $keychain;
 
@@ -53,7 +53,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @param   Crypt  $crypt  The encryption handler for use within the Keychain.
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	public function __construct(Crypt $crypt)
 	{
@@ -68,7 +68,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @return  void
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	protected function configure(): void
 	{
@@ -87,7 +87,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @return  void
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	protected function initialise(InputInterface $input, OutputInterface $output): void
 	{
@@ -101,7 +101,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @return  void
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 * @throws  InvalidArgumentException
 	 */
 	protected function initialiseKeychain(InputInterface $input): void
@@ -128,7 +128,7 @@ abstract class AbstractKeychainCommand extends AbstractCommand
 	 *
 	 * @return  boolean
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 * @throws  RuntimeException
 	 */
 	protected function saveKeychain(): bool

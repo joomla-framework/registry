@@ -23,7 +23,7 @@ class Keychain extends Registry
 	 * The encryption handler.
 	 *
 	 * @var    Crypt
-	 * @since  2.0.0-beta
+	 * @since  2.0.0
 	 */
 	protected $crypt;
 
@@ -33,7 +33,7 @@ class Keychain extends Registry
 	 * @param   Crypt  $crypt  The encryption handler.
 	 * @param   mixed  $data   The data to bind to the new Keychain.
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	public function __construct(Crypt $crypt, $data = null)
 	{

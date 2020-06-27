@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Command class to read a single entry from a keychain
  *
- * @since  2.0.0-beta
+ * @since  2.0.0
  */
 class ReadEntryCommand extends AbstractKeychainCommand
 {
@@ -24,7 +24,7 @@ class ReadEntryCommand extends AbstractKeychainCommand
 	 * The default command name
 	 *
 	 * @var    string|null
-	 * @since  2.0.0-beta
+	 * @since  2.0.0
 	 */
 	protected static $defaultName = 'keychain:read-entry';
 
@@ -36,7 +36,7 @@ class ReadEntryCommand extends AbstractKeychainCommand
 	 *
 	 * @return  integer  The command exit code
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	protected function doExecute(InputInterface $input, OutputInterface $output): int
 	{
@@ -67,7 +67,7 @@ class ReadEntryCommand extends AbstractKeychainCommand
 	 *
 	 * @return  void
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	protected function configure(): void
 	{
