@@ -61,13 +61,13 @@ class Cookie extends Input
 		// BC layer to convert old method parameters.
 		if (is_array($options) === false)
 		{
-			@trigger_error(
-				sprintf(
-					'The %1$s($name, $value, $expire, $path, $domain, $secure, $httpOnly) signature is deprecated and will not be supported'
-						. ' once support for PHP 7.2 and earlier is dropped, use the %1$s($name, $value, $options) signature instead.',
-					__METHOD__
-				),
-				E_USER_DEPRECATED
+			trigger_deprecation(
+				'joomla/input',
+				'1.4.0',
+				'The %s($name, $value, $expire, $path, $domain, $secure, $httpOnly) signature is deprecated and will not be supported once support'
+					. ' for PHP 7.2 and earlier is dropped, use the %s($name, $value, $options) signature instead',
+				__METHOD__,
+				__METHOD__
 			);
 
 			$argList = func_get_args();
