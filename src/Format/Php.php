@@ -84,7 +84,7 @@ class Php implements FormatInterface
 	 *
 	 * @return  mixed  The formatted value
 	 *
-	 * @since   2.0.0-beta
+	 * @since   2.0.0
 	 */
 	protected function formatValue($value)
 	{
