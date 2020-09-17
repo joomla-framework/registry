@@ -1,4 +1,4 @@
-## The Crypt Package [![Build Status](https://travis-ci.org/joomla-framework/crypt.png?branch=master)](https://travis-ci.org/joomla-framework/crypt)
+## The Crypt Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/crypt/status.svg)](https://ci.joomla.org/joomla-framework/crypt)
 
 The Crypt package provides a set of classes that can be used for encryption and decryption of data.
 
