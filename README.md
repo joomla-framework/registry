@@ -1,4 +1,4 @@
-## The Data Package [![Build Status](https://travis-ci.org/joomla-framework/data.png?branch=master)](https://travis-ci.org/joomla-framework/data)
+## The Data Package Copied [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/data/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/data)
 
 ### `Data\DataObject`
 
@@ -188,12 +188,12 @@ if (!empty($hurt))
 
 ## Installation via Composer
 
-Add `"joomla/data": "2.0.*@dev"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/data": "~1.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/data": "2.0.*@dev"
+		"joomla/data": "~1.0"
 	}
 }
 ```
@@ -201,5 +201,5 @@ Add `"joomla/data": "2.0.*@dev"` to the require block in your composer.json and 
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/data "2.0.*@dev"
+composer require joomla/data "~1.0"
 ```
