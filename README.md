@@ -1,4 +1,4 @@
-# The Language Package [![Build Status](https://travis-ci.org/joomla-framework/language.png?branch=master)](https://travis-ci.org/joomla-framework/language) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/joomla-framework/language/badges/quality-score.png?b=2.0-dev)](https://scrutinizer-ci.com/g/joomla-framework/language/?branch=2.0-dev)
+# The Language Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/language/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/language)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/language/v/stable)](https://packagist.org/packages/joomla/language)
 [![Total Downloads](https://poser.pugx.org/joomla/language/downloads)](https://packagist.org/packages/joomla/language)
