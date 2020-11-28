@@ -270,8 +270,8 @@ class Zip implements ExtractableInterface
 	 *
 	 * @return  boolean  True on success
 	 *
-	 * @since   1.0
 	 * @throws  \RuntimeException
+	 * @since   1.0
 	 */
 	protected function extractNative($archive, $destination)
 	{
@@ -298,15 +298,12 @@ class Zip implements ExtractableInterface
 				continue;
 			}
 
-			$stream = $zip->getStream($file);
+			$buffer = $zip->getFromIndex($index);
 
-			if ($stream === false)
+			if ($buffer === false)
 			{
 				throw new \RuntimeException('Unable to read ZIP entry');
 			}
-
-			$buffer = stream_get_contents($stream);
-			fclose($stream);
 
 			if (File::write($destination . '/' . $file, $buffer) === false)
 			{
