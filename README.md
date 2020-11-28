@@ -9,7 +9,7 @@ The Keychain package is an extension of the [Registry](https://github.com/joomla
 
 ## Requirements
 
-* PHP 7.0 or later
+* PHP 7.2 or later
 * Joomla! Framework [Crypt](https://github.com/joomla-framework/crypt) package
 * Joomla! Framework [Registry](https://github.com/joomla-framework/registry) package
 
@@ -19,4 +19,10 @@ To install the package, you can run the following from the command line:
            
 ```sh
 composer require joomla/keychain
+```
+
+If you want to include the test sources, use
+
+```sh
+composer require --prefer-source joomla/keychain
 ```
