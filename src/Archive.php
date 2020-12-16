@@ -173,16 +173,14 @@ class Archive
 	{
 		if ($override || !isset($this->adapters[$type]))
 		{
-			$error = !\is_object($class) && !class_exists($class) ? 'Archive adapter "%s" (class "%s") not found.' : '';
-
 			if (!\is_object($class) && !class_exists($class))
 			{
-				throw new UnsupportedArchiveException(sprintf('Archive adapter "%s" (class "%s") not found.', $type, $class));
+				throw new UnsupportedArchiveException($type, sprintf('Archive adapter "%s" (class "%s") not found.', $type, $class));
 			}
 
 			if (!$class::isSupported())
 			{
-				throw new UnsupportedArchiveException(sprintf('Archive adapter "%s" (class "%s") not supported.', $type, $class));
+				throw new UnsupportedArchiveException($type, sprintf('Archive adapter "%s" (class "%s") not supported.', $type, $class));
 			}
 
 			$object = new $class($this->options);
@@ -190,6 +188,7 @@ class Archive
 			if (!($object instanceof ExtractableInterface))
 			{
 				throw new UnsupportedArchiveException(
+					$type,
 					sprintf(
 						'The provided adapter "%s" (class "%s") must implement %s',
 						$type,

@@ -15,4 +15,40 @@ namespace Joomla\Archive\Exception;
  */
 class UnsupportedArchiveException extends \InvalidArgumentException
 {
+	/**
+	 * The unsupported archive adapter name
+	 *
+	 * @var    string
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $adapterType = '';
+
+	/**
+	 * Constructor
+	 *
+	 * @param   string       $adapterType  The unsupported adapter type.
+	 * @param   string       $message      The Exception message to throw.
+	 * @param   int          $code         The Exception code.
+	 * @param   ?\Throwable  $previous     The previous throwable used for the exception chaining.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function __construct(string $adapterType, string $message = '', int $code = 0, ?\Throwable $previous = null)
+	{
+		$this->adapterType = $adapterType;
+
+		parent::__construct($message, $code, $previous);
+	}
+
+	/**
+	 * Gets the name of the adapter type that was unsupported
+	 *
+	 * @return  string
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function getUnsupportedAdapterType(): string
+	{
+		return $this->adapterType;
+	}
 }
