@@ -18,7 +18,7 @@ class UnsupportedArchiveException extends \InvalidArgumentException
 	/**
 	 * The unsupported archive adapter name
 	 *
-	 * @type   string
+	 * @var    string
 	 * @since  __DEPLOY_VERSION__
 	 */
 	protected $adapterType = '';
