@@ -40,6 +40,13 @@ class UnsupportedArchiveException extends \InvalidArgumentException
 		parent::__construct($message, $code, $previous);
 	}
 
+	/**
+	 * Gets the name of the adapter type that was unsupported
+	 *
+	 * @return  string
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
 	public function getUnsupportedAdapterType(): string
 	{
 		return $this->adapterType;
