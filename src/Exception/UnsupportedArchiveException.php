@@ -19,7 +19,7 @@ class UnsupportedArchiveException extends \InvalidArgumentException
 	 * The unsupported archive adapter name
 	 *
 	 * @var    string
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-beta2
 	 */
 	protected $adapterType = '';
 
@@ -31,7 +31,7 @@ class UnsupportedArchiveException extends \InvalidArgumentException
 	 * @param   int          $code         The Exception code.
 	 * @param   ?\Throwable  $previous     The previous throwable used for the exception chaining.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-beta2
 	 */
 	public function __construct(string $adapterType, string $message = '', int $code = 0, ?\Throwable $previous = null)
 	{
@@ -45,7 +45,7 @@ class UnsupportedArchiveException extends \InvalidArgumentException
 	 *
 	 * @return  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0-beta2
 	 */
 	public function getUnsupportedAdapterType(): string
 	{
