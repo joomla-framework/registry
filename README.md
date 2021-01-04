@@ -19,3 +19,9 @@ To install the package, you can simply run the following from the command line:
 ```sh
 composer require joomla/language
 ```
+
+If you want to include the test sources and docs, use
+
+```sh
+composer require --prefer-source joomla/language "~1.0"
+```
