@@ -1,4 +1,4 @@
-## The Data Package Copied [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/data/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/data)
+## The Data Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/data/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/data)
 
 ### `Data\DataObject`
 
