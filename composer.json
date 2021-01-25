@@ -7,7 +7,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^7.2.5",
-        "joomla/filesystem": "^1.3|^2.0@beta"
+        "joomla/filesystem": "^2.0@beta"
     },
     "require-dev": {
         "joomla/coding-standards": "^3.0@dev",
