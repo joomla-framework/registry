@@ -103,6 +103,9 @@ class Php implements FormatInterface
 
 			case 'boolean':
 				return $value ? 'true' : 'false';
+				
+			case 'NULL':
+				return 'null';
 		}
 	}
 
