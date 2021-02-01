@@ -29,6 +29,7 @@ class PhpTest extends TestCase
 		$object->quoted = '"stringwithquotes"';
 		$object->booleantrue = true;
 		$object->booleanfalse = false;
+		$object->nullvalue = null;
 		$object->numericint = 42;
 		$object->numericfloat = 3.1415;
 		$object->section = new \stdClass;
@@ -41,6 +42,7 @@ class PhpTest extends TestCase
 			"\tpublic \$quoted = '\"stringwithquotes\"';\n" .
 			"\tpublic \$booleantrue = true;\n" .
 			"\tpublic \$booleanfalse = false;\n" .
+			"\tpublic \$nullvalue = null;\n" .
 			"\tpublic \$numericint = 42;\n" .
 			"\tpublic \$numericfloat = 3.1415;\n" .
 			"\tpublic \$section = array('key' => 'value');\n" .
@@ -63,6 +65,7 @@ class PhpTest extends TestCase
 		$object->quoted = '"stringwithquotes"';
 		$object->booleantrue = true;
 		$object->booleanfalse = false;
+		$object->nullvalue = null;
 		$object->numericint = 42;
 		$object->numericfloat = 3.1415;
 
@@ -77,6 +80,7 @@ class PhpTest extends TestCase
 			"\tpublic \$quoted = '\"stringwithquotes\"';\n" .
 			"\tpublic \$booleantrue = true;\n" .
 			"\tpublic \$booleanfalse = false;\n" .
+			"\tpublic \$nullvalue = null;\n" .
 			"\tpublic \$numericint = 42;\n" .
 			"\tpublic \$numericfloat = 3.1415;\n" .
 			"\tpublic \$section = array('key' => 'value');\n" .
@@ -101,6 +105,7 @@ class PhpTest extends TestCase
 		$object->quoted = '"stringwithquotes"';
 		$object->booleantrue = true;
 		$object->booleanfalse = false;
+		$object->nullvalue = null;
 		$object->numericint = 42;
 		$object->numericfloat = 3.1415;
 
@@ -116,6 +121,7 @@ class PhpTest extends TestCase
 			"\tpublic \$quoted = '\"stringwithquotes\"';\n" .
 			"\tpublic \$booleantrue = true;\n" .
 			"\tpublic \$booleanfalse = false;\n" .
+			"\tpublic \$nullvalue = null;\n" .
 			"\tpublic \$numericint = 42;\n" .
 			"\tpublic \$numericfloat = 3.1415;\n" .
 			"\tpublic \$section = array('key' => 'value');\n" .
