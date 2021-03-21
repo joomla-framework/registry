@@ -2518,7 +2518,7 @@ class ArrayHelperTest extends TestCase
 		// Search case sensitive.
 		$this->assertEquals('name', ArrayHelper::arraySearch('Foo', $array));
 
-		// Search case insenitive.
+		// Search case insensitive.
 		$this->assertEquals('email', ArrayHelper::arraySearch('FOOBAR', $array, false));
 
 		// Search non existent value.
