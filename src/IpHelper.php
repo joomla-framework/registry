@@ -32,7 +32,7 @@ final class IpHelper
 	 * @var    boolean
 	 * @since  1.6.0
 	 */
-	private static $allowIpOverrides = true;
+	private static $allowIpOverrides = false;
 
 	/**
 	 * Private constructor to prevent instantiation of this class
