@@ -367,7 +367,7 @@ array(3) {
 
 ### flatten
 
-``` php
+```php
 use Joomla\Utilities\ArrayHelper;
 
 $array = array(
