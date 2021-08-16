@@ -34,12 +34,12 @@ Aside from the two methods create and verify methods, this implementation also a
 
 ## Installation via Composer
 
-Add `"joomla/crypt": "2.0.*@dev" to the require block in your composer.json and then run `composer install`.
+Add `"joomla/crypt": "~2.0" to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/crypt": "2.0.*@dev"
+		"joomla/crypt": "~2.0"
 	}
 }
 ```
@@ -47,11 +47,11 @@ Add `"joomla/crypt": "2.0.*@dev" to the require block in your composer.json and 
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/crypt "2.0.*@dev"
+composer require joomla/crypt "~2.0"
 ```
 
 If you want to include the test sources, use
 
 ```sh
-composer require --prefer-source joomla/crypt "2.0.*@dev"
+composer require --prefer-source joomla/crypt "~2.0"
 ```
