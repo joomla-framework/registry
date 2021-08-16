@@ -18,11 +18,11 @@ The Keychain package is an extension of the [Registry](https://github.com/joomla
 To install the package, you can run the following from the command line:
            
 ```sh
-composer require joomla/keychain "2.0.*@dev"
+composer require joomla/keychain "~2.0"
 ```
 
 If you want to include the test sources and docs, use
 
 ```sh
-composer require --prefer-source joomla/keychain "2.0.*@dev"
+composer require --prefer-source joomla/keychain "~2.0"
 ```
