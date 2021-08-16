@@ -188,12 +188,12 @@ if (!empty($hurt))
 
 ## Installation via Composer
 
-Add `"joomla/data": "2.0.*@dev"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/data": "~2.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/data": "2.0.*@dev"
+		"joomla/data": "~2.0"
 	}
 }
 ```
@@ -201,11 +201,11 @@ Add `"joomla/data": "2.0.*@dev"` to the require block in your composer.json and 
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/data "2.0.*@dev"
+composer require joomla/data "~2.0"
 ```
 
 If you want to include the test sources, use
 
 ```sh
-composer require --prefer-source joomla/data "2.0.*@dev"
+composer require --prefer-source joomla/data "~2.0"
 ```
