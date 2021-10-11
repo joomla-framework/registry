@@ -1,39 +1,44 @@
 {
-    "name": "joomla/registry",
-    "type": "joomla-package",
-    "description": "Joomla Registry Package",
-    "keywords": ["joomla", "framework", "registry"],
-    "homepage": "https://github.com/joomla-framework/registry",
-    "license": "GPL-2.0-or-later",
-    "require": {
-        "php": "^7.2.5",
-        "joomla/utilities": "^1.4.1|^2.0"
-    },
-    "require-dev": {
-        "joomla/coding-standards": "^3.0@dev",
-        "symfony/yaml": "^3.4|^4.4|^5.0",
-        "phpunit/phpunit": "^8.5|^9.0"
-    },
-    "conflict": {
-        "symfony/yaml": "<3.4"
-    },
-    "suggest": {
-        "symfony/yaml": "Install symfony/yaml if you require YAML support."
-    },
-    "autoload": {
-        "psr-4": {
-            "Joomla\\Registry\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Joomla\\Registry\\Tests\\": "Tests/"
-        }
-    },
-    "minimum-stability": "dev",
-    "extra": {
-        "branch-alias": {
-	        "dev-2.0-dev": "2.0-dev"
-        }
-    }
+  "name": "joomla/registry",
+  "type": "joomla-package",
+  "description": "Joomla Registry Package",
+  "keywords": [
+	"joomla",
+	"framework",
+	"registry"
+  ],
+  "homepage": "https://github.com/joomla-framework/registry",
+  "license": "GPL-2.0-or-later",
+  "require": {
+	"php": "^7.2.5",
+	"joomla/utilities": "^1.4.1|^2.0"
+  },
+  "require-dev": {
+	"ext-json": "*",
+	"joomla/coding-standards": "^3.0@dev",
+	"symfony/yaml": "^3.4|^4.4|^5.0",
+	"phpunit/phpunit": "^8.5|^9.0"
+  },
+  "conflict": {
+	"symfony/yaml": "<3.4"
+  },
+  "suggest": {
+	"symfony/yaml": "Install symfony/yaml if you require YAML support."
+  },
+  "autoload": {
+	"psr-4": {
+	  "Joomla\\Registry\\": "src/"
+	}
+  },
+  "autoload-dev": {
+	"psr-4": {
+	  "Joomla\\Registry\\Tests\\": "Tests/"
+	}
+  },
+  "minimum-stability": "dev",
+  "extra": {
+	"branch-alias": {
+	  "dev-2.0-dev": "2.0-dev"
+	}
+  }
 }

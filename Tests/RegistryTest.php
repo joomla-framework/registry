@@ -64,18 +64,21 @@ class RegistryTest extends TestCase
 		// Check top level values
 		$this->assertSame('bar', $a->get('foo'));
 		$this->assertSame('bar', $a->def('foo'));
-		$this->assertSame('far', $a->set('foo', 'far'));
+		$this->assertSame('bar', $a->set('foo', 'far'));
+		$this->assertSame('far', $a->get('foo'));
 
 		// Check nested values
 		$this->assertSame('bar', $a->get('nested.foo'));
 		$this->assertSame('bar', $a->def('nested.foo'));
-		$this->assertSame('far', $a->set('nested.foo', 'far'));
+		$this->assertSame('bar', $a->set('nested.foo', 'far'));
+		$this->assertSame('far', $a->get('nested.foo'));
 
 		// Check adding a new nested object
 		$a->set('new.nested', ['foo' => 'bar', 'goo' => 'car']);
 		$this->assertSame('bar', $a->get('new.nested.foo'));
 		$this->assertSame('bar', $a->def('new.nested.foo'));
-		$this->assertSame('far', $a->set('new.nested.foo', 'far'));
+		$this->assertSame('bar', $a->set('new.nested.foo', 'far'));
+		$this->assertSame('far', $a->get('new.nested.foo'));
 	}
 
 	/**
@@ -491,15 +494,14 @@ class RegistryTest extends TestCase
 	{
 		$a = new Registry;
 
-		$this->assertSame(
-			'testsetvalue1',
+		$this->assertNull(
 			$a->set('foo', 'testsetvalue1'),
-			'The current value should be returned when assigning a key for the first time.'
+			'Null should be returned when assigning a key for the first time.'
 		);
 		$this->assertSame(
-			'testsetvalue2',
+			'testsetvalue1',
 			$a->set('foo', 'testsetvalue2'),
-			'The new value should be returned when assigning a key multiple times.'
+			'The previous value should be returned when assigning a key multiple times.'
 		);
 	}
 
