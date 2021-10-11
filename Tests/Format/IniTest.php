@@ -16,8 +16,6 @@ class IniTest extends TestCase
 {
 	/**
 	 * @testdox  A data object is converted to a string
-	 *
-	 * @covers   Joomla\Registry\Format\Ini
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
@@ -43,8 +41,6 @@ class IniTest extends TestCase
 
 	/**
 	 * @testdox  A string is converted to a data object
-	 *
-	 * @covers   Joomla\Registry\Format\Ini
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
@@ -88,8 +84,6 @@ class IniTest extends TestCase
 
 	/**
 	 * @testdox  Validate data equality in converted objects
-	 *
-	 * @covers   Joomla\Registry\Format\Ini
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{

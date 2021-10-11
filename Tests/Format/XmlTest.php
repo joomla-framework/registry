@@ -16,8 +16,6 @@ class XmlTest extends TestCase
 {
 	/**
 	 * @testdox  A data object is converted to a string
-	 *
-	 * @covers   Joomla\Registry\Format\Xml
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
@@ -60,8 +58,6 @@ class XmlTest extends TestCase
 
 	/**
 	 * @testdox  A string is converted to a data object
-	 *
-	 * @covers   Joomla\Registry\Format\Xml
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
@@ -99,8 +95,6 @@ class XmlTest extends TestCase
 
 	/**
 	 * @testdox  Validate data equality in converted objects
-	 *
-	 * @covers   Joomla\Registry\Format\Xml
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{
