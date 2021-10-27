@@ -82,7 +82,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 
 	/**
 	 * Set a registry value.
-	 * Example: $registry->useProperty = 'Value'; as $registry->set('useProperty', 'Value');
+	 * Example: $registry->anyProperty = 'Value'; as $registry->set('anyProperty', 'Value');
 	 *
 	 * @param   string  $path   Registry Path (e.g. joomla.content.showauthor)
 	 * @param   mixed   $value  Value of entry
