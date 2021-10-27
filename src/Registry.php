@@ -148,6 +148,8 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @param   Registry  $source     Source Registry object to merge.
 	 *
+	 * @return  $this
+	 
 	 * @since   1.0
 	 */
 	public function __invoke($source): Registry
