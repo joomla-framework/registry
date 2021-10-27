@@ -101,7 +101,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * Example: $var = $registry->anyProperty; Use as $var = $registry->get('anyProperty');
 	 *
 	 * @param   string  $path     Registry path (e.g. joomla.content.showauthor)
-	 * @param   mixed   $default  Optional default value, returned if the internal value is null.
 	 *
 	 * @return  mixed  Value of entry or null
 	 *
@@ -151,9 +150,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   1.0
 	 */
-	public function __invoke($data): Registry
+	public function __invoke($source): Registry
 	{
-		$this->bindData($this->data, $data);
+		$this->bindData($this->data, $source);
 
 		return $this;
 	}
