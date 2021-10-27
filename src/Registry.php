@@ -81,6 +81,84 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
+	 * Set a registry value.
+	 * Example: $registry->useProperty = 'Value'; as $registry->set('useProperty', 'Value');
+	 *
+	 * @param   string  $path   Registry Path (e.g. joomla.content.showauthor)
+	 * @param   mixed   $value  Value of entry
+	 *
+	 * @return  mixed  The value of the that has been set.
+	 *
+	 * @since   1.0
+	 */
+	public function __set(string $name = '', $value = null): void
+	{
+		$this->set($name, $value);
+	}
+
+	/**
+	 * Get a registry value.
+	 * Example: $var = $registry->anyProperty; Use as $var = $registry->get('anyProperty');
+	 *
+	 * @param   string  $path     Registry path (e.g. joomla.content.showauthor)
+	 * @param   mixed   $default  Optional default value, returned if the internal value is null.
+	 *
+	 * @return  mixed  Value of entry or null
+	 *
+	 * @since   1.0
+	 */
+	public function __get(string $name)
+	{
+		return $this->get($name);
+	}
+
+	/**
+	 * Check if a registry path exists.
+	 * Example: isset($registry->anyProperty); Use as $registry->exists('anyProperty');
+	 *
+	 * @param   string  $path  Registry path (e.g. joomla.content.showauthor)
+	 *
+	 * @return  boolean
+	 *
+	 * @since   1.0
+	 */
+	public function __isset(string $name): bool
+	{
+		return $this->exists($name);
+	}
+
+	/**
+	 * Delete a registry value
+	 * Example: unset($registry->anyProperty); Use as $registry->remove('anyProperty');
+	 *
+	 * @param   string  $path  Registry Path (e.g. joomla.content.showauthor)
+	 *
+	 * @return  mixed  The value of the removed node or null if not set
+	 *
+	 * @since   1.6.0
+	 */
+	public function __unset(string $name): void
+	{
+		$this->remove($name);
+	}
+
+	/**
+	 * Merge a Registry object into this one
+	 * Example: $registry($object); Use as $registry->loadObject($object);
+	 * or $registry->loadArray($object); or $registry->merge($object);
+	 *
+	 * @param   Registry  $source     Source Registry object to merge.
+	 *
+	 * @since   1.0
+	 */
+	public function __invoke($data): Registry
+	{
+		$this->bindData($this->data, $data);
+
+		return $this;
+	}
+
+	/**
 	 * Magic function to render this object as a string using default args of toString method.
 	 *
 	 * @return  string
