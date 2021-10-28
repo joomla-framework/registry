@@ -142,24 +142,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	}
 
 	/**
-	 * Merge a Registry object into this one
-	 * Example: $registry($object); Use as $registry->loadObject($object);
-	 * or $registry->loadArray($object); or $registry->merge($object);
-	 *
-	 * @param   Registry  $source     Source Registry object to merge.
-	 *
-	 * @return  $this
-	 *
-	 * @since   1.0
-	 */
-	public function __invoke($source): Registry
-	{
-		$this->bindData($this->data, $source);
-
-		return $this;
-	}
-
-	/**
 	 * Magic function to render this object as a string using default args of toString method.
 	 *
 	 * @return  string
