@@ -93,7 +93,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function __set(string $path = '', $value = null): void
 	{
-		$this->set($name, $value);
+		$this->set($path, $value);
 	}
 
 	/**
@@ -108,7 +108,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function __get(string $path)
 	{
-		return $this->get($name);
+		return $this->get($path);
 	}
 
 	/**
@@ -123,7 +123,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function __isset(string $path): bool
 	{
-		return $this->exists($name);
+		return $this->exists($path);
 	}
 
 	/**
@@ -138,7 +138,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 */
 	public function __unset(string $path): void
 	{
-		$this->remove($name);
+		$this->remove($path);
 	}
 
 	/**
