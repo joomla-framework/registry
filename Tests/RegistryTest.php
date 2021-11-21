@@ -496,6 +496,46 @@ class RegistryTest extends TestCase
 	}
 
 	/**
+	 * @testdox  The object offset is correctly retrieved
+	 *
+	 * @covers   Joomla\Registry\Registry
+	 */
+	public function testGetOffsetAsAnObject()
+	{
+		$instance = new Registry(['foo' => ['bar' => 'value']]);
+
+		$this->assertSame('value', $instance->{'foo.bar'}, 'Checks a known offset.');
+		$this->assertNull($instance->{'goo.car'}, 'Checks a unknown offset.');
+	}
+
+	/**
+	 * @testdox  The object offset is correctly set
+	 *
+	 * @covers   Joomla\Registry\Registry
+	 */
+	public function testSetOffsetAsAnObject()
+	{
+		$instance = new Registry;
+
+		$instance->{'foo.bar'} = 'value';
+		$this->assertSame('value', $instance->get('foo.bar'));
+	}
+
+	/**
+	 * @testdox  The object offset is correctly removed
+	 *
+	 * @covers   Joomla\Registry\Registry
+	 */
+	public function testRemoveOffsetAsAnObject()
+	{
+		$instance = new Registry;
+		$instance->set('foo.bar', 'value');
+
+		unset($instance->{'foo.bar'});
+		$this->assertFalse(isset($instance->{'foo.bar'}));
+	}
+
+	/**
 	 * @testdox  A value is stored to the Registry
 	 *
 	 * @covers   Joomla\Registry\Registry
