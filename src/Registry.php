@@ -91,7 +91,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @since   2.0
 	 */
-	public function __set(string $path = '', $value = null): void
+	public function __set(string $path, $value = null): void
 	{
 		$this->set($path, $value);
 	}
