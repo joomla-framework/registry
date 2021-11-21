@@ -89,7 +89,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @return  mixed  The value of the that has been set.
 	 *
-	 * @since   2.0
+	 * @since   2.2
 	 */
 	public function __set(string $path, $value = null): void
 	{
@@ -104,7 +104,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @return  mixed  Value of entry or null
 	 *
-	 * @since   2.0
+	 * @since   2.2
 	 */
 	public function __get(string $path)
 	{
@@ -119,7 +119,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @return  boolean
 	 *
-	 * @since   2.0
+	 * @since   2.2
 	 */
 	public function __isset(string $path): bool
 	{
@@ -134,7 +134,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 *
 	 * @return  mixed  The value of the removed node or null if not set
 	 *
-	 * @since   2.0
+	 * @since   2.2
 	 */
 	public function __unset(string $path): void
 	{
