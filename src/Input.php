@@ -146,6 +146,7 @@ class Input implements \Countable
 	 * @since   1.0
 	 * @see     Countable::count()
 	 */
+	#[\ReturnTypeWillChange]
 	public function count()
 	{
 		return \count($this->data);
