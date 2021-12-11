@@ -1,4 +1,4 @@
-# The Test Package
+# The Test Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/test/status.svg)](https://ci.joomla.org/joomla-framework/test)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/test/v/stable)](https://packagist.org/packages/joomla/test)
 [![Total Downloads](https://poser.pugx.org/joomla/test/downloads)](https://packagist.org/packages/joomla/test)
@@ -165,12 +165,12 @@ class FooTest extends \PHPUnit_Framework_TestCase
 
 ## Installation via Composer
 
-Add `"joomla/test": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/test": "~2.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/test": "~1.0"
+		"joomla/test": "~2.0"
 	}
 }
 ```
@@ -178,5 +178,5 @@ Add `"joomla/test": "~1.0"` to the require block in your composer.json and then 
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/test "~1.0"
+composer require joomla/test "~2.0"
 ```

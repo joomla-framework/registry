@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Test Package
  *
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -18,68 +18,10 @@ use PHPUnit\Framework\TestCase;
 class TestHelper
 {
 	/**
-	 * Assigns mock callbacks to methods.
-	 *
-	 * This method assumes that the mock callback is named {mock}{method name}.
-	 *
-	 * @param   \PHPUnit_Framework_MockObject_MockObject  $mockObject  The mock object that the callbacks are being assigned to.
-	 * @param   TestCase                                  $test        The test.
-	 * @param   array                                     $array       An array of methods names to mock with callbacks.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 * @deprecated  2.0  Manage callbacks within your test cases
-	 */
-	public static function assignMockCallbacks(\PHPUnit_Framework_MockObject_MockObject $mockObject, TestCase $test, $array)
-	{
-		foreach ($array as $index => $method)
-		{
-			if (\is_callable($method))
-			{
-				$methodName = $index;
-				$callback   = $method;
-			}
-			else
-			{
-				$methodName = $method;
-				$callback   = array(\get_called_class(), 'mock' . $method);
-			}
-
-			$mockObject->expects($test->any())
-				->method($methodName)
-				->willReturnCallback($callback);
-		}
-	}
-
-	/**
-	 * Assigns mock values to methods.
-	 *
-	 * @param   \PHPUnit_Framework_MockObject_MockObject  $mockObject  The mock object.
-	 * @param   TestCase                                  $test        The test.
-	 * @param   array                                     $array       An associative array of methods to mock with return values:<br />
-	 *                                                                 string (method name) => mixed (return value)
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 * @deprecated  2.0  Manage returns within your test cases
-	 */
-	public static function assignMockReturns(\PHPUnit_Framework_MockObject_MockObject $mockObject, TestCase $test, $array)
-	{
-		foreach ($array as $method => $return)
-		{
-			$mockObject->expects($test->any())
-				->method($method)
-				->willReturn($return);
-		}
-	}
-
-	/**
 	 * Helper method that gets a protected or private property in a class by reflection.
 	 *
-	 * @param   object  $object        The object from which to return the property value.
-	 * @param   string  $propertyName  The name of the property to return.
+	 * @param   string|object  $objectOrClass  The object from which to return the property value.
+	 * @param   string         $propertyName   The name of the property to return.
 	 *
 	 * @return  mixed  The value of the property.
 	 *
@@ -87,9 +29,9 @@ class TestHelper
 	 * @throws  \InvalidArgumentException if property not available.
 	 * @throws  \ReflectionException
 	 */
-	public static function getValue($object, $propertyName)
+	public static function getValue($objectOrClass, $propertyName)
 	{
-		$refl = new \ReflectionClass($object);
+		$refl = new \ReflectionClass($objectOrClass);
 
 		// First check if the property is easily accessible.
 		if ($refl->hasProperty($propertyName))
@@ -97,19 +39,20 @@ class TestHelper
 			$property = $refl->getProperty($propertyName);
 			$property->setAccessible(true);
 
-			return $property->getValue($object);
+			return $property->getValue($objectOrClass);
 		}
 
 		// Hrm, maybe dealing with a private property in the parent class.
-		if (get_parent_class($object))
+		if (get_parent_class($objectOrClass))
 		{
-			$property = new \ReflectionProperty(get_parent_class($object), $propertyName);
+			$property = new \ReflectionProperty(get_parent_class($objectOrClass), $propertyName);
 			$property->setAccessible(true);
 
-			return $property->getValue($object);
+			return $property->getValue($objectOrClass);
 		}
 
-		throw new \InvalidArgumentException(sprintf('Invalid property [%s] for class [%s]', $propertyName, \get_class($object)));
+		$class = \is_string($objectOrClass) ? $objectOrClass : \get_class($objectOrClass);
+		throw new \InvalidArgumentException(sprintf('Invalid property [%s] for class [%s]', $propertyName, $class));
 	}
 
 	/**
@@ -120,33 +63,25 @@ class TestHelper
 	 * $this->assertTrue(TestHelper::invoke($this->object, 'methodName', 123));
 	 * where 123 is the input parameter for your method
 	 *
-	 * @param   object  $object      The object on which to invoke the method.
-	 * @param   string  $methodName  The name of the method to invoke.
+	 * @param   object  $object         The object on which to invoke the method.
+	 * @param   string  $methodName     The name of the method to invoke.
+	 * @param   array   ...$methodArgs  The arguments to pass forward to the method being called
 	 *
 	 * @return  mixed
 	 *
 	 * @since   1.0
 	 * @throws  \ReflectionException
 	 */
-	public static function invoke($object, $methodName)
+	public static function invoke($object, $methodName, ...$methodArgs)
 	{
-		// Get the full argument list for the method.
-		$args = \func_get_args();
-
-		// Remove the method name from the argument list.
-		array_shift($args);
-		array_shift($args);
-
 		$method = new \ReflectionMethod($object, $methodName);
 		$method->setAccessible(true);
 
-		$result = $method->invokeArgs(\is_object($object) ? $object : null, $args);
-
-		return $result;
+		return $method->invokeArgs(\is_object($object) ? $object : null, $methodArgs);
 	}
 
 	/**
-	 * Helper method that sets a protected or private property in a class by reflection.
+	 * Helper method that sets a protected or private property in a class by relfection.
 	 *
 	 * @param   object  $object        The object for which to set the property.
 	 * @param   string  $propertyName  The name of the property to set.
