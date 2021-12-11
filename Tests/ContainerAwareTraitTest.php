@@ -7,121 +7,48 @@
 namespace Joomla\DI\Tests;
 
 use Joomla\DI\Container;
+use Joomla\DI\ContainerAwareTrait;
+use Joomla\DI\Exception\ContainerNotFoundException;
+use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for ContainerAwareTrait class.
- *
- * @since   1.2
- * @covers  \Joomla\DI\ContainerAwareTrait
  */
 class ContainerAwareTraitTest extends TestCase
 {
 	/**
-	 * Holds the Container instance for testing.
-	 *
-	 * @var    \Joomla\DI\ContainerAwareTrait
-	 * @since  1.2
+	 * @var ContainerAwareTrait
 	 */
 	protected $object;
 
 	/**
-	 * This method is called before the first test of this test class is run.
+	 * @testdox  Container can be set with setContainer()
 	 *
-	 * @return  void
-	 *
-	 * @since   1.2
-	 */
-	public static function setUpBeforeClass()
-	{
-		// Only run tests on PHP 5.4+
-		if (version_compare(PHP_VERSION, '5.4', '<'))
-		{
-			static::markTestSkipped('Tests are not present in PHP 5.4');
-		}
-	}
-
-	/**
-	 * Setup the tests.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.2
-	 */
-	public function setUp()
-	{
-		$this->object = $this->getObjectForTrait('\\Joomla\\DI\\ContainerAwareTrait');
-	}
-
-	/**
-	 * Tear down the tests.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.2
-	 */
-	public function tearDown()
-	{
-		$this->object = null;
-	}
-
-	/**
-	 * Tests calling getContainer() without a Container object set
-	 *
-	 * @return  void
-	 *
-	 * @since   1.2
-	 * @coversDefaultClass  getContainer
-	 * @expectedException   \UnexpectedValueException
-	 */
-	public function testGetContainerException()
-	{
-		$this->object->getContainer();
-	}
-
-	/**
-	 * Tests calling getContainer() with a Container object set
-	 *
-	 * @return  void
-	 *
-	 * @since   1.2
-	 * @coversDefaultClass  getContainer
+	 * @covers   Joomla\DI\ContainerAwareTrait
+	 * @uses     Joomla\DI\Container
 	 */
 	public function testGetContainer()
 	{
-		$reflection = new \ReflectionClass($this->object);
-		$refProp = $reflection->getProperty('container');
-		$refProp->setAccessible(true);
-		$refProp->setValue($this->object, new Container);
+		$container = new Container();
 
-		$this->assertInstanceOf(
-			'\\Joomla\\DI\\Container',
-			$this->object->getContainer(),
-			'Validates the Container object was set.'
-		);
+		$trait     = $this->getObjectForTrait(ContainerAwareTrait::class);
+		$trait->setContainer($container);
+
+		$this->assertSame($container, TestHelper::getValue($trait, 'container'));
 	}
 
 	/**
-	 * Tests setting a Container object
+	 * @testdox  getContainer() throws an ContainerNotFoundException, if no container is set
 	 *
-	 * @return  void
-	 *
-	 * @since   1.2
-	 * @coversDefaultClass  setContainer
+	 * @covers   Joomla\DI\ContainerAwareTrait
 	 */
-	public function testSetContainer()
+	public function testGetContainerException()
 	{
-		$this->object->setContainer(new Container);
+		$this->expectException(ContainerNotFoundException::class);
 
-		$reflection = new \ReflectionClass($this->object);
-		$refProp = $reflection->getProperty('container');
-		$refProp->setAccessible(true);
-		$container = $refProp->getValue($this->object);
+		$trait = $this->getObjectForTrait(ContainerAwareTrait::class);
 
-		$this->assertInstanceOf(
-			'\\Joomla\\DI\\Container',
-			$container,
-			'Validates a Container object was retrieved.'
-		);
+		TestHelper::invoke($trait, 'getContainer');
 	}
 }

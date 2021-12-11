@@ -17,7 +17,7 @@ class Stub1 implements StubInterface {}
 
 class Stub2 implements StubInterface
 {
-	protected $stub;
+	public $stub;
 
 	public function __construct(StubInterface $stub)
 	{
@@ -27,12 +27,12 @@ class Stub2 implements StubInterface
 
 class Stub3
 {
-	protected $stub;
-	protected $stub2;
+	public $stub1;
+	public $stub2;
 
 	public function __construct(StubInterface $stub, StubInterface $stub2)
 	{
-		$this->stub = $stub;
+		$this->stub1 = $stub;
 		$this->stub2 = $stub2;
 	}
 }
@@ -41,7 +41,7 @@ class Stub4 implements StubInterface {}
 
 class Stub5
 {
-	protected $stub;
+	public $stub;
 
 	public function __construct(Stub4 $stub)
 	{
@@ -51,7 +51,7 @@ class Stub5
 
 class Stub6
 {
-	protected $stub;
+	public $stub;
 
 	public function __construct($stub = 'foo')
 	{
@@ -61,7 +61,7 @@ class Stub6
 
 class Stub7
 {
-	protected $stub;
+	public $stub;
 
 	public function __construct($stub)
 	{
@@ -71,7 +71,7 @@ class Stub7
 
 class Stub8
 {
-	protected $stub;
+	public $stub;
 
 	public function __construct(DoesntExist $stub)
 	{
@@ -82,6 +82,72 @@ class Stub8
 class Stub9
 {
 }
+
+class StubNullableArgumentDoesntExist
+{
+	public $stub;
+
+	public function __construct(?DoesntExist $stub)
+	{
+		$this->stub = $stub;
+	}
+}
+
+class StubNullableArgument
+{
+	public $stub;
+
+	public function __construct(?StubInterface $stub)
+	{
+		$this->stub = $stub;
+	}
+}
+
+class StubUntypedVariadic
+{
+	public $stub;
+	public $stubs;
+
+	public function __construct(Stub1 $stub, ...$stubs)
+	{
+		$this->stub = $stub;
+		$this->stubs = $stubs;
+	}
+}
+
+class StubTypedVariadic
+{
+	public $stub;
+	public $stubs;
+
+	public function __construct(Stub1 $stub, Stub9 ...$stubs)
+	{
+		$this->stub = $stub;
+		$this->stubs = $stubs;
+	}
+}
+
+class StubOptionalScalar
+{
+	public $enabled;
+
+	public function __construct(bool $enabled = true)
+	{
+		$this->enabled = $enabled;
+	}
+}
+
+class StubRequiredScalar
+{
+	public $enabled;
+
+	public function __construct(bool $enabled)
+	{
+		$this->enabled = $enabled;
+	}
+}
+
+abstract class AbstractStub {}
 
 class StubPsrContainer implements ContainerInterface
 {

@@ -14,15 +14,15 @@ class Samurai
 		$this->shuriken = new Shuriken;
 	}
 
-	public function attack($useSword = true)
+	public function attack($target, $useSword = true)
 	{
 		if ($useSword)
 		{
-			$this->sword->hit();
+			$this->sword->hit($target);
 		}
 		else
 		{
-			$this->shuriken->hit();
+			$this->shuriken->hit($target);
 		}
 	}
 }
@@ -32,7 +32,7 @@ class Sword
 {
 	public function hit($target)
 	{
-		echo 'Hit the ' . $target;
+		echo 'Hit ' . $target;
 	}
 }
 ```
@@ -50,7 +50,7 @@ $warrior = new Samurai;
 
 // preparations....
 
-$warrior->attack();
+$warrior->attack('the enemy');
 ```
 
 ### The Situation
