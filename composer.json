@@ -6,13 +6,16 @@
     "homepage": "https://github.com/joomla-framework/filter",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^5.3.10|~7.0|^8.0",
-        "joomla/string": "~1.3|~2.0"
+        "php": "^7.2.5",
+        "joomla/string": "^1.3|^2.0"
     },
     "require-dev": {
-        "joomla/coding-standards": "~2.0@alpha",
-        "joomla/language": "~1.3",
-        "phpunit/phpunit": "^4.8.35|^5.4.3|~6.0"
+        "joomla/coding-standards": "^3.0@dev",
+        "joomla/language": "^2.0",
+        "phpunit/phpunit": "^8.5|^9.0"
+    },
+    "conflict": {
+        "joomla/language": "<2.0"
     },
     "suggest": {
         "joomla/language": "Required only if you want to use `OutputFilter::stringURLSafe`."
@@ -30,7 +33,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "1.x-dev"
+	        "dev-2.0-dev": "2.0-dev"
         }
     }
 }

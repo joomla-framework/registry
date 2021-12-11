@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -30,14 +30,12 @@ class FilterTestObject
 		$this->string1 = "<script>alert();</script>";
 		$this->string2 = "This is a test.";
 		$this->string3 = "<script>alert(3);</script>";
-		$this->array1 = array(1, 2, 3);
+		$this->array1  = [1, 2, 3];
 	}
 }
 
 /**
- * Test class for Filter\OutputFilter
- *
- * @since  1.0
+ * Test class for Joomla\Filter\OutputFilter
  */
 class OutputFilterTest extends TestCase
 {
@@ -47,9 +45,14 @@ class OutputFilterTest extends TestCase
 	protected $object;
 
 	/**
-	 * @var  beforeObject
+	 * @var  FilterTestObject
 	 */
 	protected $safeObject;
+
+	/**
+	 * @var  FilterTestObject
+	 */
+	protected $safeObjectArrayTest;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
@@ -57,7 +60,7 @@ class OutputFilterTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->object = new OutputFilter;
 		$this->safeObject = new FilterTestObject;
@@ -66,8 +69,6 @@ class OutputFilterTest extends TestCase
 
 	/**
 	 * Sends the FilterTestObject to the object filter.
-	 *
-	 * @return void
 	 */
 	public function testObjectHtmlSafe()
 	{
@@ -79,8 +80,6 @@ class OutputFilterTest extends TestCase
 
 	/**
 	 * Sends the FilterTestObject to the object filter.
-	 *
-	 * @return void
 	 */
 	public function testObjectHtmlSafeWithArray()
 	{
@@ -92,8 +91,6 @@ class OutputFilterTest extends TestCase
 
 	/**
 	 * Tests enforcing XHTML links.
-	 *
-	 * @return void
 	 */
 	public function testLinkXhtmlSafe()
 	{
@@ -106,13 +103,11 @@ class OutputFilterTest extends TestCase
 
 	/**
 	 * Tests filtering strings down to ASCII-7 lowercase URL text
-	 *
-	 * @return void
 	 */
-	public function testStringUrlSafe()
+	public function testStringUrlSafeWithoutALanguageInstance()
 	{
 		$this->assertEquals(
-			'1234567890-qwertyuiop-qwertyuiop-asdfghjkl-asdfghjkl-zxcvbnm-zxcvbnm',
+			'1234567890--qwertyuiop-qwertyuiop-asdfghjkl-asdfghjkl-zxcvbnm-zxcvbnm',
 			$this->object->stringUrlSafe('`1234567890-=~!@#$%^&*()_+	qwertyuiop[]\QWERTYUIOP{}|asdfghjkl;\'ASDFGHJKL:"zxcvbnm,./ZXCVBNM<>?'),
 			'Should clean keyboard string down to ASCII-7'
 		);
@@ -120,10 +115,6 @@ class OutputFilterTest extends TestCase
 
 	/**
 	 * Tests converting strings to URL unicoded slugs.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testStringUrlUnicodeSlug()
 	{
@@ -135,10 +126,7 @@ class OutputFilterTest extends TestCase
 	}
 
 	/**
-	 * Tests replacing single ampersands with the entity, but leaving double ampersands
-	 * and ampsersand-octothorpe combinations intact.
-	 *
-	 * @return void
+	 * Tests replacing single ampersands with the entity, but leaving double ampersands and ampsersand-octothorpe combinations intact.
 	 */
 	public function testAmpReplace()
 	{
@@ -176,37 +164,27 @@ class OutputFilterTest extends TestCase
 	/**
 	 * dataSet for Clean text
 	 *
-	 * @return array
+	 * @return  \Generator
 	 */
-	public static function dataSet()
+	public function dataSet(): \Generator
 	{
-		$cases = array(
-			'case_1' => array(
-				'',
-				''
-			),
-			'script_0' => array(
-				'<script>alert(\'hi!\');</script>',
-				''
-			),
-
-		);
-		$tests = $cases;
-
-		return $tests;
+		yield 'case_1' => [
+			'',
+			'',
+		];
+		yield 'script_0' => [
+			'<script>alert(\'hi!\');</script>',
+			'',
+		];
 	}
 
 	/**
 	 * Execute a cleanText test case.
 	 *
-	 * The test framework calls this function once for each element in the array
-	 * returned by the named data provider.
-	 *
 	 * @param   string  $data    The original output
 	 * @param   string  $expect  The expected result for this test.
 	 *
 	 * @dataProvider dataSet
-	 * @return void
 	 */
 	public function testCleanText($data, $expect)
 	{
@@ -215,10 +193,6 @@ class OutputFilterTest extends TestCase
 
 	/**
 	 * Tests stripping images.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testStripImages()
 	{
@@ -231,18 +205,15 @@ class OutputFilterTest extends TestCase
 
 	/**
 	 * Tests stripping iFrames.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testStripIframes()
 	{
 		$this->assertEquals(
 			'Hello  I am waving at you.',
-			$this->object->stripIframes('Hello <iframe src="http://player.vimeo.com/video/37576499" width="500"' .
-				' height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe> I am waving at you.'),
-				'Should remove iFrame tags'
+			$this->object->stripIframes(
+				'Hello <iframe src="http://player.vimeo.com/video/37576499" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe> I am waving at you.'
+			),
+			'Should remove iFrame tags'
 		);
 	}
 }

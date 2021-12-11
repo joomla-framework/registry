@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Filter Package
  *
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -20,42 +20,6 @@ use Joomla\String\StringHelper;
  */
 class InputFilter
 {
-	/**
-	 * Defines the InputFilter instance should use a whitelist method for sanitising tags.
-	 *
-	 * @var         integer
-	 * @since       1.3.0
-	 * @deprecated  2.0  Use the `InputFilter::ONLY_ALLOW_DEFINED_TAGS` constant instead
-	 */
-	const TAGS_WHITELIST = 0;
-
-	/**
-	 * Defines the InputFilter instance should use a blacklist method for sanitising tags.
-	 *
-	 * @var         integer
-	 * @since       1.3.0
-	 * @deprecated  2.0  Use the `InputFilter::ONLY_BLOCK_DEFINED_TAGS` constant instead
-	 */
-	const TAGS_BLACKLIST = 1;
-
-	/**
-	 * Defines the InputFilter instance should use a whitelist method for sanitising attributes.
-	 *
-	 * @var         integer
-	 * @since       1.3.0
-	 * @deprecated  2.0  Use the `InputFilter::ONLY_ALLOW_DEFINED_ATTRIBUTES` constant instead
-	 */
-	const ATTR_WHITELIST = 0;
-
-	/**
-	 * Defines the InputFilter instance should use a blacklist method for sanitising attributes.
-	 *
-	 * @var         integer
-	 * @since       1.3.0
-	 * @deprecated  2.0  Use the `InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES` constant instead
-	 */
-	const ATTR_BLACKLIST = 1;
-
 	/**
 	 * Defines the InputFilter instance should only allow the supplied list of HTML tags.
 	 *
@@ -87,15 +51,6 @@ class InputFilter
 	 * @since  1.4.0
 	 */
 	const ONLY_BLOCK_DEFINED_ATTRIBUTES = 1;
-
-	/**
-	 * A container for InputFilter instances.
-	 *
-	 * @var    InputFilter[]
-	 * @since  1.0
-	 * @deprecated  2.0
-	 */
-	protected static $instances = array();
 
 	/**
 	 * The array of permitted tags.
@@ -142,9 +97,8 @@ class InputFilter
 	 *
 	 * @var    string[]
 	 * @since  1.0
-	 * @note   This property will be renamed to $blockedTags in version 2.0
 	 */
-	public $tagBlacklist = array(
+	public $blockedTags = [
 		'applet',
 		'body',
 		'bgsound',
@@ -168,23 +122,22 @@ class InputFilter
 		'style',
 		'title',
 		'xml',
-	);
+	];
 
 	/**
 	 * The list of blocked tag attributes for the instance.
 	 *
 	 * @var    string[]
 	 * @since  1.0
-	 * @note   This property will be renamed to $blockedAttributes in version 2.0
 	 */
-	public $attrBlacklist = array(
+	public $blockedAttributes = [
 		'action',
 		'background',
 		'codebase',
 		'dynsrc',
 		'formaction',
 		'lowsrc',
-	);
+	];
 
 	/**
 	 * A special list of blocked characters.
@@ -192,12 +145,12 @@ class InputFilter
 	 * @var    string[]
 	 * @since  1.3.3
 	 */
-	private $blockedChars = array(
+	private $blockedChars = [
 		'&tab;',
 		'&space;',
 		'&colon;',
 		'&column;',
-	);
+	];
 
 	/**
 	 * Constructor for InputFilter class.
@@ -210,7 +163,7 @@ class InputFilter
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($tagsArray = array(), $attrArray = array(), $tagsMethod = self::ONLY_ALLOW_DEFINED_TAGS,
+	public function __construct(array $tagsArray = [], array $attrArray = [], $tagsMethod = self::ONLY_ALLOW_DEFINED_TAGS,
 		$attrMethod = self::ONLY_ALLOW_DEFINED_ATTRIBUTES, $xssAuto = 1
 	)
 	{
@@ -271,7 +224,7 @@ class InputFilter
 
 		if (\is_array($source))
 		{
-			$result = array();
+			$result = [];
 
 			foreach ($source as $key => $value)
 			{
@@ -320,10 +273,8 @@ class InputFilter
 	 */
 	public static function checkAttribute($attrSubSet)
 	{
-		$quoteStyle = version_compare(\PHP_VERSION, '5.4', '>=') ? \ENT_QUOTES | \ENT_HTML401 : \ENT_QUOTES;
-
 		$attrSubSet[0] = strtolower($attrSubSet[0]);
-		$attrSubSet[1] = html_entity_decode(strtolower($attrSubSet[1]), $quoteStyle, 'UTF-8');
+		$attrSubSet[1] = html_entity_decode(strtolower($attrSubSet[1]), ENT_QUOTES | ENT_HTML401, 'UTF-8');
 
 		return (strpos($attrSubSet[1], 'expression') !== false && $attrSubSet[0] === 'style')
 			|| preg_match('/(?:(?:java|vb|live)script|behaviour|mocha)(?::|&colon;|&column;)/', $attrSubSet[1]) !== 0;
@@ -422,7 +373,7 @@ class InputFilter
 			$currentTag    = StringHelper::substr($fromTagOpen, 0, $tagOpenEnd);
 			$tagLength     = StringHelper::strlen($currentTag);
 			$tagLeft       = $currentTag;
-			$attrSet       = array();
+			$attrSet       = [];
 			$currentSpace  = StringHelper::strpos($tagLeft, ' ');
 
 			// Are we an open tag or a close tag?
@@ -447,7 +398,7 @@ class InputFilter
 			 */
 			if ((!preg_match('/^[a-z][a-z0-9]*$/i', $tagName))
 				|| (!$tagName)
-				|| ((\in_array(strtolower($tagName), $this->tagBlacklist)) && ($this->xssAuto)))
+				|| ((\in_array(strtolower($tagName), $this->blockedTags)) && $this->xssAuto))
 			{
 				$postTag      = StringHelper::substr($postTag, ($tagLength + 2));
 				$tagOpenStart = StringHelper::strpos($postTag, '<');
@@ -604,9 +555,9 @@ class InputFilter
 	 *
 	 * @since   1.0
 	 */
-	protected function cleanAttributes($attrSet)
+	protected function cleanAttributes(array $attrSet)
 	{
-		$newSet = array();
+		$newSet = [];
 
 		$count = \count($attrSet);
 
@@ -627,7 +578,7 @@ class InputFilter
 			$attrSubSet[0] = array_pop($attrSubSet0);
 
 			$attrSubSet[0] = strtolower($attrSubSet[0]);
-			$quoteStyle    = version_compare(\PHP_VERSION, '5.4', '>=') ? \ENT_QUOTES | \ENT_HTML401 : \ENT_QUOTES;
+			$quoteStyle    = \ENT_QUOTES | \ENT_HTML401;
 
 			// Remove all spaces as valid attributes does not have spaces.
 			$attrSubSet[0] = html_entity_decode($attrSubSet[0], $quoteStyle, 'UTF-8');
@@ -646,8 +597,8 @@ class InputFilter
 			// Remove all "non-regular" attribute names
 			// AND blocked attributes
 			if ((!preg_match('/[a-z]*$/i', $attrSubSet[0]))
-				|| (($this->xssAuto) && ((\in_array(strtolower($attrSubSet[0]), $this->attrBlacklist))
-				|| (substr($attrSubSet[0], 0, 2) == 'on'))))
+				|| ($this->xssAuto && ((\in_array(strtolower($attrSubSet[0]), $this->blockedAttributes))
+				|| substr($attrSubSet[0], 0, 2) == 'on')))
 			{
 				continue;
 			}
@@ -747,8 +698,8 @@ class InputFilter
 	{
 		$alreadyFiltered = '';
 		$remainder       = $source;
-		$badChars        = array('<', '"', '>');
-		$escapedChars    = array('&lt;', '&quot;', '&gt;');
+		$badChars        = ['<', '"', '>'];
+		$escapedChars    = ['&lt;', '&quot;', '&gt;'];
 
 		// Process each portion based on presence of =" and "<space>, "/>, or ">
 		// See if there are any more attributes to process
