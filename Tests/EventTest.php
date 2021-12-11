@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -11,239 +11,183 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for the Event class.
- *
- * @since  1.0
  */
 class EventTest extends TestCase
 {
 	/**
-	 * Object under tests.
+	 * @testdox  An argument can be added to the event
 	 *
-	 * @var    Event
-	 *
-	 * @since  1.0
-	 */
-	private $instance;
-
-	/**
-	 * Test the addArgument method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\Event
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testAddArgument()
 	{
-		$object = new \stdClass;
+		$event = $this->createEventWithoutArguments();
 
-		$array = array(
-			'test' => array(
-				'foo' => 'bar',
-				'test' => 'test'
-			)
-		);
-
-		$this->instance->addArgument('object', $object);
-		$this->assertTrue($this->instance->hasArgument('object'));
-		$this->assertSame($object, $this->instance->getArgument('object'));
-
-		$this->instance->addArgument('array', $array);
-		$this->assertTrue($this->instance->hasArgument('array'));
-		$this->assertSame($array, $this->instance->getArgument('array'));
+		$this->assertSame($event, $event->addArgument('foo', 'bar'), 'The addArgument method has a fluent interface');
+		$this->assertTrue($event->hasArgument('foo'));
 	}
 
 	/**
-	 * Test the addArgument method when the argument already exists, it should be untouched.
+	 * @testdox  When an argument already exists on an event, it should not be overwritten
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\Event
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testAddArgumentExisting()
 	{
-		$this->instance->addArgument('foo', 'bar');
-		$this->instance->addArgument('foo', 'foo');
+		$event = $this->createEventWithoutArguments();
 
-		$this->assertTrue($this->instance->hasArgument('foo'));
-		$this->assertEquals('bar', $this->instance->getArgument('foo'));
+		$this->assertSame($event, $event->addArgument('foo', 'bar'), 'The addArgument method has a fluent interface');
+		$this->assertSame($event, $event->addArgument('foo', 'car'), 'The addArgument method has a fluent interface');
+		$this->assertSame('bar', $event->getArgument('foo'));
 	}
 
 	/**
-	 * Test the setArgument method.
+	 * @testdox  An argument can be set on the event
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\Event
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testSetArgument()
 	{
-		$object = new \stdClass;
+		$event = $this->createEventWithoutArguments();
 
-		$array = array(
-			'test' => array(
-				'foo' => 'bar',
-				'test' => 'test'
-			)
-		);
-
-		$this->instance->setArgument('object', $object);
-		$this->assertTrue($this->instance->hasArgument('object'));
-		$this->assertSame($object, $this->instance->getArgument('object'));
-
-		$this->instance->setArgument('array', $array);
-		$this->assertTrue($this->instance->hasArgument('array'));
-		$this->assertSame($array, $this->instance->getArgument('array'));
+		$this->assertSame($event, $event->setArgument('foo', 'bar'), 'The setArgument method has a fluent interface');
+		$this->assertTrue($event->hasArgument('foo'));
 	}
 
 	/**
-	 * Test the setArgument method when the argument already exists, it should be overriden.
+	 * @testdox  When an argument already exists on an event, it is overwritten
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\Event
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testSetArgumentExisting()
 	{
-		$this->instance->setArgument('foo', 'bar');
-		$this->instance->setArgument('foo', 'foo');
+		$event = $this->createEventWithoutArguments();
 
-		$this->assertTrue($this->instance->hasArgument('foo'));
-		$this->assertEquals('foo', $this->instance->getArgument('foo'));
+		$this->assertSame($event, $event->setArgument('foo', 'bar'), 'The setArgument method has a fluent interface');
+		$this->assertSame($event, $event->setArgument('foo', 'car'), 'The setArgument method has a fluent interface');
+		$this->assertSame('car', $event->getArgument('foo'));
 	}
 
 	/**
-	 * Test the removeArgument method.
+	 * @testdox  An argument can be removed from an event
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\Event
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testRemoveArgument()
 	{
-		$this->assertNull($this->instance->removeArgument('non-existing'));
+		$event = $this->createEventWithArguments();
 
-		$this->instance->addArgument('foo', 'bar');
-
-		$old = $this->instance->removeArgument('foo');
-
-		$this->assertEquals('bar', $old);
-		$this->assertFalse($this->instance->hasArgument('foo'));
+		$this->assertNull($event->removeArgument('non-existing'), 'When removing a non-existing argument, null is returned');
+		$this->assertSame('bar', $event->removeArgument('string'), 'When removing an existing argument, the value is returned');
+		$this->assertFalse($event->hasArgument('string'));
 	}
 
 	/**
-	 * Test the clearArguments method.
+	 * @testdox  The arguments can be cleared from an event
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\Event
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testClearArguments()
 	{
-		$this->assertEmpty($this->instance->clearArguments());
+		$event = $this->createEventWithArguments();
 
-		$arguments = array(
-			'test' => array(
-				'foo' => 'bar',
-				'test' => 'test'
-			),
-			'foo' => new \stdClass
-		);
-
-		$event = new Event('test', $arguments);
-
-		$oldArguments = $event->clearArguments();
-
-		$this->assertSame($oldArguments, $arguments);
-		$this->assertFalse($event->hasArgument('test'));
-		$this->assertFalse($event->hasArgument('foo'));
+		$this->assertNotEmpty($event->clearArguments(), 'The event arguments should be returned when clearing them');
+		$this->assertFalse($event->hasArgument('string'));
 	}
 
 	/**
-	 * Test the stop method.
+	 * @testdox  An event can be stopped
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\Event
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testStop()
 	{
-		$this->assertFalse($this->instance->isStopped());
+		$event = $this->createEventWithoutArguments();
 
-		$this->instance->stop();
-
-		$this->assertTrue($this->instance->isStopped());
+		$event->stop();
+		$this->assertTrue($event->isStopped());
 	}
 
 	/**
-	 * Test the offsetSet method.
+	 * @testdox  An argument can be set on the event when accessing the event as an array
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\Event
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testOffsetSet()
 	{
-		$this->instance['foo'] = 'bar';
+		$event = $this->createEventWithoutArguments();
+		$event['foo'] = 'bar';
 
-		$this->assertTrue($this->instance->hasArgument('foo'));
-		$this->assertEquals('bar', $this->instance->getArgument('foo'));
-
-		$argument = array(
-			'test' => array(
-				'foo' => 'bar',
-				'test' => 'test'
-			),
-			'foo' => new \stdClass
-		);
-
-		$this->instance['foo'] = $argument;
-		$this->assertTrue($this->instance->hasArgument('foo'));
-		$this->assertSame($argument, $this->instance->getArgument('foo'));
+		$this->assertTrue($event->hasArgument('foo'));
+		$this->assertEquals('bar', $event->getArgument('foo'));
 	}
 
 	/**
-	 * Test the offsetSet method exception.
+	 * @testdox  An argument requires a name when setting arguments on the event as an array
 	 *
-	 * @expectedException  \InvalidArgumentException
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\Event
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testOffsetSetException()
 	{
-		$this->instance[] = 'bar';
+		$this->expectException(\InvalidArgumentException::class);
+
+		$this->createEventWithoutArguments()[] = 'bar';
 	}
 
 	/**
-	 * Test the offsetUnset method.
+	 * @testdox  An argument can be removed from an event when accessing the event as an array
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\Event
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testOffsetUnset()
 	{
-		// No exception.
-		unset($this->instance['foo']);
+		$event = $this->createEventWithArguments();
 
-		$this->instance['foo'] = 'bar';
-		unset($this->instance['foo']);
+		unset($event['string']);
 
-		$this->assertFalse($this->instance->hasArgument('foo'));
+		$this->assertFalse($event->hasArgument('string'));
 	}
 
 	/**
-	 * Sets up the fixture.
+	 * Creates an event without any arguments
 	 *
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @return  Event
 	 */
-	protected function setUp()
+	private function createEventWithoutArguments(): Event
 	{
-		$this->instance = new Event('test');
+		return new Event('test');
+	}
+
+	/**
+	 * Creates an event with some arguments
+	 *
+	 * @return  Event
+	 */
+	private function createEventWithArguments(): Event
+	{
+		return new Event(
+			'test',
+			[
+				'string' => 'bar',
+				'object' => new \stdClass,
+				'array'  => [
+					'foo'  => 'bar',
+					'test' => [
+						'foo'  => 'bar',
+						'test' => 'test',
+					],
+				],
+			]
+		);
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -11,90 +11,55 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for the EventImmutable class.
- *
- * @since  1.0
  */
 class EventImmutableTest extends TestCase
 {
 	/**
-	 * Object under tests.
+	 * @testdox  The constructor cannot be triggered multiple times
 	 *
-	 * @var    EventImmutable
-	 *
-	 * @since  1.0
+	 * @covers   Joomla\Event\EventImmutable
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
-	private $instance;
-
-	/**
-	 * Test the constructor.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function test__construct()
+	public function testCannotBeConstructedMultipleTimes()
 	{
-		$arguments = array('foo' => 'bar');
-		$event = new EventImmutable('test', $arguments);
+		$this->expectException(\BadMethodCallException::class);
 
-		$this->assertEquals('test', $event->getName());
-		$this->assertEquals($arguments, $event->getArguments());
+		$this->createEventWithoutArguments()->__construct('foo');
 	}
 
 	/**
-	 * Test the constructor exception when calling it
-	 * on an already constructed object.
+	 * @testdox  An argument cannot be set on the event after it is instantiated
 	 *
-	 * @expectedException  \BadMethodCallException
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function test__constructException()
-	{
-		$this->instance->__construct('foo');
-	}
-
-	/**
-	 * Test the offsetSet method.
-	 *
-	 * @expectedException  \BadMethodCallException
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\EventImmutable
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testOffsetSet()
 	{
-		$this->instance['foo'] = 'bar';
+		$this->expectException(\BadMethodCallException::class);
+
+		$this->createEventWithoutArguments()['foo'] = 'bar';
 	}
 
 	/**
-	 * Test the offsetUnset method.
+	 * @testdox  An argument cannot be removed from the event after it is instantiated
 	 *
-	 * @expectedException  \BadMethodCallException
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\EventImmutable
+	 * @uses     Joomla\Event\AbstractEvent
 	 */
 	public function testOffsetUnSet()
 	{
-		unset($this->instance['foo']);
+		$this->expectException(\BadMethodCallException::class);
+
+		unset($this->createEventWithoutArguments()['foo']);
 	}
 
 	/**
-	 * Sets up the fixture.
+	 * Creates an event without any arguments
 	 *
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @return  EventImmutable
 	 */
-	protected function setUp()
+	private function createEventWithoutArguments(): EventImmutable
 	{
-		$this->instance = new EventImmutable('test');
+		return new EventImmutable('test');
 	}
 }

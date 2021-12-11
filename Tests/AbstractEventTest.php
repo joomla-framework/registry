@@ -1,12 +1,14 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 namespace Joomla\Event\Tests;
 
 use Joomla\Event\AbstractEvent;
+use Joomla\Event\Event;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,237 +19,159 @@ use PHPUnit\Framework\TestCase;
 class AbstractEventTest extends TestCase
 {
 	/**
-	 * Object under tests.
+	 * @testdox  The event's name can be retrieved
 	 *
-	 * @var    AbstractEvent
-	 *
-	 * @since  1.0
-	 */
-	private $instance;
-
-	/**
-	 * Test the getName method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\AbstractEvent
 	 */
 	public function testGetName()
 	{
-		$this->assertEquals('test', $this->instance->getName());
+		$this->assertEquals('test', $this->createEventWithoutArguments()->getName());
 	}
 
 	/**
-	 * Test the getArgument method.
+	 * @testdox  A named event argument can be retrieved
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\AbstractEvent
 	 */
 	public function testGetArgument()
 	{
-		$this->assertFalse($this->instance->getArgument('non-existing', false));
+		$event = $this->createEventWithArguments();
 
-		$object = new \stdClass;
-		$array = array(
-			'foo' => 'bar',
-			'test' => array(
-				'foo' => 'bar',
-				'test' => 'test'
-			)
-		);
-
-		$arguments = array(
-			'string' => 'bar',
-			'object' => $object,
-			'array' => $array
-		);
-
-		/** @var $event \Joomla\Event\AbstractEvent */
-		$event = $this->getMockForAbstractClass('Joomla\Event\AbstractEvent', array('test', $arguments));
-
-		$this->assertEquals('bar', $event->getArgument('string'));
-		$this->assertSame($object, $event->getArgument('object'));
-		$this->assertSame($array, $event->getArgument('array'));
+		$this->assertFalse($event->getArgument('non-existing', false));
+		$this->assertSame('bar', $event->getArgument('string'));
+		$this->assertInstanceOf(\stdClass::class, $event->getArgument('object'));
+		$this->assertIsArray($event->getArgument('array'));
 	}
 
 	/**
-	 * Test the hasArgument method.
+	 * @testdox  The event can be checked for a named argument
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\AbstractEvent
 	 */
 	public function testHasArgument()
 	{
-		$this->assertFalse($this->instance->hasArgument('non-existing'));
+		$event = $this->createEventWithArguments();
 
-		/** @var $event \Joomla\Event\AbstractEvent */
-		$event = $this->getMockForAbstractClass('Joomla\Event\AbstractEvent', array('test', array('foo' => 'bar')));
-
-		$this->assertTrue($event->hasArgument('foo'));
+		$this->assertFalse($event->hasArgument('non-existing'));
+		$this->assertTrue($event->hasArgument('string'));
 	}
 
 	/**
-	 * Test the getArguments method.
+	 * @testdox  The event arguments can be retrieved
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\AbstractEvent
 	 */
 	public function testGetArguments()
 	{
-		$this->assertEmpty($this->instance->getArguments());
-
-		$object = new \stdClass;
-		$array = array(
-			'foo' => 'bar',
-			'test' => array(
-				'foo' => 'bar',
-				'test' => 'test'
-			)
-		);
-
-		$arguments = array(
-			'string' => 'bar',
-			'object' => $object,
-			'array' => $array
-		);
-
-		/** @var $event \Joomla\Event\AbstractEvent */
-		$event = $this->getMockForAbstractClass('Joomla\Event\AbstractEvent', array('test', $arguments));
-
-		$this->assertSame($arguments, $event->getArguments());
+		$this->assertEmpty($this->createEventWithoutArguments()->getArguments());
 	}
 
 	/**
-	 * Test the isStopped method.
-	 * An immutable event shoudln't be stopped, otherwise it won't trigger.
+	 * @testdox  The event can be checked if its propagation has been stopped
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\AbstractEvent
 	 */
 	public function testIsStopped()
 	{
-		$this->assertFalse($this->instance->isStopped());
+		$this->assertFalse($this->createEventWithoutArguments()->isStopped());
 	}
 
 	/**
-	 * Test the count method.
+	 * @testdox  An event's propagation can be stopped
 	 *
-	 * @return  void
+	 * @covers   Joomla\Event\AbstractEvent
+	 */
+	public function testStopPropagation()
+	{
+		$event = $this->createEventWithoutArguments();
+
+		$event->stopPropagation();
+		$this->assertTrue($event->isStopped());
+	}
+
+	/**
+	 * @testdox  The event arguments can be counted
 	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\AbstractEvent
 	 */
 	public function testCount()
 	{
-		$this->assertCount(0, $this->instance);
-
-		$event = $this->getMockForAbstractClass('Joomla\Event\AbstractEvent', array('test',
-				array(
-				'foo' => 'bar',
-				'test' => array('test')
-				)
-			)
-		);
-
-		$this->assertCount(2, $event);
+		$this->assertCount(3, $this->createEventWithArguments());
 	}
 
 	/**
-	 * Test the serialize and unserialize methods.
+	 * @testdox  The event can be serialized and unserialized
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\AbstractEvent
 	 */
 	public function testSerializeUnserialize()
 	{
-		$object = new \stdClass;
-		$array = array(
-			'foo' => 'bar',
-			'test' => array(
-				'foo' => 'bar',
-				'test' => 'test'
-			)
-		);
+		$event = $this->createEventWithArguments();
 
-		$arguments = array(
-			'string' => 'bar',
-			'object' => $object,
-			'array' => $array
-		);
-
-		$event = $this->getMockForAbstractClass('Joomla\Event\AbstractEvent', array('test', $arguments));
-
-		$serialized = serialize($event);
-
-		$unserialized = unserialize($serialized);
-
-		$this->assertEquals($event, $unserialized);
+		$this->assertEquals($event, unserialize(serialize($event)));
 	}
 
 	/**
-	 * Test the offsetExists method.
+	 * @testdox  The event arguments can be checked for presence when accessing the event as an array
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\AbstractEvent
 	 */
 	public function testOffsetExists()
 	{
-		$this->assertFalse(isset($this->instance['foo']));
+		$event = $this->createEventWithArguments();
 
-		$event = $this->getMockForAbstractClass('Joomla\Event\AbstractEvent', array('test', array('foo' => 'bar')));
-
-		$this->assertTrue(isset($event['foo']));
+		$this->assertFalse(isset($event['non-existing']));
+		$this->assertTrue(isset($event['string']));
 	}
 
 	/**
-	 * Test the offsetGet method.
+	 * @testdox  The event arguments can be retrieved when accessing the event as an array
 	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @covers   Joomla\Event\AbstractEvent
 	 */
 	public function testOffsetGet()
 	{
-		$this->assertNull($this->instance['foo']);
+		$event = $this->createEventWithArguments();
 
-		$object = new \stdClass;
-		$array = array(
-			'foo' => 'bar',
-			'test' => array(
-				'foo' => 'bar',
-				'test' => 'test'
-			)
-		);
-
-		$arguments = array(
-			'string' => 'bar',
-			'object' => $object,
-			'array' => $array
-		);
-
-		$event = $this->getMockForAbstractClass('Joomla\Event\AbstractEvent', array('test', $arguments));
-
-		$this->assertEquals('bar', $event['string']);
-		$this->assertSame($object, $event['object']);
-		$this->assertSame($array, $event['array']);
+		$this->assertNull($event['non-existing']);
+		$this->assertSame('bar', $event['string']);
+		$this->assertInstanceOf(\stdClass::class, $event['object']);
+		$this->assertIsArray($event['array']);
 	}
 
 	/**
-	 * Sets up the fixture.
+	 * Creates an event without any arguments
 	 *
-	 * This method is called before a test is executed.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
+	 * @return  AbstractEvent|MockObject
 	 */
-	protected function setUp()
+	private function createEventWithoutArguments(): AbstractEvent
 	{
-		$this->instance = $this->getMockForAbstractClass('Joomla\Event\AbstractEvent', array('test'));
+		return $this->getMockForAbstractClass(AbstractEvent::class, ['test']);
+	}
+
+	/**
+	 * Creates an event with some arguments
+	 *
+	 * @return  AbstractEvent|MockObject
+	 */
+	private function createEventWithArguments(): AbstractEvent
+	{
+		return $this->getMockForAbstractClass(
+			AbstractEvent::class,
+			[
+				'test',
+				[
+					'string' => 'bar',
+					'object' => new \stdClass,
+					'array'  => [
+						'foo'  => 'bar',
+						'test' => [
+							'foo'  => 'bar',
+							'test' => 'test',
+						],
+					],
+				],
+			]
+		);
 	}
 }
