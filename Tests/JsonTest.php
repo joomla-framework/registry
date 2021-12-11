@@ -1,90 +1,82 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Input\Tests;
 
+use Joomla\Filter\InputFilter;
 use Joomla\Input\Json;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/Stubs/FilterInputMock.php';
-
 /**
- * Test class for Joomla\Input\Json.
- *
- * @since  1.0
+ * Test class for \Joomla\Input\Json.
  */
 class JsonTest extends TestCase
 {
 	/**
-	 * Test the Joomla\Input\Json::__construct method.
+	 * @testdox  Tests the default constructor behavior
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Json::__construct
-	 * @since   1.0
+	 * @covers   Joomla\Input\Json
+	 * @uses     Joomla\Input\Input
 	 */
-	public function test__construct()
+	public function test__constructDefaultBehaviour()
 	{
-		// Default constructor call
 		$instance = new Json;
 
-		$this->assertInstanceOf(
-			'Joomla\Filter\InputFilter',
-			TestHelper::getValue($instance, 'filter')
-		);
-
-		$this->assertEmpty(
-			TestHelper::getValue($instance, 'options')
-		);
-
-		$this->assertEmpty(
-			TestHelper::getValue($instance, 'data')
-		);
-
-		// Given Source & filter
-		$src = array('foo' => 'bar');
-		$instance = new Json($src, array('filter' => new FilterInputMock));
-
-		$this->assertArrayHasKey(
-			'filter',
-			TestHelper::getValue($instance, 'options')
-		);
-
-		$this->assertEquals(
-			$src,
-			TestHelper::getValue($instance, 'data')
-		);
-
-		// Src from GLOBAL
-		$GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
-		$instance = new Json;
-
-		$this->assertEquals(
-			array('a' => 1, 'b' => 2),
-			TestHelper::getValue($instance, 'data')
-		);
+		$this->assertEmpty(TestHelper::getValue($instance, 'data'), 'The JSON input defaults to php://input which should be empty in the test environment');
+		$this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
 	}
 
 	/**
-	 * Test the Joomla\Input\Json::getRaw method.
+	 * @testdox  Tests the constructor with injected data
 	 *
-	 * @return  void
+	 * @covers   Joomla\Input\Json
+	 * @uses     Joomla\Input\Input
+	 */
+	public function test__constructDependencyInjection()
+	{
+		$src        = ['foo' => 'bar'];
+		$mockFilter = $this->createMock(InputFilter::class);
+
+		$instance = new Json($src, ['filter' => $mockFilter]);
+
+		$this->assertSame($src, TestHelper::getValue($instance, 'data'));
+		$this->assertSame($mockFilter, TestHelper::getValue($instance, 'filter'));
+	}
+
+	/**
+	 * @testdox  Tests the constructor when reading data from the $GLOBALS
 	 *
-	 * @covers  Joomla\Input\Json::getRaw
-	 * @since   1.0
+	 * @covers   Joomla\Input\Json
+	 * @uses     Joomla\Input\Input
+	 *
+	 * @backupGlobals enabled
+	 */
+	public function test__constructReadingFromGlobals()
+	{
+		$GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
+
+		$instance = new Json;
+
+		$this->assertSame(['a' => 1, 'b' => 2], TestHelper::getValue($instance, 'data'));
+		$this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
+	}
+
+	/**
+	 * @testdox  Tests the constructor when reading data from the $GLOBALS
+	 *
+	 * @covers   Joomla\Input\Json
+	 * @uses     Joomla\Input\Input
+	 *
+	 * @backupGlobals enabled
 	 */
 	public function testgetRaw()
 	{
 		$GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
-		$instance = new Json;
 
-		$this->assertEquals(
-			$GLOBALS['HTTP_RAW_POST_DATA'],
-			$instance->getRaw()
-		);
+		$this->assertSame($GLOBALS['HTTP_RAW_POST_DATA'], (new Json)->getRaw());
 	}
 }

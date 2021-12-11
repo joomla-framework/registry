@@ -1,162 +1,150 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Input\Tests;
 
+use Joomla\Filter\InputFilter;
 use Joomla\Input\Files;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/Stubs/FilterInputMock.php';
-
 /**
  * Test class for \Joomla\Input\Files.
- *
- * @since  1.0
  */
 class FilesTest extends TestCase
 {
 	/**
-	 * Test the Joomla\Input\Files::__construct method.
+	 * @testdox  Tests the default constructor behavior
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Files::__construct
-	 * @since   1.1.4
+	 * @covers   Joomla\Input\Files
+	 * @uses     Joomla\Input\Input
 	 */
-	public function test__construct()
+	public function test__constructDefaultBehaviour()
 	{
-		// Default constructor call
 		$instance = new Files;
 
-		$this->assertInstanceOf(
-			'Joomla\Filter\InputFilter',
-			TestHelper::getValue($instance, 'filter')
-		);
-
-		$this->assertEmpty(
-			TestHelper::getValue($instance, 'options')
-		);
-
-		$this->assertEquals(
-			$_FILES,
-			TestHelper::getValue($instance, 'data')
-		);
-
-		// Given Source & filter
-		$src = array('foo' => 'bar');
-		$instance = new Files($src, array('filter' => new FilterInputMock));
-
-		$this->assertArrayHasKey(
-			'filter',
-			TestHelper::getValue($instance, 'options')
-		);
+		$this->assertSame($_FILES, TestHelper::getValue($instance, 'data'), 'The Files input defaults to the $_FILES superglobal');
+		$this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
 	}
 
 	/**
-	 * Test the Joomla\Input\Files::get method.
+	 * @testdox  Tests the constructor with injected data
 	 *
-	 * @return  void
+	 * @covers   Joomla\Input\Files
+	 * @uses     Joomla\Input\Input
+	 */
+	public function test__constructDependencyInjection()
+	{
+		$src        = ['foo' => 'bar'];
+		$mockFilter = $this->createMock(InputFilter::class);
+
+		$instance = new Files($src, ['filter' => $mockFilter]);
+
+		$this->assertSame($src, TestHelper::getValue($instance, 'data'));
+		$this->assertSame($mockFilter, TestHelper::getValue($instance, 'filter'));
+	}
+
+	/**
+	 * @testdox  Tests the data source is correctly read
 	 *
-	 * @covers  Joomla\Input\Files::get
-	 * @since   1.0
+	 * @covers   Joomla\Input\Files
+	 * @uses     Joomla\Input\Input
 	 */
 	public function testGet()
 	{
-		$instance = new Files;
-
-		$this->assertEquals('foobar', $instance->get('myfile', 'foobar'));
-
-		$data = array(
-			'myfile' => array(
-				'name' => 'n',
-				'type' => 'ty',
+		$data = [
+			'myfile'  => [
+				'name'     => 'n',
+				'type'     => 'ty',
 				'tmp_name' => 'tm',
-				'error' => 'e',
-				'size' => 's'
-			),
-			'myfile2' => array(
-				'name' => 'nn',
-				'type' => 'ttyy',
+				'error'    => 'e',
+				'size'     => 's'
+			],
+			'myfile2' => [
+				'name'     => 'nn',
+				'type'     => 'ttyy',
 				'tmp_name' => 'ttmm',
-				'error' => 'ee',
-				'size' => 'ss'
-			)
-		);
+				'error'    => 'ee',
+				'size'     => 'ss'
+			]
+		];
 
-		$decoded = TestHelper::setValue($instance, 'data', $data);
-		$expected = array(
-			'name' => 'n',
-			'type' => 'ty',
-			'tmp_name' => 'tm',
-			'error' => 'e',
-			'size' => 's'
-		);
+		$mockFilter = $this->createMock(InputFilter::class);
 
-		$this->assertEquals($expected, $instance->get('myfile'));
+		$instance = new Files($data, ['filter' => $mockFilter]);
+
+		$this->assertEquals('foobar', $instance->get('myfile3', 'foobar'), 'The default value is returned if data does not exist.');
+
+		$this->assertEquals(
+			[
+				'name'     => 'n',
+				'type'     => 'ty',
+				'tmp_name' => 'tm',
+				'error'    => 'e',
+				'size'     => 's'
+			],
+			$instance->get('myfile')
+		);
 	}
 
 	/**
-	 * Test the Joomla\Input\Files::decodeData method.
+	 * @testdox  Tests a multi-level data source is correctly read
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Files::decodeData
-	 * @since   1.1.4
+	 * @covers   Joomla\Input\Files
+	 * @uses     Joomla\Input\Input
 	 */
-	public function testDecodeData()
+	public function testGetWithMultiLevelData()
 	{
-		$instance = new Files;
+		$dataArr = ['first', 'second'];
+		$data = [
+			'myfile'  => [
+				'name'     => $dataArr,
+				'type'     => $dataArr,
+				'tmp_name' => $dataArr,
+				'error'    => $dataArr,
+				'size'     => $dataArr
+			]
+		];
 
-		$data = array('n', 'ty', 'tm', 'e', 's');
-		$decoded = TestHelper::invoke($instance, 'decodeData', $data);
-		$expected = array(
-			'name' => 'n',
-			'type' => 'ty',
-			'tmp_name' => 'tm',
-			'error' => 'e',
-			'size' => 's'
+		$mockFilter = $this->createMock(InputFilter::class);
+
+		$instance = new Files($data, ['filter' => $mockFilter]);
+
+		$this->assertEquals(
+			[
+				[
+					'name'     => 'first',
+					'type'     => 'first',
+					'tmp_name' => 'first',
+					'error'    => 'first',
+					'size'     => 'first'
+				],
+				[
+					'name'     => 'second',
+					'type'     => 'second',
+					'tmp_name' => 'second',
+					'error'    => 'second',
+					'size'     => 'second'
+				]
+			],
+			$instance->get('myfile')
 		);
-
-		$this->assertEquals($expected, $decoded);
-
-		$dataArr = array('first', 'second');
-		$data = array($dataArr , $dataArr, $dataArr, $dataArr, $dataArr);
-
-		$decoded = TestHelper::invoke($instance, 'decodeData', $data);
-		$expectedFirst = array(
-			'name' => 'first',
-			'type' => 'first',
-			'tmp_name' => 'first',
-			'error' => 'first',
-			'size' => 'first'
-		);
-		$expectedSecond = array(
-			'name' => 'second',
-			'type' => 'second',
-			'tmp_name' => 'second',
-			'error' => 'second',
-			'size' => 'second'
-		);
-		$expected = array($expectedFirst, $expectedSecond);
-		$this->assertEquals($expected, $decoded);
 	}
 
 	/**
-	 * Test the Joomla\Input\Files::set method.
+	 * @testdox  Tests the data source cannot be modified
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Input\Files::set
-	 * @since   1.0
+	 * @covers   Joomla\Input\Files
+	 * @uses     Joomla\Input\Input
 	 */
 	public function testSet()
 	{
 		$instance = new Files;
+		$instance->set('foo', 'bar');
 
-		$this->assertNull($instance->set('foo', 'bar'));
+		$this->assertFalse($instance->exists('foo'));
 	}
 }

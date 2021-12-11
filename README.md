@@ -1,8 +1,8 @@
-# The Input Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/input/status.svg)](https://ci.joomla.org/joomla-framework/input)
+# The Input Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/input/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/input)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/input/v/stable)](https://packagist.org/packages/joomla/input) [![Total Downloads](https://poser.pugx.org/joomla/input/downloads)](https://packagist.org/packages/joomla/input) [![Latest Unstable Version](https://poser.pugx.org/joomla/input/v/unstable)](https://packagist.org/packages/joomla/input) [![License](https://poser.pugx.org/joomla/input/license)](https://packagist.org/packages/joomla/input)
 
-This package comprises of four classes, `Input\Input`and four sub-classes extended from it: `Input\Cli`, `Input\Cookie`, `Input\Files`, and `Input\Json`. An input object is generally owned by the application and explicitly added to an application class as a public property, such as can be found in `Application\AbstractApplication`.
+This package comprises of four classes, `Input\Input`and several sub-classes extended from it: `Input\Cookie`, `Input\Files`, and `Input\Json`. An input object is generally owned by the application and explicitly added to an application class as a public property, such as can be found in `Application\AbstractApplication`.
 
 The intent of this package is to abstract out the input source to allow code to be reused in different applications and in different contexts through dependency injection. For example, a controller could inspect the request variables directly using `JRequest`. But suppose there is a requirement to add a web service that carries input as a JSON payload. Instead of writing a second controller to handle the different input source, it would be much easier to inject an input object that is tailored for the type of input source, into the controller.
 
@@ -124,66 +124,6 @@ $host = $input->env->get('HOSTNAME');
 
 The `Input\Input` class implements the `Serializable` interface so that it can be safely serialized and unserialized. Note that when serializing the "ENV" and "SERVER" inputs are removed from the class as they may conflict or inappropriately overwrite settings during unserialization. This allows for `Input\Input` objects to be safely used with cached data.
 
-## Input\Cli
-
-The `Input\Cli` class is extended from `Input\Input` but is tailored to work with command line input. Once again the get method is used to get values of command line variables in short name format (one or more individual characters following a single dash) or long format (a variable name followed by two dashes). Additional arguments can be found be accessing the args property of the input object.
-
-An instance of `Input\Cli` will rarely be instantiated directly. Instead, it would be used implicitly as a part of an application built from `Application\AbstractCliApplication` as shown in the following example.
-
-```php
-#!/usr/bin/php
-/**
- * This file is saved as argv.php
- *
- * @package  Examples
- */
-
-/**
- * An example command line application.
- *
- * @package  Examples
- * @since    1.0
- */
-class Argv extends Joomla\Application\AbstractCliApplication
-{
-	/**
-	 * Execute the application.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function execute()
-	{
-		var_dump($this->input->get('a'));
-		var_dump($this->input->get('set'));
-		var_dump($this->input->args);
-	}
-}
-```
-
-```
-> ./argv.php
-bool(false)
-bool(false)
-array(0) {}
-
-> ./argv.php -a --set=match
-bool(true)
-string(5) "match"
-array(0) {}
-
-> ./argv.php -a value
-string(5) "value"
-bool(false)
-array(0) {}
-
-> ./argv.php -a foo bar
-string(3) "foo"
-bool(false)
-array(1) {[0] => string(3) "bar"}
-```
-
 ## Input\Cookie
 
 > Can you help improve this section of the README?
@@ -273,64 +213,25 @@ The `set` method is disabled in `Input\Files`.
 For simple cases where you only need to mock the `Input\Input` class, the following snippet can be used:
 
 ```
-$mockInput = $this->getMock('Joomla\Input\Input');
+$mockInput = $this->getMockBuilder('Joomla\Input\Input')->getMock();
 ```
 
-For more complicated mocking where you need to similate input, you can use the `Input\Tests\InputMocker` class to create robust mock objects.
+## Changes From 1.x
 
-```php
-use Joomla\Input\Tests\InputMocker;
+The following changes have been made to the `Input` package since 1.x.
 
-class MyTest extends \PHPUnit_Framework_TestCase
-{
-	private $instance;
+### Pass By Reference
 
-	protected function setUp()
-	{
-		parent::setUp();
-
-		// Create the mock input object.
-		$inputMocker = new InputMocker($this);
-		$mockInput = $inputMocker->createInput();
-
-		// Set up some mock values for the input class to return.
-		$mockInput->set('foo', 'bar');
-
-		// Create the test instance injecting the mock dependency.
-		$this->instance = new MyClass($mockInput);
-	}
-}
-```
-
-The `createInput` method will return a mock of the `Input\Input` class with the following methods mocked to roughly simulate real behaviour albeit with reduced functionality:
-
-* `get($name [, $default, $fitler])`
-* `getArray([$array, $datasource])`
-* `getInt($name [, $default])`
-* `set($name, $value)`
-
-The `createInputJson` method will return a mock of the `Input\Json` class. It extends from the `createInput` method and adds the following method:
-
-* `getRaw`
-
-You can provide customised implementations these methods by creating the following methods in your test class respectively:
-
-* `mockInputGet`
-* `mockInputGetArray`
-* `mockInputGetInt`
-* `mockInputSet`
-* `mockInputGetRaw`
-
-
+`Input`, `Input\Cookie`, and `Input\Files` all use the source superglobal by reference in 1.x.  In 2.0, the reference is removed.
 
 ## Installation via Composer
 
-Add `"joomla/input": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/input": "~2.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/input": "~1.0"
+		"joomla/input": "~2.0"
 	}
 }
 ```
@@ -338,11 +239,11 @@ Add `"joomla/input": "~1.0"` to the require block in your composer.json and then
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/input "~1.0"
+composer require joomla/input "~2.0"
 ```
 
 If you want to include the test sources, use
 
 ```sh
-composer require --prefer-source joomla/input "~1.0"
+composer require --prefer-source joomla/input "~2.0"
 ```
