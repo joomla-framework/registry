@@ -15,7 +15,12 @@
     <exclude-pattern>*/vendor/*</exclude-pattern>
 
     <rule ref="Joomla">
-        <!-- Required due to methods having required params after optional, should be fixed in 2.0 -->
-        <exclude name="PEAR.Functions.ValidDefaultValue"/>
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+    </rule>
+
+    <rule ref="Joomla.Classes.InstantiateNewClasses">
+        <properties>
+            <property name="shortArraySyntax" value="true"/>
+        </properties>
     </rule>
 </ruleset>
