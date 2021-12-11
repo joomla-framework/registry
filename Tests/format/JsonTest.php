@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -17,7 +17,7 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  A data object is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Json::objectToString
+	 * @covers   Joomla\Registry\Format\Json
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
@@ -37,7 +37,7 @@ class JsonTest extends TestCase
 		// The PHP registry format does not support nested objects
 		$object->section = new \stdClass;
 		$object->section->key = 'value';
-		$object->array = array('nestedarray' => array('test1' => 'value1'));
+		$object->array = ['nestedarray' => ['test1' => 'value1']];
 
 		$string = '{"foo":"bar","quoted":"\"stringwithquotes\"",' .
 			'"booleantrue":true,"booleanfalse":false,' .
@@ -50,13 +50,7 @@ class JsonTest extends TestCase
 		$decoded = json_decode($class->objectToString($object));
 
 		// Ensures that the generated string respects the json syntax
-		$errorMsg = 'JSON error decoding string.  Code: ' . json_last_error();
-
-		// If PHP 5.5 grab the last error message too
-		if (version_compare(PHP_VERSION, '5.5', 'ge'))
-		{
-			$errorMsg .= '; Message: ' . json_last_error_msg();
-		}
+		$errorMsg = 'JSON error decoding string.  Code: ' . json_last_error() . '; Message: ' . json_last_error_msg();
 
 		$this->assertNotNull($decoded, $errorMsg);
 
@@ -67,7 +61,9 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  A string is converted to a data object
 	 *
-	 * @covers   Joomla\Registry\Format\Json::stringToObject
+	 * @covers   Joomla\Registry\Format\Json
+	 * @uses     Joomla\Registry\Factory
+	 * @uses     Joomla\Registry\Format\Ini
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
@@ -83,7 +79,7 @@ class JsonTest extends TestCase
 		$object1->params->show_title = 1;
 		$object1->params->show_abstract = 0;
 		$object1->params->show_author = 1;
-		$object1->params->categories = array(1, 2);
+		$object1->params->categories = [1, 2];
 
 		$object2 = new \stdClass;
 		$object2->section = new \stdClass;
@@ -94,21 +90,21 @@ class JsonTest extends TestCase
 
 		// Test basic JSON string to object.
 		$this->assertEquals(
-			$class->stringToObject($string1, array('processSections' => false)),
+			$class->stringToObject($string1, ['processSections' => false]),
 			$object1,
 			'The complex JSON string should convert into the appropriate object.'
 		);
 
 		// Test JSON format string without sections.
 		$this->assertEquals(
-			$class->stringToObject($string2, array('processSections' => false)),
+			$class->stringToObject($string2, ['processSections' => false]),
 			$object3,
 			'The JSON string should convert into an object without sections.'
 		);
 
 		// Test JSON format string with sections.
 		$this->assertEquals(
-			$class->stringToObject($string2, array('processSections' => true)),
+			$class->stringToObject($string2, ['processSections' => true]),
 			$object2,
 			'The JSON string should covert into an object with sections.'
 		);
@@ -117,21 +113,19 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  A malformed JSON string causes an Exception to be thrown
 	 *
-	 * @covers   Joomla\Registry\Format\Json::stringToObject
-	 * @expectedException  \RuntimeException
+	 * @covers   Joomla\Registry\Format\Json
 	 */
 	public function testAMalformedJsonStringCausesAnExceptionToBeThrown()
 	{
-		$class = new Json;
+		$this->expectException(\RuntimeException::class);
 
-		$class->stringToObject('{key:\'value\'');
+		(new Json)->stringToObject('{key:\'value\'');
 	}
 
 	/**
 	 * @testdox  Validate data equality in converted objects
 	 *
-	 * @covers   Joomla\Registry\Format\Json::objectToString
-	 * @covers   Joomla\Registry\Format\Json::stringToObject
+	 * @covers   Joomla\Registry\Format\Json
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{
@@ -147,12 +141,10 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  Validate an Exception is not thrown when a string is decoded to null and no error is reported
 	 *
-	 * @covers   Joomla\Registry\Format\Json::stringToObject
+	 * @covers   Joomla\Registry\Format\Json
 	 */
 	public function testExceptionNotThrownWhenDecodedToNullWithoutError()
 	{
-		$class = new Json;
-
-		$this->assertInstanceOf('stdClass', $class->stringToObject('{}'));
+		$this->assertInstanceOf('stdClass', (new Json)->stringToObject('{}'));
 	}
 }

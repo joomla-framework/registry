@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -8,6 +8,8 @@ namespace Joomla\Registry\Tests\Format;
 
 use Joomla\Registry\Format\Yaml;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Test class for \Joomla\Registry\Format\Yaml.
@@ -27,39 +29,28 @@ class YamlTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	public function setUp()
+	public function setUp(): void
 	{
 		$this->fixture = new Yaml;
 	}
 
 	/**
-	 * @testdox  The formatter is instantiated correctly
-	 *
-	 * @covers   Joomla\Registry\Format\Yaml::__construct
-	 */
-	public function testConstruct()
-	{
-		$this->assertAttributeInstanceOf('Symfony\Component\Yaml\Parser', 'parser', $this->fixture);
-		$this->assertAttributeInstanceOf('Symfony\Component\Yaml\Dumper', 'dumper', $this->fixture);
-	}
-
-	/**
 	 * @testdox  A data object is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::objectToString
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
-		$object = (object) array(
+		$object = (object) [
 			'foo' => 'bar',
 			'quoted' => '"stringwithquotes"',
 			'booleantrue' => true,
 			'booleanfalse' => false,
 			'numericint' => 42,
 			'numericfloat' => 3.1415,
-			'section' => (object) array('key' => 'value'),
-			'array' => (object) array('nestedarray' => (object) array('test1' => 'value1'))
-		);
+			'section' => (object) ['key' => 'value'],
+			'array' => (object) ['nestedarray' => (object) ['test1' => 'value1']]
+		];
 
 		$yaml = 'foo: bar
 quoted: \'"stringwithquotes"\'
@@ -74,28 +65,28 @@ array:
 ';
 
 		$this->assertEquals(
-			str_replace(array("\n", "\r"), '', trim($this->fixture->objectToString($object))),
-			str_replace(array("\n", "\r"), '', trim($yaml))
+			str_replace(["\n", "\r"], '', trim($this->fixture->objectToString($object))),
+			str_replace(["\n", "\r"], '', trim($yaml))
 		);
 	}
 
 	/**
 	 * @testdox  An array is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::objectToString
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testAnArrayIsConvertedToAString()
 	{
-		$object = array(
+		$object = [
 			'foo' => 'bar',
 			'quoted' => '"stringwithquotes"',
 			'booleantrue' => true,
 			'booleanfalse' => false,
 			'numericint' => 42,
 			'numericfloat' => 3.1415,
-			'section' => array('key' => 'value'),
-			'array' => array('nestedarray' => array('test1' => 'value1'))
-		);
+			'section' => ['key' => 'value'],
+			'array' => ['nestedarray' => ['test1' => 'value1']]
+		];
 
 		$yaml = 'foo: bar
 quoted: \'"stringwithquotes"\'
@@ -110,28 +101,28 @@ array:
 ';
 
 		$this->assertEquals(
-			str_replace(array("\n", "\r"), '', trim($this->fixture->objectToString($object))),
-			str_replace(array("\n", "\r"), '', trim($yaml))
+			str_replace(["\n", "\r"], '', trim($this->fixture->objectToString($object))),
+			str_replace(["\n", "\r"], '', trim($yaml))
 		);
 	}
 
 	/**
 	 * @testdox  A string is converted to a data object
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::stringToObject
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
-		$object = (object) array(
+		$object = (object) [
 			'foo' => 'bar',
 			'quoted' => '"stringwithquotes"',
 			'booleantrue' => true,
 			'booleanfalse' => false,
 			'numericint' => 42,
 			'numericfloat' => 3.1415,
-			'section' => (object) array('key' => 'value'),
-			'array' => (object) array('nestedarray' => (object) array('test1' => 'value1'))
-		);
+			'section' => (object) ['key' => 'value'],
+			'array' => (object) ['nestedarray' => (object) ['test1' => 'value1']]
+		];
 
 		$yaml = 'foo: bar
 quoted: \'"stringwithquotes"\'
@@ -150,8 +141,7 @@ array:
 	/**
 	 * @testdox  Validate data equality in converted objects
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::objectToString
-	 * @covers   Joomla\Registry\Format\Yaml::stringToObject
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -17,8 +17,7 @@ class IniTest extends TestCase
 	/**
 	 * @testdox  A data object is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Ini::getValueAsINI
-	 * @covers   Joomla\Registry\Format\Ini::objectToString
+	 * @covers   Joomla\Registry\Format\Ini
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
@@ -34,7 +33,7 @@ class IniTest extends TestCase
 		$object->section->key = 'value';
 
 		// Test basic object to string.
-		$string = $class->objectToString($object, array('processSections' => true));
+		$string = $class->objectToString($object, ['processSections' => true]);
 
 		$this->assertSame(
 			"foo=\"bar\"\nbooleantrue=true\nbooleanfalse=false\nnumericint=42\nnumericfloat=3.1415\n\n[section]\nkey=\"value\"",
@@ -45,7 +44,7 @@ class IniTest extends TestCase
 	/**
 	 * @testdox  A string is converted to a data object
 	 *
-	 * @covers   Joomla\Registry\Format\Ini::stringToObject
+	 * @covers   Joomla\Registry\Format\Ini
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
@@ -60,10 +59,10 @@ class IniTest extends TestCase
 		$object2->section = $object1;
 
 		// Test INI format string without sections.
-		$this->assertEquals($class->stringToObject($string2, array('processSections' => false)), $object1);
+		$this->assertEquals($class->stringToObject($string2, ['processSections' => false]), $object1);
 
 		// Test INI format string with sections.
-		$this->assertEquals($class->stringToObject($string2, array('processSections' => true)), $object2);
+		$this->assertEquals($class->stringToObject($string2, ['processSections' => true]), $object2);
 
 		// Test empty string
 		$this->assertEquals(new \stdClass, $class->stringToObject(null));
@@ -71,7 +70,7 @@ class IniTest extends TestCase
 		$string3 = "[section]\nfoo=bar\n;Testcomment\nkey=value\n\n/brokenkey=)brokenvalue";
 		$object2->section->key = 'value';
 
-		$this->assertEquals($class->stringToObject($string3, array('processSections' => true)), $object2);
+		$this->assertEquals($class->stringToObject($string3, ['processSections' => true]), $object2);
 
 		$string4 = "boolfalse=false\nbooltrue=true\nkeywithoutvalue\nnumericfloat=3.1415\nnumericint=42\nkey=\"value\"";
 		$object3 = new \stdClass;
@@ -90,8 +89,7 @@ class IniTest extends TestCase
 	/**
 	 * @testdox  Validate data equality in converted objects
 	 *
-	 * @covers   Joomla\Registry\Format\Ini::objectToString
-	 * @covers   Joomla\Registry\Format\Ini::stringToObject
+	 * @covers   Joomla\Registry\Format\Ini
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{
@@ -101,8 +99,8 @@ class IniTest extends TestCase
 			"arrayitem[]=\"item1\"\narrayitem[]=\"item2\"\n\n" .
 			"[section2]\nboolfalse=false\nbooltrue=true\nnumericfloat=3.1415\nnumericint=42\nkey=\"value\"";
 
-		$object = $class->stringToObject($input, array('processSections' => true, 'supportArrayValues' => true));
-		$output = $class->objectToString($object, array('processSections' => true, 'supportArrayValues' => true));
+		$object = $class->stringToObject($input, ['processSections' => true, 'supportArrayValues' => true]);
+		$output = $class->objectToString($object, ['processSections' => true, 'supportArrayValues' => true]);
 
 		$this->assertEquals($input, $output, 'Input and output data must be equal.');
 	}

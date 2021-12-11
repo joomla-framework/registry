@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -17,8 +17,7 @@ class XmlTest extends TestCase
 	/**
 	 * @testdox  A data object is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Xml::getXmlChildren
-	 * @covers   Joomla\Registry\Format\Xml::objectToString
+	 * @covers   Joomla\Registry\Format\Xml
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
@@ -33,7 +32,7 @@ class XmlTest extends TestCase
 		$object->numericfloat = 3.1415;
 		$object->section = new \stdClass;
 		$object->section->key = 'value';
-		$object->array = array('nestedarray' => array('test1' => 'value1'));
+		$object->array = ['nestedarray' => ['test1' => 'value1']];
 
 		// Check for different PHP behavior of displaying boolean false in XML.
 		$checkFalse = '<check/>' === simplexml_load_string('<test/>')->addChild('check', false)->asXML() ? '/>' : '></node>';
@@ -62,8 +61,7 @@ class XmlTest extends TestCase
 	/**
 	 * @testdox  A string is converted to a data object
 	 *
-	 * @covers   Joomla\Registry\Format\Xml::getValueFromNode
-	 * @covers   Joomla\Registry\Format\Xml::stringToObject
+	 * @covers   Joomla\Registry\Format\Xml
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
@@ -78,7 +76,7 @@ class XmlTest extends TestCase
 		$object->numericfloat = 3.1415;
 		$object->section = new \stdClass;
 		$object->section->key = 'value';
-		$object->array = array('test1' => 'value1');
+		$object->array = ['test1' => 'value1'];
 
 		$string = "<?xml version=\"1.0\"?>\n<registry>" .
 			'<node name="foo" type="string">bar</node>' .
@@ -102,8 +100,7 @@ class XmlTest extends TestCase
 	/**
 	 * @testdox  Validate data equality in converted objects
 	 *
-	 * @covers   Joomla\Registry\Format\Xml::objectToString
-	 * @covers   Joomla\Registry\Format\Xml::stringToObject
+	 * @covers   Joomla\Registry\Format\Xml
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{

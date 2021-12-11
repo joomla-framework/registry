@@ -1,22 +1,11 @@
-# The Registry Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/registry/status.svg)](https://ci.joomla.org/joomla-framework/registry)
+# The Registry Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/registry/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/registry)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/registry/v/stable)](https://packagist.org/packages/joomla/registry)
 [![Total Downloads](https://poser.pugx.org/joomla/registry/downloads)](https://packagist.org/packages/joomla/registry)
 [![Latest Unstable Version](https://poser.pugx.org/joomla/registry/v/unstable)](https://packagist.org/packages/joomla/registry)
 [![License](https://poser.pugx.org/joomla/registry/license)](https://packagist.org/packages/joomla/registry)
 
-``` php
-use Joomla\Registry\Registry;
-
-$registry = new Registry;
-
-// Set a value in the registry.
-$registry->set('foo', 'bar');
-
-// Get a value from the registry;
-$value = $registry->get('foo');
-
-```
+The Registry package provides an indexed key-value data store and an API for importing/exporting this data to several formats.
 
 ## Load config by Registry
 
@@ -174,16 +163,6 @@ If you just want to merge first level, do not hope recursive:
 $registry1->merge($registry2, false); // Set param 2 to false that Registry will only merge first level
 ```
 
-## Dump to file.
-
-``` php
-$registry->toString();
-
-$registry->toString('xml');
-
-$registry->toString('ini');
-```
-
 ## Dump to one dimension
 
 ``` php
@@ -213,114 +192,14 @@ Array
 )
 ```
 
-## Using YAML
-
-Add Symfony YAML component in `composer.json`
-
-``` json
-{
-	"require-dev": {
-		"symfony/yaml": "~2.0"
-	}
-}
-```
-
-Using `yaml` format
-
-``` php
-$registry->loadFile($yamlFile, 'yaml');
-
-$registry->loadString('foo: bar', 'yaml');
-
-// Convert to string
-$registry->toString('yaml');
-```
-
-## Using XML
-
-Keep in mind that due to XML complexity, special format must be kept when loading into Registry.
-By default, the parent XML element should be named "registry" and all child elements should be named "node".
-The nodes should include a "name" attribute, for the name of the value. The nodes can be optionally filtered with a "type"
-attribute. Valid types are:
-
-* array
-* boolean
-* double
-* integer
-* object (default)
-* string
-
-**Loading input**
-
-``` xml
-<?xml version="1.0"?>
-<registry>
-	<node name="foo_1" type="string">bar</node>
-	<node name="foo_2" type="boolean">1</node>
-	<node name="foo_3" type="integer">42</node>
-	<node name="foo_4" type="double">3.1415</node>
-	<node name="foo_5" type="object">
-		<node name="foo_5_a" type="string">value</node>
-	</node>
-	<node name="foo_6" type="array">
-		<node name="foo_6_a" type="string">value</node>
-	</node>
-</registry>
-```
-
-with `Registry`
-
-``` php
-$registry = new Registry;
-
-// Load file or string
-$registry->loadFile($xmlFile, 'xml');
-$registry->loadString($xmlString, 'xml');
-```
-
-Outputs
-
-```
-Array(
-	foo_1 => bar
-	foo_2 => 1
-	foo_3 => 42
-	foo_4 => 3.1415
-	foo_5 => Array(
-		foo_5_a => value
-	)
-	foo_6 => Array(
-		foo_6_a => value
-	)
-)
-```
-
-The names of the XML import nodes can be customised using options. For example:
-
-``` php
-$registry = new Registry(array(
-    'name' => 'data',
-    'nodeName' => 'value'
-));
-
-$registry->loadString('<data><value name="foo" type="string">bar</value></data>, 'xml');
-```
-
-## Custom Formats
-To load your own custom format you must implement the `Joomla\Registry\FormatInterface`. This can then be loaded through the `Joomla\Registry\Factory` class. To load a custom format not provided by Joomla then you can load it by using
-
-`Factory::getFormat($type, $options)`
-
-In this scenario `$type` contains the format (and class) name. Whilst `$options` is an array with the key `format_namespace` which contains the namespace that the format is in. 
-
 ## Installation via Composer
 
-Add `"joomla/registry": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/registry": "~2.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/registry": "~1.0"
+		"joomla/registry": "~2.0"
 	}
 }
 ```
@@ -328,5 +207,5 @@ Add `"joomla/registry": "~1.0"` to the require block in your composer.json and t
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/registry "~1.0"
+composer require joomla/registry "~2.0"
 ```
