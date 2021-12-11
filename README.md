@@ -1,4 +1,4 @@
-## The Profiler Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/profiler/status.svg)](https://ci.joomla.org/joomla-framework/profiler)
+## The Profiler Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/profiler/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/profiler)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/profiler/v/stable)](https://packagist.org/packages/joomla/profiler)
 [![Total Downloads](https://poser.pugx.org/joomla/profiler/downloads)](https://packagist.org/packages/joomla/profiler)
@@ -140,12 +140,12 @@ End: 0.000016 seconds.
 
 ## Installation via Composer
 
-Add `"joomla/profiler": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/profiler": "~2.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/profiler": "~1.0"
+		"joomla/profiler": "~2.0"
 	}
 }
 ```
@@ -153,5 +153,5 @@ Add `"joomla/profiler": "~1.0"` to the require block in your composer.json and t
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/profiler "~1.0"
+composer require joomla/profiler "~2.0"
 ```

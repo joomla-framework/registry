@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -25,7 +25,7 @@ class ProfilePointTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -33,10 +33,7 @@ class ProfilePointTest extends TestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Profiler\ProfilePoint::__construct
-	 * @uses    \Joomla\Profiler\ProfilePoint::getMemoryBytes
-	 * @uses    \Joomla\Profiler\ProfilePoint::getName
-	 * @uses    \Joomla\Profiler\ProfilePoint::getTime
+	 * @covers  Joomla\Profiler\ProfilePoint
 	 */
 	public function testThePointIsInstantiatedCorrectly()
 	{
@@ -46,10 +43,7 @@ class ProfilePointTest extends TestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Profiler\ProfilePoint::__construct
-	 * @uses    \Joomla\Profiler\ProfilePoint::getMemoryBytes
-	 * @uses    \Joomla\Profiler\ProfilePoint::getName
-	 * @uses    \Joomla\Profiler\ProfilePoint::getTime
+	 * @covers  Joomla\Profiler\ProfilePoint
 	 */
 	public function testThePointIsInstantiatedCorrectlyWithInjectedDependencies()
 	{
@@ -60,7 +54,7 @@ class ProfilePointTest extends TestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Profiler\ProfilePoint::getName
+	 * @covers  Joomla\Profiler\ProfilePoint
 	 */
 	public function testThePointNameIsReturned()
 	{
@@ -68,7 +62,7 @@ class ProfilePointTest extends TestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Profiler\ProfilePoint::getTime
+	 * @covers  Joomla\Profiler\ProfilePoint
 	 */
 	public function testThePointTimeIsReturned()
 	{
@@ -76,7 +70,7 @@ class ProfilePointTest extends TestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Profiler\ProfilePoint::getMemoryBytes
+	 * @covers  Joomla\Profiler\ProfilePoint
 	 */
 	public function testThePointMemoryIsReturnedInBytes()
 	{
@@ -84,11 +78,10 @@ class ProfilePointTest extends TestCase
 	}
 
 	/**
-	 * @covers  \Joomla\Profiler\ProfilePoint::getMemoryMegaBytes
+	 * @covers  Joomla\Profiler\ProfilePoint
 	 */
 	public function testThePointMemoryIsReturnedInMegabytes()
 	{
-		$profilePoint = new ProfilePoint('test', 0, 1048576);
-		$this->assertEquals($profilePoint->getMemoryMegaBytes(), 1);
+		$this->assertEquals((new ProfilePoint('test', 0, 1048576))->getMemoryMegaBytes(), 1);
 	}
 }

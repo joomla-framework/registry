@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Profiler Package
  *
- * @copyright  Copyright (C) 2005 - 2016 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -31,7 +31,7 @@ class Profiler implements ProfilerInterface, \IteratorAggregate, \Countable
 	 * @var    ProfilePointInterface[]
 	 * @since  1.0
 	 */
-	protected $points;
+	protected $points = [];
 
 	/**
 	 * A lookup array containing the names of the already marked points as keys * and their indexes in $points as value.
@@ -41,7 +41,7 @@ class Profiler implements ProfilerInterface, \IteratorAggregate, \Countable
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $lookup = array();
+	protected $lookup = [];
 
 	/**
 	 * A flag to see if we must get the real memory usage, or the usage of emalloc().
@@ -94,19 +94,12 @@ class Profiler implements ProfilerInterface, \IteratorAggregate, \Countable
 	 * @since   1.0
 	 * @throws  \InvalidArgumentException
 	 */
-	public function __construct($name, ProfilerRendererInterface $renderer = null, array $points = array(), $memoryRealUsage = false)
+	public function __construct($name, ProfilerRendererInterface $renderer = null, array $points = [], $memoryRealUsage = false)
 	{
 		$this->name     = $name;
 		$this->renderer = $renderer ? : new DefaultRenderer;
 
-		if (empty($points))
-		{
-			$this->points = array();
-		}
-		else
-		{
-			$this->setPoints($points);
-		}
+		$this->setPoints($points);
 
 		$this->memoryRealUsage = (bool) $memoryRealUsage;
 	}
