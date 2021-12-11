@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Filesystem Package
  *
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -92,7 +92,7 @@ class Stream
 	 * @var    array
 	 * @since  1.0
 	 */
-	protected $filters = array();
+	protected $filters = [];
 
 	/**
 	 * File Handle
@@ -143,7 +143,7 @@ class Stream
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($writeprefix = '', $readprefix = '', $context = array())
+	public function __construct($writeprefix = '', $readprefix = '', $context = [])
 	{
 		$this->writeprefix    = $writeprefix;
 		$this->readprefix     = $readprefix;
@@ -180,17 +180,17 @@ class Stream
 	public static function getStream($usePrefix = true, $ua = null, $uamask = false)
 	{
 		// Setup the context; Joomla! UA and overwrite
-		$context = array();
+		$context = [];
 
 		// Set the UA for HTTP
 		$context['http']['user_agent'] = $ua ?: 'Joomla! Framework Stream';
 
 		if ($usePrefix)
 		{
-			return new Stream(JPATH_ROOT . '/', JPATH_ROOT, $context);
+			return new static(JPATH_ROOT . '/', JPATH_ROOT, $context);
 		}
 
-		return new Stream('', '', $context);
+		return new static('', '', $context);
 	}
 
 	/**
@@ -232,15 +232,15 @@ class Stream
 		{
 			$scheme = ucfirst($url['scheme']);
 
+			// Map to StringWrapper if required
+			if ($scheme === 'String')
+			{
+				$scheme = 'StringWrapper';
+			}
+
 			// If we're dealing with a Joomla! stream, load it
 			if (Helper::isJoomlaStream($scheme))
 			{
-				// Map to StringWrapper if required
-				if ($scheme === 'String')
-				{
-					$scheme = 'StringWrapper';
-				}
-
 				require_once __DIR__ . '/Stream/' . $scheme . '.php';
 			}
 
@@ -1252,7 +1252,7 @@ class Stream
 	 * @since   1.0
 	 * @throws  FilesystemException
 	 */
-	public function appendFilter($filtername, $readWrite = \STREAM_FILTER_READ, $params = array())
+	public function appendFilter($filtername, $readWrite = \STREAM_FILTER_READ, $params = [])
 	{
 		$res = false;
 
@@ -1307,7 +1307,7 @@ class Stream
 	 * @since   1.0
 	 * @throws  FilesystemException
 	 */
-	public function prependFilter($filtername, $readWrite = \STREAM_FILTER_READ, $params = array())
+	public function prependFilter($filtername, $readWrite = \STREAM_FILTER_READ, $params = [])
 	{
 		$res = false;
 
@@ -1762,7 +1762,7 @@ class Stream
 	 */
 	public function set($property, $value = null)
 	{
-		$previous        = isset($this->$property) ? $this->$property : null;
+		$previous        = $this->$property ?? null;
 		$this->$property = $value;
 
 		return $previous;

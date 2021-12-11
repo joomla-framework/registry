@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Filesystem Package
  *
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -143,7 +143,7 @@ class StringWrapper
 		$now     = time();
 		$refPath = StringController::getRef(str_replace('string://', '', $path));
 		$string  = &$refPath;
-		$stat    = array(
+		$stat    = [
 			'dev'     => 0,
 			'ino'     => 0,
 			'mode'    => 0,
@@ -157,7 +157,7 @@ class StringWrapper
 			'ctime'   => $now,
 			'blksize' => '512',
 			'blocks'  => ceil(\strlen($string) / 512),
-		);
+		];
 
 		return $stat;
 	}

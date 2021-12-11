@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -13,14 +13,11 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for Joomla\Filesystem\Stream\StringWrapper.
- *
- * @since  1.0
  */
 class StringWrapperTest extends TestCase
 {
 	/**
-	 * @var    StringWrapper
-	 * @since   1.4.0
+	 * @var  StringWrapper
 	 */
 	protected $object;
 
@@ -28,11 +25,9 @@ class StringWrapperTest extends TestCase
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
-	 * @return void
-	 *
-	 * @since   1.4.0
+	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -45,10 +40,6 @@ class StringWrapperTest extends TestCase
 
 	/**
 	 * Test stream_open method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testStream_open()
 	{
@@ -75,29 +66,26 @@ class StringWrapperTest extends TestCase
 
 	/**
 	 * Test stream_stat method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testStream_stat()
 	{
 		$string = 'foo bar';
-		$now = time();
-		$stat = array(
-			'dev' => 0,
-			'ino' => 0,
-			'mode' => 0,
-			'nlink' => 1,
-			'uid' => 0,
-			'gid' => 0,
-			'rdev' => 0,
-			'size' => \strlen($string),
-			'atime' => $now,
-			'mtime' => $now,
-			'ctime' => $now,
+		$now    = time();
+		$stat   = [
+			'dev'     => 0,
+			'ino'     => 0,
+			'mode'    => 0,
+			'nlink'   => 1,
+			'uid'     => 0,
+			'gid'     => 0,
+			'rdev'    => 0,
+			'size'    => \strlen($string),
+			'atime'   => $now,
+			'mtime'   => $now,
+			'ctime'   => $now,
 			'blksize' => '512',
-			'blocks' => ceil(\strlen($string) / 512));
+			'blocks'  => ceil(\strlen($string) / 512),
+		];
 
 		TestHelper::setValue($this->object, 'stat', $stat);
 
@@ -109,27 +97,24 @@ class StringWrapperTest extends TestCase
 
 	/**
 	 * Test url_stat method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testUrl_stat()
 	{
 		$url_stat = $this->object->url_stat('string://lorem');
 
 		$string = StringController::getRef('lorem');
-		$stat = array(
-			'dev' => 0,
-			'ino' => 0,
-			'mode' => 0,
-			'nlink' => 1,
-			'uid' => 0,
-			'gid' => 0,
-			'rdev' => 0,
-			'size' => \strlen($string),
+		$stat   = [
+			'dev'     => 0,
+			'ino'     => 0,
+			'mode'    => 0,
+			'nlink'   => 1,
+			'uid'     => 0,
+			'gid'     => 0,
+			'rdev'    => 0,
+			'size'    => \strlen($string),
 			'blksize' => '512',
-			'blocks' => ceil(\strlen($string) / 512));
+			'blocks'  => ceil(\strlen($string) / 512),
+		];
 
 		foreach ($stat as $key => $value)
 		{
@@ -142,17 +127,18 @@ class StringWrapperTest extends TestCase
 		$url_stat = $this->object->url_stat('string://foo');
 
 		$string = StringController::getRef('foo');
-		$stat = array(
-			'dev' => 0,
-			'ino' => 0,
-			'mode' => 0,
-			'nlink' => 1,
-			'uid' => 0,
-			'gid' => 0,
-			'rdev' => 0,
-			'size' => \strlen($string),
+		$stat   = [
+			'dev'     => 0,
+			'ino'     => 0,
+			'mode'    => 0,
+			'nlink'   => 1,
+			'uid'     => 0,
+			'gid'     => 0,
+			'rdev'    => 0,
+			'size'    => \strlen($string),
 			'blksize' => '512',
-			'blocks' => ceil(\strlen($string) / 512));
+			'blocks'  => ceil(\strlen($string) / 512),
+		];
 
 		foreach ($stat as $key => $value)
 		{
@@ -165,10 +151,6 @@ class StringWrapperTest extends TestCase
 
 	/**
 	 * Test stream_read method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testStream_read()
 	{
@@ -192,10 +174,6 @@ class StringWrapperTest extends TestCase
 
 	/**
 	 * Test stream_write method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testStream_write()
 	{
@@ -206,10 +184,6 @@ class StringWrapperTest extends TestCase
 
 	/**
 	 * Test stream_tell method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testStream_tell()
 	{
@@ -223,10 +197,6 @@ class StringWrapperTest extends TestCase
 
 	/**
 	 * Test stream_eof method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testStream_eof()
 	{
@@ -255,30 +225,26 @@ class StringWrapperTest extends TestCase
 	/**
 	 * Test data for test of stream_seek method.
 	 *
-	 * @return  array
-	 *
-	 * @since   1.4.0
+	 * @return  \Generator
 	 */
-	public function dataStream_seek()
+	public function dataStream_seek(): \Generator
 	{
-		return array(
-			array(0, 0, 0, SEEK_SET, 0, true),
-			array(0, 0, 0, SEEK_CUR, 0, true),
-			array(0, 0, 0, SEEK_END, 0, true),
-			array(0, 0, 7, SEEK_SET, 0, false),
-			array(0, 0, 7, SEEK_CUR, 0, false),
-			array(0, 0, 7, SEEK_END, 0, false),
-			array(0, 5, 0, SEEK_SET, 0, true),
-			array(0, 5, 0, SEEK_CUR, 0, true),
-			array(0, 5, 0, SEEK_END, 5, true),
-			array(0, 5, 2, SEEK_SET, 2, true),
-			array(0, 5, 2, SEEK_CUR, 2, true),
-			array(0, 5, 2, SEEK_END, 3, true),
-			array(2, 5, 2, SEEK_SET, 2, true),
-			array(2, 5, 2, SEEK_CUR, 4, true),
-			array(2, 5, 2, SEEK_END, 3, true),
-			array(2, 5, 5, SEEK_CUR, 2, false),
-		);
+		yield [0, 0, 0, SEEK_SET, 0, true];
+		yield [0, 0, 0, SEEK_CUR, 0, true];
+		yield [0, 0, 0, SEEK_END, 0, true];
+		yield [0, 0, 7, SEEK_SET, 0, false];
+		yield [0, 0, 7, SEEK_CUR, 0, false];
+		yield [0, 0, 7, SEEK_END, 0, false];
+		yield [0, 5, 0, SEEK_SET, 0, true];
+		yield [0, 5, 0, SEEK_CUR, 0, true];
+		yield [0, 5, 0, SEEK_END, 5, true];
+		yield [0, 5, 2, SEEK_SET, 2, true];
+		yield [0, 5, 2, SEEK_CUR, 2, true];
+		yield [0, 5, 2, SEEK_END, 3, true];
+		yield [2, 5, 2, SEEK_SET, 2, true];
+		yield [2, 5, 2, SEEK_CUR, 4, true];
+		yield [2, 5, 2, SEEK_END, 3, true];
+		yield [2, 5, 5, SEEK_CUR, 2, false];
 	}
 
 	/**
@@ -291,9 +257,6 @@ class StringWrapperTest extends TestCase
 	 * @param   integer  $expPos     Expected pointer position
 	 * @param   integer  $expReturn  Expected return value
 	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 * @dataProvider dataStream_seek
 	 */
 	public function testStream_seek($currPos, $currLen, $offset, $whence, $expPos, $expReturn)
@@ -314,10 +277,6 @@ class StringWrapperTest extends TestCase
 
 	/**
 	 * Test stream_flush method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testStream_flush()
 	{

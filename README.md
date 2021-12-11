@@ -1,4 +1,4 @@
-# The Filesystem Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/filesystem/status.svg)](https://ci.joomla.org/joomla-framework/filesystem)
+# The Filesystem Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/filesystem/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/filesystem)
 
 ## File upload example
 
@@ -47,14 +47,21 @@ $path = JPATH_ROOT . '/' . $config['folder'] . '/' . File::makeSafe($file['name'
 File::upload($file['tmp_name'], $path);
 ```
 
+## Changes From 1.x
+
+### Patcher
+
+In 1.x, the second parameter of the `add` and `addFile` methods was optional.  In 2.0, this parameter is required.  This parameter requires the
+root path of the source which you are patching.
+
 ## Installation via Composer
 
-Add `"joomla/filesystem": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/filesystem": "~2.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/filesystem": "~1.0"
+		"joomla/filesystem": "~2.0"
 	}
 }
 ```
@@ -62,11 +69,10 @@ Add `"joomla/filesystem": "~1.0"` to the require block in your composer.json and
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/filesystem "~1.0"
 ```
 
 If you want to include the test sources, use
 
 ```sh
-composer require --prefer-source joomla/filesystem "~1.0"
+composer require --prefer-source joomla/filesystem "~2.0"
 ```

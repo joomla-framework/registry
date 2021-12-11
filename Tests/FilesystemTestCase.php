@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -11,24 +11,20 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Base test case for filesystem interacting tests
- *
- * @since  1.4.0
  */
 class FilesystemTestCase extends TestCase
 {
 	/**
 	 * Path to the test space
 	 *
-	 * @var    null|string
-	 * @since  1.4.0
+	 * @var  null|string
 	 */
 	protected $testPath = null;
 
 	/**
 	 * Storage for the system's umask
 	 *
-	 * @var    integer
-	 * @since  1.4.0
+	 * @var  integer
 	 */
 	private $umask;
 
@@ -36,10 +32,8 @@ class FilesystemTestCase extends TestCase
 	 * This method is called before the first test of this test class is run.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
-	public static function setUpBeforeClass()
+	public static function setUpBeforeClass(): void
 	{
 		if (!\defined('JPATH_ROOT'))
 		{
@@ -52,10 +46,8 @@ class FilesystemTestCase extends TestCase
 	 * This method is called before a test is executed.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->umask    = umask(0);
 		$this->testPath = sys_get_temp_dir() . '/' . microtime(true) . '.' . mt_rand();
@@ -70,10 +62,8 @@ class FilesystemTestCase extends TestCase
 	 * This method is called after a test is executed.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
-	protected function tearDown()
+	protected function tearDown(): void
 	{
 		Folder::delete($this->testPath);
 

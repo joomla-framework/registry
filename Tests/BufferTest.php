@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -10,27 +10,21 @@ use Joomla\Filesystem\Buffer;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test class for JBuffer.
- *
- * @since  1.0
+ * Test class for Joomla\Filesystem\Buffer.
  */
 class BufferTest extends TestCase
 {
 	/**
-	 * @var    Buffer
-	 * @since   1.4.0
+	 * @var  Buffer
 	 */
 	protected $object;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
-	 * This method is called before a test is executed.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -40,21 +34,17 @@ class BufferTest extends TestCase
 	/**
 	 * Test cases for the stream_open test
 	 *
-	 * @return  array
-	 *
-	 * @since   1.4.0
+	 * @return  \Generator
 	 */
-	public function casesOpen()
+	public function casesOpen(): \Generator
 	{
-		return array(
-			'basic' => array(
-				'http://www.example.com/fred',
-				null,
-				null,
-				null,
-				'www.example.com',
-			),
-		);
+		yield 'basic' => [
+			'http://www.example.com/fred',
+			null,
+			null,
+			null,
+			'www.example.com',
+		];
 	}
 
 	/**
@@ -66,38 +56,32 @@ class BufferTest extends TestCase
 	 * @param   string  $opened_path  The path
 	 * @param   string  $expected     The expected test return
 	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 * @dataProvider casesOpen
 	 */
 	public function testStreamOpen($path, $mode, $options, $opened_path, $expected)
 	{
 		$this->object->stream_open($path, $mode, $options, $opened_path);
-		$this->assertThat(
+
+		$this->assertEquals(
 			$expected,
-			$this->equalTo($this->object->name)
+			$this->object->name
 		);
 	}
 
 	/**
 	 * Test cases for the stream_read test
 	 *
-	 * @return  array
-	 *
-	 * @since   1.4.0
+	 * @return  \Generator
 	 */
-	public function casesRead()
+	public function casesRead(): \Generator
 	{
-		return array(
-			'basic' => array(
-				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'www.example.com',
-				30,
-				10,
-				'EFGHIJKLMN',
-			),
-		);
+		yield 'basic' => [
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'www.example.com',
+			30,
+			10,
+			'EFGHIJKLMN',
+		];
 	}
 
 	/**
@@ -109,9 +93,6 @@ class BufferTest extends TestCase
 	 * @param   integer  $count     The movement of the pointer
 	 * @param   boolean  $expected  The expected test return
 	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 * @dataProvider casesRead
 	 */
 	public function testStreamRead($buffer, $name, $position, $count, $expected)
@@ -120,30 +101,26 @@ class BufferTest extends TestCase
 		$this->object->position = $position;
 		$this->object->buffers[$name] = $buffer;
 
-		$this->assertThat(
+		$this->assertEquals(
 			$expected,
-			$this->equalTo($this->object->stream_read($count))
+			$this->object->stream_read($count)
 		);
 	}
 
 	/**
 	 * Test cases for the stream_write test
 	 *
-	 * @return  array
-	 *
-	 * @since   1.4.0
+	 * @return  \Generator
 	 */
-	public function casesWrite()
+	public function casesWrite(): \Generator
 	{
-		return array(
-			'basic' => array(
-				'abcdefghijklmnop',
-				'www.example.com',
-				5,
-				'ABCDE',
-				'abcdeABCDEklmnop',
-			),
-		);
+		yield 'basic' => [
+			'abcdefghijklmnop',
+			'www.example.com',
+			5,
+			'ABCDE',
+			'abcdeABCDEklmnop',
+		];
 	}
 
 	/**
@@ -155,9 +132,6 @@ class BufferTest extends TestCase
 	 * @param   string   $write     The data to write
 	 * @param   boolean  $expected  The expected test return
 	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 * @dataProvider casesWrite
 	 */
 	public function testStreamWrite($buffer, $name, $position, $write, $expected)
@@ -167,53 +141,46 @@ class BufferTest extends TestCase
 		$this->object->buffers[$name] = $buffer;
 		$output = $this->object->stream_write($write);
 
-		$this->assertThat(
+		$this->assertEquals(
 			$expected,
-			$this->equalTo($this->object->buffers[$name])
+			$this->object->buffers[$name]
 		);
 	}
 
 	/**
 	 * Test stream_tell method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testStreamTell()
 	{
 		$pos = 10;
 		$this->object->position = $pos;
 
-		$this->assertThat(
+		$this->assertEquals(
 			$pos,
-			$this->equalTo($this->object->stream_tell())
+			$this->object->stream_tell()
 		);
 	}
 
 	/**
 	 * Test cases for the stream_eof test
 	 *
-	 * @return  array
-	 *
-	 * @since   1.4.0
+	 * @return  \Generator
 	 */
-	public function casesEof()
+	public function casesEof(): \Generator
 	{
-		return array(
-			'~EOF' => array(
-				'abcdefghijklmnop',
-				'www.example.com',
-				5,
-				false,
-			),
-			'EOF' => array(
-				'abcdefghijklmnop',
-				'www.example.com',
-				17,
-				true,
-			),
-		);
+		yield '~EOF' => [
+			'abcdefghijklmnop',
+			'www.example.com',
+			5,
+			false,
+		];
+
+		yield 'EOF' => [
+			'abcdefghijklmnop',
+			'www.example.com',
+			17,
+			true,
+		];
 	}
 
 	/**
@@ -224,9 +191,6 @@ class BufferTest extends TestCase
 	 * @param   integer  $position  The position in the buffer of the current pointer
 	 * @param   boolean  $expected  The expected test return
 	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 * @dataProvider casesEof
 	 */
 	public function testStreamEof($buffer, $name, $position, $expected)
@@ -235,95 +199,98 @@ class BufferTest extends TestCase
 		$this->object->position = $position;
 		$this->object->buffers[$name] = $buffer;
 
-		$this->assertThat(
+		$this->assertEquals(
 			$expected,
-			$this->equalTo($this->object->stream_eof())
+			$this->object->stream_eof()
 		);
 	}
 
 	/**
 	 * Test cases for the stream_seek test
 	 *
-	 * @return  array
-	 *
-	 * @since   1.4.0
+	 * @return  \Generator
 	 */
-	public function casesSeek()
+	public function casesSeek(): \Generator
 	{
-		return array(
-			'basic' => array(
-				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'www.example.com',
-				5,
-				10,
-				SEEK_SET,
-				true,
-				10,
-			),
-			'too_early' => array(
-				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'www.example.com',
-				5,
-				-10,
-				SEEK_SET,
-				false,
-				5,
-			),
-			'off_end' => array(
-				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'www.example.com',
-				5,
-				100,
-				SEEK_SET,
-				false,
-				5,
-			),
-			'is_pos' => array(
-				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'www.example.com',
-				5,
-				10,
-				SEEK_CUR,
-				true,
-				15,
-			),
-			'is_neg' => array(
-				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'www.example.com',
-				5,
-				-100,
-				SEEK_CUR,
-				false,
-				5,
-			),
-			'from_end' => array(
-				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'www.example.com',
-				5,
-				-10,
-				SEEK_END,
-				true,
-				42,
-			),
-			'before_beg' => array(
-				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'www.example.com',
-				5,
-				-100,
-				SEEK_END,
-				false,
-				5,
-			),
-			'bad_seek_code' => array(
-				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-				'www.example.com',
-				5,
-				-100,
-				100,
-				false,
-				5,
-			),
-		);
+		yield 'basic' => [
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'www.example.com',
+			5,
+			10,
+			SEEK_SET,
+			true,
+			10,
+		];
+
+		yield 'too_early' => [
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'www.example.com',
+			5,
+			-10,
+			SEEK_SET,
+			false,
+			5,
+		];
+
+		yield 'off_end' => [
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'www.example.com',
+			5,
+			100,
+			SEEK_SET,
+			false,
+			5,
+		];
+
+		yield 'is_pos' => [
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'www.example.com',
+			5,
+			10,
+			SEEK_CUR,
+			true,
+			15,
+		];
+
+		yield 'is_neg' => [
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'www.example.com',
+			5,
+			-100,
+			SEEK_CUR,
+			false,
+			5,
+		];
+
+		yield 'from_end' => [
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'www.example.com',
+			5,
+			-10,
+			SEEK_END,
+			true,
+			42,
+		];
+
+		yield 'before_beg' => [
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'www.example.com',
+			5,
+			-100,
+			SEEK_END,
+			false,
+			5,
+		];
+
+		yield 'bad_seek_code' => [
+			'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			'www.example.com',
+			5,
+			-100,
+			100,
+			false,
+			5,
+		];
 	}
 
 	/**
@@ -337,9 +304,6 @@ class BufferTest extends TestCase
 	 * @param   boolean  $expected     The expected test return
 	 * @param   integer  $expectedPos  The new buffer position pointer
 	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 * @dataProvider casesSeek
 	 */
 	public function testStreamSeek($buffer, $name, $position, $offset, $whence, $expected, $expectedPos)
@@ -348,13 +312,13 @@ class BufferTest extends TestCase
 		$this->object->position = $position;
 		$this->object->buffers[$name] = $buffer;
 
-		$this->assertThat(
+		$this->assertEquals(
 			$expected,
-			$this->equalTo($this->object->stream_seek($offset, $whence))
+			$this->object->stream_seek($offset, $whence)
 		);
-		$this->assertThat(
+		$this->assertEquals(
 			$expectedPos,
-			$this->equalTo($this->object->position)
+			$this->object->position
 		);
 	}
 }

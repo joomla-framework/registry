@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Filesystem Package
  *
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -125,7 +125,7 @@ class FtpClient
 	 * @var    array
 	 * @since  1.0
 	 */
-	private $autoAscii = array(
+	private $autoAscii = [
 		'asp',
 		'bat',
 		'c',
@@ -147,7 +147,7 @@ class FtpClient
 		'txt',
 		'xhtml',
 		'xml',
-	);
+	];
 
 	/**
 	 * Array to hold native line ending characters
@@ -155,7 +155,7 @@ class FtpClient
 	 * @var    array
 	 * @since  1.0
 	 */
-	private $lineEndings = array('UNIX' => "\n", 'WIN' => "\r\n");
+	private $lineEndings = ['UNIX' => "\n", 'WIN' => "\r\n"];
 
 	/**
 	 * FtpClient instances container.
@@ -163,7 +163,7 @@ class FtpClient
 	 * @var    FtpClient[]
 	 * @since  1.0
 	 */
-	protected static $instances = array();
+	protected static $instances = [];
 
 	/**
 	 * FtpClient object constructor
@@ -172,7 +172,7 @@ class FtpClient
 	 *
 	 * @since   1.0
 	 */
-	public function __construct(array $options = array())
+	public function __construct(array $options = [])
 	{
 		// If default transfer type is not set, set it to autoascii detect
 		if (!isset($options['type']))
@@ -223,7 +223,7 @@ class FtpClient
 	 *
 	 * @since   1.0
 	 */
-	public static function getInstance($host = '127.0.0.1', $port = '21', array $options = array(), $user = null, $pass = null)
+	public static function getInstance($host = '127.0.0.1', $port = '21', array $options = [], $user = null, $pass = null)
 	{
 		$signature = $user . ':' . $pass . '@' . $host . ':' . $port;
 
@@ -379,7 +379,7 @@ class FtpClient
 		}
 
 		// Send the username
-		if (!$this->_putCmd('USER ' . $user, array(331, 503)))
+		if (!$this->_putCmd('USER ' . $user, [331, 503]))
 		{
 			throw new FilesystemException(
 				sprintf('%1$s: Bad Username. Server response: %2$s [Expected: 331]. Username sent: %3$s', __METHOD__, $this->response, $user)
@@ -446,7 +446,7 @@ class FtpClient
 			return $ret;
 		}
 
-		$match = array(null);
+		$match = [null];
 
 		// Send print working directory command and verify success
 		if (!$this->_putCmd('PWD', 257))
@@ -659,7 +659,7 @@ class FtpClient
 		}
 
 		// Send change mode command and verify success [must convert mode from octal]
-		if (!$this->_putCmd('SITE CHMOD ' . $mode . ' ' . $path, array(200, 250)))
+		if (!$this->_putCmd('SITE CHMOD ' . $mode . ' ' . $path, [200, 250]))
 		{
 			if (!\defined('PHP_WINDOWS_VERSION_MAJOR'))
 			{
@@ -831,7 +831,7 @@ class FtpClient
 			throw new FilesystemException(__METHOD__ . ': Unable to use passive mode.');
 		}
 
-		if (!$this->_putCmd('STOR ' . $path, array(150, 125)))
+		if (!$this->_putCmd('STOR ' . $path, [150, 125]))
 		{
 			@ fclose($this->dataconn);
 
@@ -909,7 +909,7 @@ class FtpClient
 			throw new FilesystemException(__METHOD__ . ': Unable to use passive mode.');
 		}
 
-		if (!$this->_putCmd('RETR ' . $remote, array(150, 125)))
+		if (!$this->_putCmd('RETR ' . $remote, [150, 125]))
 		{
 			@ fclose($this->dataconn);
 
@@ -1004,7 +1004,7 @@ class FtpClient
 			throw new FilesystemException(__METHOD__ . ': Unable to use passive mode.');
 		}
 
-		if (!$this->_putCmd('RETR ' . $remote, array(150, 125)))
+		if (!$this->_putCmd('RETR ' . $remote, [150, 125]))
 		{
 			@ fclose($this->dataconn);
 
@@ -1100,7 +1100,7 @@ class FtpClient
 		}
 
 		// Send store command to the FTP server
-		if (!$this->_putCmd('STOR ' . $remote, array(150, 125)))
+		if (!$this->_putCmd('STOR ' . $remote, [150, 125]))
 		{
 			@ fclose($fp);
 			@ fclose($this->dataconn);
@@ -1191,7 +1191,7 @@ class FtpClient
 		}
 
 		// Send store command to the FTP server
-		if (!$this->_putCmd('STOR ' . $remote, array(150, 125)))
+		if (!$this->_putCmd('STOR ' . $remote, [150, 125]))
 		{
 			@ fclose($this->dataconn);
 
@@ -1255,9 +1255,9 @@ class FtpClient
 			if (($list = @ftp_nlist($this->conn, $path)) === false)
 			{
 				// Workaround for empty directories on some servers
-				if ($this->listDetails($path, 'files') === array())
+				if ($this->listDetails($path, 'files') === [])
 				{
-					return array();
+					return [];
 				}
 
 				throw new FilesystemException(__METHOD__ . 'Bad response.');
@@ -1288,14 +1288,14 @@ class FtpClient
 			throw new FilesystemException(__METHOD__ . ': Unable to use passive mode.');
 		}
 
-		if (!$this->_putCmd('NLST' . $path, array(150, 125)))
+		if (!$this->_putCmd('NLST' . $path, [150, 125]))
 		{
 			@ fclose($this->dataconn);
 
 			// Workaround for empty directories on some servers
-			if ($this->listDetails($path, 'files') === array())
+			if ($this->listDetails($path, 'files') === [])
 			{
-				return array();
+				return [];
 			}
 
 			throw new FilesystemException(
@@ -1346,7 +1346,7 @@ class FtpClient
 	 */
 	public function listDetails($path = null, $type = 'all')
 	{
-		$dirList = array();
+		$dirList = [];
 		$data    = null;
 		$regs    = null;
 
@@ -1385,7 +1385,7 @@ class FtpClient
 			}
 
 			// Request the file listing
-			if (!$this->_putCmd(($recurse == true) ? 'LIST -R' : 'LIST' . $path, array(150, 125)))
+			if (!$this->_putCmd(($recurse == true) ? 'LIST -R' : 'LIST' . $path, [150, 125]))
 			{
 				@ fclose($this->dataconn);
 
@@ -1440,13 +1440,13 @@ class FtpClient
 		}
 
 		// Regular expressions for the directory listing parsing.
-		$regexps = array(
+		$regexps = [
 			'UNIX' => '#([-dl][rwxstST-]+).* ([0-9]*) ([a-zA-Z0-9]+).* ([a-zA-Z0-9]+).* ([0-9]*)'
 				. ' ([a-zA-Z]+[0-9: ]*[0-9])[ ]+(([0-9]{1,2}:[0-9]{2})|[0-9]{4}) (.+)#',
 			'MAC' => '#([-dl][rwxstST-]+).* ?([0-9 ]*)?([a-zA-Z0-9]+).* ([a-zA-Z0-9]+).* ([0-9]*)'
 				. ' ([a-zA-Z]+[0-9: ]*[0-9])[ ]+(([0-9]{2}:[0-9]{2})|[0-9]{4}) (.+)#',
 			'WIN' => '#([0-9]{2})-([0-9]{2})-([0-9]{2}) +([0-9]{2}):([0-9]{2})(AM|PM) +([0-9]+|<DIR>) +(.+)#',
-		);
+		];
 
 		// Find out the format of the directory listing by matching one of the regexps
 		$osType = null;
@@ -1661,8 +1661,8 @@ class FtpClient
 	 */
 	protected function _passive()
 	{
-		$match = array();
-		$parts = array();
+		$match = [];
+		$parts = [];
 		$errno = null;
 		$err   = null;
 
@@ -1717,7 +1717,7 @@ class FtpClient
 		}
 
 		// This is pretty simple - store it for later use ;).
-		$this->pasv = array('ip' => $match[1] . '.' . $match[2] . '.' . $match[3] . '.' . $match[4], 'port' => $match[5] * 256 + $match[6]);
+		$this->pasv = ['ip' => $match[1] . '.' . $match[2] . '.' . $match[3] . '.' . $match[4], 'port' => $match[5] * 256 + $match[6]];
 
 		// Connect, assuming we've got a connection.
 		$this->dataconn = @fsockopen($this->pasv['ip'], $this->pasv['port'], $errno, $err, $this->timeout);

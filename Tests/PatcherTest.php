@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -8,12 +8,11 @@ namespace Joomla\Filesystem\Tests;
 
 use Joomla\Filesystem\Patcher;
 use Joomla\Filesystem\Path;
+use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
 
 /**
  * A unit test class for Patcher
- *
- * @since  1.0
  */
 class PatcherTest extends TestCase
 {
@@ -21,10 +20,8 @@ class PatcherTest extends TestCase
 	 * This method is called before the first test of this test class is run.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
-	public static function setUpBeforeClass()
+	public static function setUpBeforeClass(): void
 	{
 		if (!\defined('JPATH_ROOT'))
 		{
@@ -37,10 +34,8 @@ class PatcherTest extends TestCase
 	 * This method is called before a test is executed.
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -55,10 +50,8 @@ class PatcherTest extends TestCase
 	 * Remove created files
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
-	protected function tearDown()
+	protected function tearDown(): void
 	{
 		$this->_cleanupTestFiles();
 	}
@@ -67,8 +60,6 @@ class PatcherTest extends TestCase
 	 * Convenience method to cleanup before and after test
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	private function _cleanupTestFiles()
 	{
@@ -84,10 +75,8 @@ class PatcherTest extends TestCase
 	 * @param   string  $path  The path to clean
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
-	private function _cleanupFile($path)
+	private function _cleanupFile(string $path)
 	{
 		if (file_exists($path))
 		{
@@ -105,11 +94,9 @@ class PatcherTest extends TestCase
 	/**
 	 * Data provider for testAdd
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function addData()
+	public function addData(): \Generator
 	{
 		$udiff = 'Index: lao
 ===================================================================
@@ -135,56 +122,57 @@ class PatcherTest extends TestCase
 ';
 
 		// Use of realpath to ensure test works for on all platforms
-		return array(
-			array(
-				$udiff,
-				realpath(__DIR__ . '/tmp/patcher'),
-				0,
-				array(
-					array(
-						'udiff' => $udiff,
-						'root' => realpath(__DIR__ . '/tmp/patcher') . DIRECTORY_SEPARATOR,
-						'strip' => 0
-					)
-				)
-			),
-			array(
-				$udiff,
-				realpath(__DIR__ . '/tmp/patcher') . DIRECTORY_SEPARATOR,
-				0,
-				array(
-					array(
-						'udiff' => $udiff,
-						'root' => realpath(__DIR__ . '/tmp/patcher') . DIRECTORY_SEPARATOR,
-						'strip' => 0
-					)
-				)
-			),
-			array(
-				$udiff,
-				null,
-				0,
-				array(
-					array(
-						'udiff' => $udiff,
-						'root' => '',
-						'strip' => 0
-					)
-				)
-			),
-			array(
-				$udiff,
-				'',
-				0,
-				array(
-					array(
-						'udiff' => $udiff,
-						'root' => DIRECTORY_SEPARATOR,
-						'strip' => 0
-					)
-				)
-			),
-		);
+		yield [
+			$udiff,
+			realpath(__DIR__ . '/tmp/patcher'),
+			0,
+			[
+				[
+					'udiff' => $udiff,
+					'root'  => realpath(__DIR__ . '/tmp/patcher') . DIRECTORY_SEPARATOR,
+					'strip' => 0,
+				],
+			],
+		];
+
+		yield [
+			$udiff,
+			realpath(__DIR__ . '/tmp/patcher') . DIRECTORY_SEPARATOR,
+			0,
+			[
+				[
+					'udiff' => $udiff,
+					'root'  => realpath(__DIR__ . '/tmp/patcher') . DIRECTORY_SEPARATOR,
+					'strip' => 0,
+				],
+			],
+		];
+
+		yield [
+			$udiff,
+			null,
+			0,
+			[
+				[
+					'udiff' => $udiff,
+					'root'  => '',
+					'strip' => 0,
+				],
+			],
+		];
+
+		yield [
+			$udiff,
+			'',
+			0,
+			[
+				[
+					'udiff' => $udiff,
+					'root'  => DIRECTORY_SEPARATOR,
+					'strip' => 0,
+				],
+			],
+		];
 	}
 
 	/**
@@ -195,29 +183,21 @@ class PatcherTest extends TestCase
 	 * @param   string  $strip     The number of '/' to strip
 	 * @param   array   $expected  The expected array patches
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider addData
-	 * @since   1.0
 	 */
 	public function testAdd($udiff, $root, $strip, $expected)
 	{
 		$patcher = Patcher::getInstance()->reset();
 		$patcher->add($udiff, $root, $strip);
-		$this->assertAttributeEquals(
+		$this->assertSame(
 			$expected,
-			'patches',
-			$patcher,
+			TestHelper::getValue($patcher, 'patches'),
 			'Line:' . __LINE__ . ' The patcher cannot add the unified diff string.'
 		);
 	}
 
 	/**
 	 * Test Patcher::addFile add a unified diff file to the patcher
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testAddFile()
 	{
@@ -249,26 +229,21 @@ class PatcherTest extends TestCase
 		$patcher = Patcher::getInstance()->reset();
 		$patcher->addFile(__DIR__ . '/tmp/patcher/lao2tzu.diff', realpath(__DIR__ . '/tmp/patcher'));
 
-		$this->assertAttributeEquals(
-			array(
-				array(
+		$this->assertSame(
+			[
+				[
 					'udiff' => $udiff,
-					'root' => realpath(__DIR__ . '/tmp/patcher') . DIRECTORY_SEPARATOR,
-					'strip' => 0
-				)
-			),
-			'patches',
-			$patcher,
+					'root'  => realpath(__DIR__ . '/tmp/patcher') . DIRECTORY_SEPARATOR,
+					'strip' => 0,
+				],
+			],
+			TestHelper::getValue($patcher, 'patches'),
 			'Line:' . __LINE__ . ' The patcher cannot add the unified diff file.'
 		);
 	}
 
 	/**
 	 * Patcher::reset reset the patcher to its initial state
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testReset()
 	{
@@ -301,28 +276,24 @@ class PatcherTest extends TestCase
 			$patcher,
 			'Line:' . __LINE__ . ' The reset method does not return $this for chaining.'
 		);
-		$this->assertAttributeEquals(
-			array(),
-			'sources',
-			$patcher,
+		$this->assertSame(
+			[],
+			TestHelper::getValue($patcher, 'sources'),
 			'Line:' . __LINE__ . ' The patcher has not been reset.'
 		);
-		$this->assertAttributeEquals(
-			array(),
-			'destinations',
-			$patcher,
+		$this->assertSame(
+			[],
+			TestHelper::getValue($patcher, 'destinations'),
 			'Line:' . __LINE__ . ' The patcher has not been reset.'
 		);
-		$this->assertAttributeEquals(
-			array(),
-			'removals',
-			$patcher,
+		$this->assertSame(
+			[],
+			TestHelper::getValue($patcher, 'removals'),
 			'Line:' . __LINE__ . ' The patcher has not been reset.'
 		);
-		$this->assertAttributeEquals(
-			array(),
-			'patches',
-			$patcher,
+		$this->assertSame(
+			[],
+			TestHelper::getValue($patcher, 'patches'),
 			'Line:' . __LINE__ . ' The patcher has not been reset.'
 		);
 	}
@@ -330,16 +301,12 @@ class PatcherTest extends TestCase
 	/**
 	 * Data provider for testApply
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function applyData()
+	public function applyData(): \Generator
 	{
-		return array(
-			// Test classical feature
-			'Test classical feature' => array(
-				'Index: lao
+		yield 'Test classical feature' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -361,10 +328,10 @@ class PatcherTest extends TestCase
 +Deeper and more profound,
 +The door of all subtleties!
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(
-					__DIR__ . '/tmp/patcher/lao' =>
+			__DIR__ . '/tmp/patcher',
+			0,
+			[
+				__DIR__ . '/tmp/patcher/lao' =>
 					'The Way that can be told of is not the eternal Way;
 The name that can be named is not the eternal name.
 The Nameless is the origin of Heaven and Earth;
@@ -376,10 +343,10 @@ And let there always be being,
 The two are the same,
 But after they are produced,
   they have different names.
-'
-				),
-				array(
-					__DIR__ . '/tmp/patcher/tzu' =>
+',
+			],
+			[
+				__DIR__ . '/tmp/patcher/tzu' =>
 					'The Nameless is the origin of Heaven and Earth;
 The named is the mother of all things.
 
@@ -393,15 +360,14 @@ But after they are produced,
 They both may be called deep and profound.
 Deeper and more profound,
 The door of all subtleties!
-'
-				),
-				1,
-				false
-			),
+',
+			],
+			1,
+			false,
+		];
 
-			// Test truncated hunk
-			'Test truncated hunk' => array(
-				'Index: lao
+		yield 'Test truncated hunk' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -409,10 +375,10 @@ The door of all subtleties!
 -The Way that can be told of is not the eternal Way;
 +The named is the mother of all things.
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(
-					__DIR__ . '/tmp/patcher/lao' =>
+			__DIR__ . '/tmp/patcher',
+			0,
+			[
+				__DIR__ . '/tmp/patcher/lao' =>
 					'The Way that can be told of is not the eternal Way;
 The name that can be named is not the eternal name.
 The Nameless is the origin of Heaven and Earth;
@@ -424,10 +390,10 @@ And let there always be being,
 The two are the same,
 But after they are produced,
   they have different names.
-'
-				),
-				array(
-					__DIR__ . '/tmp/patcher/tzu' =>
+',
+			],
+			[
+				__DIR__ . '/tmp/patcher/tzu' =>
 					'The named is the mother of all things.
 The name that can be named is not the eternal name.
 The Nameless is the origin of Heaven and Earth;
@@ -439,15 +405,14 @@ And let there always be being,
 The two are the same,
 But after they are produced,
   they have different names.
-'
-				),
-				1,
-				false
-			),
+',
+			],
+			1,
+			false,
+		];
 
-			// Test strip is null
-			'Test strip is null' => array(
-				'Index: lao
+		yield 'Test strip is null' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -469,10 +434,10 @@ But after they are produced,
 +Deeper and more profound,
 +The door of all subtleties!
 ',
-				__DIR__ . '/tmp/patcher',
-				null,
-				array(
-					__DIR__ . '/tmp/patcher/lao' =>
+			__DIR__ . '/tmp/patcher',
+			null,
+			[
+				__DIR__ . '/tmp/patcher/lao' =>
 					'The Way that can be told of is not the eternal Way;
 The name that can be named is not the eternal name.
 The Nameless is the origin of Heaven and Earth;
@@ -484,10 +449,10 @@ And let there always be being,
 The two are the same,
 But after they are produced,
   they have different names.
-'
-				),
-				array(
-					__DIR__ . '/tmp/patcher/tzu' =>
+',
+			],
+			[
+				__DIR__ . '/tmp/patcher/tzu' =>
 					'The Nameless is the origin of Heaven and Earth;
 The named is the mother of all things.
 
@@ -501,15 +466,14 @@ But after they are produced,
 They both may be called deep and profound.
 Deeper and more profound,
 The door of all subtleties!
-'
-				),
-				1,
-				false
-			),
+',
+			],
+			1,
+			false,
+		];
 
-			// Test strip is different of 0
-			'Test strip is different of 0' => array(
-				'Index: lao
+		yield 'Test strip is different of 0' => [
+			'Index: lao
 ===================================================================
 --- /path/to/lao	2011-09-21 16:05:45.086909120 +0200
 +++ /path/to/tzu	2011-09-21 16:05:41.156878938 +0200
@@ -531,10 +495,10 @@ The door of all subtleties!
 +Deeper and more profound,
 +The door of all subtleties!
 ',
-				__DIR__ . '/tmp/patcher',
-				3,
-				array(
-					__DIR__ . '/tmp/patcher/lao' =>
+			__DIR__ . '/tmp/patcher',
+			3,
+			[
+				__DIR__ . '/tmp/patcher/lao' =>
 					'The Way that can be told of is not the eternal Way;
 The name that can be named is not the eternal name.
 The Nameless is the origin of Heaven and Earth;
@@ -546,10 +510,10 @@ And let there always be being,
 The two are the same,
 But after they are produced,
   they have different names.
-'
-				),
-				array(
-					__DIR__ . '/tmp/patcher/tzu' =>
+',
+			],
+			[
+				__DIR__ . '/tmp/patcher/tzu' =>
 					'The Nameless is the origin of Heaven and Earth;
 The named is the mother of all things.
 
@@ -563,15 +527,14 @@ But after they are produced,
 They both may be called deep and profound.
 Deeper and more profound,
 The door of all subtleties!
-'
-				),
-				1,
-				false
-			),
+',
+			],
+			1,
+			false,
+		];
 
-			// Test create file
-			'Test create file' => array(
-				'Index: lao
+		yield 'Test create file' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -591,11 +554,11 @@ The door of all subtleties!
 +The door of all subtleties!
 +
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(),
-				array(
-					__DIR__ . '/tmp/patcher/tzu' =>
+			__DIR__ . '/tmp/patcher',
+			0,
+			[],
+			[
+				__DIR__ . '/tmp/patcher/tzu' =>
 					'The Nameless is the origin of Heaven and Earth;
 The named is the mother of all things.
 
@@ -609,15 +572,14 @@ But after they are produced,
 They both may be called deep and profound.
 Deeper and more profound,
 The door of all subtleties!
-'
-				),
-				1,
-				false
-			),
+',
+			],
+			1,
+			false,
+		];
 
-			// Test patch itself
-			'Test patch itself' => array(
-				'Index: lao
+		yield 'Test patch itself' => [
+			'Index: lao
 ===================================================================
 --- tzu	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -639,10 +601,10 @@ The door of all subtleties!
 +Deeper and more profound,
 +The door of all subtleties!
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(
-					__DIR__ . '/tmp/patcher/tzu' =>
+			__DIR__ . '/tmp/patcher',
+			0,
+			[
+				__DIR__ . '/tmp/patcher/tzu' =>
 					'The Way that can be told of is not the eternal Way;
 The name that can be named is not the eternal name.
 The Nameless is the origin of Heaven and Earth;
@@ -654,10 +616,10 @@ And let there always be being,
 The two are the same,
 But after they are produced,
   they have different names.
-'
-				),
-				array(
-					__DIR__ . '/tmp/patcher/tzu' =>
+',
+			],
+			[
+				__DIR__ . '/tmp/patcher/tzu' =>
 					'The Nameless is the origin of Heaven and Earth;
 The named is the mother of all things.
 
@@ -671,15 +633,14 @@ But after they are produced,
 They both may be called deep and profound.
 Deeper and more profound,
 The door of all subtleties!
-'
-				),
-				1,
-				false
-			),
+',
+			],
+			1,
+			false,
+		];
 
-			// Test delete
-			'Test delete' => array(
-				'Index: lao
+		yield 'Test delete' => [
+			'Index: lao
 ===================================================================
 --- tzu	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -696,10 +657,10 @@ The door of all subtleties!
 -But after they are produced,
 -  they have different names.
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(
-					__DIR__ . '/tmp/patcher/tzu' =>
+			__DIR__ . '/tmp/patcher',
+			0,
+			[
+				__DIR__ . '/tmp/patcher/tzu' =>
 					'The Way that can be told of is not the eternal Way;
 The name that can be named is not the eternal name.
 The Nameless is the origin of Heaven and Earth;
@@ -711,89 +672,83 @@ And let there always be being,
 The two are the same,
 But after they are produced,
   they have different names.
-'
-				),
-				array(
-					__DIR__ . '/tmp/patcher/tzu' => null
-				),
-				1,
-				false
-			),
+',
+			],
+			[
+				__DIR__ . '/tmp/patcher/tzu' => null,
+			],
+			1,
+			false,
+		];
 
-			// Test unexpected eof after header
-			'Test unexpected eof after header 1' => array(
-				'Index: lao
+		yield 'Test unexpected eof after header 1' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(),
-				array(),
-				1,
-				'RuntimeException'
-			),
+			__DIR__ . '/tmp/patcher',
+			0,
+			[],
+			[],
+			1,
+			\RuntimeException::class,
+		];
 
-			// Test unexpected eof after header
-			'Test unexpected eof after header 2' => array(
-				'Index: lao
+		yield 'Test unexpected eof after header 2' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(),
-				array(),
-				1,
-				'RuntimeException'
-			),
+			__DIR__ . '/tmp/patcher',
+			0,
+			[],
+			[],
+			1,
+			\RuntimeException::class,
+		];
 
-			// Test unexpected eof in header
-			'Test unexpected eof in header' => array(
-				'Index: lao
+		yield 'Test unexpected eof in header' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(),
-				array(),
-				1,
-				'RuntimeException'
-			),
+			__DIR__ . '/tmp/patcher',
+			0,
+			[],
+			[],
+			1,
+			\RuntimeException::class,
+		];
 
-			// Test invalid diff in header
-			'Test invalid diff in header' => array(
-				'Index: lao
+		yield 'Test invalid diff in header' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(),
-				array(),
-				1,
-				'RuntimeException'
-			),
+			__DIR__ . '/tmp/patcher',
+			0,
+			[],
+			[],
+			1,
+			\RuntimeException::class,
+		];
 
-			// Test unexpected eof after hunk 1
-			'Test unexpected eof after hunk 1' => array(
-				'Index: lao
+		yield 'Test unexpected eof after hunk 1' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
 @@ -1,11 +1,0 @@',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(),
-				array(),
-				1,
-				'RuntimeException'
-			),
+			__DIR__ . '/tmp/patcher',
+			0,
+			[],
+			[],
+			1,
+			\RuntimeException::class,
+		];
 
-			// Test unexpected eof after hunk 2
-			'Test unexpected eof after hunk 2' => array(
-				'Index: lao
+		yield 'Test unexpected eof after hunk 2' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -802,17 +757,16 @@ But after they are produced,
 +The name that can be named is not the eternal name.
 -The Nameless is the origin of Heaven and Earth;
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(),
-				array(),
-				1,
-				'RuntimeException'
-			),
+			__DIR__ . '/tmp/patcher',
+			0,
+			[],
+			[],
+			1,
+			\RuntimeException::class,
+		];
 
-			// Test unexpected remove line
-			'Test unexpected remove line' => array(
-				'Index: lao
+		yield 'Test unexpected remove line' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -821,17 +775,16 @@ But after they are produced,
 -The name that can be named is not the eternal name.
 +The Nameless is the origin of Heaven and Earth;
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(),
-				array(),
-				1,
-				'RuntimeException'
-			),
+			__DIR__ . '/tmp/patcher',
+			0,
+			[],
+			[],
+			1,
+			\RuntimeException::class,
+		];
 
-			// Test unexpected add line
-			'Test unexpected add line' => array(
-				'Index: lao
+		yield 'Test unexpected add line' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -840,17 +793,16 @@ But after they are produced,
 +The name that can be named is not the eternal name.
 -The Nameless is the origin of Heaven and Earth;
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(),
-				array(),
-				1,
-				'RuntimeException'
-			),
+			__DIR__ . '/tmp/patcher',
+			0,
+			[],
+			[],
+			1,
+			\RuntimeException::class,
+		];
 
-			// Test unexisting source
-			'Test unexisting source' => array(
-				'Index: lao
+		yield 'Test unexisting source' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -872,17 +824,16 @@ But after they are produced,
 +Deeper and more profound,
 +The door of all subtleties!
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(),
-				array(),
-				1,
-				'RuntimeException'
-			),
+			__DIR__ . '/tmp/patcher',
+			0,
+			[],
+			[],
+			1,
+			\RuntimeException::class,
+		];
 
-			// Test failed verify
-			'Test failed verify' => array(
-				'Index: lao
+		yield 'Test failed verify' => [
+			'Index: lao
 ===================================================================
 --- lao	2011-09-21 16:05:45.086909120 +0200
 +++ tzu	2011-09-21 16:05:41.156878938 +0200
@@ -904,16 +855,15 @@ But after they are produced,
 +Deeper and more profound,
 +The door of all subtleties!
 ',
-				__DIR__ . '/tmp/patcher',
-				0,
-				array(
-					__DIR__ . '/tmp/patcher/lao' => ''
-				),
-				array(),
-				1,
-				'RuntimeException'
-			),
-		);
+			__DIR__ . '/tmp/patcher',
+			0,
+			[
+				__DIR__ . '/tmp/patcher/lao' => '',
+			],
+			[],
+			1,
+			\RuntimeException::class,
+		];
 	}
 
 	/**
@@ -927,24 +877,13 @@ But after they are produced,
 	 * @param   integer  $result        The number of files patched
 	 * @param   mixed    $throw         The exception throw, false for no exception
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider applyData
-	 * @since   1.0
 	 */
 	public function testApply($udiff, $root, $strip, $sources, $destinations, $result, $throw)
 	{
 		if ($throw)
 		{
-			// expectException was added in PHPUnit 5.2 and setExpectedException removed in 6.0
-			if (method_exists($this, 'expectException'))
-			{
-				$this->expectException($throw);
-			}
-			else
-			{
-				$this->setExpectedException($throw);
-			}
+			$this->expectException($throw);
 		}
 
 		foreach ($sources as $path => $content)

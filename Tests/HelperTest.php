@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -10,18 +10,12 @@ use Joomla\Filesystem\Helper;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test class for Helper.
- *
- * @since  1.0
+ * Test class for Joomla\Filesystem\Helper.
  */
 class HelperTest extends TestCase
 {
 	/**
 	 * Test remotefsize method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testRemotefsize()
 	{
@@ -52,10 +46,6 @@ class HelperTest extends TestCase
 
 	/**
 	 * Test ftpChmod method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testFtpChmod()
 	{
@@ -71,32 +61,14 @@ class HelperTest extends TestCase
 	}
 
 	/**
-	 * Test...
-	 *
-	 * @todo Implement testGetWriteModes().
-	 *
-	 * @return void
-	 */
-	public function testGetWriteModes()
-	{
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
-	}
-
-	/**
 	 * Test getSupported method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testGetSupported()
 	{
-		$this->assertTrue(
-			\in_array('String', Helper::getSupported()),
-			'Line:' . __LINE__ . ' Joomla Streams must contain String.'
+		$this->assertContains(
+			'StringWrapper',
+			Helper::getSupported(),
+			'Line:' . __LINE__ . ' Joomla Streams must contain StringWrapper.'
 		);
 
 		$registeredStreams = stream_get_wrappers();
@@ -110,10 +82,6 @@ class HelperTest extends TestCase
 
 	/**
 	 * Test getTransports method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testGetTransports()
 	{
@@ -128,10 +96,6 @@ class HelperTest extends TestCase
 
 	/**
 	 * Test getFilters method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testGetFilters()
 	{
@@ -145,11 +109,7 @@ class HelperTest extends TestCase
 	}
 
 	/**
-	 * Test getJStreams method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
+	 * Test getJStreams mthod.
 	 */
 	public function testGetJStreams()
 	{
@@ -161,16 +121,13 @@ class HelperTest extends TestCase
 	/**
 	 * Test
 	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 * @covers  Joomla\Filesystem\Helper::isJoomlaStream
 	 */
 	public function testIsJoomlaStream()
 	{
 		$this->assertTrue(
-			Helper::isJoomlaStream('String'),
-			'Line:' . __LINE__ . ' String must be a Joomla Stream.'
+			Helper::isJoomlaStream('StringWrapper'),
+			'Line:' . __LINE__ . ' StringWrapper must be a Joomla Stream.'
 		);
 
 		$this->assertFalse(

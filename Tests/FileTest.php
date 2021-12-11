@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -10,46 +10,39 @@ use Joomla\Filesystem\File;
 
 /**
  * Test class for Joomla\Filesystem\File.
- *
- * @since  1.0
  */
 class FileTest extends FilesystemTestCase
 {
 	/**
-	 * Provides the data to test the makeSafe method.
+	 * Provides the data to test the stripExt method.
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function dataTestStripExt()
+	public function dataTestStripExt(): \Generator
 	{
-		return array(
-			array(
-				'foobar.php',
-				'foobar',
-			),
-			array(
-				'foobar..php',
-				'foobar.',
-			),
-			array(
-				'foobar.php.',
-				'foobar.php',
-			),
-		);
+		yield [
+			'foobar.php',
+			'foobar',
+		];
+
+		yield [
+			'foobar..php',
+			'foobar.',
+		];
+
+		yield [
+			'foobar.php.',
+			'foobar.php',
+		];
 	}
 
 	/**
-	 * Test makeSafe method
+	 * Test stripExt method
 	 *
 	 * @param   string  $fileName        The name of the file with extension
 	 * @param   string  $nameWithoutExt  Name without extension
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider  dataTestStripExt
-	 * @since         1.0
 	 */
 	public function testStripExt($fileName, $nameWithoutExt)
 	{
@@ -63,50 +56,51 @@ class FileTest extends FilesystemTestCase
 	/**
 	 * Provides the data to test the makeSafe method.
 	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function dataTestMakeSafe()
+	public function dataTestMakeSafe(): \Generator
 	{
-		return array(
-			array(
-				'joomla.',
-				array('#^\.#'),
-				'joomla',
-				'There should be no fullstop on the end of a filename',
-			),
-			array(
-				'Test j00mla_5-1.html',
-				array('#^\.#'),
-				'Test j00mla_5-1.html',
-				'Alphanumeric symbols, dots, dashes, spaces and underscores should not be filtered',
-			),
-			array(
-				'Test j00mla_5-1.html',
-				array('#^\.#', '/\s+/'),
-				'Testj00mla_5-1.html',
-				'Using strip chars parameter here to strip all spaces',
-			),
-			array(
-				'joomla.php!.',
-				array('#^\.#'),
-				'joomla.php',
-				'Non-alphanumeric symbols should be filtered to avoid disguising file extensions',
-			),
-			array(
-				'joomla.php.!',
-				array('#^\.#'),
-				'joomla.php',
-				'Non-alphanumeric symbols should be filtered to avoid disguising file extensions',
-			),
-			array(
-				'.gitignore',
-				array(),
-				'.gitignore',
-				'Files starting with a fullstop should be allowed when strip chars parameter is empty',
-			),
-		);
+		yield [
+			'joomla.',
+			['#^\.#'],
+			'joomla',
+			'There should be no fullstop on the end of a filename',
+		];
+
+		yield [
+			'Test j00mla_5-1.html',
+			['#^\.#'],
+			'Test j00mla_5-1.html',
+			'Alphanumeric symbols, dots, dashes, spaces and underscores should not be filtered',
+		];
+
+		yield [
+			'Test j00mla_5-1.html',
+			['#^\.#', '/\s+/'],
+			'Testj00mla_5-1.html',
+			'Using strip chars parameter here to strip all spaces',
+		];
+
+		yield [
+			'joomla.php!.',
+			['#^\.#'],
+			'joomla.php',
+			'Non-alphanumeric symbols should be filtered to avoid disguising file extensions',
+		];
+
+		yield [
+			'joomla.php.!',
+			['#^\.#'],
+			'joomla.php',
+			'Non-alphanumeric symbols should be filtered to avoid disguising file extensions',
+		];
+
+		yield [
+			'.gitignore',
+			[],
+			'.gitignore',
+			'Files starting with a fullstop should be allowed when strip chars parameter is empty',
+		];
 	}
 
 	/**
@@ -117,11 +111,8 @@ class FileTest extends FilesystemTestCase
 	 * @param   string  $expected    The expected safe file name
 	 * @param   string  $message     The message to show on failure of test
 	 *
-	 * @return  void
-	 *
 	 * @covers        Joomla\Filesystem\File::makeSafe
 	 * @dataProvider  dataTestMakeSafe
-	 * @since         1.0
 	 */
 	public function testMakeSafe($name, $stripChars, $expected, $message)
 	{
@@ -130,10 +121,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test copy method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testCopyWithPathArgPassed()
 	{
@@ -160,10 +147,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test copy method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testCopyWithoutPathArgPassed()
 	{
@@ -190,10 +173,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test copy method using streams.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testCopyWithStreams()
 	{
@@ -220,14 +199,11 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test makeCopy method for an exception
-	 *
-	 * @return  void
-	 *
-	 * @expectedException  \UnexpectedValueException
-	 * @since   1.4.0
 	 */
 	public function testCopySrcDontExist()
 	{
+		$this->expectException(\UnexpectedValueException::class);
+
 		$name       = 'tempFile';
 		$copiedName = 'tempCopiedFileName';
 
@@ -236,10 +212,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test delete method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testDeleteForSingleFile()
 	{
@@ -259,10 +231,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test delete method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testDeleteForArrayOfFiles()
 	{
@@ -281,17 +249,13 @@ class FileTest extends FilesystemTestCase
 		}
 
 		$this->assertTrue(
-			File::delete(array($this->testPath . '/' . $name1, $this->testPath . '/' . $name2)),
+			File::delete([$this->testPath . '/' . $name1, $this->testPath . '/' . $name2]),
 			'The files were not deleted.'
 		);
 	}
 
 	/**
 	 * Tests the File::move method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testMoveWithPathArgPassed()
 	{
@@ -312,10 +276,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Tests the File::move method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testMoveWithoutPathArgPassed()
 	{
@@ -336,10 +296,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Tests the File::move method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testMoveWithStreams()
 	{
@@ -361,10 +317,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test the File::move method where source file doesn't exist.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testMoveSrcDontExist()
 	{
@@ -379,10 +331,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test write method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testWrite()
 	{
@@ -403,11 +351,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test write method when appending to a file.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.5.0
-	 *
 	 */
 	public function testWriteWithAppend()
 	{
@@ -434,10 +377,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test write method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testWriteCreatesMissingDirectory()
 	{
@@ -458,10 +397,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test write method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testWriteWithStreams()
 	{
@@ -483,10 +418,6 @@ class FileTest extends FilesystemTestCase
 	/**
 	 * Test upload method.
 	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
-	 *
 	 * @backupGlobals enabled
 	 */
 	public function testUpload()
@@ -502,12 +433,12 @@ class FileTest extends FilesystemTestCase
 			$this->markTestSkipped('The test file could not be created.');
 		}
 
-		$_FILES = array(
-			'test' => array(
+		$_FILES = [
+			'test' => [
 				'name'     => 'test.jpg',
 				'tmp_name' => $this->testPath . '/' . $name,
-			)
-		);
+			],
+		];
 
 		$this->assertTrue(
 			File::upload($this->testPath . '/' . $name, $this->testPath . '/' . $uploadedFileName)
@@ -516,10 +447,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test upload method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 *
 	 * @backupGlobals enabled
 	 */
@@ -536,12 +463,12 @@ class FileTest extends FilesystemTestCase
 			$this->markTestSkipped('The test file could not be created.');
 		}
 
-		$_FILES = array(
-			'test' => array(
+		$_FILES = [
+			'test' => [
 				'name'     => 'test.jpg',
 				'tmp_name' => $this->testPath . '/' . $name,
-			)
-		);
+			],
+		];
 
 		$this->assertTrue(
 			File::upload($this->testPath . '/' . $name, $this->testPath . '/' . $uploadedFileName, true)
@@ -550,10 +477,6 @@ class FileTest extends FilesystemTestCase
 
 	/**
 	 * Test upload method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 *
 	 * @backupGlobals enabled
 	 */
@@ -570,12 +493,12 @@ class FileTest extends FilesystemTestCase
 			$this->markTestSkipped('The test file could not be created.');
 		}
 
-		$_FILES = array(
-			'test' => array(
+		$_FILES = [
+			'test' => [
 				'name'     => 'test.jpg',
 				'tmp_name' => $this->testPath . '/' . $name . '.txt',
-			)
-		);
+			],
+		];
 
 		$this->assertTrue(
 			File::upload($this->testPath . '/' . $name . '.txt', $this->testPath . '/' . $name . '/' . $uploadedFileName)

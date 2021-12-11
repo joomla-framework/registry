@@ -1,28 +1,23 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Filesystem\Tests;
 
+use Joomla\Filesystem\Exception\FilesystemException;
 use Joomla\Filesystem\Folder;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
 
 /**
  * Test class for Joomla\Filesystem\Folder.
- *
- * @since  1.0
  */
 class FolderTest extends FilesystemTestCase
 {
 	/**
 	 * Tests the Folder::copy method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testCopyWithPathArgPassed()
 	{
@@ -42,10 +37,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::copy method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testCopyWithoutPathArgPassed()
 	{
@@ -64,10 +55,6 @@ class FolderTest extends FilesystemTestCase
 	}
 	/**
 	 * Tests the Folder::copy method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testCopyWithStreams()
 	{
@@ -88,14 +75,11 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Test the Folder::copy method where source folder doesn't exist.
-	 *
-	 * @return void
-	 *
-	 * @expectedException Joomla\Filesystem\Exception\FilesystemException
-	 * @since   1.0
 	 */
 	public function testCopySrcDontExist()
 	{
+		$this->expectException(FilesystemException::class);
+
 		$name             = 'tempFolder';
 		$copiedFolderName = 'tempCopiedFolderName';
 
@@ -104,10 +88,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Test the Folder::copy method where destination folder exists and the copy is forced.
-	 *
-	 * @return void
-	 *
-	 * @since   1.0
 	 */
 	public function testCopyDestExistAndForced()
 	{
@@ -132,14 +112,11 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Test the Folder::copy method where destination folder exists and the copy is not forced.
-	 *
-	 * @return void
-	 *
-	 * @expectedException Joomla\Filesystem\Exception\FilesystemException
-	 * @since   1.0
 	 */
 	public function testCopyDestExistAndNotForced()
 	{
+		$this->expectException(FilesystemException::class);
+
 		$name             = 'tempFolder';
 		$copiedFolderName = 'tempCopiedFolderName';
 
@@ -158,10 +135,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::create method for a nested directory.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testCreateNested()
 	{
@@ -173,23 +146,16 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::create method for a potential infinite loop.
-	 *
-	 * @return  void
-	 *
-	 * @expectedException Joomla\Filesystem\Exception\FilesystemException
-	 * @since   1.0
 	 */
 	public function testCreateInfiniteLoopException()
 	{
+		$this->expectException(FilesystemException::class);
+
 		Folder::create($this->testPath . '/a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p/q/r/s/t/u/v/w/x/y/z');
 	}
 
 	/**
 	 * Tests the Folder::delete method for a nested directory.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testDeleteRecursive()
 	{
@@ -214,23 +180,16 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::delete method blocks removal of the root directory.
-	 *
-	 * @return  void
-	 *
-	 * @expectedException  Joomla\Filesystem\Exception\FilesystemException
-	 * @since   1.0
 	 */
 	public function testDeleteBaseDir()
 	{
+		$this->expectException(FilesystemException::class);
+
 		Folder::delete('');
 	}
 
 	/**
 	 * Tests the Folder::move method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testMoveWithPathArgPassed()
 	{
@@ -250,10 +209,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::move method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testMoveWithoutPathArgPassed()
 	{
@@ -273,10 +228,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::move method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testMoveWithStreams()
 	{
@@ -344,10 +295,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::files method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFiles()
 	{
@@ -370,10 +317,10 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				'index.html',
 				'index.txt',
-			),
+			],
 			Folder::files($this->testPath . '/' . $name),
 			'The files within a directory should be listed'
 		);
@@ -381,10 +328,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::files method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFilesWithExcludeList()
 	{
@@ -407,20 +350,16 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				'index.txt',
-			),
-			Folder::files($this->testPath . '/' . $name, '.', false, false, array('index.html')),
+			],
+			Folder::files($this->testPath . '/' . $name, '.', false, false, ['index.html']),
 			'The files within a directory should be listed unless excluded'
 		);
 	}
 
 	/**
 	 * Tests the Folder::files method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFilesWithFullPath()
 	{
@@ -443,10 +382,10 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				Path::clean($this->testPath . '/' . $name . '/index.html'),
 				Path::clean($this->testPath . '/' . $name . '/index.txt'),
-			),
+			],
 			Folder::files($this->testPath . '/' . $name, '.', false, true),
 			'Files should be listed with their full paths'
 		);
@@ -454,10 +393,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::files method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFilesWithFilter()
 	{
@@ -480,9 +415,9 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				'index.html',
-			),
+			],
 			Folder::files($this->testPath . '/' . $name, 'index.html'),
 			'Only files matching the filter should be listed'
 		);
@@ -490,10 +425,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::files method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFilesWithRecursiveFilter()
 	{
@@ -531,10 +462,10 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				'index.html',
 				'index.html',
-			),
+			],
 			Folder::files($this->testPath . '/' . $name, 'index.html', true),
 			'Only files matching the filter in nested directories should be listed'
 		);
@@ -542,10 +473,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::files method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFilesWithRecursiveFullPath()
 	{
@@ -583,27 +510,24 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				Path::clean($this->testPath . '/' . $name . '/index.html'),
 				Path::clean($this->testPath . '/' . $name . '/index.txt'),
 				Path::clean($this->testPath . '/' . $name . '/' . $name . '/index.html'),
 				Path::clean($this->testPath . '/' . $name . '/' . $name . '/index.txt'),
-			),
+			],
 			Folder::files($this->testPath . '/' . $name, '.', true, true),
-		'Files in all nested directories should be listed with their full paths'
+			'Files in all nested directories should be listed with their full paths'
 		);
 	}
 
 	/**
 	 * Tests the Folder::files method.
-	 *
-	 * @return  void
-	 *
-	 * @expectedException  \UnexpectedValueException
-	 * @since   1.4.0
 	 */
 	public function testFilesWithNonexistingDirectory()
 	{
+		$this->expectException(\UnexpectedValueException::class);
+
 		$name = 'tempFolder';
 
 		Folder::files($this->testPath . '/' . $name);
@@ -611,10 +535,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::folders method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFolders()
 	{
@@ -626,9 +546,9 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				$name,
-			),
+			],
 			Folder::folders($this->testPath),
 			'The folders within a directory should be listed'
 		);
@@ -636,10 +556,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::folders method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFoldersWithExcludeList()
 	{
@@ -657,20 +573,16 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				$name,
-			),
-			Folder::folders($this->testPath, '.', false, false, array($excludeName)),
+			],
+			Folder::folders($this->testPath, '.', false, false, [$excludeName]),
 			'The folders within a directory should be listed unless excluded'
 		);
 	}
 
 	/**
 	 * Tests the Folder::folders method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFoldersWithFullPath()
 	{
@@ -682,9 +594,9 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				Path::clean($this->testPath . '/' . $name),
-			),
+			],
 			Folder::folders($this->testPath, '.', false, true),
 			'Folders should be listed with their full paths'
 		);
@@ -692,10 +604,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::folders method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFoldersWithFilter()
 	{
@@ -713,9 +621,9 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				$name,
-			),
+			],
 			Folder::folders($this->testPath, $name),
 			'Only folders matching the filter should be listed'
 		);
@@ -723,10 +631,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::folders method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFoldersWithRecursiveFilter()
 	{
@@ -764,11 +668,11 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				$name,
 				$name,
 				$name,
-			),
+			],
 			Folder::folders($this->testPath, $name, true),
 			'Only folders matching the filter in nested directories should be listed'
 		);
@@ -776,10 +680,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::folders method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testFoldersWithRecursiveFullPath()
 	{
@@ -817,29 +717,26 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
+			[
 				Path::clean($this->testPath . '/' . $excludeName),
 				Path::clean($this->testPath . '/' . $excludeName . '/' . $excludeName),
 				Path::clean($this->testPath . '/' . $excludeName . '/' . $name),
 				Path::clean($this->testPath . '/' . $name),
 				Path::clean($this->testPath . '/' . $name . '/' . $excludeName),
 				Path::clean($this->testPath . '/' . $name . '/' . $name),
-			),
+			],
 			Folder::folders($this->testPath, '.', true, true),
-		'Folders in all nested directories should be listed with their full paths'
+			'Folders in all nested directories should be listed with their full paths'
 		);
 	}
 
 	/**
 	 * Tests the Folder::folders method.
-	 *
-	 * @return  void
-	 *
-	 * @expectedException  \UnexpectedValueException
-	 * @since   1.4.0
 	 */
 	public function testFoldersWithNonexistingDirectory()
 	{
+		$this->expectException(\UnexpectedValueException::class);
+
 		$name = 'tempFolder';
 
 		Folder::folders($this->testPath . '/' . $name);
@@ -847,10 +744,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::listFolderTree method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testListFolderTreeWithEmptyDirectory()
 	{
@@ -862,7 +755,7 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(),
+			[],
 			Folder::listFolderTree($this->testPath . '/' . $name, '.'),
 			'There should not be a folder tree for an empty directory.'
 		);
@@ -870,10 +763,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::listFolderTree method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testListFolderTreeWithASubirectory()
 	{
@@ -891,15 +780,15 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
-				array(
+			[
+				[
 					'id'       => 1,
 					'parent'   => 0,
 					'name'     => $childName,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName),
-				),
-			),
+				],
+			],
 			Folder::listFolderTree($this->testPath . '/' . $name, '.'),
 			'The folder tree was not listed as expected.'
 		);
@@ -907,10 +796,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::listFolderTree method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testListFolderTreeWithMultipleSubirectories()
 	{
@@ -934,22 +819,22 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
-				array(
+			[
+				[
 					'id'       => 1,
 					'parent'   => 0,
 					'name'     => $childName1,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName1),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName1),
-				),
-				array(
+				],
+				[
 					'id'       => 2,
 					'parent'   => 0,
 					'name'     => $childName2,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName2),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName2),
-				),
-			),
+				],
+			],
 			Folder::listFolderTree($this->testPath . '/' . $name, '.'),
 			'The folder tree was not listed as expected.'
 		);
@@ -957,10 +842,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::listFolderTree method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testListFolderTreeWithANestedSubirectory()
 	{
@@ -984,22 +865,22 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
-				array(
+			[
+				[
 					'id'       => 1,
 					'parent'   => 0,
 					'name'     => $childName,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName),
-				),
-				array(
+				],
+				[
 					'id'       => 2,
 					'parent'   => 1,
 					'name'     => $subChildName,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName . '/' . $subChildName),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName . '/' . $subChildName),
-				),
-			),
+				],
+			],
 			Folder::listFolderTree($this->testPath . '/' . $name, '.'),
 			'The folder tree was not listed as expected.'
 		);
@@ -1007,10 +888,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::listFolderTree method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testListFolderTreeWithMultipleNestedSubirectories()
 	{
@@ -1056,50 +933,50 @@ class FolderTest extends FilesystemTestCase
 		}
 
 		$this->assertSame(
-			array(
-				array(
+			[
+				[
 					'id'       => 1,
 					'parent'   => 0,
 					'name'     => $childName1,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName1),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName1),
-				),
-				array(
+				],
+				[
 					'id'       => 2,
 					'parent'   => 1,
 					'name'     => $subChildName1,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName1 . '/' . $subChildName1),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName1 . '/' . $subChildName1),
-				),
-				array(
+				],
+				[
 					'id'       => 3,
 					'parent'   => 1,
 					'name'     => $subChildName2,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName1 . '/' . $subChildName2),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName1 . '/' . $subChildName2),
-				),
-				array(
+				],
+				[
 					'id'       => 4,
 					'parent'   => 0,
 					'name'     => $childName2,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName2),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName2),
-				),
-				array(
+				],
+				[
 					'id'       => 5,
 					'parent'   => 4,
 					'name'     => $subChildName1,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName2 . '/' . $subChildName1),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName2 . '/' . $subChildName1),
-				),
-				array(
+				],
+				[
 					'id'       => 6,
 					'parent'   => 4,
 					'name'     => $subChildName2,
 					'fullname' => Path::clean($this->testPath . '/' . $name . '/' . $childName2 . '/' . $subChildName2),
 					'relname'  => Path::clean($this->testPath . '/' . $name . '/' . $childName2 . '/' . $subChildName2),
-				),
-			),
+				],
+			],
 			Folder::listFolderTree($this->testPath . '/' . $name, '.'),
 			'The folder tree was not listed as expected.'
 		);
@@ -1107,10 +984,6 @@ class FolderTest extends FilesystemTestCase
 
 	/**
 	 * Tests the Folder::makeSafe method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testMakeSafe()
 	{

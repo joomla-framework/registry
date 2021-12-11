@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2020 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,21 +12,15 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for StringController.
- *
- * @since  1.0
  */
 class StringControllerTest extends TestCase
 {
 	/**
 	 * Test _getArray method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function test_getArray()
 	{
-		$strings = array('foo' => 'bar');
+		$strings = ['foo' => 'bar'];
 
 		TestHelper::setValue(new StringController, 'strings', $strings);
 
@@ -36,15 +30,11 @@ class StringControllerTest extends TestCase
 		);
 
 		// Clean up static variable
-		TestHelper::setValue(new StringController, 'strings', array());
+		TestHelper::setValue(new StringController, 'strings', []);
 	}
 
 	/**
 	 * Test createRef method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testCreateRef()
 	{
@@ -60,15 +50,11 @@ class StringControllerTest extends TestCase
 		);
 
 		// Clean up static variable
-		TestHelper::setValue(new StringController, 'strings', array());
+		TestHelper::setValue(new StringController, 'strings', []);
 	}
 
 	/**
 	 * Test getRef method.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.4.0
 	 */
 	public function testGetRef()
 	{
