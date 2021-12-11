@@ -1,21 +1,20 @@
-# The Session Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/session/status.svg)](https://ci.joomla.org/joomla-framework/session)
+# The Session Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/session/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/session)
 
-[![Latest Stable Version](https://poser.pugx.org/joomla/session/v/stable)](https://packagist.org/packages/joomla/session) [![Total Downloads](https://poser.pugx.org/joomla/session/downloads)](https://packagist.org/packages/joomla/session) [![Latest Unstable Version](https://poser.pugx.org/joomla/session/v/unstable)](https://packagist.org/packages/joomla/session) [![License](https://poser.pugx.org/joomla/session/license)](https://packagist.org/packages/joomla/session)
+[![Latest Stable Version](https://poser.pugx.org/joomla/session/v/stable)](https://packagist.org/packages/joomla/session)
+[![Total Downloads](https://poser.pugx.org/joomla/session/downloads)](https://packagist.org/packages/joomla/session)
+[![Latest Unstable Version](https://poser.pugx.org/joomla/session/v/unstable)](https://packagist.org/packages/joomla/session)
+[![License](https://poser.pugx.org/joomla/session/license)](https://packagist.org/packages/joomla/session)
 
-## Installation via Composer
+The Session package provides an interface for managing sessions within an application.
 
-Add `"joomla/session": "~1.0"` to the require block in your composer.json and then run `composer install`.
+## Requirements
 
-```json
-{
-	"require": {
-		"joomla/session": "~1.0"
-	}
-}
-```
+* PHP 7.0 or later
 
-Alternatively, you can simply run the following from the command line:
+## Installation
 
+To install the package, you can simply run the following from the command line:
+           
 ```sh
-composer require joomla/session "~1.0"
+composer require joomla/session "~2.0"
 ```

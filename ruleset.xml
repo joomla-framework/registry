@@ -15,9 +15,14 @@
     <exclude-pattern>*/vendor/*</exclude-pattern>
 
     <rule ref="Joomla">
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
         <!-- Variables inherited from the PHP SessionHandlerInterface definition are named in snake case -->
         <exclude name="Joomla.NamingConventions.ValidVariableName"/>
-        <!-- Required due to legacy methods being named with a leading underscore, should be fixed in 2.0 -->
-        <exclude name="Joomla.NamingConventions.ValidFunctionName.MethodUnderscore"/>
+    </rule>
+
+    <rule ref="Joomla.Classes.InstantiateNewClasses">
+        <properties>
+            <property name="shortArraySyntax" value="true"/>
+        </properties>
     </rule>
 </ruleset>
