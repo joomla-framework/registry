@@ -1,417 +1,499 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Router\Tests;
 
-use Joomla\Input\Input;
+use Joomla\Router\Exception\MethodNotAllowedException;
+use Joomla\Router\Exception\RouteNotFoundException;
+use Joomla\Router\Route;
 use Joomla\Router\Router;
-use Joomla\Test\TestHelper;
 use PHPUnit\Framework\TestCase;
-
-require_once __DIR__ . '/Stubs/Bar.php';
-require_once __DIR__ . '/Stubs/Baz.php';
-require_once __DIR__ . '/Stubs/Foo.php';
-require_once __DIR__ . '/Stubs/GooGet.php';
 
 /**
  * Tests for the Joomla\Router\Router class.
- *
- * @since  1.0
  */
 class RouterTest extends TestCase
 {
 	/**
 	 * An instance of the object to be tested.
 	 *
-	 * @var    Router
-	 * @since  1.0
+	 * @var  Router
 	 */
-	private $instance;
+	protected $instance;
 
 	/**
-	 * Provides test data for the testParseRoute method.
-	 *
-	 * @return  array
-	 *
-	 * @since   1.0
+	 * {@inheritdoc}
 	 */
-	public static function seedTestParseRoute()
+	protected function setUp(): void
 	{
-		// Route, Exception, ControllerName, InputData, MapSet
-		return array(
-			array('', false, 'home', array(), 1),
-			array('articles/4', true, 'home', array(), 1),
-			array('', false, 'index', array(), 2),
-			array('login', false, 'login', array('_rawRoute' => 'login'), 2),
-			array('articles', false, 'articles', array('_rawRoute' => 'articles'), 2),
-			array('articles/4', false, 'article', array('article_id' => 4, '_rawRoute' => 'articles/4'), 2),
-			array('articles/4/crap', true, '', array(), 2),
-			array('test', true, '', array(), 2),
-			array('test/foo', true, '', array(), 2),
-			array('test/foo/path', true, '', array(), 2),
-			array('test/foo/path/bar', false, 'test', array('seg1' => 'foo', 'seg2' => 'bar', '_rawRoute' => 'test/foo/path/bar'), 2),
-			array('content/article-1/*', false, 'content', array('_rawRoute' => 'content/article-1/*'), 2),
-			array('content/cat-1/article-1', false,
-				'article', array('category' => 'cat-1', 'article' => 'article-1', '_rawRoute' => 'content/cat-1/article-1'), 2),
-			array('content/cat-1/cat-2/article-1', false,
-				'article', array('category' => 'cat-1/cat-2', 'article' => 'article-1', '_rawRoute' => 'content/cat-1/cat-2/article-1'), 2),
-			array('content/cat-1/cat-2/cat-3/article-1', false,
-				'article', array('category' => 'cat-1/cat-2/cat-3', 'article' => 'article-1', '_rawRoute' => 'content/cat-1/cat-2/cat-3/article-1'), 2)
-		);
+		parent::setUp();
+
+		$this->instance = new Router;
 	}
 
 	/**
-	 * Setup the router maps to option 1.
+	 * @testdox  Ensure the Router is instantiated correctly with no injected routes.
 	 *
-	 * This has no routes but has a default controller for the home page.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function setMaps1()
-	{
-		$this->instance->addMaps(array());
-		$this->instance->setDefaultController('home');
-	}
-
-	/**
-	 * Setup the router maps to option 2.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function setMaps2()
-	{
-		$this->instance->addMaps(
-			array(
-				'login' => 'login',
-				'logout' => 'logout',
-				'articles' => 'articles',
-				'articles/:article_id' => 'article',
-				'test/:seg1/path/:seg2' => 'test',
-				'content/:/\*' => 'content',
-				'content/*category/:article' => 'article'
-			)
-		);
-		$this->instance->setDefaultController('index');
-	}
-
-	/**
-	 * Tests the Joomla\Router\Router::__construct method.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Router\Router::__construct
-	 * @since   1.0
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
 	 */
 	public function test__construct()
 	{
-		$this->assertAttributeInstanceOf(
-			'Joomla\\Input\\Input',
-			'input',
-			$this->instance
+		$this->assertEmpty(
+			(new Router)->getRoutes(),
+			'A Router should have no known routes by default.'
 		);
 	}
 
 	/**
-	 * Test data the Joomla\Router\Router::addMap method.
+	 * @testdox  Ensure the Router is instantiated correctly with injected routes.
 	 *
-	 * @return  array
-	 *
-	 * @since   1.1.2
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
 	 */
-	public function dataAddMap()
+	public function test__constructNotEmpty()
 	{
-		return array(
-			// Note: route, controller, regex, vars, controller
-			array('foo', 'FooCont', '^foo$', array(), 'FooCont'),
-			array('/arts/:', 'ArtCont', '^arts/[^/]*$', array(), 'ArtCont'),
-			array('/art/:art_id', 'ArtCont', '^art/([^/]*)$', array('art_id'), 'ArtCont'),
-			array('/art/\\:art_id', 'ArtCont', '^art/\:art_id$', array(), 'ArtCont'),
-			array('/arts/*', 'ArtCont', '^arts/.*$', array(), 'ArtCont'),
-			array('/arts/*tags', 'ArtCont', '^arts/(.*)$', array('tags'), 'ArtCont'),
-			array('/arts/\\*tags', 'ArtCont', '^arts/\*tags$', array(), 'ArtCont'),
+		$routes = [
+			[
+				'pattern'    => 'login',
+				'controller' => 'login',
+			],
+			[
+				'pattern'    => 'requests/:request_id',
+				'controller' => 'request',
+				'rules'      => [
+					'request_id' => '(\d+)',
+				],
+			],
+		];
+
+		$rules = [
+			new Route(['GET'], 'login', 'login', [], []),
+			new Route(['GET'], 'requests/:request_id', 'request', ['request_id' => '(\d+)'], []),
+		];
+
+		$router = new Router($routes);
+
+		$this->assertEquals(
+			$rules,
+			$router->getRoutes(),
+			'When passing an array of routes when instantiating a Router, the maps property should be set accordingly.'
 		);
 	}
 
 	/**
-	 * Tests the Joomla\Router\Router::addMap method.
+	 * @testdox  Ensure a route is added to the Router.
 	 *
-	 * @param   string  $route       The route pattern to use for matching.
-	 * @param   string  $controller  The controller name to map to the given pattern.
-	 * @param   string  $regex       The generated regex to match.
-	 * @param   array   $vars        Variables captured from route
-	 * @param   string  $called      Controller called.
-	 *
-	 * @return  void
-	 *
-	 * @covers        Joomla\Router\Router::addMap
-	 * @dataProvider  dataAddMap
-	 * @since         1.0
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
 	 */
-	public function testAddMap($route, $controller, $regex, $vars, $called)
+	public function testAddRoute()
 	{
-		$this->instance->addMap($route, $controller);
+		$route = new Route(['GET'], 'foo', 'MyApplicationFoo', [], []);
 
-		$this->assertContains(
-			array(
-				'regex' => \chr(1) . $regex . \chr(1),
-				'vars' => $vars,
-				'controller' => $called
-			),
-			TestHelper::getValue($this->instance, 'maps')
+		$this->assertSame(
+			$this->instance,
+			$this->instance->addRoute($route),
+			'The addRoute method has a fluent interface'
+		);
+
+		$this->assertEquals(
+			[
+				$route,
+			],
+			$this->instance->getRoutes()
 		);
 	}
 
 	/**
-	 * Tests the Joomla\Router\Router::addMaps method.
+	 * @testdox  Ensure a route is added to the Router.
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Router\Router::addMaps
-	 * @since   1.0
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
 	 */
-	public function testAddMaps()
+	public function testAddRouteWithDefaults()
 	{
-		$maps = array(
-			'login' => 'login',
-			'logout' => 'logout',
-			'requests' => 'requests',
-			'requests/:request_id' => 'request'
+		$route = new Route(['GET'], 'foo', 'MyApplicationFoo', [], ['default1' => 'foo']);
+
+		$this->assertSame(
+			$this->instance,
+			$this->instance->addRoute($route),
+			'The addRoute method has a fluent interface'
 		);
 
-		$rules = array(
-			array(
-				'regex' => \chr(1) . '^login$' . \chr(1),
-				'vars' => array(),
-				'controller' => 'login'
-			),
-			array(
-				'regex' => \chr(1) . '^logout$' . \chr(1),
-				'vars' => array(),
-				'controller' => 'logout'
-			),
-			array(
-				'regex' => \chr(1) . '^requests$' . \chr(1),
-				'vars' => array(),
-				'controller' => 'requests'
-			),
-			array(
-				'regex' => \chr(1) . '^requests/([^/]*)$' . \chr(1),
-				'vars' => array('request_id'),
-				'controller' => 'request'
-			)
+		$this->assertEquals(
+			[
+				$route,
+			],
+			$this->instance->getRoutes()
 		);
-
-		$this->assertAttributeEmpty('maps', $this->instance);
-		$this->instance->addMaps($maps);
-		$this->assertAttributeEquals($rules, 'maps', $this->instance);
 	}
 
 	/**
-	 * Tests the Joomla\Router\Router::getController method.
+	 * @testdox  Ensure a GET route is added to the Router.
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Router\Router::getController
-	 * @since   1.0
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
 	 */
-	public function testGetController()
+	public function testGet()
 	{
-		$this->instance->setControllerPrefix('\Joomla\Router\Tests\Stubs\\')
-			->addMap('articles/:article_id', 'GooGet');
-
-		$controller = $this->instance->getController('articles/3');
-		$this->assertInstanceOf('\Joomla\Router\Tests\Stubs\GooGet', $controller);
-
-		$input = $controller->getInput();
-		$this->assertEquals('3', $input->get('article_id'));
+		$this->assertSame(
+			$this->instance,
+			$this->instance->get('foo', 'MyApplicationFoo', [], ['default1' => 'foo']),
+			'The get method has a fluent interface'
+		);
 	}
 
 	/**
-	 * Tests the Joomla\Router\Router::parseRoute method.
+	 * @testdox  Ensure a POST route is added to the Router.
 	 *
-	 * @param   string   $r  The route to parse.
-	 * @param   boolean  $e  True if an exception is expected.
-	 * @param   string   $c  The expected controller name.
-	 * @param   array    $i  The expected input object data.
-	 * @param   integer  $m  The map set to use for setting up the router.
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
+	 */
+	public function testPost()
+	{
+		$this->assertSame(
+			$this->instance,
+			$this->instance->post('foo', 'MyApplicationFoo', [], ['default1' => 'foo']),
+			'The post method has a fluent interface'
+		);
+	}
+
+	/**
+	 * @testdox  Ensure a PUT route is added to the Router.
 	 *
-	 * @return  void
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
+	 */
+	public function testPut()
+	{
+		$this->assertSame(
+			$this->instance,
+			$this->instance->put('foo', 'MyApplicationFoo', [], ['default1' => 'foo']),
+			'The put method has a fluent interface'
+		);
+	}
+
+	/**
+	 * @testdox  Ensure a DELETE route is added to the Router.
 	 *
-	 * @covers        Joomla\Router\Router::parseRoute
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
+	 */
+	public function testDelete()
+	{
+		$this->assertSame(
+			$this->instance,
+			$this->instance->delete('foo', 'MyApplicationFoo', [], ['default1' => 'foo']),
+			'The delete method has a fluent interface'
+		);
+	}
+
+	/**
+	 * @testdox  Ensure a HEAD route is added to the Router.
+	 *
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
+	 */
+	public function testHead()
+	{
+		$this->assertSame(
+			$this->instance,
+			$this->instance->head('foo', 'MyApplicationFoo', [], ['default1' => 'foo']),
+			'The head method has a fluent interface'
+		);
+	}
+
+	/**
+	 * @testdox  Ensure a OPTIONS route is added to the Router.
+	 *
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
+	 */
+	public function testOptions()
+	{
+		$this->assertSame(
+			$this->instance,
+			$this->instance->options('foo', 'MyApplicationFoo', [], ['default1' => 'foo']),
+			'The options method has a fluent interface'
+		);
+	}
+
+	/**
+	 * @testdox  Ensure a TRACE route is added to the Router.
+	 *
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
+	 */
+	public function testTrace()
+	{
+		$this->assertSame(
+			$this->instance,
+			$this->instance->trace('foo', 'MyApplicationFoo', [], ['default1' => 'foo']),
+			'The trace method has a fluent interface'
+		);
+	}
+
+	/**
+	 * @testdox  Ensure a PATCH route is added to the Router.
+	 *
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
+	 */
+	public function testPatch()
+	{
+		$this->assertSame(
+			$this->instance,
+			$this->instance->patch('foo', 'MyApplicationFoo', [], ['default1' => 'foo']),
+			'The patch method has a fluent interface'
+		);
+	}
+
+	/**
+	 * @testdox  Ensure a route supporting all methods is added to the Router.
+	 *
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
+	 */
+	public function testAll()
+	{
+		$this->assertSame(
+			$this->instance,
+			$this->instance->all('foo', 'MyApplicationFoo', [], ['default1' => 'foo']),
+			'The all method has a fluent interface'
+		);
+	}
+
+	/**
+	 * @testdox  Ensure several routes are added to the Router.
+	 *
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
+	 */
+	public function testAddRoutes()
+	{
+		$routes = [
+			[
+				'pattern'    => 'login',
+				'controller' => 'login',
+			],
+			[
+				'pattern'    => 'user/:name/:id',
+				'controller' => 'UserController',
+				'rules'      => [
+					'id' => '(\d+)',
+				],
+			],
+			[
+				'pattern'    => 'requests/:request_id',
+				'controller' => 'request',
+				'rules'      => [
+					'request_id' => '(\d+)',
+				],
+			],
+		];
+
+		$rules = [
+			new Route(['GET'], 'login', 'login', [], []),
+			new Route(['GET'], 'user/:name/:id', 'UserController', ['id' => '(\d+)'], []),
+			new Route(['GET'], 'requests/:request_id', 'request', ['request_id' => '(\d+)'], []),
+		];
+
+		$this->assertSame(
+			$this->instance,
+			$this->instance->addRoutes($routes),
+			'The addRoutes method has a fluent interface'
+		);
+
+		$this->assertEquals($rules, $this->instance->getRoutes());
+	}
+
+	/**
+	 * @testdox  Ensure the Router parses routes.
+	 *
+	 * @param    string   $r  The route to parse.
+	 * @param    boolean  $e  True if an exception is expected.
+	 * @param    array    $i  The expected return data.
+	 * @param    boolean  $m  True if routes should be set up.
+	 *
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\ResolvedRoute
+	 * @uses     Joomla\Router\Route
+	 *
 	 * @dataProvider  seedTestParseRoute
-	 * @since         1.0
 	 */
-	public function testParseRoute($r, $e, $c, $i, $m)
+	public function testParseRoute($r, $e, $i, $m)
 	{
-		// Setup the router maps.
-		$mapSetup = 'setMaps' . $m;
-		$this->$mapSetup();
+		if ($m)
+		{
+			$this->setRoutes();
+		}
 
 		// If we should expect an exception set that up.
 		if ($e)
 		{
-			// expectException was added in PHPUnit 5.2 and setExpectedException removed in 6.0
-			if (method_exists($this, 'expectException'))
-			{
-				$this->expectException('InvalidArgumentException');
-			}
-			else
-			{
-				$this->setExpectedException('InvalidArgumentException');
-			}
+			$this->expectException(RouteNotFoundException::class);
 		}
 
 		// Execute the route parsing.
-		$actual = TestHelper::invoke($this->instance, 'parseRoute', $r);
+		$actual = $this->instance->parseRoute($r);
 
 		// Test the assertions.
-		$this->assertEquals($c, $actual, 'Incorrect controller name found.');
+		$this->assertSame($i['controller'], $actual->getController());
+		$this->assertEquals($i['vars'], $actual->getRouteVariables());
 	}
 
 	/**
-	 * Tests the Joomla\Router\Router::setControllerPrefix method.
+	 * @testdox  Ensure the Router handles a method not allowed error correctly.
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Router\Router::setControllerPrefix
-	 * @since   1.0
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Exception\MethodNotAllowedException
+	 * @uses     Joomla\Router\Route
 	 */
-	public function testSetControllerPrefix()
+	public function testParseRouteWithMethodNotAllowedError()
 	{
-		$this->instance->setControllerPrefix('MyApplication');
-		$this->assertAttributeEquals('MyApplication', 'controllerPrefix', $this->instance);
+		$this->expectException(MethodNotAllowedException::class);
+		$this->expectExceptionMessage('Route `test/foo/path/bar` does not support `POST` requests.');
+
+		$this->instance->get('test/foo/path/bar', 'TestController');
+
+		// Execute the route parsing.
+		$this->instance->parseRoute('test/foo/path/bar', 'POST');
 	}
 
 	/**
-	 * Tests the Joomla\Router\Router::setDefaultController method.
+	 * @testdox  The router can be serialized
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Router\Router::setDefaultController
-	 * @since   1.0
+	 * @covers   Joomla\Router\Router
+	 * @uses     Joomla\Router\Route
 	 */
-	public function testSetDefaultController()
+	public function testSerialization()
 	{
-		$this->instance->setDefaultController('foobar');
-		$this->assertAttributeEquals('foobar', 'default', $this->instance);
+		$this->setRoutes();
+
+		$unserializedRouter = unserialize(serialize($this->instance));
+
+		$this->assertNotSame($unserializedRouter, $this->instance, 'A new router instance should be created when unserialized');
+		$this->assertEquals($unserializedRouter->getRoutes(), $this->instance->getRoutes(), 'The routers should have the same routes');
 	}
 
 	/**
-	 * Tests the Joomla\Router\Router::fetchController method if the controller class is missing.
+	 * Provides test data for the testParseRoute method.
 	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Router\Router::fetchController
-	 * @since   1.0
+	 * @return  \Generator
 	 */
-	public function testFetchControllerWithMissingClass()
+	public function seedTestParseRoute(): \Generator
 	{
-		// expectException was added in PHPUnit 5.2 and setExpectedException removed in 6.0
-		if (method_exists($this, 'expectException'))
-		{
-			$this->expectException('RuntimeException');
-			$this->expectExceptionCode(404);
-		}
-		else
-		{
-			$this->setExpectedException('RuntimeException', null, 404);
-		}
+		// Route Pattern, Throws Exception, Return Data, MapSetup
+		yield ['', true, [], false];
+		yield ['articles/4', true, [], false];
+		yield ['', false, ['controller' => 'DefaultController', 'vars' => []], true];
+		yield ['login', false, ['controller' => 'LoginController', 'vars' => []], true];
+		yield ['articles', false, ['controller' => 'ArticlesController', 'vars' => []], true];
+		yield ['articles/4', false, ['controller' => 'ArticleController', 'vars' => ['article_id' => 4]], true];
+		yield ['articles/4/crap', true, [], true];
+		yield ['test', true, [], true];
+		yield ['test/foo', true, [], true];
+		yield ['test/foo/path', true, [], true];
+		yield ['test/foo/path/bar', false, ['controller' => 'TestController', 'vars' => ['seg1' => 'foo', 'seg2' => 'bar']], true];
+		yield ['content/article-1/*', false, ['controller' => 'ContentController', 'vars' => []], true];
 
-		$controller = TestHelper::invoke($this->instance, 'fetchController', 'goober');
+		yield [
+			'content/cat-1/article-1',
+			false,
+			['controller' => 'ArticleController', 'vars' => ['category' => 'cat-1', 'article' => 'article-1']],
+			true,
+		];
+
+		yield [
+			'content/cat-1/cat-2/article-1',
+			false,
+			['controller' => 'ArticleController', 'vars' => ['category' => 'cat-1/cat-2', 'article' => 'article-1']],
+			true,
+		];
+
+		yield [
+			'content/cat-1/cat-2/cat-3/article-1',
+			false,
+			['controller' => 'ArticleController', 'vars' => ['category' => 'cat-1/cat-2/cat-3', 'article' => 'article-1']],
+			true,
+		];
+
+		yield [
+			'default_option/4',
+			false,
+			['controller' => 'ArticleController', 'vars' => ['article_id' => 4, 'option' => 'content']],
+			true,
+		];
+
+		yield [
+			'overriden_option/article/4',
+			false,
+			['controller' => 'ArticleController', 'vars' => ['id' => 4, 'option' => 'content', 'view' => 'article']],
+			true,
+		];
 	}
 
 	/**
-	 * Tests the Joomla\Router\Router::fetchController method if the class not a controller.
+	 * Setup the router with routes.
 	 *
 	 * @return  void
-	 *
-	 * @covers  Joomla\Router\Router::fetchController
-	 * @since   1.0
 	 */
-	public function testFetchControllerWithNonController()
+	protected function setRoutes(): void
 	{
-		// expectException was added in PHPUnit 5.2 and setExpectedException removed in 6.0
-		if (method_exists($this, 'expectException'))
-		{
-			$this->expectException('RuntimeException');
-			$this->expectExceptionCode(500);
-		}
-		else
-		{
-			$this->setExpectedException('RuntimeException', null, 500);
-		}
-
-		$controller = TestHelper::invoke($this->instance, 'fetchController', 'MyTestControllerBaz');
-	}
-
-	/**
-	 * Tests the Joomla\Router\Router::fetchController method with a prefix set.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Router\Router::fetchController
-	 * @since   1.0
-	 */
-	public function testFetchControllerWithPrefixSet()
-	{
-		$this->instance->setControllerPrefix('MyTestController');
-		$controller = TestHelper::invoke($this->instance, 'fetchController', 'Foo');
-	}
-
-	/**
-	 * Tests the Joomla\Router\Router::fetchController method without a prefix set even though it is necessary.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Router\Router::fetchController
-	 * @since   1.0
-	 */
-	public function testFetchControllerWithoutPrefixSetThoughNecessary()
-	{
-		// expectException was added in PHPUnit 5.2 and setExpectedException removed in 6.0
-		if (method_exists($this, 'expectException'))
-		{
-			$this->expectException('RuntimeException');
-		}
-		else
-		{
-			$this->setExpectedException('RuntimeException');
-		}
-
-		$controller = TestHelper::invoke($this->instance, 'fetchController', 'foo');
-	}
-
-	/**
-	 * Tests the Joomla\Router\Router::fetchController method without a prefix set.
-	 *
-	 * @return  void
-	 *
-	 * @covers  Joomla\Router\Router::fetchController
-	 * @since   1.0
-	 */
-	public function testFetchControllerWithoutPrefixSet()
-	{
-		$controller = TestHelper::invoke($this->instance, 'fetchController', 'TControllerBar');
-	}
-
-	/**
-	 * Prepares the environment before running a test.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		$this->instance = new Router(new Input(array()));
+		$this->instance->addRoutes(
+			[
+				[
+					'pattern'    => 'login',
+					'controller' => 'LoginController',
+				],
+				[
+					'pattern'    => 'logout',
+					'controller' => 'LogoutController',
+				],
+				[
+					'pattern'    => 'articles',
+					'controller' => 'ArticlesController',
+				],
+				[
+					'pattern'    => 'articles/:article_id',
+					'controller' => 'ArticleController',
+				],
+				[
+					'pattern'    => 'test/:seg1/path/:seg2',
+					'controller' => 'TestController',
+				],
+				[
+					'pattern'    => 'content/:/\*',
+					'controller' => 'ContentController',
+				],
+				[
+					'pattern'    => 'content/*category/:article',
+					'controller' => 'ArticleController',
+				],
+				[
+					'pattern'    => '/',
+					'controller' => 'DefaultController',
+				],
+				[
+					'pattern'    => 'default_option/:article_id',
+					'controller' => 'ArticleController',
+					'defaults'   => [
+						'option' => 'content',
+					],
+				],
+				[
+					'pattern'    => 'overriden_option/:view/:id',
+					'controller' => 'ArticleController',
+					'defaults'   => [
+						'option' => 'content',
+						'view'   => 'category',
+					],
+				],
+			]
+		);
 	}
 }
