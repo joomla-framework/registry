@@ -1,4 +1,4 @@
-# The Controller Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/controller/status.svg)](https://ci.joomla.org/joomla-framework/controller)
+# The Controller Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/controller/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/controller)
 
 ## Interfaces
 
@@ -69,12 +69,12 @@ The `Controller\AbstractController` class implements `Serializable`. When serial
 
 ## Installation via Composer
 
-Add `"joomla/controller": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/controller": "~2.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/controller": "~1.0"
+		"joomla/controller": "~2.0"
 	}
 }
 ```
@@ -82,11 +82,11 @@ Add `"joomla/controller": "~1.0"` to the require block in your composer.json and
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/controller "~1.0"
+composer require joomla/controller "~2.0"
 ```
 
 If you want to include the test sources, use
 
 ```sh
-composer require --prefer-source joomla/controller "~1.0"
+composer require --prefer-source joomla/controller "~2.0"
 ```
