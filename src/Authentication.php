@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Authentication Package
  *
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -20,35 +20,35 @@ class Authentication
 	 *
 	 * @since  1.0
 	 */
-	const SUCCESS = 1;
+	public const SUCCESS = 1;
 
 	/**
 	 * Credentials were provided but they were invalid.
 	 *
 	 * @since  1.0
 	 */
-	const INVALID_CREDENTIALS = 2;
+	public const INVALID_CREDENTIALS = 2;
 
 	/**
 	 * Credentials were provided but the user did not exist in the credential store.
 	 *
 	 * @since  1.0
 	 */
-	const NO_SUCH_USER = 3;
+	public const NO_SUCH_USER = 3;
 
 	/**
 	 * There were no credentials found.
 	 *
 	 * @since  1.0
 	 */
-	const NO_CREDENTIALS = 4;
+	public const NO_CREDENTIALS = 4;
 
 	/**
 	 * There were partial credentials found but they were not complete.
 	 *
 	 * @since  1.0
 	 */
-	const INCOMPLETE_CREDENTIALS = 5;
+	public const INCOMPLETE_CREDENTIALS = 5;
 
 	/**
 	 * The array of strategies.
@@ -56,7 +56,7 @@ class Authentication
 	 * @var    AuthenticationStrategyInterface[]
 	 * @since  1.0
 	 */
-	private $strategies = array();
+	private $strategies = [];
 
 	/**
 	 * The array of results.
@@ -64,7 +64,7 @@ class Authentication
 	 * @var    integer[]
 	 * @since  1.0
 	 */
-	private $results = array();
+	private $results = [];
 
 	/**
 	 * Register a new strategy
@@ -84,14 +84,14 @@ class Authentication
 	/**
 	 * Perform authentication
 	 *
-	 * @param   AuthenticationStrategyInterface[]  $strategies  Array of strategies to try - empty to try all strategies.
+	 * @param   string[]  $strategies  Array of strategies to try - empty to try all strategies.
 	 *
 	 * @return  string|boolean  A string containing a username if authentication is successful, false otherwise.
 	 *
 	 * @since   1.0
 	 * @throws  \RuntimeException
 	 */
-	public function authenticate($strategies = array())
+	public function authenticate(array $strategies = [])
 	{
 		if (empty($strategies))
 		{
@@ -99,8 +99,7 @@ class Authentication
 		}
 		else
 		{
-			$strategies      = (array) $strategies;
-			$strategyObjects = array();
+			$strategyObjects = [];
 
 			foreach ($strategies as $strategy)
 			{

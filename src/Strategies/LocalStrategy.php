@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Authentication Package
  *
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -45,12 +45,12 @@ class LocalStrategy extends AbstractUsernamePasswordAuthenticationStrategy
 	 *
 	 * @since   1.0
 	 */
-	public function __construct(Input $input, $credentialStore, HandlerInterface $passwordHandler = null)
+	public function __construct(Input $input, array $credentialStore = [], ?HandlerInterface $passwordHandler = null)
 	{
 		parent::__construct($passwordHandler);
 
-		$this->input           = $input;
 		$this->credentialStore = $credentialStore;
+		$this->input           = $input;
 	}
 
 	/**
@@ -86,11 +86,6 @@ class LocalStrategy extends AbstractUsernamePasswordAuthenticationStrategy
 	 */
 	protected function getHashedPassword($username)
 	{
-		if (!isset($this->credentialStore[$username]))
-		{
-			return false;
-		}
-
-		return $this->credentialStore[$username];
+		return $this->credentialStore[$username] ?? false;
 	}
 }

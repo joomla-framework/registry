@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -17,13 +17,12 @@ class BCryptHandlerTest extends TestCase
 	/**
 	 * @testdox  A password is hashed and validated
 	 *
-	 * @covers   Joomla\Authentication\Password\BCryptHandler::hashPassword
-	 * @covers   Joomla\Authentication\Password\BCryptHandler::validatePassword
+	 * @covers   Joomla\Authentication\Password\BCryptHandler
 	 */
 	public function testAPasswordIsHashedAndValidated()
 	{
 		$handler = new BCryptHandler;
-		$hash = $handler->hashPassword('password', array('cost' => 4));
+		$hash    = $handler->hashPassword('password', ['cost' => 4]);
 		$this->assertTrue($handler->validatePassword('password', $hash), 'The hashed password was not validated.');
 	}
 }

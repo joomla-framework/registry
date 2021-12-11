@@ -1,129 +1,138 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Authentication\Tests;
 
 use Joomla\Authentication\Authentication;
+use Joomla\Authentication\AuthenticationStrategyInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Test class for Joomla\Authentication\Authentication
+ * Test class for \Joomla\Authentication\Authentication
  */
-class AuthenticationTest extends CompatTestCase
+class AuthenticationTest extends TestCase
 {
+	/**
+	 * Object being tested
+	 *
+	 * @var  Authentication
+	 */
+	private $object;
+
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 *
 	 * @return  void
 	 */
-	protected function doSetUp()
+	protected function setUp(): void
 	{
 		$this->object = new Authentication;
 	}
 
 	/**
 	 * Tests the authenticate method, specifying the strategy by name.
+	 *
+	 * @covers   Joomla\Authentication\Authentication
 	 */
 	public function testSingleStrategy()
 	{
-		$mockStrategy = $this->getMockBuilder('Joomla\\Authentication\\AuthenticationStrategyInterface')->getMock();
-
-		$this->object->addStrategy('mock', $mockStrategy);
+		$mockStrategy = $this->createMock(AuthenticationStrategyInterface::class);
 
 		$mockStrategy->expects($this->once())
 			->method('authenticate')
-			->with()
-			->will($this->returnValue(false));
+			->willReturn(false);
 
-		$this->assertFalse($this->object->authenticate('mock'));
+		$this->object->addStrategy('mock', $mockStrategy);
+
+		$this->assertFalse($this->object->authenticate(['mock']));
 	}
 
 	/**
 	 * Tests the authenticate method, using all strategies
+	 *
+	 * @covers   Joomla\Authentication\Authentication
 	 */
 	public function testSingleStrategyEmptyArray()
 	{
-		$mockStrategy = $this->getMockBuilder('Joomla\\Authentication\\AuthenticationStrategyInterface')->getMock();
-
-		$this->object->addStrategy('mock', $mockStrategy);
+		$mockStrategy = $this->createMock(AuthenticationStrategyInterface::class);
 
 		$mockStrategy->expects($this->once())
 			->method('authenticate')
-			->with()
-			->will($this->returnValue(false));
+			->willReturn(false);
+
+		$this->object->addStrategy('mock', $mockStrategy);
 
 		$this->assertFalse($this->object->authenticate());
 	}
 
 	/**
 	 * Tests the authenticate method, using some strategies.
+	 *
+	 * @covers   Joomla\Authentication\Authentication
 	 */
 	public function testSomeStrategies()
 	{
-		$mockStrategy1 = $this->getMockBuilder('Joomla\\Authentication\\AuthenticationStrategyInterface')->getMock();
-		$mockStrategy2 = $this->getMockBuilder('Joomla\\Authentication\\AuthenticationStrategyInterface')->getMock();
-		$mockStrategy3 = $this->getMockBuilder('Joomla\\Authentication\\AuthenticationStrategyInterface')->getMock();
+		$mockStrategy1 = $this->createMock(AuthenticationStrategyInterface::class);
+
+		$mockStrategy1->expects($this->never())
+			->method('authenticate');
+
+		$mockStrategy2 = $this->createMock(AuthenticationStrategyInterface::class);
+
+		$mockStrategy2->expects($this->once())
+			->method('authenticate')
+			->willReturn('jimbob');
+
+		$mockStrategy3 = $this->createMock(AuthenticationStrategyInterface::class);
 
 		$this->object->addStrategy('mock1', $mockStrategy1);
 		$this->object->addStrategy('mock2', $mockStrategy2);
 		$this->object->addStrategy('mock3', $mockStrategy3);
 
-		$mockStrategy1->expects($this->never())
-			->method('authenticate');
-
-		$mockStrategy2->expects($this->once())
-			->method('authenticate')
-			->with()
-			->will($this->returnValue('jimbob'));
-
 		$mockStrategy3->expects($this->never())
 			->method('authenticate');
 
-		$this->assertEquals('jimbob', $this->object->authenticate(array('mock2', 'mock3')));
+		$this->assertEquals('jimbob', $this->object->authenticate(['mock2', 'mock3']));
 	}
 
 	/**
 	 * Tests the authenticate method, using a non registered strategy
+	 *
+	 * @covers   Joomla\Authentication\Authentication
 	 */
 	public function testStrategiesException()
 	{
-		if (method_exists($this, 'expectException'))
-		{
-			$this->expectException('\\RuntimeException');
-		}
-		else
-		{
-			$this->setExpectedException('\\RuntimeException');
-		}
+		$this->expectException(\RuntimeException::class);
 
-		$this->assertEquals(false, $this->object->authenticate('mock1'));
+		$this->object->authenticate(['mock1']);
 	}
 
 	/**
 	 * Tests getting the result back.
+	 *
+	 * @covers   Joomla\Authentication\Authentication
 	 */
 	public function testGetResults()
 	{
-		$mockStrategy = $this->getMockBuilder('Joomla\\Authentication\\AuthenticationStrategyInterface')->getMock();
-
-		$this->object->addStrategy('mock', $mockStrategy);
+		$mockStrategy = $this->createMock(AuthenticationStrategyInterface::class);
 
 		$mockStrategy->expects($this->once())
 			->method('authenticate')
-			->with()
-			->will($this->returnValue(false));
+			->willReturn(false);
 
 		$mockStrategy->expects($this->once())
 			->method('getResult')
-			->with()
-			->will($this->returnValue(Authentication::SUCCESS));
+			->willReturn(Authentication::SUCCESS);
+
+		$this->object->addStrategy('mock', $mockStrategy);
 
 		$this->object->authenticate();
 
 		$this->assertEquals(
-			array('mock' => Authentication::SUCCESS),
+			['mock' => Authentication::SUCCESS],
 			$this->object->getResults()
 		);
 	}

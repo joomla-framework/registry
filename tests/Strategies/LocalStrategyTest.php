@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -9,37 +9,41 @@ namespace Joomla\Authentication\Tests\Strategies;
 use Joomla\Authentication\Authentication;
 use Joomla\Authentication\Password\HandlerInterface;
 use Joomla\Authentication\Strategies\LocalStrategy;
-use Joomla\Authentication\Tests\CompatTestCase;
 use Joomla\Input\Input;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for Joomla\Authentication\Strategies\LocalStrategy
  */
-class LocalStrategyTest extends CompatTestCase
+class LocalStrategyTest extends TestCase
 {
 	/**
-	 * @var  Input|\PHPUnit_Framework_MockObject_MockObject
+	 * @var  MockObject|Input
 	 */
 	private $input;
 
 	/**
-	 * @var  HandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+	 * @var  MockObject|HandlerInterface
 	 */
 	private $passwordHandler;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 */
-	protected function doSetUp()
+	protected function setUp(): void
 	{
-		$this->input           = $this->getMockBuilder('Joomla\\Input\\Input')->getMock();
-		$this->passwordHandler = $this->getMockBuilder('Joomla\\Authentication\\Password\\HandlerInterface')->getMock();
+		$this->input           = $this->createMock(Input::class);
+		$this->passwordHandler = $this->createMock(HandlerInterface::class);
 
-		parent::doSetUp();
+		parent::setUp();
 	}
 
 	/**
 	 * Tests the authenticate method with valid credentials.
+	 *
+	 * @covers   Joomla\Authentication\Strategies\LocalStrategy
+	 * @uses     Joomla\Authentication\AbstractUsernamePasswordAuthenticationStrategy
 	 */
 	public function testValidPassword()
 	{
@@ -51,9 +55,9 @@ class LocalStrategyTest extends CompatTestCase
 			->method('validatePassword')
 			->willReturn(true);
 
-		$credentialStore = array(
+		$credentialStore = [
 			'username' => '$2y$10$.vpEGa99w.WUetDFJXjMn.RiKRhZ/ImzxtOjtoJ0VFDV8S7ua0uJG'
-		);
+		];
 
 		$localStrategy = new LocalStrategy($this->input, $credentialStore, $this->passwordHandler);
 
@@ -64,6 +68,9 @@ class LocalStrategyTest extends CompatTestCase
 
 	/**
 	 * Tests the authenticate method with invalid credentials.
+	 *
+	 * @covers   Joomla\Authentication\Strategies\LocalStrategy
+	 * @uses     Joomla\Authentication\AbstractUsernamePasswordAuthenticationStrategy
 	 */
 	public function testInvalidPassword()
 	{
@@ -75,9 +82,9 @@ class LocalStrategyTest extends CompatTestCase
 			->method('validatePassword')
 			->willReturn(false);
 
-		$credentialStore = array(
+		$credentialStore = [
 			'username' => '$2y$10$.vpEGa99w.WUetDFJXjMn.RiKRhZ/ImzxtOjtoJ0VFDV8S7ua0uJH'
-		);
+		];
 
 		$localStrategy = new LocalStrategy($this->input, $credentialStore, $this->passwordHandler);
 
@@ -88,6 +95,9 @@ class LocalStrategyTest extends CompatTestCase
 
 	/**
 	 * Tests the authenticate method with no credentials provided.
+	 *
+	 * @covers   Joomla\Authentication\Strategies\LocalStrategy
+	 * @uses     Joomla\Authentication\AbstractUsernamePasswordAuthenticationStrategy
 	 */
 	public function testNoPassword()
 	{
@@ -98,9 +108,9 @@ class LocalStrategyTest extends CompatTestCase
 		$this->passwordHandler->expects($this->never())
 			->method('validatePassword');
 
-		$credentialStore = array(
+		$credentialStore = [
 			'username' => '$2y$10$.vpEGa99w.WUetDFJXjMn.RiKRhZ/ImzxtOjtoJ0VFDV8S7ua0uJH'
-		);
+		];
 
 		$localStrategy = new LocalStrategy($this->input, $credentialStore, $this->passwordHandler);
 
@@ -111,6 +121,9 @@ class LocalStrategyTest extends CompatTestCase
 
 	/**
 	 * Tests the authenticate method with credentials for an unknown user.
+	 *
+	 * @covers   Joomla\Authentication\Strategies\LocalStrategy
+	 * @uses     Joomla\Authentication\AbstractUsernamePasswordAuthenticationStrategy
 	 */
 	public function testUserNotExist()
 	{
@@ -121,9 +134,9 @@ class LocalStrategyTest extends CompatTestCase
 		$this->passwordHandler->expects($this->never())
 			->method('validatePassword');
 
-		$credentialStore = array(
+		$credentialStore = [
 			'jimbob' => '$2y$10$.vpEGa99w.WUetDFJXjMn.RiKRhZ/ImzxtOjtoJ0VFDV8S7ua0uJH'
-		);
+		];
 
 		$localStrategy = new LocalStrategy($this->input, $credentialStore, $this->passwordHandler);
 

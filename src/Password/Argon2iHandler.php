@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Authentication Package
  *
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -28,10 +28,10 @@ class Argon2iHandler implements HandlerInterface
 	 * @since   1.2.0
 	 * @throws  UnsupportedPasswordHandlerException if the password handler is not supported
 	 */
-	public function hashPassword($plaintext, array $options = array())
+	public function hashPassword($plaintext, array $options = [])
 	{
 		// Use the password extension if able
-		if (version_compare(\PHP_VERSION, '7.2', '>=') && \defined('PASSWORD_ARGON2I'))
+		if (\defined('PASSWORD_ARGON2I'))
 		{
 			return password_hash($plaintext, \PASSWORD_ARGON2I, $options);
 		}
@@ -75,7 +75,7 @@ class Argon2iHandler implements HandlerInterface
 	public static function isSupported()
 	{
 		// Check for native PHP engine support in the password extension
-		if (version_compare(\PHP_VERSION, '7.2', '>=') && \defined('PASSWORD_ARGON2I'))
+		if (\defined('PASSWORD_ARGON2I'))
 		{
 			return true;
 		}
@@ -104,7 +104,7 @@ class Argon2iHandler implements HandlerInterface
 	public function validatePassword($plaintext, $hashed)
 	{
 		// Use the password extension if able
-		if (version_compare(\PHP_VERSION, '7.2', '>=') && \defined('PASSWORD_ARGON2I'))
+		if (\defined('PASSWORD_ARGON2I'))
 		{
 			return password_verify($plaintext, $hashed);
 		}

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -9,48 +9,54 @@ namespace Joomla\Authentication\Tests\Strategies;
 use Joomla\Authentication\Authentication;
 use Joomla\Authentication\Password\HandlerInterface;
 use Joomla\Authentication\Strategies\DatabaseStrategy;
-use Joomla\Authentication\Tests\CompatTestCase;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\QueryInterface;
 use Joomla\Input\Input;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Authentication\Strategies\DatabaseStrategy
  */
-class DatabaseStrategyTest extends CompatTestCase
+class DatabaseStrategyTest extends TestCase
 {
 	/**
-	 * @var  DatabaseDriver|\PHPUnit_Framework_MockObject_MockObject
+	 * @var  MockObject|DatabaseDriver
 	 */
 	private $db;
 
 	/**
-	 * @var  Input|\PHPUnit_Framework_MockObject_MockObject
+	 * @var  MockObject|Input
 	 */
 	private $input;
 
 	/**
-	 * @var  HandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+	 * @var  MockObject|HandlerInterface
 	 */
 	private $passwordHandler;
 
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 */
-	protected function doSetUp()
+	protected function setUp(): void
 	{
-		$this->db              = $this->getMockBuilder('Joomla\\Database\\DatabaseDriver')->disableOriginalConstructor()->getMock();
-		$this->input           = $this->getMockBuilder('Joomla\\Input\\Input')->getMock();
-		$this->passwordHandler = $this->getMockBuilder('Joomla\\Authentication\\Password\\HandlerInterface')->getMock();
+		$this->db              = $this->createMock(DatabaseInterface::class);
+		$this->input           = $this->createMock(Input::class);
+		$this->passwordHandler = $this->createMock(HandlerInterface::class);
 
-		parent::doSetUp();
+		parent::setUp();
 	}
 
 	/**
 	 * Tests the authenticate method with valid credentials.
+	 *
+	 * @covers   Joomla\Authentication\Strategies\DatabaseStrategy
+	 * @uses     Joomla\Authentication\AbstractUsernamePasswordAuthenticationStrategy
 	 */
 	public function testValidPassword()
 	{
-		$query = $this->getMockBuilder('Joomla\\Database\\DatabaseQuery')->getMock();
+		$query = $this->createMock(QueryInterface::class);
 		$query->expects($this->any())
 			->method('select')
 			->willReturnSelf();
@@ -61,6 +67,10 @@ class DatabaseStrategyTest extends CompatTestCase
 
 		$query->expects($this->any())
 			->method('where')
+			->willReturnSelf();
+
+		$query->expects($this->any())
+			->method('bind')
 			->willReturnSelf();
 
 		$this->db->expects($this->any())
@@ -84,7 +94,7 @@ class DatabaseStrategyTest extends CompatTestCase
 			->method('validatePassword')
 			->willReturn(true);
 
-		$strategy = new DatabaseStrategy($this->input, $this->db, array(), $this->passwordHandler);
+		$strategy = new DatabaseStrategy($this->input, $this->db, [], $this->passwordHandler);
 
 		$this->assertEquals('username', $strategy->authenticate());
 		$this->assertEquals(Authentication::SUCCESS, $strategy->getResult());
@@ -92,10 +102,13 @@ class DatabaseStrategyTest extends CompatTestCase
 
 	/**
 	 * Tests the authenticate method with invalid credentials.
+	 *
+	 * @covers   Joomla\Authentication\Strategies\DatabaseStrategy
+	 * @uses     Joomla\Authentication\AbstractUsernamePasswordAuthenticationStrategy
 	 */
 	public function testInvalidPassword()
 	{
-		$query = $this->getMockBuilder('Joomla\\Database\\DatabaseQuery')->getMock();
+		$query = $this->createMock(QueryInterface::class);
 		$query->expects($this->any())
 			->method('select')
 			->willReturnSelf();
@@ -106,6 +119,10 @@ class DatabaseStrategyTest extends CompatTestCase
 
 		$query->expects($this->any())
 			->method('where')
+			->willReturnSelf();
+
+		$query->expects($this->any())
+			->method('bind')
 			->willReturnSelf();
 
 		$this->db->expects($this->any())
@@ -129,7 +146,7 @@ class DatabaseStrategyTest extends CompatTestCase
 			->method('validatePassword')
 			->willReturn(false);
 
-		$strategy = new DatabaseStrategy($this->input, $this->db, array(), $this->passwordHandler);
+		$strategy = new DatabaseStrategy($this->input, $this->db, [], $this->passwordHandler);
 
 		$this->assertEquals(false, $strategy->authenticate());
 		$this->assertEquals(Authentication::INVALID_CREDENTIALS, $strategy->getResult());
@@ -137,6 +154,9 @@ class DatabaseStrategyTest extends CompatTestCase
 
 	/**
 	 * Tests the authenticate method with no credentials provided.
+	 *
+	 * @covers   Joomla\Authentication\Strategies\DatabaseStrategy
+	 * @uses     Joomla\Authentication\AbstractUsernamePasswordAuthenticationStrategy
 	 */
 	public function testNoPassword()
 	{
@@ -150,7 +170,7 @@ class DatabaseStrategyTest extends CompatTestCase
 		$this->passwordHandler->expects($this->never())
 			->method('validatePassword');
 
-		$strategy = new DatabaseStrategy($this->input, $this->db, array(), $this->passwordHandler);
+		$strategy = new DatabaseStrategy($this->input, $this->db, [], $this->passwordHandler);
 
 		$this->assertEquals(false, $strategy->authenticate());
 		$this->assertEquals(Authentication::NO_CREDENTIALS, $strategy->getResult());
@@ -158,10 +178,13 @@ class DatabaseStrategyTest extends CompatTestCase
 
 	/**
 	 * Tests the authenticate method with credentials for an unknown user.
+	 *
+	 * @covers   Joomla\Authentication\Strategies\DatabaseStrategy
+	 * @uses     Joomla\Authentication\AbstractUsernamePasswordAuthenticationStrategy
 	 */
 	public function testUserNotExist()
 	{
-		$query = $this->getMockBuilder('Joomla\\Database\\DatabaseQuery')->getMock();
+		$query = $this->createMock(QueryInterface::class);
 		$query->expects($this->any())
 			->method('select')
 			->willReturnSelf();
@@ -172,6 +195,10 @@ class DatabaseStrategyTest extends CompatTestCase
 
 		$query->expects($this->any())
 			->method('where')
+			->willReturnSelf();
+
+		$query->expects($this->any())
+			->method('bind')
 			->willReturnSelf();
 
 		$this->db->expects($this->any())
@@ -194,7 +221,7 @@ class DatabaseStrategyTest extends CompatTestCase
 		$this->passwordHandler->expects($this->never())
 			->method('validatePassword');
 
-		$strategy = new DatabaseStrategy($this->input, $this->db, array(), $this->passwordHandler);
+		$strategy = new DatabaseStrategy($this->input, $this->db, [], $this->passwordHandler);
 
 		$this->assertEquals(false, $strategy->authenticate());
 		$this->assertEquals(Authentication::NO_SUCH_USER, $strategy->getResult());

@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Authentication Package
  *
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -41,7 +41,7 @@ abstract class AbstractUsernamePasswordAuthenticationStrategy implements Authent
 	 *
 	 * @since   1.2.0
 	 */
-	public function __construct(HandlerInterface $passwordHandler = null)
+	public function __construct(?HandlerInterface $passwordHandler = null)
 	{
 		$this->passwordHandler = $passwordHandler ?: new BCryptHandler;
 	}

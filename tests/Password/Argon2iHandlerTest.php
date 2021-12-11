@@ -1,37 +1,36 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Authentication\Tests\Password;
 
 use Joomla\Authentication\Password\Argon2iHandler;
-use Joomla\Authentication\Tests\CompatTestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Authentication\Password\Argon2iHandler
  */
-class Argon2iHandlerTest extends CompatTestCase
+class Argon2iHandlerTest extends TestCase
 {
 	/**
 	 * This method is called before the first test of this test class is run.
 	 */
-	protected function doSetUp()
+	public static function setUpBeforeClass(): void
 	{
 		if (!Argon2iHandler::isSupported())
 		{
 			static::markTestSkipped('Argon2i algorithm is not supported.');
 		}
 
-		parent::doSetUp();
+		parent::setUpBeforeClass();
 	}
 
 	/**
 	 * @testdox  A password is hashed and validated
 	 *
-	 * @covers   Joomla\Authentication\Password\Argon2iHandler::hashPassword
-	 * @covers   Joomla\Authentication\Password\Argon2iHandler::validatePassword
+	 * @covers   Joomla\Authentication\Password\Argon2iHandler
 	 */
 	public function testAPasswordIsHashedAndValidated()
 	{

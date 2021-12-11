@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Authentication Package
  *
- * @copyright  Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -11,7 +11,7 @@ namespace Joomla\Authentication\Strategies;
 use Joomla\Authentication\AbstractUsernamePasswordAuthenticationStrategy;
 use Joomla\Authentication\Authentication;
 use Joomla\Authentication\Password\HandlerInterface;
-use Joomla\Database\DatabaseDriver;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Input\Input;
 
 /**
@@ -22,9 +22,9 @@ use Joomla\Input\Input;
 class DatabaseStrategy extends AbstractUsernamePasswordAuthenticationStrategy
 {
 	/**
-	 * DatabaseDriver object
+	 * DatabaseInterface object
 	 *
-	 * @var    DatabaseDriver
+	 * @var    DatabaseInterface
 	 * @since  1.1.0
 	 */
 	private $db;
@@ -48,23 +48,23 @@ class DatabaseStrategy extends AbstractUsernamePasswordAuthenticationStrategy
 	/**
 	 * Strategy Constructor
 	 *
-	 * @param   Input             $input            The input object from which to retrieve the request credentials.
-	 * @param   DatabaseDriver    $database         DatabaseDriver for retrieving user credentials.
-	 * @param   array             $options          Optional options array for configuring the credential storage connection.
-	 * @param   HandlerInterface  $passwordHandler  The password handler.
+	 * @param   Input              $input            The input object from which to retrieve the request credentials.
+	 * @param   DatabaseInterface  $database         DatabaseDriver for retrieving user credentials.
+	 * @param   array              $options          Optional options array for configuring the credential storage connection.
+	 * @param   HandlerInterface   $passwordHandler  The password handler.
 	 *
 	 * @since   1.1.0
 	 */
-	public function __construct(Input $input, DatabaseDriver $database, array $options = array(), HandlerInterface $passwordHandler = null)
+	public function __construct(Input $input, DatabaseInterface $database, array $options = [], ?HandlerInterface $passwordHandler = null)
 	{
 		parent::__construct($passwordHandler);
 
 		$this->input = $input;
 		$this->db    = $database;
 
-		$options['database_table']  = isset($options['database_table']) ? $options['database_table'] : '#__users';
-		$options['username_column'] = isset($options['username_column']) ? $options['username_column'] : 'username';
-		$options['password_column'] = isset($options['password_column']) ? $options['password_column'] : 'password';
+		$options['database_table']  = $options['database_table'] ?? '#__users';
+		$options['username_column'] = $options['username_column'] ?? 'username';
+		$options['password_column'] = $options['password_column'] ?? 'password';
 
 		$this->dbOptions = $options;
 	}
@@ -102,12 +102,20 @@ class DatabaseStrategy extends AbstractUsernamePasswordAuthenticationStrategy
 	 */
 	protected function getHashedPassword($username)
 	{
-		$password = $this->db->setQuery(
-			$this->db->getQuery(true)
-				->select($this->dbOptions['password_column'])
-				->from($this->dbOptions['database_table'])
-				->where($this->dbOptions['username_column'] . ' = ' . $this->db->quote($username))
-		)->loadResult();
+		try
+		{
+			$password = $this->db->setQuery(
+				$this->db->getQuery(true)
+					->select($this->db->quoteName($this->dbOptions['password_column']))
+					->from($this->db->quoteName($this->dbOptions['database_table']))
+					->where($this->db->quoteName($this->dbOptions['username_column']) . ' = ?')
+					->bind(1, $username)
+			)->loadResult();
+		}
+		catch (\RuntimeException $exception)
+		{
+			return false;
+		}
 
 		if (!$password)
 		{
