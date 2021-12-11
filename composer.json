@@ -6,15 +6,21 @@
     "homepage": "https://github.com/joomla-framework/string",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^5.3.10|~7.0"
+        "php": "^7.2.5|^8.0",
+        "symfony/deprecation-contracts": "^2.1"
     },
     "require-dev": {
-        "joomla/coding-standards": "~2.0@alpha",
-        "joomla/test": "~1.0",
-        "phpunit/phpunit": "^4.8.35|^5.4.3|~6.0"
+        "doctrine/inflector": "^1.2",
+        "joomla/coding-standards": "^3.0@dev",
+        "joomla/test": "^2.0.1",
+        "phpunit/phpunit": "^8.5|^9.0"
+    },
+    "conflict": {
+        "doctrine/inflector": "<1.2"
     },
     "suggest": {
-        "ext-mbstring": "For improved processing"
+        "ext-mbstring": "For improved processing",
+        "doctrine/inflector": "To use the string inflector"
     },
     "autoload": {
         "psr-4": {
@@ -43,9 +49,10 @@
             "Joomla\\String\\Tests\\": "Tests/"
         }
     },
+    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "1.x-dev"
+	        "dev-2.0-dev": "2.0-dev"
         }
     }
 }
