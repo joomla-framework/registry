@@ -1,11 +1,14 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2017 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Model\Tests;
 
+use Joomla\Database\DatabaseInterface;
+use Joomla\Model\DatabaseModelTrait;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,33 +19,29 @@ class DatabaseModelTraitTest extends TestCase
 	/**
 	 * @testdox  Calling getDb() without a DatabaseDriver set will throw an Exception
 	 *
-	 * @requires            PHP 5.4
-	 * @covers              Joomla\Model\DatabaseModelTrait::getDb
-	 * @expectedException   \UnexpectedValueException
+	 * @covers   Joomla\Model\DatabaseModelTrait
 	 */
 	public function testGetDbException()
 	{
-		/** @var \Joomla\Model\DatabaseModelTrait $object */
-		$object = $this->getObjectForTrait('\\Joomla\\Model\\DatabaseModelTrait');
+		$this->expectException(\UnexpectedValueException::class);
+
+		/** @var DatabaseModelTrait|MockObject $object */
+		$object = $this->getObjectForTrait(DatabaseModelTrait::class);
 		$object->getDb();
 	}
 
 	/**
 	 * @testdox  A DatabaseDriver is set and retrieved
 	 *
-	 * @requires  PHP 5.4
-	 * @covers    Joomla\Model\DatabaseModelTrait::getDb
-	 * @covers    Joomla\Model\DatabaseModelTrait::setDb
+	 * @covers   Joomla\Model\DatabaseModelTrait
 	 */
 	public function testSetAndGetDb()
 	{
-		/** @var \Joomla\Model\DatabaseModelTrait $object */
-		$object = $this->getObjectForTrait('\\Joomla\\Model\\DatabaseModelTrait');
+		/** @var DatabaseModelTrait|MockObject $object */
+		$object = $this->getObjectForTrait(DatabaseModelTrait::class);
 
-		/** @var \Joomla\Database\DatabaseDriver $db */
-		$db = $this->getMockBuilder('\\Joomla\\Database\\DatabaseDriver')
-			->disableOriginalConstructor()
-			->getMock();
+		/** @var DatabaseInterface|MockObject $db */
+		$db = $this->createMock(DatabaseInterface::class);
 
 		$object->setDb($db);
 

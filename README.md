@@ -1,4 +1,4 @@
-# The Model Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/model/status.svg)](https://ci.joomla.org/joomla-framework/model)
+# The Model Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/model/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/model)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/model/v/stable)](https://packagist.org/packages/joomla/model)
 [![Total Downloads](https://poser.pugx.org/joomla/model/downloads)](https://packagist.org/packages/joomla/model)
@@ -116,12 +116,12 @@ catch (RuntimeException $e)
 
 ## Installation via Composer
 
-Add `"joomla/model": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/model": "~2.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/model": "~1.0"
+		"joomla/model": "~2.0"
 	}
 }
 ```
@@ -129,5 +129,5 @@ Add `"joomla/model": "~1.0"` to the require block in your composer.json and then
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/model "~1.0"
+composer require joomla/model "~2.0"
 ```

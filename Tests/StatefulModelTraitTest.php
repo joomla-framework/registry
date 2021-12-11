@@ -1,11 +1,14 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2017 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\Model\Tests;
 
+use Joomla\Model\StatefulModelTrait;
+use Joomla\Registry\Registry;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,32 +19,29 @@ class StatefulModelTraitTest extends TestCase
 	/**
 	 * @testdox  Calling getState() without a state set will throw an Exception
 	 *
-	 * @requires            PHP 5.4
-	 * @covers              Joomla\Model\StatefulModelTrait::getState
-	 * @expectedException   \UnexpectedValueException
+	 * @covers   Joomla\Model\StatefulModelTrait
 	 */
-	public function testgetStateException()
+	public function testGetStateException()
 	{
-		/** @var \Joomla\Model\StatefulModelTrait $object */
-		$object = $this->getObjectForTrait('\\Joomla\\Model\\StatefulModelTrait');
+		$this->expectException(\UnexpectedValueException::class);
+
+		/** @var StatefulModelTrait|MockObject $object */
+		$object = $this->getObjectForTrait(StatefulModelTrait::class);
 		$object->getState();
 	}
 
 	/**
 	 * @testdox  A Registry representing the state is set and retrieved
 	 *
-	 * @requires  PHP 5.4
-	 * @covers    Joomla\Model\StatefulModelTrait::getState
-	 * @covers    Joomla\Model\StatefulModelTrait::setState
+	 * @covers   Joomla\Model\StatefulModelTrait
 	 */
 	public function testSetAndgetState()
 	{
-		/** @var \Joomla\Model\StatefulModelTrait $object */
-		$object = $this->getObjectForTrait('\\Joomla\\Model\\StatefulModelTrait');
+		/** @var StatefulModelTrait|MockObject $object */
+		$object = $this->getObjectForTrait(StatefulModelTrait::class);
 
-		/** @var \Joomla\Registry\Registry $state */
-		$state = $this->getMockBuilder('\\Joomla\\Registry\\Registry')
-			->getMock();
+		/** @var Registry|MockObject $state */
+		$state = $this->createMock(Registry::class);
 
 		$object->setState($state);
 
