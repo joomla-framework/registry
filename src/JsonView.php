@@ -9,19 +9,21 @@
 namespace Joomla\View;
 
 /**
- * Joomla Framework View Interface
+ * Joomla Framework JSON View Class
  *
- * @since  1.0
+ * @since  2.0.0
  */
-interface ViewInterface
+class JsonView extends AbstractView
 {
 	/**
 	 * Method to render the view.
 	 *
 	 * @return  string  The rendered view.
 	 *
-	 * @since   1.0
-	 * @throws  \RuntimeException
+	 * @since   2.0.0
 	 */
-	public function render();
+	public function render()
+	{
+		return json_encode($this->getData());
+	}
 }
