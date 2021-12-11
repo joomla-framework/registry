@@ -1,4 +1,4 @@
-## The OAuth1 Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/oauth2/status.svg)](https://ci.joomla.org/joomla-framework/oauth1)
+## The OAuth1 Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/oauth1/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/oauth1)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/oauth1/v/stable)](https://packagist.org/packages/joomla/oauth1)
 [![Total Downloads](https://poser.pugx.org/joomla/oauth1/downloads)](https://packagist.org/packages/joomla/oauth1)
@@ -65,12 +65,12 @@ The following resources contain more information:
 
 ## Installation via Composer
 
-Add `"joomla/oauth1": "~1.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/oauth1": "~2.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/oauth1": "~1.0"
+		"joomla/oauth1": "~2.0"
 	}
 }
 ```
@@ -78,5 +78,5 @@ Add `"joomla/oauth1": "~1.0"` to the require block in your composer.json and the
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/oauth1 "~1.0"
+composer require joomla/oauth1 "~2.0"
 ```

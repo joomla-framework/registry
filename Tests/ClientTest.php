@@ -1,67 +1,74 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
 namespace Joomla\OAuth1\Tests;
 
-use Joomla\Application\AbstractWebApplication;
+use Joomla\Application\SessionAwareWebApplicationInterface;
+use Joomla\Http\Http;
 use Joomla\Input\Input;
-use Joomla\OAuth1\Client;
+use Joomla\OAuth1\Tests\Stub\TestClient;
 use Joomla\Registry\Registry;
+use Joomla\Session\SessionInterface;
 use Joomla\Test\TestHelper;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/stubs/ClientInspector.php';
-
 /**
- * Test class for OAuth1 Client.
+ * Test class for \Joomla\OAuth1\Client.
  *
- * @since  1.0
+ * @backupGlobals enabled
  */
 class ClientTest extends TestCase
 {
 	/**
-	 * @var    Input  input for the Client object.
-	 * @since  1.0
+	 * Input object for the Client object.
+	 *
+	 * @var  Input
 	 */
 	protected $input;
 
 	/**
-	 * @var    Registry  Options for the Client object.
-	 * @since  1.0
+	 * Options for the Client object.
+	 *
+	 * @var  Registry
 	 */
 	protected $options;
 
 	/**
-	 * @var    object  Mock http object.
-	 * @since  1.0
+	 * Mock HTTP object.
+	 *
+	 * @var  Http|MockObject
 	 */
 	protected $client;
 
 	/**
 	 * An instance of the object to test.
 	 *
-	 * @var    ClientInspector
-	 * @since  1.0
+	 * @var  TestClient
 	 */
 	protected $object;
 
 	/**
-	 * @var   AbstractWebApplication|\PHPUnit_Framework_MockObject_MockObject  The application object to send HTTP headers for redirects.
+	 * The application object to send HTTP headers for redirects.
+	 *
+	 * @var   SessionAwareWebApplicationInterface|MockObject
 	 */
 	protected $application;
 
 	/**
-	 * @var    string  Sample JSON string.
-	 * @since  1.0
+	 * Sample JSON string.
+	 *
+	 * @var  string
 	 */
 	protected $sampleString = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
 
 	/**
-	 * @var    string  Sample JSON error message.
-	 * @since  1.0
+	 * Sample JSON error message.
+	 *
+	 * @var  string
 	 */
 	protected $errorString = '{"errorCode":401, "message": "Generic error"}';
 
@@ -69,51 +76,55 @@ class ClientTest extends TestCase
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 *
-	 * @return void
+	 * @return  void
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
-		$_SERVER['HTTP_HOST'] = 'example.com';
+		$_SERVER['HTTP_HOST']       = 'example.com';
 		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0';
-		$_SERVER['REQUEST_URI'] = '/index.php';
-		$_SERVER['SCRIPT_NAME'] = '/index.php';
+		$_SERVER['REQUEST_URI']     = '/index.php';
+		$_SERVER['SCRIPT_NAME']     = '/index.php';
 
-		$key = "TEST_KEY";
-		$secret = "TEST_SECRET";
-		$my_url = "TEST_URL";
+		$key    = 'TEST_KEY';
+		$secret = 'TEST_SECRET';
+		$my_url = 'TEST_URL';
 
-		$this->options = new Registry;
-		$this->client = $this->getMockBuilder('Joomla\\Http\\Http')->getMock();
-		$this->input = new Input;
-		$this->application = $this->getMockForAbstractClass('Joomla\\Application\\AbstractWebApplication');
+		$this->options     = new Registry;
+		$this->client      = $this->createMock(Http::class);
+		$this->input       = new Input([]);
+		$this->application = $this->createMock(SessionAwareWebApplicationInterface::class);
 
-		$mockSession = $this->getMockBuilder('Joomla\\Session\\Session')
-			->disableOriginalConstructor()
-			->getMock();
-
-		$this->application->setSession($mockSession);
+		$this->application->expects($this->any())
+			->method('getSession')
+			->willReturn($this->createMock(SessionInterface::class));
 
 		$this->options->set('consumer_key', $key);
 		$this->options->set('consumer_secret', $secret);
-		$this->object = new ClientInspector($this->options, $this->client, $this->input, $this->application);
+		$this->object = new TestClient($this->application, $this->client, $this->input, $this->options);
 	}
 
 	/**
-	* Provides test data.
-	*
-	* @return array
-	*
-	* @since 1.0
-	*/
-	public function seedAuthenticate()
+	 * Tests the constructor to ensure only arrays or ArrayAccess objects are allowed
+	 */
+	public function testConstructorDisallowsNonArrayObjects()
+	{
+		$this->expectException(\InvalidArgumentException::class);
+
+		new TestClient($this->application, $this->client, $this->input, new \stdClass);
+	}
+
+	/**
+	 * Provides test data.
+	 *
+	 * @return  \Generator
+	 */
+	public function seedAuthenticate(): \Generator
 	{
 		// Token, fail and oauth version.
-		return array(
-			array(array('key' => 'valid', 'secret' => 'valid'), false, '1.0'),
-			array(null, false, '1.0'),
-			array(null, false, '1.0a'),
-			array(null, true, '1.0a')
-			);
+		yield [['key' => 'valid', 'secret' => 'valid'], false, '1.0'];
+		yield [null, false, '1.0'];
+		yield [null, false, '1.0a'];
+		yield [null, true, '1.0a'];
 	}
 
 	/**
@@ -123,10 +134,7 @@ class ClientTest extends TestCase
 	 * @param   boolean  $fail     Mark if should fail or not.
 	 * @param   string   $version  Specify oauth version 1.0 or 1.0a.
 	 *
-	 * @return  void
-	 *
 	 * @dataProvider seedAuthenticate
-	 * @since   1.0
 	 */
 	public function testAuthenticate($token, $fail, $version)
 	{
@@ -151,11 +159,10 @@ class ClientTest extends TestCase
 			$this->client->expects($this->at(0))
 				->method('post')
 				->with($this->object->getOption('requestTokenURL'))
-				->will($this->returnValue($returnData));
+				->willReturn($returnData);
 
 			$input = TestHelper::getValue($this->object, 'input');
 			$input->set('oauth_verifier', null);
-			TestHelper::setValue($this->object, 'input', $input);
 
 			if (strcmp($version, '1.0a') === 0)
 			{
@@ -171,62 +178,49 @@ class ClientTest extends TestCase
 			// Access token.
 			$input = TestHelper::getValue($this->object, 'input');
 
-			if (strcmp($version, '1.0a') === 0)
+			TestHelper::setValue($this->object, 'version', $version);
+
+			if ($version === '1.0a')
 			{
-				TestHelper::setValue($this->object, 'version', $version);
-				$data = array('oauth_verifier' => 'verifier', 'oauth_token' => 'token');
+				$data = ['oauth_verifier' => 'verifier', 'oauth_token' => 'token'];
 			}
 			else
 			{
-				TestHelper::setValue($this->object, 'version', $version);
-				$data = array('oauth_token' => 'token');
+				$data = ['oauth_token' => 'token'];
 			}
 
 			TestHelper::setValue($input, 'data', $data);
 
 			// Get mock session
-			$mockSession = $this->getMockBuilder('Joomla\\Session\\Session')
-				->disableOriginalConstructor()
-				->getMock();
+			/** @var SessionInterface|MockObject $mockSession */
+			$mockSession = $this->application->getSession();
 
 			if ($fail)
 			{
 				$mockSession->expects($this->at(0))
-							->method('get')
-							->with('oauth_token.key', null)
-							->will($this->returnValue('bad'));
+					->method('get')
+					->with('oauth_token.key')
+					->willReturn('bad');
 
 				$mockSession->expects($this->at(1))
-							->method('get')
-							->with('oauth_token.secret', null)
-							->will($this->returnValue('session'));
+					->method('get')
+					->with('oauth_token.secret')
+					->willReturn('session');
 
-				$this->application->setSession($mockSession);
+				$this->expectException(\DomainException::class);
 
-				// expectException was added in PHPUnit 5.2 and setExpectedException removed in 6.0
-				if (method_exists($this, 'expectException'))
-				{
-					$this->expectException('DomainException');
-				}
-				else
-				{
-					$this->setExpectedException('DomainException');
-				}
-
-				$result = $this->object->authenticate();
+				$this->object->authenticate();
 			}
 
 			$mockSession->expects($this->at(0))
-						->method('get')
-						->with('oauth_token.key', null)
-						->will($this->returnValue('token'));
+				->method('get')
+				->with('oauth_token.key')
+				->willReturn('token');
 
 			$mockSession->expects($this->at(1))
-						->method('get')
-						->with('oauth_token.secret', null)
-						->will($this->returnValue('secret'));
-
-			$this->application->setSession($mockSession);
+				->method('get')
+				->with('oauth_token.secret')
+				->willReturn('secret');
 
 			$returnData = new \stdClass;
 			$returnData->code = 200;
@@ -235,7 +229,7 @@ class ClientTest extends TestCase
 			$this->client->expects($this->at(0))
 				->method('post')
 				->with($this->object->getOption('accessTokenURL'))
-				->will($this->returnValue($returnData));
+				->willReturn($returnData);
 
 			$result = $this->object->authenticate();
 
@@ -246,14 +240,11 @@ class ClientTest extends TestCase
 
 	/**
 	 * Tests the generateRequestToken method - failure
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 * @expectedException  \DomainException
 	 */
 	public function testGenerateRequestTokenFailure()
 	{
+		$this->expectException(\DomainException::class);
+
 		$this->object->setOption('requestTokenURL', 'https://example.com/request_token');
 
 		$returnData = new \stdClass;
@@ -263,26 +254,21 @@ class ClientTest extends TestCase
 		$this->client->expects($this->at(0))
 			->method('post')
 			->with($this->object->getOption('requestTokenURL'))
-			->will($this->returnValue($returnData));
+			->willReturn($returnData);
 
 		TestHelper::invoke($this->object, 'generateRequestToken');
 	}
 
 	/**
-	* Provides test data.
-	*
-	* @return array
-	*
-	* @since  1.0
-	*/
-	public function seedOauthRequest()
+	 * Provides test data.
+	 *
+	 * @return  \Generator
+	 */
+	public function seedOauthRequest(): \Generator
 	{
-		// Method
-		return array(
-			array('GET'),
-			array('PUT'),
-			array('DELETE')
-			);
+		yield 'GET request' => ['GET'];
+		yield 'PUT request' => ['PUT'];
+		yield 'DELETE request' => ['DELETE'];
 	}
 
 	/**
@@ -291,9 +277,6 @@ class ClientTest extends TestCase
 	 * @param   string  $method  The request method.
 	 *
 	 * @dataProvider seedOauthRequest
-	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testOauthRequest($method)
 	{
@@ -301,30 +284,42 @@ class ClientTest extends TestCase
 		$returnData->code = 200;
 		$returnData->body = $this->sampleString;
 
-		if (strcmp($method, 'PUT') === 0)
+		if ($method === 'PUT')
 		{
-			$data = array('key1' => 'value1', 'key2' => 'value2');
+			$data = ['key1' => 'value1', 'key2' => 'value2'];
 			$this->client->expects($this->at(0))
-				->method($method, $data)
-				->with('www.example.com')
-				->will($this->returnValue($returnData));
+				->method($method)
+				->with('www.example.com', $data)
+				->willReturn($returnData);
 
-			$this->assertThat(
-				$this->object->oauthRequest('www.example.com', $method, array('oauth_token' => '1235'), $data, array('Content-Type' => 'multipart/form-data')),
-				$this->equalTo($returnData)
-				);
+			$this->assertSame(
+				$returnData,
+				$this->object->oauthRequest(
+					'www.example.com',
+					$method,
+					['oauth_token' => '1235'],
+					$data,
+					['Content-Type' => 'multipart/form-data']
+				)
+			);
 		}
 		else
 		{
 			$this->client->expects($this->at(0))
 				->method($method)
 				->with('www.example.com')
-				->will($this->returnValue($returnData));
+				->willReturn($returnData);
 
-			$this->assertThat(
-				$this->object->oauthRequest('www.example.com', $method, array('oauth_token' => '1235'), array(), array('Content-Type' => 'multipart/form-data')),
-				$this->equalTo($returnData)
-				);
+			$this->assertSame(
+				$returnData,
+				$this->object->oauthRequest(
+					'www.example.com',
+					$method,
+					['oauth_token' => '1235'],
+					[],
+					['Content-Type' => 'multipart/form-data']
+				)
+			);
 		}
 	}
 
@@ -332,14 +327,11 @@ class ClientTest extends TestCase
 	 * Tests the safeEncode
 	 *
 	 * @return  void
-	 *
-	 * @since   1.0
 	 */
 	public function testSafeEncodeEmpty()
 	{
-		$this->assertThat(
-			$this->object->safeEncode(null),
-			$this->equalTo('')
-			);
+		$this->assertEmpty(
+			$this->object->safeEncode(null)
+		);
 	}
 }
