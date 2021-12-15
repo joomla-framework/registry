@@ -2,14 +2,18 @@
     "name": "joomla/view",
     "type": "joomla-package",
     "description": "Joomla View Package",
-    "keywords": ["joomla", "framework", "view"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "view"
+    ],
     "homepage": "https://github.com/joomla-framework/view",
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^7.2.5|^8.0"
     },
     "require-dev": {
-        "joomla/coding-standards": "^2.0@alpha",
+        "joomla/coding-standards": "^3.0@dev",
         "joomla/renderer": "^2.0",
         "phpunit/phpunit": "^8.5|^9.0"
     },
@@ -29,7 +33,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-	        "dev-2.0-dev": "2.0-dev"
+            "dev-2.0-dev": "2.0-dev"
         }
     }
 }
