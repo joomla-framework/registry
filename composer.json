@@ -2,11 +2,18 @@
     "name": "joomla/di",
     "type": "joomla-package",
     "description": "Joomla DI Package",
-    "keywords": ["joomla", "framework", "dependency injection", "di", "ioc", "container"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "dependency injection",
+        "di",
+        "ioc",
+        "container"
+    ],
     "homepage": "https://github.com/joomla-framework/di",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5|~8",
+        "php": "^7.2.5|^8.0",
         "psr/container": "^1.0",
         "symfony/deprecation-contracts": "^2.1"
     },
