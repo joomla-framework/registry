@@ -2,11 +2,15 @@
     "name": "joomla/session",
     "type": "joomla-package",
     "description": "Joomla Session Package",
-    "keywords": ["joomla", "framework", "session"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "session"
+    ],
     "homepage": "https://github.com/joomla-framework/session",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.2.5|^8.0",
         "symfony/deprecation-contracts": "^2.1"
     },
     "require-dev": {
@@ -36,9 +40,9 @@
         "ext-wincache": "To use WinCache as a session handler"
     },
     "autoload": {
-    	"psr-4": {
+        "psr-4": {
             "Joomla\\Session\\": "src/"
-    	}
+        }
     },
     "autoload-dev": {
         "psr-4": {
