@@ -2,11 +2,15 @@
     "name": "joomla/archive",
     "type": "joomla-package",
     "description": "Joomla Archive Package",
-    "keywords": ["joomla", "framework", "archive"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "archive"
+    ],
     "homepage": "https://github.com/joomla-framework/archive",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.2.5|^8.0",
         "joomla/filesystem": "^2.0"
     },
     "require-dev": {
