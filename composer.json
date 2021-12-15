@@ -2,7 +2,11 @@
     "name": "joomla/filesystem",
     "type": "joomla-package",
     "description": "Joomla Filesystem Package",
-    "keywords": ["joomla", "framework", "filesystem"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "filesystem"
+    ],
     "homepage": "https://github.com/joomla/joomla-framework-filesystem",
     "license": "GPL-2.0-or-later",
     "require": {
@@ -27,7 +31,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-	        "dev-2.0-dev": "2.0-dev"
+            "dev-2.0-dev": "2.0-dev"
         }
     }
 }
