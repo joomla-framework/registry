@@ -172,6 +172,7 @@ class Session implements SessionInterface, DispatcherAwareInterface
 	 *
 	 * @since   1.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function getIterator()
 	{
 		return new \ArrayIterator($this->all());

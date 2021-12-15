@@ -67,6 +67,7 @@ class RedisHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function close()
 	{
 		// No need to close the connection to Redis server manually.
@@ -99,6 +100,7 @@ class RedisHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function gc($maxlifetime)
 	{
 		return true;
@@ -126,6 +128,7 @@ class RedisHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function open($save_path, $session_id)
 	{
 		return true;
@@ -140,6 +143,7 @@ class RedisHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function read($session_id)
 	{
 		return $this->redis->get($this->prefix . $session_id) ?: '';
@@ -155,6 +159,7 @@ class RedisHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function write($session_id, $session_data)
 	{
 		if ($this->ttl > 0)

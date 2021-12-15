@@ -67,6 +67,7 @@ class MemcachedHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function close()
 	{
 		return true;
@@ -95,6 +96,7 @@ class MemcachedHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function gc($maxlifetime)
 	{
 		// Memcached manages garbage collection on its own
@@ -127,6 +129,7 @@ class MemcachedHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function open($save_path, $session_id)
 	{
 		return true;
@@ -141,6 +144,7 @@ class MemcachedHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function read($session_id)
 	{
 		return $this->memcached->get($this->prefix . $session_id) ?: '';
@@ -156,6 +160,7 @@ class MemcachedHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function write($session_id, $session_data)
 	{
 		return $this->memcached->set($this->prefix . $session_id, $session_data, time() + $this->ttl);

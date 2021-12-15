@@ -45,6 +45,7 @@ class ApcuHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function close()
 	{
 		return true;
@@ -74,6 +75,7 @@ class ApcuHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function gc($maxlifetime)
 	{
 		return true;
@@ -109,6 +111,7 @@ class ApcuHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function open($save_path, $session_id)
 	{
 		return true;
@@ -123,6 +126,7 @@ class ApcuHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function read($session_id)
 	{
 		return (string) apcu_fetch($this->prefix . $session_id);
@@ -138,6 +142,7 @@ class ApcuHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function write($session_id, $session_data)
 	{
 		return apcu_store($this->prefix . $session_id, $session_data, ini_get('session.gc_maxlifetime'));

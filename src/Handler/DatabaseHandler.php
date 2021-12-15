@@ -66,6 +66,7 @@ class DatabaseHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function close()
 	{
 		if ($this->gcCalled)
@@ -194,6 +195,7 @@ class DatabaseHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function gc($maxlifetime)
 	{
 		// We'll delay garbage collection until the session is closed to prevent potential issues mid-cycle
@@ -225,6 +227,7 @@ class DatabaseHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function open($save_path, $session_id)
 	{
 		$this->db->connect();
@@ -241,6 +244,7 @@ class DatabaseHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function read($session_id)
 	{
 		try
@@ -272,6 +276,7 @@ class DatabaseHandler implements HandlerInterface
 	 *
 	 * @since   2.0.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function write($session_id, $session_data)
 	{
 		try
