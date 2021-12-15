@@ -2,7 +2,11 @@
     "name": "joomla/string",
     "type": "joomla-package",
     "description": "Joomla String Package",
-    "keywords": ["joomla", "framework", "string"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "string"
+    ],
     "homepage": "https://github.com/joomla-framework/string",
     "license": "GPL-2.0-or-later",
     "require": {
@@ -52,7 +56,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-	        "dev-2.0-dev": "2.0-dev"
+            "dev-2.0-dev": "2.0-dev"
         }
     }
 }
