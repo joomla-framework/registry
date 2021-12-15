@@ -2,14 +2,20 @@
     "name": "joomla/test",
     "type": "joomla-package",
     "description": "Joomla Test Helper Package",
-    "keywords": ["joomla", "framework", "unit test", "phpunit", "reflection"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "unit test",
+        "phpunit",
+        "reflection"
+    ],
     "homepage": "https://github.com/joomla-framework/test",
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^7.2.5|^8.0"
     },
     "require-dev": {
-        "joomla/coding-standards": "~3.0@dev",
+        "joomla/coding-standards": "^3.0@dev",
         "joomla/database": "~2.0",
         "phpunit/phpunit": "^8.5|^9.0"
     },
