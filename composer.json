@@ -2,11 +2,15 @@
     "name": "joomla/event",
     "type": "joomla-package",
     "description": "Joomla Event Package",
-    "keywords": ["joomla", "framework", "event"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "event"
+    ],
     "homepage": "https://github.com/joomla-framework/event",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.2.5|^8.0",
         "symfony/deprecation-contracts": "^2.1"
     },
     "require-dev": {
@@ -32,7 +36,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-	        "dev-2.0-dev": "2.0-dev"
+            "dev-2.0-dev": "2.0-dev"
         }
     }
 }
