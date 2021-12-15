@@ -2,11 +2,15 @@
     "name": "joomla/oauth1",
     "type": "joomla-package",
     "description": "Joomla OAuth1 Package",
-    "keywords": ["joomla", "framework", "oauth1"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "oauth1"
+    ],
     "homepage": "https://github.com/joomla-framework/oauth1",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.2.5|^8.0",
         "joomla/application": "^2.0",
         "joomla/http": "^1.2.2|^2.0",
         "joomla/input": "^1.2|^2.0",
@@ -33,7 +37,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-	        "dev-2.0-dev": "2.0-dev"
+            "dev-2.0-dev": "2.0-dev"
         }
     }
 }
