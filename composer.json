@@ -2,11 +2,15 @@
     "name": "joomla/input",
     "type": "joomla-package",
     "description": "Joomla Input Package",
-    "keywords": ["joomla", "framework", "input"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "input"
+    ],
     "homepage": "https://github.com/joomla-framework/input",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5",
+        "php": "^7.2.5|^8.0",
         "joomla/filter": "^1.0|^2.0",
         "symfony/deprecation-contracts": "^2.1"
     },
@@ -28,7 +32,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-	        "dev-2.0-dev": "2.0-dev"
+            "dev-2.0-dev": "2.0-dev"
         }
     }
 }
