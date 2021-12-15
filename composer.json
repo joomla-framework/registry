@@ -2,7 +2,11 @@
     "name": "joomla/authentication",
     "type": "joomla-package",
     "description": "Joomla Authentication Package",
-    "keywords": ["joomla", "framework", "authentication"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "authentication"
+    ],
     "homepage": "https://github.com/joomla-framework/authentication",
     "license": "GPL-2.0-or-later",
     "require": {
