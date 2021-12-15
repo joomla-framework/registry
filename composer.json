@@ -2,11 +2,15 @@
     "name": "joomla/profiler",
     "type": "joomla-package",
     "description": "Joomla Profiler Package",
-    "keywords": ["joomla", "framework", "profiler"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "profiler"
+    ],
     "homepage": "https://github.com/joomla-framework/profiler",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5"
+        "php": "^7.2.5|^8.0"
     },
     "require-dev": {
         "joomla/coding-standards": "^3.0@dev",
@@ -26,7 +30,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-	        "dev-2.0-dev": "2.0-dev"
+            "dev-2.0-dev": "2.0-dev"
         }
     }
 }
