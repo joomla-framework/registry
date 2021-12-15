@@ -2,14 +2,18 @@
     "name": "joomla/uri",
     "type": "joomla-package",
     "description": "Joomla Uri Package",
-    "keywords": ["joomla", "framework", "uri"],
+    "keywords": [
+        "joomla",
+        "framework",
+        "uri"
+    ],
     "homepage": "https://github.com/joomla-framework/uri",
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^7.2.5|^8.0"
     },
     "require-dev": {
-        "joomla/coding-standards": "^2.0@alpha",
+        "joomla/coding-standards": "^3.0@dev",
         "phpunit/phpunit": "^8.5|^9.0"
     },
     "autoload": {
@@ -25,7 +29,7 @@
     "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-	        "dev-2.0-dev": "2.0-dev"
+            "dev-2.0-dev": "2.0-dev"
         }
     }
 }
