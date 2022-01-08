@@ -109,6 +109,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @link    https://www.php.net/manual/en/countable.count.php
 	 * @since   1.3.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function count()
 	{
 		return \count(get_object_vars($this->data));
@@ -286,6 +287,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 	 * @see     IteratorAggregate::getIterator()
 	 * @since   1.3.0
 	 */
+	#[\ReturnTypeWillChange]
 	public function getIterator()
 	{
 		return new \ArrayIterator($this->data);
