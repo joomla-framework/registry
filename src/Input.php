@@ -179,7 +179,7 @@ class Input implements \Countable
 	 *
 	 * @param   array  $vars        Associative array of keys and filter types to apply.
 	 *                              If empty and datasource is null, all the input data will be returned
-	 *                              but filtered using the default case in JFilterInput::clean.
+	 *                              but filtered using the default case in InputFilter::clean.
 	 * @param   mixed  $datasource  Array to retrieve data from, or null
 	 *
 	 * @return  mixed  The filtered input data.
