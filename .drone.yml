@@ -181,7 +181,7 @@ steps:
   image: joomlaprojects/docker-images:php8.0
   commands:
   - php -v
-  - composer update --ignore-platform-reqs --prefer-stable
+  - composer update --prefer-stable
   volumes:
   - name: composer-cache
     path: /tmp/composer-cache
@@ -198,7 +198,35 @@ volumes:
     path: /tmp/composer-cache
 
 ---
+kind: pipeline
+name: PHP 8.1
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: composer
+  image: joomlaprojects/docker-images:php8.1
+  commands:
+  - php -v
+  - composer update --prefer-stable
+  volumes:
+  - name: composer-cache
+    path: /tmp/composer-cache
+
+- name: PHPUnit
+  image: joomlaprojects/docker-images:php8.1
+  commands:
+  - vendor/bin/phpunit
+
+volumes:
+- name: composer-cache
+  host:
+    path: /tmp/composer-cache
+
+---
 kind: signature
-hmac: 1577ca52ded57e24f7da3fe94aa83bd561c3fe4d56abf2c8a1e525f479cca466
+hmac: 6f0cfab68a937e5d4077ae518bae4a2a97f4eed11dae28124a52a0196c22bd15
 
 ...

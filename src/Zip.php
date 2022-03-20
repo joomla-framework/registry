@@ -677,8 +677,8 @@ class Zip implements ExtractableInterface
 	/**
 	 * Check if a path is below a given destination path
 	 *
-	 * @param   string  $destination
-	 * @param   string  $path
+	 * @param   string  $destination  The destination path
+	 * @param   string  $path         The path to be checked
 	 *
 	 * @return  boolean
 	 */
