@@ -26,18 +26,14 @@ class Files extends Input
 	/**
 	 * The class constructor.
 	 *
-	 * @param   array  $source   The source argument is ignored. $_FILES is always used.
-	 * @param   array  $options  Array of configuration parameters (Optional)
+	 * @param   array|null  $source   Source data (Optional, default is $_FILES)
+	 * @param   array       $options  Array of configuration parameters (Optional)
 	 *
 	 * @since   1.0
 	 */
 	public function __construct($source = null, array $options = [])
 	{
-		if (empty($source))
-		{
-			$source = $_FILES;
-		}
-
+		$source = $source ?? $_FILES;
 		parent::__construct($source, $options);
 	}
 

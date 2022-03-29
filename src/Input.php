@@ -84,15 +84,15 @@ class Input implements \Countable
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $source   Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   array  $options  An optional associative array of configuration parameters:
-	 *                           filter: An instance of Filter\Input. If omitted, a default filter is initialised.
+	 * @param   array|null  $source   Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 * @param   array       $options  An optional associative array of configuration parameters:
+	 *                                filter: An instance of Filter\Input. If omitted, a default filter is initialised.
 	 *
 	 * @since   1.0
 	 */
 	public function __construct($source = null, array $options = [])
 	{
-		$this->data    = empty($source) ? $_REQUEST : $source;
+		$this->data    = $source ?? $_REQUEST;
 		$this->filter  = $options['filter'] ?? new Filter\InputFilter;
 		$this->options = $options;
 	}

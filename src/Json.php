@@ -28,8 +28,8 @@ class Json extends Input
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $source   Source data (Optional, default is the raw HTTP input decoded from JSON)
-	 * @param   array  $options  Array of configuration parameters (Optional)
+	 * @param   array|null  $source   Source data (Optional, default is the raw HTTP input decoded from JSON)
+	 * @param   array       $options  Array of configuration parameters (Optional)
 	 *
 	 * @since   1.0
 	 */
