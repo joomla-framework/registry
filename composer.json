@@ -18,6 +18,7 @@
         "symfony/yaml": "<3.4"
     },
     "suggest": {
+        "ext-json": "ext-json is needed for JSON support",
         "symfony/yaml": "Install symfony/yaml if you require YAML support."
     },
     "autoload": {

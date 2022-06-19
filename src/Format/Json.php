@@ -51,6 +51,19 @@ class Json implements FormatInterface
 	 */
 	public function stringToObject($data, array $options = ['processSections' => false])
 	{
+		if (!is_string($data))
+		{
+			trigger_error(
+				sprintf(
+					'Passing non-string values as first parameter to %s is deprecated and will cause an error in 3.0',
+					__METHOD__
+				),
+				E_USER_DEPRECATED
+			);
+
+			$data = (string) $data;
+		}
+
 		$data = trim($data);
 
 		// Because developers are clearly not validating their data before pushing it into a Registry, we'll do it for them
