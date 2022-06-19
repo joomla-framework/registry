@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -8,6 +8,8 @@ namespace Joomla\Registry\Tests\Format;
 
 use Joomla\Registry\Format\Yaml;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Test class for \Joomla\Registry\Format\Yaml.
@@ -27,26 +29,15 @@ class YamlTest extends TestCase
 	 *
 	 * @return  void
 	 */
-	public function setUp()
+	public function setUp(): void
 	{
 		$this->fixture = new Yaml;
 	}
 
 	/**
-	 * @testdox  The formatter is instantiated correctly
-	 *
-	 * @covers   Joomla\Registry\Format\Yaml::__construct
-	 */
-	public function testConstruct()
-	{
-		$this->assertAttributeInstanceOf('Symfony\Component\Yaml\Parser', 'parser', $this->fixture);
-		$this->assertAttributeInstanceOf('Symfony\Component\Yaml\Dumper', 'dumper', $this->fixture);
-	}
-
-	/**
 	 * @testdox  A data object is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::objectToString
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
@@ -82,7 +73,7 @@ array:
 	/**
 	 * @testdox  An array is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::objectToString
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testAnArrayIsConvertedToAString()
 	{
@@ -118,7 +109,7 @@ array:
 	/**
 	 * @testdox  A string is converted to a data object
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::stringToObject
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
@@ -150,8 +141,7 @@ array:
 	/**
 	 * @testdox  Validate data equality in converted objects
 	 *
-	 * @covers   Joomla\Registry\Format\Yaml::objectToString
-	 * @covers   Joomla\Registry\Format\Yaml::stringToObject
+	 * @covers   Joomla\Registry\Format\Yaml
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{

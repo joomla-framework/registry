@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -17,9 +17,7 @@ class PhpTest extends TestCase
 	/**
 	 * @testdox  A data object is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Php::formatValue
-	 * @covers   Joomla\Registry\Format\Php::getArrayString
-	 * @covers   Joomla\Registry\Format\Php::objectToString
+	 * @covers   Joomla\Registry\Format\Php
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
@@ -31,6 +29,7 @@ class PhpTest extends TestCase
 		$object->quoted = '"stringwithquotes"';
 		$object->booleantrue = true;
 		$object->booleanfalse = false;
+		$object->nullvalue = null;
 		$object->numericint = 42;
 		$object->numericfloat = 3.1415;
 		$object->section = new \stdClass;
@@ -43,6 +42,7 @@ class PhpTest extends TestCase
 			"\tpublic \$quoted = '\"stringwithquotes\"';\n" .
 			"\tpublic \$booleantrue = true;\n" .
 			"\tpublic \$booleanfalse = false;\n" .
+			"\tpublic \$nullvalue = null;\n" .
 			"\tpublic \$numericint = 42;\n" .
 			"\tpublic \$numericfloat = 3.1415;\n" .
 			"\tpublic \$section = array('key' => 'value');\n" .
@@ -55,9 +55,7 @@ class PhpTest extends TestCase
 	/**
 	 * @testdox  A data object is converted to a string with no specified class
 	 *
-	 * @covers   Joomla\Registry\Format\Php::formatValue
-	 * @covers   Joomla\Registry\Format\Php::getArrayString
-	 * @covers   Joomla\Registry\Format\Php::objectToString
+	 * @covers   Joomla\Registry\Format\Php
 	 */
 	public function testADataObjectIsConvertedToAStringWithNoSpecifiedClass()
 	{
@@ -67,6 +65,7 @@ class PhpTest extends TestCase
 		$object->quoted = '"stringwithquotes"';
 		$object->booleantrue = true;
 		$object->booleanfalse = false;
+		$object->nullvalue = null;
 		$object->numericint = 42;
 		$object->numericfloat = 3.1415;
 
@@ -81,6 +80,7 @@ class PhpTest extends TestCase
 			"\tpublic \$quoted = '\"stringwithquotes\"';\n" .
 			"\tpublic \$booleantrue = true;\n" .
 			"\tpublic \$booleanfalse = false;\n" .
+			"\tpublic \$nullvalue = null;\n" .
 			"\tpublic \$numericint = 42;\n" .
 			"\tpublic \$numericfloat = 3.1415;\n" .
 			"\tpublic \$section = array('key' => 'value');\n" .
@@ -93,9 +93,7 @@ class PhpTest extends TestCase
 	/**
 	 * @testdox  A data object is converted to a string with a namespace
 	 *
-	 * @covers   Joomla\Registry\Format\Php::formatValue
-	 * @covers   Joomla\Registry\Format\Php::getArrayString
-	 * @covers   Joomla\Registry\Format\Php::objectToString
+	 * @covers   Joomla\Registry\Format\Php
 	 */
 	public function testADataObjectIsConvertedToAStringWithANamespace()
 	{
@@ -107,6 +105,7 @@ class PhpTest extends TestCase
 		$object->quoted = '"stringwithquotes"';
 		$object->booleantrue = true;
 		$object->booleanfalse = false;
+		$object->nullvalue = null;
 		$object->numericint = 42;
 		$object->numericfloat = 3.1415;
 
@@ -122,6 +121,7 @@ class PhpTest extends TestCase
 			"\tpublic \$quoted = '\"stringwithquotes\"';\n" .
 			"\tpublic \$booleantrue = true;\n" .
 			"\tpublic \$booleanfalse = false;\n" .
+			"\tpublic \$nullvalue = null;\n" .
 			"\tpublic \$numericint = 42;\n" .
 			"\tpublic \$numericfloat = 3.1415;\n" .
 			"\tpublic \$section = array('key' => 'value');\n" .
@@ -134,7 +134,7 @@ class PhpTest extends TestCase
 	/**
 	 * @testdox  A string is converted to a data object
 	 *
-	 * @covers   Joomla\Registry\Format\Php::stringToObject
+	 * @covers   Joomla\Registry\Format\Php
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
@@ -147,8 +147,7 @@ class PhpTest extends TestCase
 	/**
 	 * @testdox  Validate data equality in converted objects
 	 *
-	 * @covers   Joomla\Registry\Format\Php::objectToString
-	 * @covers   Joomla\Registry\Format\Php::stringToObject
+	 * @covers   Joomla\Registry\Format\Php
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{

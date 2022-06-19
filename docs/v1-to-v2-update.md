@@ -4,7 +4,7 @@ The following changes were made to the Registry package between v1 and v2.
 
 ### Minimum supported PHP version raised
 
-All Framework packages now require PHP 7.0 or newer.
+All Framework packages now require PHP 7.2 or newer.
 
 ### Object caching removed
 
@@ -30,3 +30,7 @@ argument as an array; this was not enforced in v1.
 
 Several methods in the `Registry` class are now typehinted, this affects methods with an argument requiring an array and the
 `Registry::merge()` method which now typehints the `$source` argument.
+
+### Joomla\Registry\Registry::extract() always returns a Registry
+
+Previously when there was no data for a key, `Registry::extract()` would return a null value. In 2.0, the null return is removed and an empty `Registry` is returned.

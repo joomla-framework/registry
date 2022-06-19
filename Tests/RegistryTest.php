@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -18,59 +18,51 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  A Registry instance is instantiated with empty data
 	 *
-	 * @covers   Joomla\Registry\Registry::__construct
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testARegistryInstanceIsInstantiatedWithEmptyData()
 	{
-		$a = new Registry;
-
-		$this->assertCount(0, $a, 'The Registry data store should be empty.');
+		$this->assertCount(0, new Registry, 'The Registry data store should be empty.');
 	}
 
 	/**
 	 * @testdox  A Registry instance is instantiated with an array of data
 	 *
-	 * @covers   Joomla\Registry\Registry::__construct
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testARegistryInstanceIsInstantiatedWithAnArrayOfData()
 	{
-		$a = new Registry(['foo' => 'bar']);
-
-		$this->assertCount(1, $a, 'The Registry data store should not be empty.');
+		$this->assertCount(1, new Registry(['foo' => 'bar']), 'The Registry data store should not be empty.');
 	}
 
 	/**
 	 * @testdox  A Registry instance is instantiated with a string of data
 	 *
-	 * @covers   Joomla\Registry\Registry::__construct
+	 * @covers   Joomla\Registry\Registry
+	 * @uses     Joomla\Registry\Factory
+	 * @uses     Joomla\Registry\Format\Json
 	 */
 	public function testARegistryInstanceIsInstantiatedWithAStringOfData()
 	{
-		$a = new Registry(json_encode(['foo' => 'bar']));
-
-		$this->assertCount(1, $a, 'The Registry data store should not be empty.');
+		$this->assertCount(1, new Registry(json_encode(['foo' => 'bar'])), 'The Registry data store should not be empty.');
 	}
 
 	/**
 	 * @testdox  A Registry instance is instantiated with another Registry
 	 *
-	 * @covers   Joomla\Registry\Registry::__construct
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testARegistryInstanceIsInstantiatedWithAnotherRegistry()
 	{
-		$a = new Registry(['foo' => 'bar']);
-		$b = new Registry($a);
-
-		$this->assertCount(1, $b, 'The Registry data store should not be empty.');
+		$this->assertCount(1, new Registry(new Registry(['foo' => 'bar'])), 'The Registry data store should not be empty.');
 	}
 
 	/**
 	 * @testdox  A Registry instance instantiated with a string of data is correctly manipulated
 	 *
-	 * @covers   Joomla\Registry\Registry::__construct
-	 * @covers   Joomla\Registry\Registry::def
-	 * @covers   Joomla\Registry\Registry::get
-	 * @covers   Joomla\Registry\Registry::set
+	 * @covers   Joomla\Registry\Registry
+	 * @uses     Joomla\Registry\Factory
+	 * @uses     Joomla\Registry\Format\Json
 	 */
 	public function testARegistryInstanceInstantiatedWithAStringOfDataIsCorrectlyManipulated()
 	{
@@ -96,7 +88,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  A Registry instance can be cloned
 	 *
-	 * @covers   Joomla\Registry\Registry::__clone
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testCloningARegistry()
 	{
@@ -110,7 +102,9 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  A Registry instance can be cast as a string
 	 *
-	 * @covers   Joomla\Registry\Registry::__toString
+	 * @covers   Joomla\Registry\Registry
+	 * @uses     Joomla\Registry\Factory
+	 * @uses     Joomla\Registry\Format\Json
 	 */
 	public function testConvertingARegistryToAString()
 	{
@@ -123,7 +117,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  A Registry instance can be counted
 	 *
-	 * @covers   Joomla\Registry\Registry::count
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testCountable()
 	{
@@ -141,46 +135,39 @@ class RegistryTest extends TestCase
 	}
 
 	/**
-	 * @testdox   A Registry instance can be processed through json_encode()
+	 * @testdox  A Registry instance can be processed through json_encode()
 	 *
-	 * @covers    Joomla\Registry\Registry::jsonSerialize
-	 * @requires  PHP 5.4
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testJsonSerializingARegistry()
 	{
-		$a = new Registry(['foo' => 'bar']);
-
-		$this->assertSame(json_encode($a), '{"foo":"bar"}', 'A Registry\'s data should be encoded to JSON.');
+		$this->assertSame(json_encode(new Registry(['foo' => 'bar'])), '{"foo":"bar"}', 'A Registry\'s data should be encoded to JSON.');
 	}
 
 	/**
 	 * @testdox  A default value is assigned to a key if not already set
 	 *
-	 * @covers   Joomla\Registry\Registry::def
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testDefineADefaultValueIfKeyIsNotSet()
 	{
-		$a = new Registry;
-
-		$this->assertSame($a->def('foo', 'bar'), 'bar', 'Calling def() on an unset key should assign the specified default value.');
+		$this->assertSame((new Registry)->def('foo', 'bar'), 'bar', 'Calling def() on an unset key should assign the specified default value.');
 	}
 
 	/**
 	 * @testdox  A default value is not assigned to a key if already set
 	 *
-	 * @covers   Joomla\Registry\Registry::def
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testDoNotDefineADefaultValueIfKeyIsSet()
 	{
-		$a = new Registry(['foo' => 'bar']);
-
-		$this->assertSame($a->def('foo', 'car'), 'bar', 'Calling def() on a key with a value should return the current value.');
+		$this->assertSame((new Registry(['foo' => 'bar']))->def('foo', 'car'), 'bar', 'Calling def() on a key with a value should return the current value.');
 	}
 
 	/**
 	 * @testdox  The Registry validates top level keys exist
 	 *
-	 * @covers   Joomla\Registry\Registry::exists
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testEnsureTopLevelKeysExist()
 	{
@@ -193,12 +180,11 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The Registry validates nested keys exist
 	 *
-	 * @covers   Joomla\Registry\Registry::exists
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testEnsureNestedKeysExist()
 	{
-		$a = new Registry;
-		$a->set('nested', ['foo' => 'bar']);
+		$a = new Registry(['nested' => ['foo' => 'bar']]);
 
 		$this->assertTrue($a->exists('nested.foo'), 'The nested key "nested.foo" should exist.');
 		$this->assertFalse($a->exists('nested.goo'), 'The nested key "nested.goo" should not exist.');
@@ -207,137 +193,111 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The Registry does not validate an empty path exists
 	 *
-	 * @covers   Joomla\Registry\Registry::exists
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testEnsureEmptyPathsDoNotExist()
 	{
-		$a = new Registry;
-
-		$this->assertFalse($a->exists(''), 'An empty path should not exist.');
+		$this->assertFalse((new Registry)->exists(''), 'An empty path should not exist.');
 	}
 
 	/**
 	 * @testdox  The Registry returns the default value when a key is not set.
 	 *
-	 * @covers   Joomla\Registry\Registry::get
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testGetReturnsTheDefaultValueWhenAKeyIsNotSet()
 	{
-		$a = new Registry;
-
-		$this->assertNull($a->get('foo'), 'The default value should be returned for an unassigned key.');
+		$this->assertNull((new Registry)->get('foo'), 'The default value should be returned for an unassigned key.');
 	}
 
 	/**
 	 * @testdox  The Registry returns the default value when a nested key is not set.
 	 *
-	 * @covers   Joomla\Registry\Registry::get
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testGetReturnsTheDefaultValueWhenANestedKeyIsNotSet()
 	{
-		$a = new Registry;
-		$a->set('nested', (object) ['foo' => 'bar']);
-
-		$this->assertNull($a->get('nested.goo'), 'The default value should be returned for an unassigned nested key.');
+		$this->assertNull((new Registry(['nested' => (object) ['foo' => 'bar']]))->get('nested.goo'), 'The default value should be returned for an unassigned nested key.');
 	}
 
 	/**
 	 * @testdox  The Registry returns the default value when the path is empty.
 	 *
-	 * @covers   Joomla\Registry\Registry::get
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testGetReturnsTheDefaultValueWhenThePathIsEmpty()
 	{
-		$a = new Registry;
-
-		$this->assertNull($a->get(''), 'The default value should be returned for an empty path.');
+		$this->assertNull((new Registry)->get(''), 'The default value should be returned for an empty path.');
 	}
 
 	/**
 	 * @testdox  The Registry returns the assigned value when a key is set.
 	 *
-	 * @covers   Joomla\Registry\Registry::get
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testGetReturnsTheAssignedValueWhenAKeyIsSet()
 	{
-		$a = new Registry(['foo' => 'bar']);
-
-		$this->assertSame($a->get('foo'), 'bar', 'The value of "foo" should be returned.');
+		$this->assertSame((new Registry(['foo' => 'bar']))->get('foo'), 'bar', 'The value of "foo" should be returned.');
 	}
 
 	/**
 	 * @testdox  The Registry returns the assigned value for a set nested key.
 	 *
-	 * @covers   Joomla\Registry\Registry::get
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testGetReturnsTheAssignedValueForASetNestedKey()
 	{
-		$a = new Registry;
-		$a->set('nested', (object) ['foo' => 'bar']);
-
-		$this->assertSame($a->get('nested.foo'), 'bar', 'The value of "nested.foo" should be returned.');
+		$this->assertSame((new Registry(['nested' => (object) ['foo' => 'bar']]))->get('nested.foo'), 'bar', 'The value of "nested.foo" should be returned.');
 	}
 
 	/**
 	 * @testdox  The Registry correctly handles assignments for integer zero.
 	 *
-	 * @covers   Joomla\Registry\Registry::get
-	 * @covers   Joomla\Registry\Registry::set
+	 * @covers   Joomla\Registry\Registry
 	 * @ticket   https://github.com/joomla/jissues/issues/629
 	 */
 	public function testTheRegistryCorrectlyHandlesAssignmentsForIntegerZero()
 	{
 		$a = new Registry;
 		$a->set('foo', 0);
+		$a->set('goo.bar', 0);
 
 		$this->assertSame(0, $a->get('foo'), 'The Registry correctly handles when a top level key has a value of 0');
-
-		$a = new Registry;
-		$a->set('foo.bar', 0);
-
-		$this->assertSame(0, $a->get('foo.bar'), 'The Registry correctly handles when a nested key has a value of 0');
+		$this->assertSame(0, $a->get('goo.bar'), 'The Registry correctly handles when a nested key has a value of 0');
 	}
 
 	/**
 	 * @testdox  The Registry correctly handles assignments for class instances.
 	 *
-	 * @covers   Joomla\Registry\Registry::get
-	 * @covers   Joomla\Registry\Registry::set
+	 * @covers   Joomla\Registry\Registry
 	 * @ticket   https://github.com/joomla-framework/registry/issues/8
 	 */
 	public function testTheRegistryCorrectlyHandlesAssignmentsForClassInstances()
 	{
-		// Only using the Yaml object here as it's pulled in as a package dependency
-		$yaml = new Yaml;
+		$class = new class {};
 
 		$a = new Registry;
-		$a->set('yaml', $yaml);
+		$a->set('class', $class);
+		$a->set('nested.class', $class);
 
-		$this->assertSame($yaml, $a->get('yaml'), 'The Registry correctly handles when a top level key is an instance of a class');
-
-		$a = new Registry;
-		$a->set('nested.yaml', $yaml);
-
-		$this->assertSame($yaml, $a->get('nested.yaml'), 'The Registry correctly handles when a nested key is an instance of a class');
+		$this->assertSame($class, $a->get('class'), 'The Registry correctly handles when a top level key is an instance of a class');
+		$this->assertSame($class, $a->get('nested.class'), 'The Registry correctly handles when a nested key is an instance of a class');
 	}
 
 	/**
 	 * @testdox  The Registry can be iterated
 	 *
-	 * @covers   Joomla\Registry\Registry::getIterator
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testTheRegistryCanBeIterated()
 	{
-		$a = new Registry;
-
-		$this->assertInstanceOf('ArrayIterator', $a->getIterator());
+		$this->assertInstanceOf('ArrayIterator', (new Registry)->getIterator());
 	}
 
 	/**
 	 * @testdox  The Registry can load an array
 	 *
-	 * @covers   Joomla\Registry\Registry::bindData
-	 * @covers   Joomla\Registry\Registry::loadArray
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testAnArrayCanBeLoaded()
 	{
@@ -350,8 +310,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The Registry can load a flattened array
 	 *
-	 * @covers   Joomla\Registry\Registry::bindData
-	 * @covers   Joomla\Registry\Registry::loadArray
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testAFlattenedArrayCanBeLoaded()
 	{
@@ -369,8 +328,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The Registry can load an object
 	 *
-	 * @covers   Joomla\Registry\Registry::bindData
-	 * @covers   Joomla\Registry\Registry::loadObject
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testAnObjectCanBeLoaded()
 	{
@@ -387,7 +345,9 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The Registry can load a file
 	 *
-	 * @covers   Joomla\Registry\Registry::loadFile
+	 * @covers   Joomla\Registry\Registry
+	 * @uses     Joomla\Registry\Factory
+	 * @uses     Joomla\Registry\Format\Json
 	 */
 	public function testAFileCanBeLoaded()
 	{
@@ -400,7 +360,9 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The Registry can load a string
 	 *
-	 * @covers   Joomla\Registry\Registry::loadString
+	 * @covers   Joomla\Registry\Registry
+	 * @uses     Joomla\Registry\Factory
+	 * @uses     Joomla\Registry\Format\Ini
 	 */
 	public function testAStringCanBeLoaded()
 	{
@@ -413,8 +375,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  Two Registry instances can be merged
 	 *
-	 * @covers   Joomla\Registry\Registry::bindData
-	 * @covers   Joomla\Registry\Registry::merge
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testTwoRegistryInstancesCanBeMerged()
 	{
@@ -441,7 +402,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  A subset of data can be extracted to a new Registry
 	 *
-	 * @covers   Joomla\Registry\Registry::extract
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testASubsetOfDataCanBeExtractedToANewRegistry()
 	{
@@ -464,21 +425,23 @@ class RegistryTest extends TestCase
 	}
 
 	/**
-	 * @testdox  A Registry cannot be extracted from null data
+	 * @testdox  A Registry can be extracted from null data
 	 *
-	 * @covers   Joomla\Registry\Registry::extract
+	 * @covers   Joomla\Registry\Registry
 	 */
-	public function testARegistryCannotBeExtractedFromNullData()
+	public function testARegistryCanBeExtractedFromNullData()
 	{
 		$a = new Registry;
+		$b = $a->extract('foo');
 
-		$this->assertNull($a->extract('foo'), 'A Registry cannot be extracted from null data.');
+		$this->assertInstanceOf(Registry::class, $b, 'A Registry can be extracted from null data.');
+		$this->assertNotSame($a, $b, 'Extracting a Registry should always create a new instance.');
 	}
 
 	/**
 	 * @testdox  The array offset is correctly checked
 	 *
-	 * @covers   Joomla\Registry\Registry::offsetExists
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testCheckOffsetAsAnArray()
 	{
@@ -495,7 +458,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The array offset is correctly retrieved
 	 *
-	 * @covers   Joomla\Registry\Registry::offsetGet
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testGetOffsetAsAnArray()
 	{
@@ -508,7 +471,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The array offset is correctly set
 	 *
-	 * @covers   Joomla\Registry\Registry::offsetSet
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testSetOffsetAsAnArray()
 	{
@@ -521,7 +484,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The array offset is correctly removed
 	 *
-	 * @covers   Joomla\Registry\Registry::offsetUnset
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testRemoveOffsetAsAnArray()
 	{
@@ -535,7 +498,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  A value is stored to the Registry
 	 *
-	 * @covers   Joomla\Registry\Registry::set
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testAValueIsStoredToTheRegistry()
 	{
@@ -548,7 +511,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  A key is appended to a nested path
 	 *
-	 * @covers   Joomla\Registry\Registry::append
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testAKeyIsAppendedToANestedPath()
 	{
@@ -561,11 +524,11 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  A key is removed from the Registry
 	 *
-	 * @covers   Joomla\Registry\Registry::remove
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testAKeyIsRemovedFromTheRegistry()
 	{
-		$a = new Registry(array('foo' => 'bar'));
+		$a = new Registry(['foo' => 'bar']);
 
 		$this->assertSame('bar', $a->remove('foo'), 'When removing a key from the Registry its old value should be returned.');
 		$this->assertFalse($a->exists('foo'));
@@ -574,11 +537,11 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  A nested key is removed from the Registry
 	 *
-	 * @covers   Joomla\Registry\Registry::remove
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testANestedKeyIsRemovedFromTheRegistry()
 	{
-		$a = new Registry(array('nested' => array('foo' => 'bar')));
+		$a = new Registry(['nested' => ['foo' => 'bar']]);
 
 		$this->assertSame('bar', $a->remove('nested.foo'), 'When removing a key from the Registry its old value should be returned.');
 		$this->assertFalse($a->exists('nested.foo'));
@@ -587,24 +550,22 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The Registry is unchanged when deleting a non-existing value
 	 *
-	 * @covers   Joomla\Registry\Registry::remove
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testTheRegistryIsUnchangedWhenDeletingANonExistingValue()
 	{
-		$a = new Registry(array('foo' => 'bar'));
+		$a = new Registry(['foo' => 'bar']);
 
 		$this->assertNull($a->remove('goo'));
 		$this->assertNull($a->remove('nested.goo'));
 
-		$this->assertEquals($a->toArray(), array('foo' => 'bar'));
+		$this->assertEquals($a->toArray(), ['foo' => 'bar']);
 	}
 
 	/**
 	 * @testdox  The Registry handles mixed array structures correctly
 	 *
-	 * @covers   Joomla\Registry\Registry::get
-	 * @covers   Joomla\Registry\Registry::loadArray
-	 * @covers   Joomla\Registry\Registry::set
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testMixedArrayStructuresHandledCorrectly()
 	{
@@ -636,50 +597,53 @@ class RegistryTest extends TestCase
 		$a->set('unassoc.3', 'baz4');
 		$this->assertSame('baz4', $a->get('unassoc.3'));
 
-		$this->assertTrue(is_array($a->get('unassoc')), 'Un-associative array should remain after write');
+		$this->assertTrue(\is_array($a->get('unassoc')), 'Un-associative array should remain after write');
 	}
 
 	/**
 	 * @testdox  The Registry can be converted to an array
 	 *
-	 * @covers   Joomla\Registry\Registry::asArray
-	 * @covers   Joomla\Registry\Registry::toArray
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testTheRegistryCanBeConvertedToAnArray()
 	{
-		$a = new Registry(['foo1' => 'testtoarray1', 'foo2' => 'testtoarray2', 'config' => ['foo3' => 'testtoarray3']]);
-
-		$expected = [
-			'foo1' => 'testtoarray1',
-			'foo2' => 'testtoarray2',
-			'config' => ['foo3' => 'testtoarray3']
-		];
-
-		$this->assertSame($expected, $a->toArray(), 'The Registry should be converted to an array.');
+		$this->assertSame(
+			[
+				'foo1' => 'testtoarray1',
+				'foo2' => 'testtoarray2',
+				'config' => ['foo3' => 'testtoarray3']
+			],
+			(new Registry(['foo1' => 'testtoarray1', 'foo2' => 'testtoarray2', 'config' => ['foo3' => 'testtoarray3']]))->toArray(),
+			'The Registry should be converted to an array.'
+		);
 	}
 
 	/**
 	 * @testdox  The Registry can be converted to an object
 	 *
-	 * @covers   Joomla\Registry\Registry::toObject
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testTheRegistryCanBeConvertedToAnObject()
 	{
-		$a = new Registry(['foo1' => 'testtoobject1', 'foo2' => 'testtoobject2', 'config' => ['foo3' => 'testtoobject3']]);
-
 		$expected = new \stdClass;
 		$expected->foo1 = 'testtoobject1';
 		$expected->foo2 = 'testtoobject2';
 		$expected->config = new \stdClass;
 		$expected->config->foo3 = 'testtoobject3';
 
-		$this->assertEquals($expected, $a->toObject(), 'The Registry should be converted to an object.');
+		$this->assertEquals(
+			$expected,
+			(new Registry(['foo1' => 'testtoobject1', 'foo2' => 'testtoobject2', 'config' => ['foo3' => 'testtoobject3']]))->toObject(),
+			'The Registry should be converted to an object.'
+		);
 	}
 
 	/**
 	 * @testdox  The Registry can be converted to a string
 	 *
-	 * @covers   Joomla\Registry\Registry::toString
+	 * @covers   Joomla\Registry\Registry
+	 * @uses     Joomla\Registry\Factory
+	 * @uses     Joomla\Registry\Format\Json
 	 */
 	public function testTheRegistryCanBeConvertedToAString()
 	{
@@ -698,8 +662,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The Registry can be flattened to an array
 	 *
-	 * @covers   Joomla\Registry\Registry::flatten
-	 * @covers   Joomla\Registry\Registry::toFlatten
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testTheRegistryCanBeFlattenedToAnArray()
 	{
@@ -717,8 +680,7 @@ class RegistryTest extends TestCase
 	/**
 	 * @testdox  The Registry operates correctly with custom path separators
 	 *
-	 * @covers   Joomla\Registry\Registry::get
-	 * @covers   Joomla\Registry\Registry::set
+	 * @covers   Joomla\Registry\Registry
 	 */
 	public function testCustomPathSeparatorsCanBeUsed()
 	{

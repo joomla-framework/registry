@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -17,8 +17,7 @@ class XmlTest extends TestCase
 	/**
 	 * @testdox  A data object is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Xml::getXmlChildren
-	 * @covers   Joomla\Registry\Format\Xml::objectToString
+	 * @covers   Joomla\Registry\Format\Xml
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
@@ -62,8 +61,7 @@ class XmlTest extends TestCase
 	/**
 	 * @testdox  A string is converted to a data object
 	 *
-	 * @covers   Joomla\Registry\Format\Xml::getValueFromNode
-	 * @covers   Joomla\Registry\Format\Xml::stringToObject
+	 * @covers   Joomla\Registry\Format\Xml
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
@@ -102,8 +100,7 @@ class XmlTest extends TestCase
 	/**
 	 * @testdox  Validate data equality in converted objects
 	 *
-	 * @covers   Joomla\Registry\Format\Xml::objectToString
-	 * @covers   Joomla\Registry\Format\Xml::stringToObject
+	 * @covers   Joomla\Registry\Format\Xml
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{

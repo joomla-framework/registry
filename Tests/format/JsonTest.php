@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -17,7 +17,7 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  A data object is converted to a string
 	 *
-	 * @covers   Joomla\Registry\Format\Json::objectToString
+	 * @covers   Joomla\Registry\Format\Json
 	 */
 	public function testADataObjectIsConvertedToAString()
 	{
@@ -61,7 +61,9 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  A string is converted to a data object
 	 *
-	 * @covers   Joomla\Registry\Format\Json::stringToObject
+	 * @covers   Joomla\Registry\Format\Json
+	 * @uses     Joomla\Registry\Factory
+	 * @uses     Joomla\Registry\Format\Ini
 	 */
 	public function testAStringIsConvertedToADataObject()
 	{
@@ -111,21 +113,19 @@ class JsonTest extends TestCase
 	/**
 	 * @testdox  A malformed JSON string causes an Exception to be thrown
 	 *
-	 * @covers   Joomla\Registry\Format\Json::stringToObject
-	 * @expectedException  \RuntimeException
+	 * @covers   Joomla\Registry\Format\Json
 	 */
 	public function testAMalformedJsonStringCausesAnExceptionToBeThrown()
 	{
-		$class = new Json;
+		$this->expectException(\RuntimeException::class);
 
-		$class->stringToObject('{key:\'value\'');
+		(new Json)->stringToObject('{key:\'value\'');
 	}
 
 	/**
 	 * @testdox  Validate data equality in converted objects
 	 *
-	 * @covers   Joomla\Registry\Format\Json::objectToString
-	 * @covers   Joomla\Registry\Format\Json::stringToObject
+	 * @covers   Joomla\Registry\Format\Json
 	 */
 	public function testDataEqualityInConvertedObjects()
 	{
@@ -136,5 +136,15 @@ class JsonTest extends TestCase
 		$output = $class->objectToString($object);
 
 		$this->assertEquals($input, $output, 'Input and output data must be equal.');
+	}
+
+	/**
+	 * @testdox  Validate an Exception is not thrown when a string is decoded to null and no error is reported
+	 *
+	 * @covers   Joomla\Registry\Format\Json
+	 */
+	public function testExceptionNotThrownWhenDecodedToNullWithoutError()
+	{
+		$this->assertInstanceOf('stdClass', (new Json)->stringToObject('{}'));
 	}
 }

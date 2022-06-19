@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Registry Package
  *
- * @copyright  Copyright (C) 2005 - 2018 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -84,11 +84,11 @@ class Php implements FormatInterface
 	 *
 	 * @return  mixed  The formatted value
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0.0
 	 */
 	protected function formatValue($value)
 	{
-		switch (gettype($value))
+		switch (\gettype($value))
 		{
 			case 'string':
 				return "'" . addcslashes($value, '\\\'') . "'";
@@ -103,6 +103,9 @@ class Php implements FormatInterface
 
 			case 'boolean':
 				return $value ? 'true' : 'false';
+
+			case 'NULL':
+				return 'null';
 		}
 	}
 
