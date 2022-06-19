@@ -66,23 +66,30 @@ class RegistryTest extends TestCase
 	 */
 	public function testARegistryInstanceInstantiatedWithAStringOfDataIsCorrectlyManipulated()
 	{
-		$a = new Registry(json_encode(['foo' => 'bar', 'goo' => 'car', 'nested' => ['foo' => 'bar', 'goo' => 'car']]));
+		$a = new Registry(json_encode([
+			'foo' => 'bar',
+			'goo' => 'car',
+			'nested' => [
+				'foo' => 'bar',
+				'goo' => 'car',
+				],
+		]));
 
 		// Check top level values
 		$this->assertSame('bar', $a->get('foo'));
 		$this->assertSame('bar', $a->def('foo'));
-		$this->assertSame('far', $a->set('foo', 'far'));
+		$this->assertSame('bar', $a->set('foo', 'far'));
 
 		// Check nested values
 		$this->assertSame('bar', $a->get('nested.foo'));
 		$this->assertSame('bar', $a->def('nested.foo'));
-		$this->assertSame('far', $a->set('nested.foo', 'far'));
+		$this->assertSame('bar', $a->set('nested.foo', 'far'));
 
 		// Check adding a new nested object
 		$a->set('new.nested', ['foo' => 'bar', 'goo' => 'car']);
 		$this->assertSame('bar', $a->get('new.nested.foo'));
 		$this->assertSame('bar', $a->def('new.nested.foo'));
-		$this->assertSame('far', $a->set('new.nested.foo', 'far'));
+		$this->assertSame('bar', $a->set('new.nested.foo', 'far'));
 	}
 
 	/**
@@ -504,8 +511,8 @@ class RegistryTest extends TestCase
 	{
 		$a = new Registry;
 
-		$this->assertSame('testsetvalue1', $a->set('foo', 'testsetvalue1'), 'The current value should be returned when assigning a key for the first time.');
-		$this->assertSame('testsetvalue2', $a->set('foo', 'testsetvalue2'), 'The new value should be returned when assigning a key multiple times.');
+		$this->assertSame(null, $a->set('foo', 'testsetvalue1'), 'null should be returned when assigning a key for the first time.');
+		$this->assertSame('testsetvalue1', $a->set('foo', 'testsetvalue2'), 'The previous value should be returned when assigning to a key.');
 	}
 
 	/**
