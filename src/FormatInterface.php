@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the Joomla Framework Registry Package
  *
@@ -26,7 +27,8 @@ interface FormatInterface
      * @return  string  Formatted string.
      *
      * @since   1.5.0
-     * @since   2.0.0  The `FormatInterface::objectToString()` method typehints the `$options` argument as an array; this was not enforced before 2.0.0 with `AbstractRegistryFormat::objectToString()`.
+     * @since   2.0.0  The `FormatInterface::objectToString()` method typehints the `$options` argument as an array;
+     *                 this was not enforced before 2.0.0 with `AbstractRegistryFormat::objectToString()`.
      */
     public function objectToString($object, array $options = []);
 

@@ -41,6 +41,11 @@
     "scripts": {
         "test": "vendor/bin/phpunit",
         "testdox": "vendor/bin/phpunit --testdox",
-        "coverage":  "vendor/bin/phpunit --coverage-html build/coverage"
+        "coverage": "vendor/bin/phpunit --coverage-html build/coverage",
+        "sign": [
+            "drone jsonnet --stream",
+            "drone sign joomla-framework/registry --save"
+        ],
+        "style": "vendor/bin/phpcs -p --report=full --extensions=php --standard=PSR12 src/"
     }
 }

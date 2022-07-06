@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the Joomla Framework Registry Package
  *
@@ -27,7 +28,8 @@ class Php implements FormatInterface
      * @return  string  Config class formatted string
      *
      * @since   1.0.0
-     * @since   2.0.0  The PHP format respects the data type of each value when generating the PHP source code. Before 2.0.0, all data were converted to string notation.
+     * @since   2.0.0  The PHP format respects the data type of each value when generating the PHP source code.
+     *                 Before 2.0.0, all data were converted to string notation.
      */
     public function objectToString($object, array $params = [])
     {

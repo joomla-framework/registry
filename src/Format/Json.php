@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the Joomla Framework Registry Package
  *
@@ -54,7 +55,6 @@ class Json implements FormatInterface
     {
         $data = \trim($data);
 
-        // Because developers are clearly not validating their data before pushing it into a Registry, we'll do it for them
         if (empty($data)) {
             return new \stdClass();
         }
