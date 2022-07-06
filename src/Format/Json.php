@@ -52,10 +52,9 @@ class Json implements FormatInterface
      */
     public function stringToObject($data, array $options = ['processSections' => false])
     {
-        if (!is_string($data))
-        {
-            trigger_error(
-                sprintf(
+        if (!\is_string($data)) {
+            \trigger_error(
+                \sprintf(
                     'Passing non-string values as first parameter to %s is deprecated and will cause an error in 3.0',
                     __METHOD__
                 ),
