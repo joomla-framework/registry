@@ -18,6 +18,8 @@
         "symfony/yaml": "<3.4"
     },
     "suggest": {
+        "ext-json": "ext-json is needed for JSON support",
+        "ext-simplexml": "ext-simplexml is needed for XML support",
         "symfony/yaml": "Install symfony/yaml if you require YAML support."
     },
     "autoload": {
@@ -27,7 +29,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Joomla\\Registry\\Tests\\": "Tests/"
+            "Joomla\\Registry\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",
@@ -35,5 +37,10 @@
         "branch-alias": {
 	        "dev-2.0-dev": "2.0-dev"
         }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "testdox": "vendor/bin/phpunit --testdox",
+        "coverage":  "vendor/bin/phpunit --coverage-html build/coverage"
     }
 }
