@@ -49,6 +49,8 @@ class Json implements FormatInterface
      *
      * @throws  \RuntimeException
      * @since   1.0.0
+     * @since   __DEPLOY_VERSION__  Passing non-string values as first parameter is deprecated and will issue an
+     *                              E_USER_DEPRECATED warning. It  will cause an error in 3.0.
      */
     public function stringToObject($data, array $options = ['processSections' => false])
     {
