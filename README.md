@@ -12,7 +12,7 @@ The Registry package provides an indexed key-value data store and an API for imp
 ``` php
 use Joomla\Registry\Registry;
 
-$registry = new Registry;
+$registry = new Registry();
 
 // Load by string
 $registry->loadString('{"foo" : "bar"}');
@@ -56,9 +56,9 @@ $registry->def('bar', $default);
 
 ``` php
 $json = '{
-	"parent" : {
-		"child" : "Foo"
-	}
+    "parent" : {
+        "child" : "Foo"
+    }
 }';
 
 $registry = new Registry($json);
@@ -96,7 +96,7 @@ $value = $registry['foo'];
 // Check if a key in the registry is set.
 if (isset($registry['foo']))
 {
-	echo 'Say bar.';
+    echo 'Say bar.';
 }
 ```
 
@@ -137,18 +137,18 @@ Array(
 
 ``` php
 $object1 = '{
-	"foo" : "foo value",
-	"bar" : {
-		"bar1" : "bar value 1",
-		"bar2" : "bar value 2"
-	}
+    "foo" : "foo value",
+    "bar" : {
+        "bar1" : "bar value 1",
+        "bar2" : "bar value 2"
+    }
 }';
 
 $object2 = '{
-	"foo" : "foo value",
-	"bar" : {
-		"bar2" : "new bar value 2"
-	}
+    "foo" : "foo value",
+    "bar" : {
+        "bar2" : "new bar value 2"
+    }
 }';
 
 $registry1 = new Registry(json_decode($object1));
@@ -194,13 +194,13 @@ Array
 
 ## Installation via Composer
 
-Add `"joomla/registry": "~2.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/registry": "~2.0"` to the 'require' block in your composer.json and then run `composer install`.
 
 ```json
 {
-	"require": {
-		"joomla/registry": "~2.0"
-	}
+    "require": {
+        "joomla/registry": "~2.0"
+    }
 }
 ```
 
