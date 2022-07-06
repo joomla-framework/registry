@@ -59,8 +59,7 @@ local pipeline(name, phpversion, params) = {
                 image: "joomlaprojects/docker-images:php7.4",
                 depends: [ "composer" ],
                 commands: [
-                    "vendor/bin/phpcs --config-set installed_paths vendor/joomla/coding-standards",
-                    "vendor/bin/phpcs -p --report=full --extensions=php --standard=ruleset.xml src/"
+                    "vendor/bin/phpcs -p --report=full --extensions=php --standard=PSR12 src/"
                 ]
             },
             {
