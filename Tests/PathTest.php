@@ -238,7 +238,11 @@ class PathTest extends FilesystemTestCase
 		yield 'Nothing to do.' => ['/var/www/foo/bar/baz', '/', '/var/www/foo/bar/baz'];
 		yield 'One backslash.' => ['/var/www/foo\\bar/baz', '/', '/var/www/foo/bar/baz'];
 		yield 'Two and one backslashes.' => ['/var/www\\\\foo\\bar/baz', '/', '/var/www/foo/bar/baz'];
-		yield 'Mixed backslashes and double forward slashes.' => ['/var\\/www//foo\\bar/baz', '/', '/var/www/foo/bar/baz'];
+		yield 'Mixed backslashes and double forward slashes.' => [
+			'/var\\/www//foo\\bar/baz',
+			'/',
+			'/var/www/foo/bar/baz'
+		];
 		yield 'UNC path.' => ['\\\\www\\docroot', '\\', '\\\\www\\docroot'];
 		yield 'UNC path with forward slash.' => ['\\\\www/docroot', '\\', '\\\\www\\docroot'];
 		yield 'UNC path with UNIX directory separator.' => ['\\\\www/docroot', '/', '/www/docroot'];
@@ -312,7 +316,7 @@ class PathTest extends FilesystemTestCase
 	 *
 	 * @return  void
 	 *
-	 * @since   1.4.0
+	 * @since         1.4.0
 	 *
 	 * @dataProvider  getResolveData
 	 */
@@ -324,11 +328,11 @@ class PathTest extends FilesystemTestCase
 	/**
 	 * Test resolve method
 	 *
-	 * @param   string  $path            test path
+	 * @param   string  $path  test path
 	 *
 	 * @return void
 	 *
-	 * @since   1.4.0
+	 * @since         1.4.0
 	 *
 	 * @dataProvider  getResolveExceptionData
 	 */
@@ -383,6 +387,66 @@ class PathTest extends FilesystemTestCase
 		return array(
 			array("../var/www/joomla"),
 			array("/var/../../../www/joomla")
+		);
+	}
+
+	/**
+	 * @return  \string[][]
+	 *
+	 * @since   2.0.1
+	 */
+	public function casesForRemoveRoot()
+	{
+		return array(
+			'linux'   => array(
+				'path'     => '/var/www/html/sub/dir/file.ext',
+				'root'     => '/var/www/html',
+				'expected' => '[ROOT]/sub/dir/file.ext',
+			),
+			'windows' => array(
+				'path'     => 'C:\\Documents\\Sites\\sub\\dir\\file.ext',
+				'root'     => 'C:\\Documents\\Sites',
+				'expected' => '[ROOT]\\sub\\dir\\file.ext',
+			),
+			'temp'    => array(
+				'path'     => sys_get_temp_dir() . '\\sub\\dir\\file.ext',
+				'root'     => '',
+				'expected' => '[TMP]\\sub\\dir\\file.ext',
+			),
+			'home' => array(
+				'path'     => '~/projects/sub/dir/file.ext',
+				'root'     => '~/projects',
+				'expected' => '[ROOT]/sub/dir/file.ext',
+			),
+			'win-copy' => array(
+				'path'     => 'C:\\Documents\\Sites~1\\sub\\dir\\file.ext',
+				'root'     => 'C:\\Documents\\Sites~1',
+				'expected' => '[ROOT]\\sub\\dir\\file.ext',
+			),
+		);
+	}
+
+	/**
+	 * @testdox      Root directory can be removed from messages
+	 *
+	 * @param   string  $path      The original (absolute) path
+	 * @param   string  $root      The leading path to remove
+	 * @param   string  $expected  The expected result
+	 *
+	 * @dataProvider casesForRemoveRoot
+	 *
+	 * @return  void
+	 *
+	 * @since   2.0.1
+	 */
+	public function testRemoveRoot($path, $root, $expected)
+	{
+		$prefix = 'A string containing an absolute path ';
+		$suffix = ', followed by more text';
+
+		$this->assertEquals(
+			$prefix . $expected . $suffix,
+			Path::removeRoot($prefix . $path . $suffix, $root)
 		);
 	}
 }
