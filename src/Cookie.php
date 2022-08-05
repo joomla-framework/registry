@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Input Package
  *
- * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2022 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -18,18 +18,14 @@ class Cookie extends Input
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $source   Source data (Optional, default is $_COOKIE)
-	 * @param   array  $options  Array of configuration parameters (Optional)
+	 * @param   array|null  $source   Source data (Optional, default is $_COOKIE)
+	 * @param   array       $options  Array of configuration parameters (Optional)
 	 *
 	 * @since   1.0
 	 */
 	public function __construct($source = null, array $options = [])
 	{
-		if (empty($source))
-		{
-			$source = $_COOKIE;
-		}
-
+		$source = $source ?? $_COOKIE;
 		parent::__construct($source, $options);
 	}
 

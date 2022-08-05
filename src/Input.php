@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Input Package
  *
- * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2022 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -84,15 +84,15 @@ class Input implements \Countable
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $source   Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   array  $options  An optional associative array of configuration parameters:
-	 *                           filter: An instance of Filter\Input. If omitted, a default filter is initialised.
+	 * @param   array|null  $source   Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+	 * @param   array       $options  An optional associative array of configuration parameters:
+	 *                                filter: An instance of Filter\Input. If omitted, a default filter is initialised.
 	 *
 	 * @since   1.0
 	 */
 	public function __construct($source = null, array $options = [])
 	{
-		$this->data    = empty($source) ? $_REQUEST : $source;
+		$this->data    = $source ?? $_REQUEST;
 		$this->filter  = $options['filter'] ?? new Filter\InputFilter;
 		$this->options = $options;
 	}
@@ -179,7 +179,7 @@ class Input implements \Countable
 	 *
 	 * @param   array  $vars        Associative array of keys and filter types to apply.
 	 *                              If empty and datasource is null, all the input data will be returned
-	 *                              but filtered using the default case in JFilterInput::clean.
+	 *                              but filtered using the default case in InputFilter::clean.
 	 * @param   mixed  $datasource  Array to retrieve data from, or null
 	 *
 	 * @return  mixed  The filtered input data.
