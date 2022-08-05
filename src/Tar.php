@@ -100,10 +100,8 @@ class Tar implements ExtractableInterface
 	 */
 	public function extract($archive, $destination)
 	{
-		$this->data     = null;
 		$this->metadata = null;
-
-		$this->data = file_get_contents($archive);
+		$this->data     = file_get_contents($archive);
 
 		if (!$this->data)
 		{
@@ -120,6 +118,11 @@ class Tar implements ExtractableInterface
 			{
 				$buffer = $this->metadata[$i]['data'];
 				$path   = Path::clean($destination . '/' . $this->metadata[$i]['name']);
+
+				if (!$this->isBelow($destination, $destination . '/' . $this->metadata[$i]['name']))
+				{
+					throw new \OutOfBoundsException('Unable to write outside of destination path', 100);
+				}
 
 				// Make sure the destination folder exists
 				if (!Folder::create(\dirname($path)))
@@ -243,5 +246,23 @@ class Tar implements ExtractableInterface
 		}
 
 		$this->metadata = $returnArray;
+	}
+
+	/**
+	 * Check if a path is below a given destination path
+	 *
+	 * @param   string  $destination  The destination path
+	 * @param   string  $path         The path to be checked
+	 *
+	 * @return  boolean
+	 *
+	 * @since   2.0.1
+	 */
+	private function isBelow($destination, $path): bool
+	{
+		$absoluteRoot = Path::clean(Path::resolve($destination));
+		$absolutePath = Path::clean(Path::resolve($path));
+
+		return strpos($absolutePath, $absoluteRoot) === 0;
 	}
 }

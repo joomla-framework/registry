@@ -222,10 +222,8 @@ class Zip implements ExtractableInterface
 	 */
 	protected function extractCustom($archive, $destination)
 	{
-		$this->data     = null;
 		$this->metadata = null;
-
-		$this->data = file_get_contents($archive);
+		$this->data     = file_get_contents($archive);
 
 		if (!$this->data)
 		{
@@ -248,7 +246,7 @@ class Zip implements ExtractableInterface
 
 				if (!$this->isBelow($destination, $destination . '/' . $metadata['name']))
 				{
-					throw new \RuntimeException('Unable to write outside of destination path', 100);
+					throw new \OutOfBoundsException('Unable to write outside of destination path', 100);
 				}
 
 				// Make sure the destination folder exists
@@ -677,10 +675,12 @@ class Zip implements ExtractableInterface
 	/**
 	 * Check if a path is below a given destination path
 	 *
-	 * @param   string  $destination
-	 * @param   string  $path
+	 * @param   string  $destination  The destination path
+	 * @param   string  $path         The path to be checked
 	 *
 	 * @return  boolean
+	 *
+	 * @since   1.1.10
 	 */
 	private function isBelow($destination, $path): bool
 	{
