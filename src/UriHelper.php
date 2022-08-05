@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Uri Package
  *
- * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2022 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -30,6 +30,8 @@ class UriHelper
 	 */
 	public static function parse_url($url, $component = -1)
 	{
+		$result = [];
+
 		// If no UTF-8 chars in the url just parse it using php native parse_url which is faster.
 		if (utf8_decode($url) === $url)
 		{

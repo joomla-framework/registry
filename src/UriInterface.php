@@ -2,7 +2,7 @@
 /**
  * Part of the Joomla Framework Uri Package
  *
- * @copyright  Copyright (C) 2005 - 2021 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2022 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -23,7 +23,7 @@ interface UriInterface
 	 * @var    integer
 	 * @since  1.2.0
 	 */
-	const SCHEME = 1;
+	public const SCHEME = 1;
 
 	/**
 	 * Include the user
@@ -31,7 +31,7 @@ interface UriInterface
 	 * @var    integer
 	 * @since  1.2.0
 	 */
-	const USER = 2;
+	public const USER = 2;
 
 	/**
 	 * Include the password
@@ -39,7 +39,7 @@ interface UriInterface
 	 * @var    integer
 	 * @since  1.2.0
 	 */
-	const PASS = 4;
+	public const PASS = 4;
 
 	/**
 	 * Include the host
@@ -47,7 +47,7 @@ interface UriInterface
 	 * @var    integer
 	 * @since  1.2.0
 	 */
-	const HOST = 8;
+	public const HOST = 8;
 
 	/**
 	 * Include the port
@@ -55,7 +55,7 @@ interface UriInterface
 	 * @var    integer
 	 * @since  1.2.0
 	 */
-	const PORT = 16;
+	public const PORT = 16;
 
 	/**
 	 * Include the path
@@ -63,7 +63,7 @@ interface UriInterface
 	 * @var    integer
 	 * @since  1.2.0
 	 */
-	const PATH = 32;
+	public const PATH = 32;
 
 	/**
 	 * Include the query string
@@ -71,7 +71,7 @@ interface UriInterface
 	 * @var    integer
 	 * @since  1.2.0
 	 */
-	const QUERY = 64;
+	public const QUERY = 64;
 
 	/**
 	 * Include the fragment
@@ -79,7 +79,7 @@ interface UriInterface
 	 * @var    integer
 	 * @since  1.2.0
 	 */
-	const FRAGMENT = 128;
+	public const FRAGMENT = 128;
 
 	/**
 	 * Include all available url parts (scheme, user, pass, host, port, path, query, fragment)
@@ -87,7 +87,7 @@ interface UriInterface
 	 * @var    integer
 	 * @since  1.2.0
 	 */
-	const ALL = 255;
+	public const ALL = 255;
 
 	/**
 	 * Magic method to get the string representation of the URI object.
@@ -107,7 +107,7 @@ interface UriInterface
 	 *
 	 * @since   1.0
 	 */
-	public function toString(array $parts = ['scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment']);
+	public function toString($parts = ['scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment']);
 
 	/**
 	 * Checks if variable exists.
