@@ -361,7 +361,7 @@ class InputFilter
 
 			if (($tagOpenNested !== false) && ($tagOpenNested < $tagOpenEnd))
 			{
-				$preTag       .= StringHelper::substr($postTag, 0, ($tagOpenNested + 1));
+				$preTag       .= StringHelper::substr($postTag, 1, $tagOpenNested);
 				$postTag      = StringHelper::substr($postTag, ($tagOpenNested + 1));
 				$tagOpenStart = StringHelper::strpos($postTag, '<');
 

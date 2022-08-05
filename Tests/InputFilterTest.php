@@ -674,10 +674,16 @@ class InputFilterTest extends TestCase
 				'<em><strong>محمد</strong></em>',
 				'From generic utf-8 multibyte cases',
 			],
-			'Malformed Nested tags'                                         => [
+			'Malformed Nested tags'                                => [
 				'',
 				'<em><strongFred</strong></em>',
 				'<em>strongFred</strong></em>',
+				'From generic cases',
+			],
+			'Malformed Nested tags inversed'                                         => [
+				'',
+				'</scr>class=;pagebreak" title=" title"<strongFred<figure />',
+				'</scr>class=;pagebreak" title=" title"strongFred<figure />',
 				'From generic cases',
 			],
 			'Malformed Nested tags with utf-8 multibyte persian characters' => [
@@ -789,6 +795,13 @@ class InputFilterTest extends TestCase
 				'<em><strongFred</strong></em>',
 				'strongFred',
 				'From specific cases',
+			],
+
+			'Malformed Nested tags inversed'                                         => [
+				'',
+				'</scr>class=;pagebreak" title=" title"<strongFred<figure />',
+				'class=;pagebreak" title=" title"strongFred',
+				'From generic cases',
 			],
 			'Malformed Nested tags with utf-8 multibyte persian characters' => [
 				'',
@@ -924,6 +937,13 @@ class InputFilterTest extends TestCase
 				'<em><strongFred</strong></em>',
 				'strongFred',
 				'From specific cases',
+			],
+
+			'Malformed Nested tags inversed'                                         => [
+				'',
+				'</scr>class=;pagebreak" title=" title"<strongFred<figure />',
+				'class=;pagebreak" title=" title"strongFred',
+				'From generic cases',
 			],
 			'Malformed Nested tags with utf-8 multibyte persian characters' => [
 				'',
@@ -1083,6 +1103,12 @@ class InputFilterTest extends TestCase
 				'strongFred',
 				'From specific cases',
 			],
+			'Malformed Nested tags inversed'                                         => [
+				'',
+				'</scr>class=;pagebreak" title=" title"<strongFred<figure />',
+				'class=;pagebreak" title=" title"strongFred',
+				'From generic cases',
+			],
 			'Malformed Nested tags with utf-8 multibyte persian characters' => [
 				'',
 				'<em><strongمحمد</strong></em>',
@@ -1210,6 +1236,12 @@ class InputFilterTest extends TestCase
 				'<em><strongFred</strong></em>',
 				'strongFred',
 				'From specific cases',
+			],
+			'Malformed Nested tags inversed'                                         => [
+				'',
+				'</scr>class=;pagebreak" title=" title"<strongFred<figure />',
+				'class=;pagebreak" title=" title"strongFred',
+				'From generic cases',
 			],
 			'Malformed Nested tags with utf-8 multibyte persian characters' => [
 				'',
