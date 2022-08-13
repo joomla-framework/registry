@@ -10,12 +10,11 @@
     "homepage": "https://github.com/joomla-framework/data",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5|^8.0",
-        "joomla/registry": "^1.4.5|^2.0"
+        "php": "^7.2.5|~8.0.0|~8.1.0",
+        "joomla/registry": "dev-php-8.2"
     },
     "require-dev": {
-        "joomla/coding-standards": "^3.0@dev",
-        "joomla/test": "^2.0",
+        "joomla/test": "dev-php-8.2",
         "phpunit/phpunit": "^8.5|^9.0"
     },
     "autoload": {
