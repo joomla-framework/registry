@@ -10,11 +10,10 @@
     "homepage": "https://github.com/joomla-framework/crypt",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5|^8.0"
+        "php": "^7.2.5|~8.0.0|~8.1.0"
     },
     "require-dev": {
         "defuse/php-encryption": "^2.0",
-        "joomla/coding-standards": "^3.0@dev",
         "paragonie/sodium_compat": "^1.0",
         "phpunit/phpunit": "^8.5|^9.0",
         "symfony/polyfill-util": "^1.0",
