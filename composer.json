@@ -10,12 +10,11 @@
     "homepage": "https://github.com/joomla-framework/event",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5|^8.0",
+        "php": "^7.2.5|~8.0.0|~8.1.0",
         "symfony/deprecation-contracts": "^2.1"
     },
     "require-dev": {
-        "joomla/coding-standards": "^3.0@dev",
-        "joomla/console": "^2.0",
+        "joomla/console": "dev-php-8.2",
         "phpunit/phpunit": "^8.5|^9.0",
         "psr/container": "^1.0"
     },
