@@ -10,15 +10,14 @@
     "homepage": "https://github.com/joomla-framework/oauth2",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5|^8.0",
-        "joomla/application": "^2.0",
-        "joomla/http": "^1.2.2|^2.0",
-        "joomla/input": "^1.2|^2.0",
-        "joomla/session": "^1.0|^2.0",
-        "joomla/uri": "^1.0|^2.0"
+        "php": "^7.2.5|~8.0.0|~8.1.0",
+        "joomla/application": "dev-php-8.2",
+        "joomla/http": "dev-php-8.2",
+        "joomla/input": "dev-php-8.2",
+        "joomla/session": "dev-php-8.2",
+        "joomla/uri": "dev-php-8.2"
     },
     "require-dev": {
-        "joomla/coding-standards": "^3.0@dev",
         "phpunit/phpunit": "^8.5|^9.0"
     },
     "autoload": {
