@@ -10,11 +10,10 @@
     "homepage": "https://github.com/joomla-framework/view",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2.5|^8.0"
+        "php": "^7.2.5|~8.0.0|~8.1.0"
     },
     "require-dev": {
-        "joomla/coding-standards": "^3.0@dev",
-        "joomla/renderer": "^2.0",
+        "joomla/renderer": "dev-php-8.2",
         "phpunit/phpunit": "^8.5|^9.0"
     },
     "suggest": {
