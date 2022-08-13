@@ -10,13 +10,12 @@
     "homepage": "https://github.com/joomla-framework/keychain",
     "license": "LGPL-2.1-or-later",
     "require": {
-        "php": "^7.2.5|^8.0",
-        "joomla/crypt": "^2.0",
-        "joomla/registry": "^1.6|^2.0"
+        "php": "^7.2.5|~8.0.0|~8.1.0",
+        "joomla/crypt": "2.0-dev",
+        "joomla/registry": "2.0-dev"
     },
     "require-dev": {
-        "joomla/coding-standards": "^3.0@dev",
-        "joomla/console": "^2.0",
+        "joomla/console": "2.0-dev",
         "phpunit/phpunit": "^8.5|^9.0"
     },
     "suggest": {
