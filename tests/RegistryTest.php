@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright  Copyright (C) 2013 Open Source Matters, Inc.
  * @license    GNU General Public License version 2 or later; see LICENSE
@@ -706,8 +707,7 @@ class RegistryTest extends TestCase
                 'foo2'   => 'testtoarray2',
                 'config' => ['foo3' => 'testtoarray3'],
             ],
-            (new Registry(['foo1' => 'testtoarray1', 'foo2' => 'testtoarray2', 'config' => ['foo3' => 'testtoarray3']]
-            ))->toArray(),
+            (new Registry(['foo1' => 'testtoarray1', 'foo2' => 'testtoarray2', 'config' => ['foo3' => 'testtoarray3']]))->toArray(),
             'The Registry should be converted to an array.'
         );
     }

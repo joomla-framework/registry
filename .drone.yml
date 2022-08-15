@@ -20,7 +20,7 @@
       },
       {
          "commands": [
-            "vendor/bin/phpcs -p --report=full --extensions=php --standard=PSR12 src/"
+            "vendor/bin/phpcs --standard=ruleset.xml"
          ],
          "depends": [
             "composer"
@@ -303,7 +303,44 @@
    ]
 }
 ---
+{
+   "kind": "pipeline",
+   "name": "PHP 8.2",
+   "steps": [
+      {
+         "commands": [
+            "php -v",
+            "composer update --prefer-stable --ignore-platform-reqs"
+         ],
+         "image": "joomlaprojects/docker-images:php8.2",
+         "name": "composer",
+         "volumes": [
+            {
+               "name": "composer-cache",
+               "path": "/tmp/composer-cache"
+            }
+         ]
+      },
+      {
+         "commands": [
+            "vendor/bin/phpunit"
+         ],
+         "failure": "ignore",
+         "image": "joomlaprojects/docker-images:php8.2",
+         "name": "PHPUnit"
+      }
+   ],
+   "volumes": [
+      {
+         "host": {
+            "path": "/tmp/composer-cache"
+         },
+         "name": "composer-cache"
+      }
+   ]
+}
+---
 kind: signature
-hmac: 8ce225386480f94a8ed0cfbb8261489d0bb53a674f4264f92eadfcea27b40ccc
+hmac: adf77e27d980fe75d12a8a5c07da2e0db889d914d4bbf7444b03f4efdd4c0c5e
 
 ...

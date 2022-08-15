@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpIllegalPsrClassPathInspection */
+<?php
+
+// phpcs:ignoreFile
 
 class JRegistry
 {
