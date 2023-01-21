@@ -795,4 +795,23 @@ class RegistryTest extends TestCase
         $this->assertEquals('test1', $a->get('Foo/Bar'));
         $this->assertEquals('test2', $a->get('Foo/Baz'));
     }
+
+    /**
+     * @testdox  The Registry created with flattened property
+     *
+     * @covers   \Joomla\Registry\Registry
+     */
+    public function testFlattened()
+    {
+        $data = (object) [
+            'foo' => 'bar',
+            'bar' => ['beer' => true]
+        ];
+        $r = new Registry($data, true);
+        $r->set('test.set', 'test set');
+
+        $this->assertEquals('bar', $r->get('foo'));
+        $this->assertEquals(null, $r->get('bar.beer'));
+        $this->assertEquals('test set', $r->get('test.set'));
+    }
 }
