@@ -550,6 +550,21 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
     {
         $result = null;
 
+        if ($this->flattened) {
+            if (isset($this->data->$path)) {
+                // Can append only to array
+                if (\is_array($this->data->$path)) {
+                    $this->data->$path[] = $value;
+                } else {
+                    $this->data->$path = $value;
+                }
+            } else {
+                $this->data->$path = [$value];
+            }
+
+            return $value;
+        }
+
         /*
          * Explode the registry path into an array and remove empty
          * nodes that occur as a result of a double dot. ex: joomla..test
