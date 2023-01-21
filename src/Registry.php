@@ -44,22 +44,34 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
     public $separator = '.';
 
     /**
+     * Treat the data as one dimensional.
+     * Ignores $separator property.
+     * Should not be changed after object initialised.
+     *
+     * @var    boolean
+     * @since  2.1.0
+     */
+    protected $flattened = false;
+
+    /**
      * Constructor
      *
-     * @param  mixed  $data  The data to bind to the new Registry object.
+     * @param  mixed  $data       The data to bind to the new Registry object.
+     * @param  mixed  $flattened  Treat the data as one dimensional.
      *
      * @since   1.0.0
      */
-    public function __construct($data = null)
+    public function __construct($data = null, bool $flattened = false)
     {
         // Instantiate the internal data object.
         $this->data = new \stdClass();
+        $this->flattened = $flattened;
 
         // Optionally load supplied data.
         if ($data instanceof self) {
             $this->merge($data);
         } elseif (\is_array($data) || \is_object($data)) {
-            $this->bindData($this->data, $data);
+            $this->bindData($this->data, $data, !$this->flattened);
         } elseif (!empty($data) && \is_string($data)) {
             $this->loadString($data);
         }
@@ -152,6 +164,10 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             return false;
         }
 
+        if ($this->flattened) {
+            return isset($this->data->$path);
+        }
+
         // Explode the registry path into an array
         $nodes = \explode($this->separator, $path);
 
@@ -196,7 +212,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             return $default;
         }
 
-        if (!\strpos($path, $this->separator)) {
+        if ($this->flattened || !\strpos($path, $this->separator)) {
             return (isset($this->data->$path) && $this->data->$path !== null && $this->data->$path !== '')
                 ? $this->data->$path
                 : $default;
@@ -263,7 +279,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      */
     public function loadArray(array $array, $flattened = false, $separator = null)
     {
-        if (!$flattened) {
+        if (!$this->flattened && !$flattened) {
             $this->bindData($this->data, $array);
 
             return $this;
@@ -287,7 +303,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      */
     public function loadObject($object)
     {
-        $this->bindData($this->data, $object);
+        $this->bindData($this->data, $object, !$this->flattened);
 
         return $this;
     }
@@ -452,6 +468,13 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      */
     public function set($path, $value, $separator = null)
     {
+        if ($this->flattened) {
+            $result = $this->data->$path ?? null;
+            $this->data->$path = $value;
+
+            return $result;
+        }
+
         if (empty($separator)) {
             $separator = $this->separator;
         }
@@ -582,7 +605,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
     public function remove($path)
     {
         // Cheap optimisation to direct remove the node if there is no separator
-        if (!\strpos($path, $this->separator)) {
+        if ($this->flattened || !\strpos($path, $this->separator)) {
             $result = (isset($this->data->$path) && $this->data->$path !== null && $this->data->$path !== '')
                 ? $this->data->$path
                 : null;
