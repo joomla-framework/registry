@@ -795,4 +795,21 @@ class RegistryTest extends TestCase
         $this->assertEquals('test1', $a->get('Foo/Bar'));
         $this->assertEquals('test2', $a->get('Foo/Baz'));
     }
+
+    /**
+     * @testdox  The Registry operates correctly with empty separator
+     *
+     * @covers   \Joomla\Registry\Registry
+     */
+    public function testEmptySeparator()
+    {
+        $a = new Registry(['foo' => 'bar']);
+        $a->separator = '';
+        $a->set('bar', 'beer');
+        $a->set('foo.bar', 'beer');
+
+        $this->assertEquals('bar', $a->get('foo'));
+        $this->assertEquals('beer', $a->get('bar'));
+        $this->assertEquals('beer', $a->get('foo.bar'));
+    }
 }
