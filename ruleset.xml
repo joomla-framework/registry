@@ -5,7 +5,9 @@
     </description>
 
     <file>src</file>
-    <file>tests</file>
+    <file>Tests</file>
+
+    <exclude-pattern>*/Tests/Stubs/*</exclude-pattern>
 
     <arg name="extensions" value="php"/>
     <arg name="report" value="full"/>
