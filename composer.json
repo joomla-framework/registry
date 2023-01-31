@@ -10,9 +10,9 @@
         "joomla/utilities": "^2.0"
     },
     "require-dev": {
-        "joomla/coding-standards": "^3.0@dev",
         "symfony/yaml": "^3.4|^4.4|^5.0",
-        "phpunit/phpunit": "^8.5|^9.0"
+        "phpunit/phpunit": "^8.5|^9.0",
+        "squizlabs/php_codesniffer": "~3.7.1"
     },
     "conflict": {
         "symfony/yaml": "<3.4"
