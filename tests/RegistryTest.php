@@ -322,7 +322,7 @@ class RegistryTest extends TestCase
      */
     public function testTheRegistryCorrectlyHandlesAssignmentsForClassInstances()
     {
-        $class = new class {
+        $class = new class () {
         };
 
         $a = new Registry();
@@ -662,7 +662,7 @@ class RegistryTest extends TestCase
         $a = new Registry();
         $a->loadArray(
             [
-                'assoc'   => [
+                'assoc' => [
                     'foo' => 'bar',
                 ],
                 'unassoc' => [
@@ -670,7 +670,7 @@ class RegistryTest extends TestCase
                     'baz2',
                     'baz3',
                 ],
-                'mixed'   => [
+                'mixed' => [
                     'var',
                     'var2',
                     'key' => 'var3',
