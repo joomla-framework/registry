@@ -365,7 +365,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @param  string  $path  Registry path (e.g. joomla.content.showauthor)
      *
-     * @return  Registry  Registry object (empty if no data is present)
+     * @return  static  Registry object (empty if no data is present)
      *
      * @since   1.2.0
      * @since   2.0.0  `Registry:extract()` now always returns a `Registry` object. Before 2.0.0, `null` was returned
@@ -375,7 +375,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
     {
         $data = $this->get($path);
 
-        return new Registry($data);
+        return new static($data);
     }
 
     /**
