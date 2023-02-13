@@ -17,7 +17,7 @@ use Joomla\Utilities\ArrayHelper;
  * @since  1.0.0
  * @since  2.0.0  `Registry::getInstance()` was removed. Instantiate a new Registry instance instead.
  */
-class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \Countable
+class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \Countable, RegistryInterface
 {
     /**
      * Registry Object
