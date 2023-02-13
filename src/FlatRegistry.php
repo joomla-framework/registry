@@ -127,7 +127,8 @@ class FlatRegistry implements RegistryInterface, \JsonSerializable
      *
      * @since   2.1.0
      */
-    public function jsonSerialize(): mixed
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
     {
         return $this->data;
     }
