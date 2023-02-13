@@ -14,7 +14,7 @@ namespace Joomla\Registry;
  *
  * @since  2.1.0
  */
-class FlatRegistry implements RegistryInterface, \JsonSerializable
+class FlatRegistry implements RegistryInterface, \JsonSerializable, \Countable
 {
     /**
      * Data storage
@@ -27,11 +27,11 @@ class FlatRegistry implements RegistryInterface, \JsonSerializable
      *
      * @param  string  $key  Registry key
      *
-     * @return  boolean
+     * @return  bool
      *
      * @since   2.1.0
      */
-    public function exists(string $key)
+    public function exists(string $key): bool
     {
         return array_key_exists($key, $this->data);
     }
@@ -105,13 +105,13 @@ class FlatRegistry implements RegistryInterface, \JsonSerializable
     /**
      * Load data in to registry, will override an existing keys if exists.
      *
-     * @param iterable $data  Data to load
+     * @param mixed $data  Iterable data to load, array or object
      *
      * @return static
      *
      * @since   2.1.0
      */
-    public function loadData(\Iterable $data)
+    public function loadData($data): RegistryInterface
     {
         foreach ($data as $key => $value) {
             $this->data[$key] = $value;
@@ -131,5 +131,18 @@ class FlatRegistry implements RegistryInterface, \JsonSerializable
     public function jsonSerialize()
     {
         return $this->data;
+    }
+
+    /**
+     * Implementation for Countable interface.
+     * Count elements of the data.
+     *
+     * @return  integer  The custom count as an integer.
+     *
+     * @since   2.1.0
+     */
+    public function count(): int
+    {
+        return \count($this->data);
     }
 }
