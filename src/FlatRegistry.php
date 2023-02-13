@@ -14,7 +14,7 @@ namespace Joomla\Registry;
  *
  * @since  2.1.0
  */
-class FlatRegistry implements RegistryInterface
+class FlatRegistry implements RegistryInterface, \JsonSerializable
 {
     /**
      * Data storage
@@ -73,7 +73,7 @@ class FlatRegistry implements RegistryInterface
     }
 
     /**
-     * Delete a registry value
+     * Delete a registry value.
      *
      * @param  string  $key  Registry key
      *
@@ -88,5 +88,47 @@ class FlatRegistry implements RegistryInterface
         unset($this->data[$key]);
 
         return $prevValue;
+    }
+
+    /**
+     * Return data as array.
+     *
+     * @return  array
+     *
+     * @since   2.1.0
+     */
+    public function toArray()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Load data in to registry, will override an existing keys if exists.
+     *
+     * @param iterable $data  Data to load
+     *
+     * @return static
+     *
+     * @since   2.1.0
+     */
+    public function loadData(\Iterable $data)
+    {
+        foreach ($data as $key => $value) {
+            $this->data[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Implementation for the JsonSerializable interface.
+     *
+     * @return  array
+     *
+     * @since   2.1.0
+     */
+    public function jsonSerialize(): mixed
+    {
+        return $this->data;
     }
 }
