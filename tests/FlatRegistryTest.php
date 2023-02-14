@@ -56,7 +56,7 @@ class FlatRegistryTest extends TestCase
 
         $this->assertSame('bar', $a->get('foo'));
         $this->assertSame('foo', $a->get('bar'));
-
+        $this->assertSame('foo', $a->set('bar', 'bar'), 'The set() method should return previous value.');
         $this->assertCount(2, $a, 'The Registry data store should not be empty.');
     }
 
@@ -80,6 +80,22 @@ class FlatRegistryTest extends TestCase
         $this->assertSame(false, $a->get('c', 'foo'), 'The get() method should return non default value.');
         $this->assertSame(0, $a->get('d', 'foo'), 'The get() method should return non default value.');
         $this->assertSame('Foo bar', $a->get('e', 'foo'), 'The get() method should return non default value.');
+    }
+
+    /**
+     * @testdox  A FlatRegistry instance doing remove() correctly
+     *
+     * @covers   \Joomla\Registry\FlatRegistry
+     */
+    public function testRemoveMethod()
+    {
+        $a = new FlatRegistry();
+
+        $a->set('foo', 'bar');
+        $a->set('bar', 'foo');
+
+        $this->assertSame('bar', $a->remove('foo'), 'The remove() method should return previous value.');
+        $this->assertCount(1, $a, 'The Registry data store should be reduced after removing a value.');
     }
 
     /**
