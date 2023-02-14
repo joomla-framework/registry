@@ -19,6 +19,6 @@ namespace Joomla\Registry;
  *
  * @since  2.1.0
  */
-interface RegistryInterface
+interface RegistryInterface extends \JsonSerializable, \Countable
 {
 }

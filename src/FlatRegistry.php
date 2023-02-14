@@ -14,7 +14,7 @@ namespace Joomla\Registry;
  *
  * @since  2.1.0
  */
-class FlatRegistry implements RegistryInterface, \JsonSerializable, \Countable
+class FlatRegistry implements RegistryInterface
 {
     /**
      * Data storage
