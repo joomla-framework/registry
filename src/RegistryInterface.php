@@ -16,6 +16,7 @@ namespace Joomla\Registry;
  * @method get(string $key, $default = null)
  * @method set(string $key, $value)
  * @method remove(string $key)
+ * @method toArray()
  *
  * @since  2.1.0
  */
