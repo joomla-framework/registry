@@ -153,7 +153,11 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
         }
 
         // Explode the registry path into an array
-        $nodes = $this->separator ? \explode($this->separator, $path) : [$path];
+        if ($this->separator === null || $this->separator === '') {
+            $nodes = [$path];
+        } else {
+            $nodes = \explode($this->separator, $path);
+        }
 
         // Initialize the current node to be the registry root.
         $node  = $this->data;
@@ -196,7 +200,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             return $default;
         }
 
-        if (!$this->separator || !\strpos($path, $this->separator)) {
+        if ($this->separator === null || $this->separator === '' || !\strpos($path, $this->separator)) {
             return (isset($this->data->$path) && $this->data->$path !== null && $this->data->$path !== '')
                 ? $this->data->$path
                 : $default;
@@ -461,10 +465,10 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
          * nodes that occur as a result of a double separator. ex: joomla..test
          * Finally, re-key the array so they are sequential.
          */
-        if ($separator) {
-            $nodes = \array_values(\array_filter(\explode($separator, $path), 'strlen'));
-        } else {
+        if ($separator === null || $separator === '') {
             $nodes = [$path];
+        } else {
+            $nodes = \array_values(\array_filter(\explode($separator, $path), 'strlen'));
         }
 
         if (!$nodes) {
@@ -536,10 +540,10 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
          * nodes that occur as a result of a double dot. ex: joomla..test
          * Finally, re-key the array so they are sequential.
          */
-        if ($this->separator) {
-            $nodes = \array_values(\array_filter(\explode($this->separator, $path), 'strlen'));
-        } else {
+        if ($this->separator === null || $this->separator === '') {
             $nodes = [$path];
+        } else {
+            $nodes = \array_values(\array_filter(\explode($this->separator, $path), 'strlen'));
         }
 
         if ($nodes) {
@@ -590,7 +594,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
     public function remove($path)
     {
         // Cheap optimisation to direct remove the node if there is no separator
-        if (!$this->separator || !\strpos($path, $this->separator)) {
+        if ($this->separator === null || $this->separator === '' || !\strpos($path, $this->separator)) {
             $result = (isset($this->data->$path) && $this->data->$path !== null && $this->data->$path !== '')
                 ? $this->data->$path
                 : null;
