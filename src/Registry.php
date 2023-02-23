@@ -40,18 +40,23 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @var    string
      * @since  1.4.0
+     *
+     * @deprecated This property will become protected in version 4 to prevent direct access.
      */
     public $separator = '.';
 
     /**
      * Constructor
      *
-     * @param  mixed  $data  The data to bind to the new Registry object.
+     * @param  mixed   $data       The data to bind to the new Registry object.
+     * @param  string  $separator  The path separator, and empty string will flatten the registry.
      *
      * @since   1.0.0
      */
-    public function __construct($data = null)
+    public function __construct($data = null, string $separator = '.')
     {
+        $this->separator = $separator;
+
         // Instantiate the internal data object.
         $this->data = new \stdClass();
 
@@ -449,6 +454,8 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @return  mixed  The value of the that has been set.
      *
      * @since   1.0.0
+     *
+     * @deprecated The $separator parameter will be removed in version 4.
      */
     public function set($path, $value, $separator = null)
     {
