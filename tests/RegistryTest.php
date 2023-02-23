@@ -797,7 +797,7 @@ class RegistryTest extends TestCase
     }
 
     /**
-     * @testdox  The Registry operates correctly with empty separator
+     * @testdox  The Registry operates correctly with empty string separator
      *
      * @covers   \Joomla\Registry\Registry
      */
@@ -806,10 +806,44 @@ class RegistryTest extends TestCase
         $a = new Registry(['foo' => 'bar']);
         $a->separator = '';
         $a->set('bar', 'beer');
-        $a->set('foo.bar', 'beer');
+        $a->set('foo2.bar', 'beer');
 
         $this->assertEquals('bar', $a->get('foo'));
         $this->assertEquals('beer', $a->get('bar'));
-        $this->assertEquals('beer', $a->get('foo.bar'));
+        $this->assertEquals('beer', $a->get('foo2.bar'));
+    }
+
+    /**
+     * @testdox  The Registry operates correctly with null separator
+     *
+     * @covers   \Joomla\Registry\Registry
+     */
+    public function testNullSeparator()
+    {
+        $a = new Registry(['foo' => 'bar']);
+        $a->separator = null;
+        $a->set('bar', 'beer');
+        $a->set('foo2.bar', 'beer');
+
+        $this->assertEquals('bar', $a->get('foo'));
+        $this->assertEquals('beer', $a->get('bar'));
+        $this->assertEquals('beer', $a->get('foo2.bar'));
+    }
+
+    /**
+     * @testdox  The Registry operates correctly with Zero separator
+     *
+     * @covers   \Joomla\Registry\Registry
+     */
+    public function testZeroSeparator()
+    {
+        $a = new Registry(['foo' => 'bar']);
+        $a->separator = 0;
+        $a->set('bar', 'beer');
+        $a->set('foo20bar', 'beer');
+
+        $this->assertEquals('bar', $a->get('foo'));
+        $this->assertEquals('beer', $a->get('bar'));
+        $this->assertEquals((object) ['bar' => 'beer'], $a->get('foo2'));
     }
 }
