@@ -806,11 +806,11 @@ class RegistryTest extends TestCase
         $a = new Registry(['foo' => 'bar']);
         $a->separator = '';
         $a->set('bar', 'beer');
-        $a->set('foo2.bar', 'beer');
+        $a->set('foo2.bar', 'wine');
 
         $this->assertEquals('bar', $a->get('foo'));
         $this->assertEquals('beer', $a->get('bar'));
-        $this->assertEquals('beer', $a->get('foo2.bar'));
+        $this->assertEquals('wine', $a->get('foo2.bar'));
     }
 
     /**
@@ -823,11 +823,11 @@ class RegistryTest extends TestCase
         $a = new Registry(['foo' => 'bar']);
         $a->separator = null;
         $a->set('bar', 'beer');
-        $a->set('foo2.bar', 'beer');
+        $a->set('foo2.bar', 'wine');
 
         $this->assertEquals('bar', $a->get('foo'));
         $this->assertEquals('beer', $a->get('bar'));
-        $this->assertEquals('beer', $a->get('foo2.bar'));
+        $this->assertEquals('wine', $a->get('foo2.bar'));
     }
 
     /**
@@ -840,10 +840,10 @@ class RegistryTest extends TestCase
         $a = new Registry(['foo' => 'bar']);
         $a->separator = 0;
         $a->set('bar', 'beer');
-        $a->set('foo20bar', 'beer');
+        $a->set('foo20bar', 'wine');
 
         $this->assertEquals('bar', $a->get('foo'));
         $this->assertEquals('beer', $a->get('bar'));
-        $this->assertEquals((object) ['bar' => 'beer'], $a->get('foo2'));
+        $this->assertEquals((object) ['bar' => 'wine'], $a->get('foo2'));
     }
 }
