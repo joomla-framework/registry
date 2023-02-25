@@ -463,8 +463,16 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      */
     public function set($path, $value, $separator = null)
     {
-        if (empty($separator)) {
+        if ($separator === null) {
             $separator = $this->separator;
+        } else {
+            \trigger_deprecation(
+                'joomla/registry',
+                '2.1.0',
+                'The $separator parameter will be removed in version 4.',
+                self::class,
+                self::class
+            );
         }
 
         /*

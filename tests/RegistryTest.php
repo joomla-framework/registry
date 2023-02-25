@@ -786,14 +786,10 @@ class RegistryTest extends TestCase
      */
     public function testCustomPathSeparatorsCanBeUsed()
     {
-        $a            = new Registry();
-        $a->separator = '\\';
+        $a = new Registry(null, '\\');
         $a->set('Foo\\Bar', 'test1');
-        $a->separator = '/';
-        $a->set('Foo/Baz', 'test2');
 
-        $this->assertEquals('test1', $a->get('Foo/Bar'));
-        $this->assertEquals('test2', $a->get('Foo/Baz'));
+        $this->assertEquals((object) ['Bar' => 'test1'], $a->get('Foo'));
     }
 
     /**
@@ -803,31 +799,14 @@ class RegistryTest extends TestCase
      */
     public function testEmptySeparator()
     {
-        $a = new Registry(['foo' => 'bar']);
-        $a->separator = '';
+        $a = new Registry(['foo' => 'bar'], '');
         $a->set('bar', 'beer');
         $a->set('foo2.bar', 'wine');
 
         $this->assertEquals('bar', $a->get('foo'));
         $this->assertEquals('beer', $a->get('bar'));
         $this->assertEquals('wine', $a->get('foo2.bar'));
-    }
-
-    /**
-     * @testdox  The Registry operates correctly with null separator
-     *
-     * @covers   \Joomla\Registry\Registry
-     */
-    public function testNullSeparator()
-    {
-        $a = new Registry(['foo' => 'bar']);
-        $a->separator = null;
-        $a->set('bar', 'beer');
-        $a->set('foo2.bar', 'wine');
-
-        $this->assertEquals('bar', $a->get('foo'));
-        $this->assertEquals('beer', $a->get('bar'));
-        $this->assertEquals('wine', $a->get('foo2.bar'));
+        $this->assertEquals(null, $a->get('foo2'));
     }
 
     /**
@@ -837,8 +816,7 @@ class RegistryTest extends TestCase
      */
     public function testZeroSeparator()
     {
-        $a = new Registry(['foo' => 'bar']);
-        $a->separator = 0;
+        $a = new Registry(['foo' => 'bar'], 0);
         $a->set('bar', 'beer');
         $a->set('foo20bar', 'wine');
 
