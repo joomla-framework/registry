@@ -40,10 +40,8 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @var    string
      * @since  1.4.0
-     *
-     * @deprecated This property will become protected in version 4 to prevent direct access.
      */
-    public $separator = '.';
+    protected $separator = '.';
 
     /**
      * Constructor
@@ -840,6 +838,89 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             }
 
             $array[$key] = $v;
+        }
+    }
+
+    /**
+     * Magic method to access separator property.
+     *
+     * @param  string  $name  The name of the property.
+     *
+     * @return string|null A value if the property name is valid, null otherwise.
+     *
+     * @since       __DEPLOY_VERSION__
+     * @deprecated  4.0  This is a B/C proxy for deprecated read accesses
+     */
+    public function __get($name)
+    {
+        switch ($name) {
+            case 'separator':
+                \trigger_deprecation(
+                    'joomla/registry',
+                    '2.1.0',
+                    'The $separator parameter will be removed in version 4.',
+                    self::class,
+                    self::class
+                );
+
+                return $this->separator;
+
+            default:
+                $trace = \debug_backtrace();
+                \trigger_error(
+                    \sprintf(
+                        'Undefined property via __get(): %1$s in %2$s on line %3$s',
+                        $name,
+                        $trace[0]['file'],
+                        $trace[0]['line']
+                    ),
+                    E_USER_NOTICE
+                );
+
+                return null;
+        }
+    }
+
+    /**
+     * Magic method to access separator property.
+     *
+     * @param  string  $name   The name of the property.
+     * @param  mixed   $value  The value of the property.
+     *
+     * @return void
+     *
+     * @since       __DEPLOY_VERSION__
+     * @deprecated  4.0  This is a B/C proxy for deprecated read accesses
+     */
+    public function __set($name, $value)
+    {
+        switch ($name)
+        {
+            case 'separator':
+                \trigger_deprecation(
+                    'joomla/registry',
+                    '2.1.0',
+                    'The $separator parameter will be removed in version 4.',
+                    self::class,
+                    self::class
+                );
+
+                $this->separator = $value;
+                break;
+
+            default:
+                if (property_exists($this, $name)) {
+                    throw new \RuntimeException(
+                        \sprintf(
+                            'Cannot access protected or private property %s::$%s',
+                            __CLASS__,
+                            $name
+                        )
+                    );
+                }
+
+                $this->$name = $value;
+                break;
         }
     }
 }
