@@ -894,8 +894,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      */
     public function __set($name, $value)
     {
-        switch ($name)
-        {
+        switch ($name) {
             case 'separator':
                 \trigger_deprecation(
                     'joomla/registry',
