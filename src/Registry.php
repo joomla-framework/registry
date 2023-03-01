@@ -857,7 +857,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             case 'separator':
                 \trigger_deprecation(
                     'joomla/registry',
-                    '2.1.0',
+                    '__DEPLOY_VERSION__',
                     'The $separator parameter will be removed in version 4.',
                     self::class,
                     self::class
@@ -899,7 +899,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             case 'separator':
                 \trigger_deprecation(
                     'joomla/registry',
-                    '2.1.0',
+                    '__DEPLOY_VERSION__',
                     'The $separator parameter will be removed in version 4.',
                     self::class,
                     self::class
