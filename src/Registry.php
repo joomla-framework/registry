@@ -849,7 +849,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @return string|null A value if the property name is valid, null otherwise.
      *
      * @since       __DEPLOY_VERSION__
-     * @deprecated  4.0  This is a B/C proxy for deprecated read accesses
+     * @deprecated  3.0  This is a B/C proxy for deprecated read accesses
      */
     public function __get($name)
     {
@@ -858,7 +858,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
                 \trigger_deprecation(
                     'joomla/registry',
                     '__DEPLOY_VERSION__',
-                    'The $separator parameter will be removed in version 4.',
+                    'The $separator parameter will be removed in version 3.',
                     self::class,
                     self::class
                 );
@@ -866,6 +866,16 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
                 return $this->separator;
 
             default:
+                if (property_exists($this, $name)) {
+                    throw new \RuntimeException(
+                        \sprintf(
+                            'Cannot access protected or private property %s::$%s',
+                            __CLASS__,
+                            $name
+                        )
+                    );
+                }
+
                 $trace = \debug_backtrace();
                 \trigger_error(
                     \sprintf(
@@ -890,7 +900,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @return void
      *
      * @since       __DEPLOY_VERSION__
-     * @deprecated  4.0  This is a B/C proxy for deprecated read accesses
+     * @deprecated  3.0  This is a B/C proxy for deprecated read accesses
      */
     public function __set($name, $value)
     {
@@ -899,7 +909,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
                 \trigger_deprecation(
                     'joomla/registry',
                     '__DEPLOY_VERSION__',
-                    'The $separator parameter will be removed in version 4.',
+                    'The $separator parameter will be removed in version 3.',
                     self::class,
                     self::class
                 );
