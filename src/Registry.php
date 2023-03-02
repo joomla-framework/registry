@@ -928,6 +928,14 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
                     );
                 }
 
+                \trigger_deprecation(
+                    'joomla/registry',
+                    '__DEPLOY_VERSION__',
+                    'Creating a property will be removed in version 3.',
+                    self::class,
+                    self::class
+                );
+
                 $this->$name = $value;
                 break;
         }
