@@ -71,7 +71,7 @@ class Xml implements FormatInterface
     /**
      * Method to get a PHP native value for a SimpleXMLElement object. -- called recursively
      *
-     * @param  object  $node  SimpleXMLElement object for which to get the native value.
+     * @param  \SimpleXMLElement  $node  SimpleXMLElement object for which to get the native value.
      *
      * @return  mixed  Native value of the SimpleXMLElement object.
      *

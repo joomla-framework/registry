@@ -11,7 +11,6 @@ namespace Joomla\Registry\Format;
 
 use Joomla\Registry\Factory;
 use Joomla\Registry\FormatInterface;
-use RuntimeException;
 
 /**
  * JSON format handler for Registry.
