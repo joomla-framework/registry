@@ -6,16 +6,15 @@
     "homepage": "https://github.com/joomla-framework/registry",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "~8.1.0",
+        "php": "^8.1.0",
         "joomla/utilities": "3.0.x-dev"
     },
     "require-dev": {
-        "symfony/yaml": "^3.4|^4.4|^5.0",
+        "symfony/yaml": "^5.0",
         "phpunit/phpunit": "^9.5.28",
-        "squizlabs/php_codesniffer": "~3.7.1"
-    },
-    "conflict": {
-        "symfony/yaml": "<3.4"
+        "squizlabs/php_codesniffer": "^3.7.2",
+        "phpstan/phpstan": "^1.10.7",
+        "phan/phan": "^5.4.2"
     },
     "suggest": {
         "ext-json": "ext-json is needed for JSON support",

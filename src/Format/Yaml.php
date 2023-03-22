@@ -14,8 +14,6 @@ use Symfony\Component\Yaml\Dumper as SymfonyYamlDumper;
 use Symfony\Component\Yaml\Parser as SymfonyYamlParser;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 
-use function sprintf;
-
 /**
  * YAML format handler for Registry.
  *
