@@ -8,4 +8,4 @@ All Framework packages now require PHP 8.1 or newer.
 
 ### Enforce input types
 
-The `Joomla\Registry\Format\Xml::getValueFromNode()` method now requires the `$node` parameter to be a `SimpleXMLElement` object.
+* The `Joomla\Registry\Format\Xml::getValueFromNode()` method now requires the `$node` parameter to be a `SimpleXMLElement` object.
