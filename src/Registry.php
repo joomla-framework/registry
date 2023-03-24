@@ -41,17 +41,20 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @var    string
      * @since  1.4.0
      */
-    public $separator = '.';
+    protected $separator = '.';
 
     /**
      * Constructor
      *
-     * @param  mixed  $data  The data to bind to the new Registry object.
+     * @param  mixed   $data       The data to bind to the new Registry object.
+     * @param  string  $separator  The path separator, and empty string will flatten the registry.
      *
      * @since   1.0.0
      */
-    public function __construct($data = null)
+    public function __construct($data = null, string $separator = '.')
     {
+        $this->separator = $separator;
+
         // Instantiate the internal data object.
         $this->data = new \stdClass();
 
@@ -153,7 +156,11 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
         }
 
         // Explode the registry path into an array
-        $nodes = \explode($this->separator, $path);
+        if ($this->separator === null || $this->separator === '') {
+            $nodes = [$path];
+        } else {
+            $nodes = \explode($this->separator, $path);
+        }
 
         // Initialize the current node to be the registry root.
         $node  = $this->data;
@@ -196,7 +203,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             return $default;
         }
 
-        if (!\strpos($path, $this->separator)) {
+        if ($this->separator === null || $this->separator === '' || !\strpos($path, $this->separator)) {
             return (isset($this->data->$path) && $this->data->$path !== null && $this->data->$path !== '')
                 ? $this->data->$path
                 : $default;
@@ -449,11 +456,21 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @return  mixed  The value of the that has been set.
      *
      * @since   1.0.0
+     *
+     * @deprecated The $separator parameter will be removed in version 4.
      */
     public function set($path, $value, $separator = null)
     {
-        if (empty($separator)) {
+        if ($separator === null) {
             $separator = $this->separator;
+        } else {
+            \trigger_deprecation(
+                'joomla/registry',
+                '__DEPLOY_VERSION__',
+                'The $separator parameter will be removed in version 3.',
+                self::class,
+                self::class
+            );
         }
 
         /*
@@ -461,7 +478,11 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
          * nodes that occur as a result of a double separator. ex: joomla..test
          * Finally, re-key the array so they are sequential.
          */
-        $nodes = \array_values(\array_filter(\explode($separator, $path), 'strlen'));
+        if ($separator === null || $separator === '') {
+            $nodes = [$path];
+        } else {
+            $nodes = \array_values(\array_filter(\explode($separator, $path), 'strlen'));
+        }
 
         if (!$nodes) {
             return null;
@@ -532,7 +553,11 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
          * nodes that occur as a result of a double dot. ex: joomla..test
          * Finally, re-key the array so they are sequential.
          */
-        $nodes = \array_values(\array_filter(\explode('.', $path), 'strlen'));
+        if ($this->separator === null || $this->separator === '') {
+            $nodes = [$path];
+        } else {
+            $nodes = \array_values(\array_filter(\explode($this->separator, $path), 'strlen'));
+        }
 
         if ($nodes) {
             // Initialize the current node to be the registry root.
@@ -582,7 +607,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
     public function remove($path)
     {
         // Cheap optimisation to direct remove the node if there is no separator
-        if (!\strpos($path, $this->separator)) {
+        if ($this->separator === null || $this->separator === '' || !\strpos($path, $this->separator)) {
             $result = (isset($this->data->$path) && $this->data->$path !== null && $this->data->$path !== '')
                 ? $this->data->$path
                 : null;
@@ -813,6 +838,106 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             }
 
             $array[$key] = $v;
+        }
+    }
+
+    /**
+     * Magic method to access separator property.
+     *
+     * @param  string  $name  The name of the property.
+     *
+     * @return string|null A value if the property name is valid, null otherwise.
+     *
+     * @since       __DEPLOY_VERSION__
+     * @deprecated  3.0  This is a B/C proxy for deprecated read accesses
+     */
+    public function __get($name)
+    {
+        switch ($name) {
+            case 'separator':
+                \trigger_deprecation(
+                    'joomla/registry',
+                    '__DEPLOY_VERSION__',
+                    'The $separator parameter will be removed in version 3.',
+                    self::class,
+                    self::class
+                );
+
+                return $this->separator;
+
+            default:
+                if (property_exists($this, $name)) {
+                    throw new \RuntimeException(
+                        \sprintf(
+                            'Cannot access protected or private property %s::$%s',
+                            __CLASS__,
+                            $name
+                        )
+                    );
+                }
+
+                $trace = \debug_backtrace();
+                \trigger_error(
+                    \sprintf(
+                        'Undefined property via __get(): %1$s in %2$s on line %3$s',
+                        $name,
+                        $trace[0]['file'],
+                        $trace[0]['line']
+                    ),
+                    E_USER_NOTICE
+                );
+
+                return null;
+        }
+    }
+
+    /**
+     * Magic method to access separator property.
+     *
+     * @param  string  $name   The name of the property.
+     * @param  mixed   $value  The value of the property.
+     *
+     * @return void
+     *
+     * @since       __DEPLOY_VERSION__
+     * @deprecated  3.0  This is a B/C proxy for deprecated read accesses
+     */
+    public function __set($name, $value)
+    {
+        switch ($name) {
+            case 'separator':
+                \trigger_deprecation(
+                    'joomla/registry',
+                    '__DEPLOY_VERSION__',
+                    'The $separator parameter will be removed in version 3.',
+                    self::class,
+                    self::class
+                );
+
+                $this->separator = $value;
+                break;
+
+            default:
+                if (property_exists($this, $name)) {
+                    throw new \RuntimeException(
+                        \sprintf(
+                            'Cannot access protected or private property %s::$%s',
+                            __CLASS__,
+                            $name
+                        )
+                    );
+                }
+
+                \trigger_deprecation(
+                    'joomla/registry',
+                    '__DEPLOY_VERSION__',
+                    'Creating a property will be removed in version 3.',
+                    self::class,
+                    self::class
+                );
+
+                $this->$name = $value;
+                break;
         }
     }
 }
