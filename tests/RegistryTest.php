@@ -526,7 +526,7 @@ class RegistryTest extends TestCase
         $instance->set('foo.bar', 'value');
 
         $this->assertTrue(isset($instance['foo.bar']), 'Checks a known offset by isset.');
-        $this->assertFalse(isset($instance['goo.car']), 'Checks an uknown offset.');
+        $this->assertFalse(isset($instance['goo.car']), 'Checks an unknown offset.');
     }
 
     /**
