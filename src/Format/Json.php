@@ -11,7 +11,6 @@ namespace Joomla\Registry\Format;
 
 use Joomla\Registry\Factory;
 use Joomla\Registry\FormatInterface;
-use RuntimeException;
 
 /**
  * JSON format handler for Registry.
@@ -50,9 +49,23 @@ class Json implements FormatInterface
      *
      * @throws  \RuntimeException
      * @since   1.0.0
+     * @since   __DEPLOY_VERSION__  Passing non-string values as first parameter is deprecated and will issue an
+     *                              E_USER_DEPRECATED warning. It  will cause an error in 3.0.
      */
     public function stringToObject($data, array $options = ['processSections' => false])
     {
+        if (!\is_string($data)) {
+            \trigger_error(
+                \sprintf(
+                    'Passing non-string values as first parameter to %s is deprecated and will cause an error in 3.0',
+                    __METHOD__
+                ),
+                E_USER_DEPRECATED
+            );
+
+            $data = (string) $data;
+        }
+
         $data = \trim($data);
 
         if (empty($data)) {
