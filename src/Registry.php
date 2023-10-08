@@ -451,13 +451,11 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @param  string  $path       Registry Path (e.g. joomla.content.showauthor)
      * @param  mixed   $value      Value of entry
-     * @param  string  $separator  The key separator
+     * @param  string  $separator  The key separator. Will be removed in version 4.
      *
      * @return  mixed  The value of the that has been set.
      *
      * @since   1.0.0
-     *
-     * @deprecated The $separator parameter will be removed in version 4.
      */
     public function set($path, $value, $separator = null)
     {
@@ -467,7 +465,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             \trigger_deprecation(
                 'joomla/registry',
                 '__DEPLOY_VERSION__',
-                'The $separator parameter will be removed in version 3.',
+                'The $separator parameter will be removed in version 4.',
                 self::class,
                 self::class
             );
