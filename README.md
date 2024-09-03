@@ -1,4 +1,4 @@
-# The Registry Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/registry/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/registry)
+# The Registry Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/registry/status.svg?ref=refs/heads/3.x-dev)](https://ci.joomla.org/joomla-framework/registry)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/registry/v/stable)](https://packagist.org/packages/joomla/registry)
 [![Total Downloads](https://poser.pugx.org/joomla/registry/downloads)](https://packagist.org/packages/joomla/registry)
@@ -194,12 +194,12 @@ Array
 
 ## Installation via Composer
 
-Add `"joomla/registry": "~2.0"` to the 'require' block in your composer.json and then run `composer install`.
+Add `"joomla/registry": "~3.0"` to the 'require' block in your composer.json and then run `composer install`.
 
 ```json
 {
     "require": {
-        "joomla/registry": "~2.0"
+        "joomla/registry": "~3.0"
     }
 }
 ```
@@ -207,5 +207,5 @@ Add `"joomla/registry": "~2.0"` to the 'require' block in your composer.json and
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/registry "~2.0"
+composer require joomla/registry "~3.0"
 ```
