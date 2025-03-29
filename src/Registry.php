@@ -846,7 +846,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @return string|null A value if the property name is valid, null otherwise.
      *
-     * @since       __DEPLOY_VERSION__
+     * @since       2.0.0
      * @deprecated  3.0  This is a B/C proxy for deprecated read accesses
      */
     public function __get($name)
@@ -855,7 +855,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             case 'separator':
                 \trigger_deprecation(
                     'joomla/registry',
-                    '__DEPLOY_VERSION__',
+                    '2.0.0',
                     'The $separator parameter will be removed in version 3.',
                     self::class,
                     self::class
@@ -897,7 +897,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @return void
      *
-     * @since       __DEPLOY_VERSION__
+     * @since       2.0.0
      * @deprecated  3.0  This is a B/C proxy for deprecated read accesses
      */
     public function __set($name, $value)
@@ -906,7 +906,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             case 'separator':
                 \trigger_deprecation(
                     'joomla/registry',
-                    '__DEPLOY_VERSION__',
+                    '2.0.0',
                     'The $separator parameter will be removed in version 3.',
                     self::class,
                     self::class
