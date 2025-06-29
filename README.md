@@ -1,4 +1,4 @@
-# The Registry Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/registry/status.svg?ref=refs/heads/3.x-dev)](https://ci.joomla.org/joomla-framework/registry)
+# The Registry Package [![Build Status](https://github.com/joomla-framework/registry/actions/workflows/ci.yml/badge.svg?branch=3.x-dev)](https://github.com/joomla-framework/registry)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/registry/v/stable)](https://packagist.org/packages/joomla/registry)
 [![Total Downloads](https://poser.pugx.org/joomla/registry/downloads)](https://packagist.org/packages/joomla/registry)
