@@ -7,7 +7,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^8.1.0",
-        "joomla/utilities": "^3.0"
+        "joomla/utilities": "dev-4.x-dev"
     },
     "require-dev": {
         "symfony/yaml": "^5.0",
@@ -35,7 +35,8 @@
     "extra": {
         "branch-alias": {
             "dev-2.0-dev": "2.0-dev",
-            "dev-3.x-dev": "3.0-dev"
+            "dev-3.x-dev": "3.0-dev",
+            "dev-4.x-dev": "4.0-dev"
         }
     },
     "scripts": {
