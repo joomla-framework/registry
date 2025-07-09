@@ -66,7 +66,7 @@ class IniTest extends TestCase
         $this->assertEquals($class->stringToObject($string2, ['processSections' => true]), $object2);
 
         // Test empty string
-        $this->assertEquals(new \stdClass(), $class->stringToObject(null));
+        $this->assertEquals(new \stdClass(), $class->stringToObject(''));
 
         $string3               = "[section]\nfoo=bar\n;Testcomment\nkey=value\n\n/brokenkey=)brokenvalue";
         $object2->section->key = 'value';
