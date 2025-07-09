@@ -50,7 +50,7 @@ class Json implements FormatInterface
      * @throws  \RuntimeException
      * @since   1.0.0
      */
-    public function stringToObject($data, array $options = ['processSections' => false])
+    public function stringToObject(string $data, array $options = ['processSections' => false])
     {
         $data = \trim($data);
 
