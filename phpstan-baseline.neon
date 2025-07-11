@@ -1,0 +1,31 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/Registry.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of class ArrayIterator constructor expects array\\<TKey of \\(int\\|string\\), TValue\\>, stdClass given\\.$#"
+			count: 1
+			path: src/Registry.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(string\\)\\: bool\\)\\|null, 'strlen' given\\.$#"
+			count: 3
+			path: src/Registry.php
+
+		-
+			message: "#^Result of \\|\\| is always false\\.$#"
+			count: 1
+			path: src/Registry.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between mixed and null will always evaluate to false\\.$#"
+			count: 1
+			path: src/Registry.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
+			count: 1
+			path: src/Registry.php
