@@ -7,12 +7,6 @@ parameters:
 			path: src/Format/Json.php
 
 		-
-			message: '#^Call to function is_object\(\) with object will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Registry.php
-
-		-
 			message: '#^Negated boolean expression is always false\.$#'
 			identifier: booleanNot.alwaysFalse
 			count: 1
@@ -32,12 +26,6 @@ parameters:
 
 		-
 			message: '#^Strict comparison using \=\=\= between mixed and null will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: src/Registry.php
-
-		-
-			message: '#^Strict comparison using \=\=\= between string and null will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
 			path: src/Registry.php
