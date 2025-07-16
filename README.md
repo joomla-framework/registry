@@ -194,12 +194,12 @@ Array
 
 ## Installation via Composer
 
-Add `"joomla/registry": "~3.0"` to the 'require' block in your composer.json and then run `composer install`.
+Add `"joomla/registry": "~4.0"` to the 'require' block in your composer.json and then run `composer install`.
 
 ```json
 {
     "require": {
-        "joomla/registry": "~3.0"
+        "joomla/registry": "~4.0"
     }
 }
 ```
@@ -207,5 +207,5 @@ Add `"joomla/registry": "~3.0"` to the 'require' block in your composer.json and
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/registry "~3.0"
+composer require joomla/registry "~4.0"
 ```

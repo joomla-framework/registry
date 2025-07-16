@@ -42,5 +42,5 @@ interface FormatInterface
      *
      * @since   1.5.0
      */
-    public function stringToObject($data, array $options = []);
+    public function stringToObject(string $data, array $options = []);
 }

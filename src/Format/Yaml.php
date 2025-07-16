@@ -86,7 +86,7 @@ class Yaml implements FormatInterface
      *
      * @since   1.0.0
      */
-    public function stringToObject($data, array $options = [])
+    public function stringToObject(string $data, array $options = [])
     {
         $array = $this->parser->parse(\trim($data));
 

@@ -72,7 +72,7 @@ class Php implements FormatInterface
      *
      * @since   1.0.0
      */
-    public function stringToObject($data, array $options = [])
+    public function stringToObject(string $data, array $options = [])
     {
         return new \stdClass();
     }
