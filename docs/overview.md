@@ -3,6 +3,9 @@
 The Registry package provides an indexed key-value data store and an API for importing/exporting this data to several
 formats.
 
+For an encrypted store, `Joomla\Registry\Keychain` extends `Registry` with `loadKeychain()` and
+`saveKeychain()`. It is optional and needs `joomla/crypt` — see [Keychain](keychain.md).
+
 ### Basic usage
 
 The following demonstrates basic usage for storing and retrieving data from the store.
@@ -140,3 +143,62 @@ if (isset($registry['foo']))
     echo 'Say bar.';
 }
 ```
+
+## Things to know before you build on this
+
+**An empty string reads back as the default.** `get()` treats `''` like "not set":
+
+```php
+$registry->set('prefix', '');
+$registry->get('prefix', 'jos_');   // 'jos_', not ''
+$registry->exists('prefix');        // true
+```
+
+So a deliberately empty value cannot be stored and read back. Use `exists()` to distinguish, or a
+sentinel value.
+
+**`loadFile()` does not report read errors.** `file_get_contents()` returning `false` becomes an
+empty registry rather than an exception, so a missing or unreadable configuration file leaves every
+setting on its default — including the security-relevant ones. Check the path first:
+
+```php
+if (!is_readable($file)) {
+    throw new \RuntimeException(sprintf('Configuration file "%s" is not readable.', $file));
+}
+
+$registry->loadFile($file, 'JSON');
+```
+
+**`remove()` on a path whose parent is missing returns an unrelated value.** If an intermediate
+node does not exist, the traversal does not advance, and the method reads and reports the key from
+the **root** instead — without removing anything:
+
+```php
+$registry = new Registry(['x' => 1, 'c' => 'toplevel']);
+$registry->remove('a.b.c');    // returns 'toplevel'; nothing was removed
+```
+
+Check with `exists()` before removing a nested path.
+
+**`set()` and `get()` disagree about a leading separator.** `set('.a', 5)` writes to `a`, but
+`get('.a')` looks for a key literally named `.a` and returns the default. Do not start paths with
+the separator.
+
+**The JSON format falls back to INI.** If `Format\Json::stringToObject()` cannot decode the string
+and it does not start with `{`, it parses it as INI instead of failing. A malformed JSON file can
+therefore produce a partially populated registry rather than an error.
+
+**`Format\Php` only writes.** `stringToObject()` returns an empty `stdClass`, so
+`loadFile($file, 'PHP')` always yields an empty registry with no indication that nothing was read.
+
+When generating PHP with `toString('PHP')`, note that property names, the `class` option and the
+`namespace` option must be valid PHP identifiers — they are written into the generated source and
+are validated for that reason. Values are escaped.
+
+**`Format\Xml` does not harden the parser.** `simplexml_load_string()` is called without
+`LIBXML_NONET`, without internal error handling and without a check of the return value. Do not
+feed it XML from an untrusted source.
+
+**`Format\Ini` caches parsed strings statically with a shallow clone.** Nested sections are shared
+between the cache entry and the value you get back, so mutating a returned registry can change what
+a later parse of the same string returns.
