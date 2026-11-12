@@ -74,10 +74,50 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @return  void
      *
      * @since   1.0.0
+     * @since   __DEPLOY_VERSION__  The data is copied recursively instead of through serialization, so values that cannot
+     *                              be serialized, such as closures, no longer make cloning fail.
      */
     public function __clone()
     {
-        $this->data = \unserialize(\serialize($this->data));
+        $this->data = $this->copyValue($this->data);
+    }
+
+    /**
+     * Recursively copy a value of the data tree for __clone().
+     *
+     * Arrays and stdClass nodes are copied recursively, other objects are cloned if possible.
+     *
+     * @param  mixed  $value  The value to copy.
+     *
+     * @return  mixed
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function copyValue(mixed $value): mixed
+    {
+        if (\is_array($value)) {
+            foreach ($value as $key => $item) {
+                $value[$key] = $this->copyValue($item);
+            }
+
+            return $value;
+        }
+
+        if ($value instanceof \stdClass) {
+            $copy = new \stdClass();
+
+            foreach (\get_object_vars($value) as $key => $item) {
+                $copy->$key = $this->copyValue($item);
+            }
+
+            return $copy;
+        }
+
+        if (\is_object($value) && (new \ReflectionClass($value))->isCloneable()) {
+            return clone $value;
+        }
+
+        return $value;
     }
 
     /**
@@ -478,7 +518,8 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
         // Traverse the registry to find the correct node for the result.
         for ($i = 0, $n = \count($nodes) - 1; $i < $n; $i++) {
             if (\is_object($node)) {
-                if (!isset($node->{$nodes[$i]})) {
+                // A missing or scalar node cannot hold children, so it is replaced by an object
+                if (!isset($node->{$nodes[$i]}) || \is_scalar($node->{$nodes[$i]})) {
                     $node->{$nodes[$i]} = new \stdClass();
                 }
 
@@ -489,7 +530,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             }
 
             if (\is_array($node)) {
-                if (!isset($node[$nodes[$i]])) {
+                if (!isset($node[$nodes[$i]]) || \is_scalar($node[$nodes[$i]])) {
                     $node[$nodes[$i]] = new \stdClass();
                 }
 
@@ -551,14 +592,15 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             // TODO Create a new private method from part of code below, as it is almost equal to 'set' method
             for ($i = 0, $n = \count($nodes) - 1; $i <= $n; $i++) {
                 if (\is_object($node)) {
-                    if (!isset($node->{$nodes[$i]}) && ($i !== $n)) {
+                    // A missing or scalar parent node cannot hold children, so it is replaced by an object
+                    if (($i !== $n) && (!isset($node->{$nodes[$i]}) || \is_scalar($node->{$nodes[$i]}))) {
                         $node->{$nodes[$i]} = new \stdClass();
                     }
 
                     // Pass the child as pointer in case it is an array
                     $node = &$node->{$nodes[$i]};
                 } elseif (\is_array($node)) {
-                    if (($i !== $n) && !isset($node[$nodes[$i]])) {
+                    if (($i !== $n) && (!isset($node[$nodes[$i]]) || \is_scalar($node[$nodes[$i]]))) {
                         $node[$nodes[$i]] = new \stdClass();
                     }
 
@@ -567,9 +609,15 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
                 }
             }
 
-            if (!\is_array($node)) {
+            if ($node === null) {
+                // Start a new list if the path does not exist yet
+                $node = [];
+            } elseif (\is_object($node)) {
                 // Convert the node to array to make append possible
                 $node = \get_object_vars($node);
+            } elseif (!\is_array($node)) {
+                // Turn a scalar into a list that keeps the existing value
+                $node = [$node];
             }
 
             $node[] = $value;
