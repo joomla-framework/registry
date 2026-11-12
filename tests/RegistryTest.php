@@ -120,6 +120,33 @@ class RegistryTest extends TestCase
         $this->assertNotSame($a, $b, 'A cloned Registry should be a different object from the original.');
     }
 
+    public function testCloningARegistryCopiesNestedData()
+    {
+        $a = new Registry(['nested' => ['key' => 'value'], 'list' => [(object) ['key' => 'value']]]);
+        $b = clone $a;
+
+        $b->set('nested.key', 'changed');
+        $b->get('list')[0]->key = 'changed';
+
+        $this->assertSame('value', $a->get('nested.key'), 'Changing a clone must not change the original.');
+        $this->assertSame('value', $a->get('list')[0]->key, 'Objects in arrays must be copied as well.');
+    }
+
+    public function testARegistryWithAClosureCanBeCloned()
+    {
+        $closure = static function () {
+            return 'called';
+        };
+
+        $a = new Registry();
+        $a->set('nested.callback', $closure);
+
+        $b = clone $a;
+
+        $this->assertSame('called', ($b->get('nested.callback'))());
+        $this->assertNotSame($a->toObject()->nested, $b->toObject()->nested);
+    }
+
     /**
      * @testdox  A Registry instance can be cast as a string
      *
@@ -633,6 +660,40 @@ class RegistryTest extends TestCase
         $a->append('foo', 'var4');
 
         $this->assertSame('var4', $a->get('foo.3'), 'A key is appended to a nested path.');
+    }
+
+    public function testSettingAPathBelowAScalarReplacesTheScalar()
+    {
+        $a = new Registry(['a' => 'string', 'list' => ['x' => 1]]);
+
+        $this->assertNull($a->set('a.b', 1));
+        $this->assertSame(1, $a->get('a.b'));
+
+        $a->set('list.x.y', 2);
+        $this->assertSame(['a' => ['b' => 1], 'list' => ['x' => ['y' => 2]]], $a->toArray());
+    }
+
+    public function testAValueIsAppendedToAMissingPath()
+    {
+        $a = new Registry();
+
+        $this->assertSame('first', $a->append('new', 'first'));
+        $this->assertSame('nested', $a->append('deep.new', 'nested'));
+
+        $this->assertSame(['new' => ['first'], 'deep' => ['new' => ['nested']]], $a->toArray());
+    }
+
+    public function testAValueIsAppendedToAScalar()
+    {
+        $a = new Registry(['scalar' => 'existing', 'parent' => 'string']);
+
+        $a->append('scalar', 'appended');
+        $a->append('parent.child', 'appended');
+
+        $this->assertSame(
+            ['scalar' => ['existing', 'appended'], 'parent' => ['child' => ['appended']]],
+            $a->toArray()
+        );
     }
 
     /**
