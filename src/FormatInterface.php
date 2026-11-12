@@ -30,7 +30,7 @@ interface FormatInterface
      * @since   2.0.0  The `FormatInterface::objectToString()` method typehints the `$options` argument as an array;
      *                 this was not enforced before 2.0.0 with `AbstractRegistryFormat::objectToString()`.
      */
-    public function objectToString($object, array $options = []);
+    public function objectToString(object $object, array $options = []): string;
 
     /**
      * Converts a formatted string into an object.
@@ -42,5 +42,5 @@ interface FormatInterface
      *
      * @since   1.5.0
      */
-    public function stringToObject(string $data, array $options = []);
+    public function stringToObject(string $data, array $options = []): object;
 }

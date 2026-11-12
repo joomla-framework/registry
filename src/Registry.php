@@ -51,7 +51,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    public function __construct($data = null, string $separator = '.')
+    public function __construct(mixed $data = null, string $separator = '.')
     {
         $this->separator = $separator;
 
@@ -75,7 +75,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    public function __clone()
+    public function __clone(): void
     {
         $this->data = \unserialize(\serialize($this->data));
     }
@@ -87,7 +87,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }
@@ -100,8 +100,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @link    https://www.php.net/manual/en/countable.count.php
      * @since   1.3.0
      */
-    #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         return \count(\get_object_vars($this->data));
     }
@@ -115,8 +114,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @since   1.0.0
      * @note    The interface is only present in PHP 5.4 and up.
      */
-    #[\ReturnTypeWillChange]
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->data;
     }
@@ -131,7 +129,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    public function def($key, $default = '')
+    public function def(string $key, mixed $default = ''): mixed
     {
         $value = $this->get($key, $default);
         $this->set($key, $value);
@@ -142,13 +140,16 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
     /**
      * Check if a registry path exists.
      *
+     * A path exists if it has been set, even if its value is null.
+     *
      * @param  string  $path  Registry path (e.g. joomla.content.showauthor)
      *
      * @return  boolean
      *
      * @since   1.0.0
+     * @since   __DEPLOY_VERSION__  A path whose value is null exists. Before, exists() followed isset() and returned false.
      */
-    public function exists($path)
+    public function exists(string $path): bool
     {
         // Return default value if path is empty
         if (empty($path)) {
@@ -168,14 +169,14 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
 
         // Traverse the registry to find the correct node for the result.
         foreach ($nodes as $n) {
-            if (\is_array($node) && isset($node[$n])) {
+            if (\is_array($node) && \array_key_exists($n, $node)) {
                 $node  = $node[$n];
                 $found = true;
 
                 continue;
             }
 
-            if (!isset($node->$n)) {
+            if (!\is_object($node) || !\property_exists($node, $n)) {
                 return false;
             }
 
@@ -195,8 +196,9 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @return  mixed  Value of entry or null
      *
      * @since   1.0.0
+     * @since   __DEPLOY_VERSION__  A stored empty string is returned. Before, the default value was returned instead.
      */
-    public function get($path, $default = null)
+    public function get(string $path, mixed $default = null): mixed
     {
         // Return default value if path is empty
         if (empty($path)) {
@@ -204,9 +206,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
         }
 
         if ($this->separator === null || $this->separator === '' || !\strpos($path, $this->separator)) {
-            return (isset($this->data->$path) && $this->data->$path !== '')
-                ? $this->data->$path
-                : $default;
+            return $this->data->$path ?? $default;
         }
 
         // Explode the registry path into an array
@@ -233,7 +233,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             $found = true;
         }
 
-        if (!$found || $node === null || $node === '') {
+        if (!$found || $node === null) {
             return $default;
         }
 
@@ -250,8 +250,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @see     \IteratorAggregate::getIterator()
      * @since   1.3.0
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator((array) $this->data);
     }
@@ -267,7 +266,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @since   1.0.0
      * @since   2.0.0  The parameter `$array` is now type hinted as `array`. Before 2.0.0, the type was not enforced.
      */
-    public function loadArray(array $array, $flattened = false)
+    public function loadArray(array $array, bool $flattened = false): static
     {
         if (!$flattened) {
             $this->bindData($this->data, $array);
@@ -291,7 +290,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    public function loadObject($object)
+    public function loadObject(object $object): static
     {
         $this->bindData($this->data, $object);
 
@@ -310,7 +309,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @since   1.0.0
      * @since   2.0.0  The parameter `$options` is now type hinted as `array`. Before 2.0.0, the type was not enforced.
      */
-    public function loadFile($file, $format = 'JSON', array $options = [])
+    public function loadFile(string $file, string $format = 'JSON', array $options = []): static
     {
         $data = \file_get_contents($file);
 
@@ -329,7 +328,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @since   1.0.0
      * @since   2.0.0  The parameter `$options` is now type hinted as `array`. Before 2.0.0, the type was not enforced.
      */
-    public function loadString($data, $format = 'JSON', array $options = [])
+    public function loadString(string $data, string $format = 'JSON', array $options = []): static
     {
         // Load a string into the given namespace [or default namespace if not given]
         $obj = Factory::getFormat($format, $options)->stringToObject($data, $options);
@@ -359,7 +358,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @since   2.0.0  The parameter `$source` is now type hinted as `Registry`. Before 2.0.0, `Registry::merge()` just
      *          returned `false` if `$source` was not a `Registry`.
      */
-    public function merge(Registry $source, $recursive = false)
+    public function merge(Registry $source, bool $recursive = false): static
     {
         $this->bindData($this->data, $source->toArray(), $recursive, false);
 
@@ -377,7 +376,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @since   2.0.0  `Registry:extract()` now always returns a `Registry` object. Before 2.0.0, `null` was returned
      *          if there was no data for the key.
      */
-    public function extract($path)
+    public function extract(string $path): Registry
     {
         $data = $this->get($path);
 
@@ -389,14 +388,14 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @param  mixed  $offset  The array offset.
      *
-     * @return  boolean  True if the offset exists, false otherwise.
+     * @return  boolean  True if the offset exists and its value is not null, false otherwise.
      *
      * @since   1.0.0
+     * @since   __DEPLOY_VERSION__  Keeps the isset() semantics, so `isset($registry['key'])` is false for a null value.
      */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
-        return $this->exists($offset);
+        return $this->exists($offset) && $this->get($offset) !== null;
     }
 
     /**
@@ -408,8 +407,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->get($offset);
     }
@@ -424,8 +422,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->set($offset, $value);
     }
@@ -439,8 +436,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         $this->remove($offset);
     }
@@ -455,7 +451,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    public function set($path, $value)
+    public function set(string $path, mixed $value): mixed
     {
         /*
          * Explode the registry path into an array and remove empty
@@ -528,7 +524,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.4.0
      */
-    public function append($path, $value)
+    public function append(string $path, mixed $value): mixed
     {
         $result = null;
 
@@ -588,7 +584,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.6.0
      */
-    public function remove($path)
+    public function remove(string $path): mixed
     {
         // Cheap optimisation to direct remove the node if there is no separator
         if ($this->separator === null || $this->separator === '' || !\strpos($path, $this->separator)) {
@@ -668,7 +664,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->asArray($this->data);
     }
@@ -680,7 +676,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    public function toObject()
+    public function toObject(): object
     {
         return $this->data;
     }
@@ -695,7 +691,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    public function toString($format = 'JSON', array $options = [])
+    public function toString(string $format = 'JSON', array $options = []): string
     {
         return Factory::getFormat($format, $options)->objectToString($this->data, $options);
     }
@@ -712,7 +708,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    protected function bindData($parent, $data, $recursive = true, $allowNull = true)
+    protected function bindData(object $parent, mixed $data, bool $recursive = true, bool $allowNull = true): void
     {
         // The data object is now initialized
         $this->initialized = true;
@@ -748,7 +744,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      */
-    protected function asArray($data)
+    protected function asArray(object|array $data): array
     {
         $array = [];
 
@@ -778,7 +774,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.3.0
      */
-    public function flatten($separator = null)
+    public function flatten(?string $separator = null): array
     {
         $array = [];
 
@@ -804,7 +800,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @since   1.3.0
      * @since   2.0.0  The parameter `$array` is now type hinted as `array`. Before 2.0.0, the type was not enforced.
      */
-    protected function toFlatten($separator = null, $data = null, array &$array = [], $prefix = '')
+    protected function toFlatten(?string $separator = null, mixed $data = null, array &$array = [], string $prefix = ''): void
     {
         $data = (array) $data;
 

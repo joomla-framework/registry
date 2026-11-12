@@ -9,7 +9,6 @@
 
 namespace Joomla\Registry\Format;
 
-use Joomla\Registry\Factory;
 use Joomla\Registry\FormatInterface;
 
 /**
@@ -29,7 +28,7 @@ class Json implements FormatInterface
      *
      * @since   1.0.0
      */
-    public function objectToString($object, array $options = [])
+    public function objectToString(object $object, array $options = []): string
     {
         $bitMask = $options['bitmask'] ?? 0;
         $depth   = $options['depth'] ?? 512;
@@ -40,17 +39,16 @@ class Json implements FormatInterface
     /**
      * Parse a JSON formatted string and convert it into an object.
      *
-     * If the string is not in JSON format, this method will attempt to parse it as INI format.
-     *
      * @param  string  $data     JSON formatted string to convert.
      * @param  array   $options  Options used by the formatter.
      *
      * @return  object   Data object.
      *
-     * @throws  \RuntimeException
+     * @throws  \RuntimeException  if the string is not valid JSON
      * @since   1.0.0
+     * @since   __DEPLOY_VERSION__  A string that is not valid JSON is no longer parsed as INI, but throws an exception.
      */
-    public function stringToObject(string $data, array $options = ['processSections' => false])
+    public function stringToObject(string $data, array $options = ['processSections' => false]): object
     {
         $data = \trim($data);
 
@@ -62,11 +60,6 @@ class Json implements FormatInterface
 
         // Check for an error decoding the data
         if ($decoded === null && \json_last_error() !== JSON_ERROR_NONE) {
-            // If it's an ini file, parse as ini.
-            if ($data !== '' && $data[0] !== '{') {
-                return Factory::getFormat('Ini')->stringToObject($data, $options);
-            }
-
             throw new \RuntimeException(\sprintf('Error decoding JSON data: %s', \json_last_error_msg()));
         }
 

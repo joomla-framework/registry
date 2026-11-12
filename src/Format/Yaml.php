@@ -68,7 +68,7 @@ class Yaml implements FormatInterface
      *
      * @since   1.0.0
      */
-    public function objectToString($object, array $options = [])
+    public function objectToString(object|array $object, array $options = []): string
     {
         $array = \json_decode(\json_encode($object), true);
 
@@ -86,7 +86,7 @@ class Yaml implements FormatInterface
      *
      * @since   1.0.0
      */
-    public function stringToObject(string $data, array $options = [])
+    public function stringToObject(string $data, array $options = []): object
     {
         $array = $this->parser->parse(\trim($data));
 

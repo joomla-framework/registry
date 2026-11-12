@@ -52,7 +52,7 @@ class Ini implements FormatInterface
      *
      * @since   1.0.0
      */
-    public function objectToString($object, array $options = [])
+    public function objectToString(object $object, array $options = []): string
     {
         $options            = \array_merge(static::$options, $options);
         $supportArrayValues = $options['supportArrayValues'];
@@ -124,7 +124,7 @@ class Ini implements FormatInterface
      *
      * @since   1.0.0
      */
-    public function stringToObject(string $data, array $options = [])
+    public function stringToObject(string $data, array $options = []): object
     {
         $options = \array_merge(static::$options, $options);
 
@@ -281,7 +281,7 @@ class Ini implements FormatInterface
      *
      * @since   1.0.0
      */
-    protected function getValueAsIni($value)
+    protected function getValueAsIni(mixed $value): string
     {
         $string = '';
 
