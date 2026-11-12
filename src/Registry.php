@@ -613,44 +613,36 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
         }
 
         // Initialize the current node to be the registry root.
-        $node   = $this->data;
-        $parent = null;
+        $node = &$this->data;
 
-        // Traverse the registry to find the correct node for the result.
+        // Traverse the registry by reference, so that the value is removed from the real parent node.
         for ($i = 0, $n = \count($nodes) - 1; $i < $n; $i++) {
-            if (\is_object($node)) {
-                if (!isset($node->{$nodes[$i]})) {
-                    continue;
-                }
-
-                $parent = &$node;
-                $node   = $node->{$nodes[$i]};
+            if (\is_object($node) && isset($node->{$nodes[$i]})) {
+                $node = &$node->{$nodes[$i]};
 
                 continue;
             }
 
-            if (\is_array($node)) {
-                if (!isset($node[$nodes[$i]])) {
-                    continue;
-                }
-
-                $parent = &$node;
-                $node   = $node[$nodes[$i]];
+            if (\is_array($node) && isset($node[$nodes[$i]])) {
+                $node = &$node[$nodes[$i]];
 
                 continue;
             }
+
+            // A parent node does not exist, so there is nothing to remove.
+            return null;
         }
 
         // Get the old value if exists so we can return it
         switch (true) {
             case \is_object($node):
                 $result = $node->{$nodes[$i]} ?? null;
-                unset($parent->{$nodes[$i]});
+                unset($node->{$nodes[$i]});
                 break;
 
             case \is_array($node):
                 $result = $node[$nodes[$i]] ?? null;
-                unset($parent[$nodes[$i]]);
+                unset($node[$nodes[$i]]);
                 break;
 
             default:
