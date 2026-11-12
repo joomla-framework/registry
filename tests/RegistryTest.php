@@ -684,6 +684,37 @@ class RegistryTest extends TestCase
         $this->assertEquals($a->toArray(), ['foo' => 'bar']);
     }
 
+    public function testRemovingAPathWithAMissingParentReturnsNullAndRemovesNothing()
+    {
+        $a = new Registry(['x' => 1, 'c' => 'toplevel', 'b' => ['c' => 'nested']]);
+
+        $this->assertNull($a->remove('a.b.c'), 'A missing parent node must not resolve to the root.');
+        $this->assertNull($a->remove('a.c'));
+        $this->assertNull($a->remove('x.c'), 'A scalar parent node has no children.');
+
+        $this->assertSame(['x' => 1, 'c' => 'toplevel', 'b' => ['c' => 'nested']], $a->toArray());
+    }
+
+    public function testANestedKeyIsRemovedFromAnArrayNode()
+    {
+        $a = new Registry();
+        $a->set('a', ['b' => ['c' => 1, 'd' => 2]]);
+
+        $this->assertSame(1, $a->remove('a.b.c'));
+        $this->assertSame(['a' => ['b' => ['d' => 2]]], $a->toArray());
+
+        $this->assertSame(['d' => 2], $a->remove('a.b'));
+        $this->assertSame(['a' => []], $a->toArray());
+    }
+
+    public function testADeeplyNestedKeyIsRemovedFromObjectNodes()
+    {
+        $a = new Registry(['a' => ['b' => ['c' => 1, 'd' => 2]]]);
+
+        $this->assertSame(1, $a->remove('a.b.c'));
+        $this->assertSame(['a' => ['b' => ['d' => 2]]], $a->toArray());
+    }
+
     /**
      * @testdox  The Registry handles mixed array structures correctly
      *

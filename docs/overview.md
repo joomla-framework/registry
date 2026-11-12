@@ -19,6 +19,21 @@ $registry->set('foo', 'bar');
 $value = $registry->get('foo');
 ```
 
+### Removing values
+
+`remove()` deletes the value at a path and returns it. If the path, or one of its parent nodes, does not exist, nothing
+is removed and `null` is returned. Paths into array values work the same way as paths into objects.
+
+``` php
+use Joomla\Registry\Registry;
+
+$registry = new Registry();
+$registry->set('a', ['b' => ['c' => 1, 'd' => 2]]);
+
+$registry->remove('a.b.c');   // 1; 'a' is now ['b' => ['d' => 2]]
+$registry->remove('x.b.c');   // null; nothing was removed
+```
+
 ### Format Support
 
 A Registry supports import/export in several formats, including:
