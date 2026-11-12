@@ -113,7 +113,6 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @return  object
      *
      * @since   1.0.0
-     * @note    The interface is only present in PHP 5.4 and up.
      */
     #[\ReturnTypeWillChange]
     public function jsonSerialize()

@@ -17,7 +17,6 @@
         "phpstan/phpstan-deprecation-rules": "^2.0.3"
     },
     "suggest": {
-        "ext-json": "ext-json is needed for JSON support",
         "ext-simplexml": "ext-simplexml is needed for XML support",
         "symfony/yaml": "Install symfony/yaml if you require YAML support."
     },
