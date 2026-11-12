@@ -97,6 +97,9 @@ class Php implements FormatInterface
                 return $this->getArrayString((array) $value);
 
             case 'double':
+                // var_export() keeps the full precision and the type, e.g. 1.0 instead of 1
+                return \var_export($value, true);
+
             case 'integer':
                 return $value;
 

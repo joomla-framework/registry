@@ -152,4 +152,30 @@ array:
 
         $this->assertEquals($input, $output, 'Input and output data must be equal.');
     }
+
+    public function testValuesJsonCannotRepresentAreWritten()
+    {
+        $yaml = $this->fixture->objectToString(
+            (object) ['infinite' => INF, 'number' => 1, 'section' => (object) ['key' => 'value']]
+        );
+
+        $this->assertSame("infinite: .Inf\nnumber: 1\nsection:\n    key: value\n", $yaml);
+    }
+
+    public function testValuesJsonCannotRepresentAreRead()
+    {
+        $object = $this->fixture->stringToObject("infinite: .inf\nnumber: 1\n");
+
+        $this->assertEquals((object) ['infinite' => INF, 'number' => 1], $object);
+    }
+
+    public function testMappingsBecomeObjectsAndSequencesStayArrays()
+    {
+        $object = $this->fixture->stringToObject("list: [1, 2]\nmap: { a: { b: 1 } }\nempty: []\n");
+
+        $this->assertEquals(
+            (object) ['list' => [1, 2], 'map' => (object) ['a' => (object) ['b' => 1]], 'empty' => []],
+            $object
+        );
+    }
 }

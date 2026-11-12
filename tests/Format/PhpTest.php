@@ -132,6 +132,29 @@ class PhpTest extends TestCase
         $this->assertSame($string, $class->objectToString($object, $options));
     }
 
+    public function testFloatsAreWrittenWithFullPrecision()
+    {
+        $object           = new \stdClass();
+        $object->sum      = 0.1 + 0.2;
+        $object->whole    = 1.0;
+        $object->negative = -2.5;
+        $object->nested   = ['float' => 1 / 3];
+
+        $code = (new Php())->objectToString($object, ['class' => 'FloatPrecision', 'closingtag' => false]);
+
+        $this->assertStringContainsString("\tpublic \$sum = 0.30000000000000004;\n", $code);
+        $this->assertStringContainsString("\tpublic \$whole = 1.0;\n", $code);
+        $this->assertStringContainsString("\tpublic \$negative = -2.5;\n", $code);
+
+        eval(\substr($code, \strlen("<?php\n")));
+
+        $loaded = new \FloatPrecision();
+
+        $this->assertSame(0.1 + 0.2, $loaded->sum);
+        $this->assertSame(1.0, $loaded->whole);
+        $this->assertSame(1 / 3, $loaded->nested['float']);
+    }
+
     /**
      * @testdox  Conversion of PHP source code of a class into a data object is not implemented. `Php::stringToObject()` always returns an empty `stdClass` object.
      *
