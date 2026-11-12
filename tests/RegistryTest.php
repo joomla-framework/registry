@@ -570,6 +570,38 @@ class RegistryTest extends TestCase
     }
 
     /**
+     * @testdox  Mixed types are correctly stored and identified
+     *
+     * @covers   \Joomla\Registry\Registry
+     */
+    public function testMixedTypesInRegistry()
+    {
+        $instance = new Registry();
+        $instance->set('string', 'hello');
+        $instance->set('integer', 42);
+        $instance->set('array', ['a', 'b', 'c']);
+        $instance->set('object', new \stdClass());
+        $instance->set('registry', new Registry());
+
+        $expected = [
+            'string'   => ['type' => 'string'],
+            'integer'  => ['type' => 'integer'],
+            'array'    => ['type' => 'array'],
+            'object'   => ['type' => 'object', 'class' => \stdClass::class],
+            'registry' => ['type' => 'object', 'class' => Registry::class],
+        ];
+
+        foreach ($instance as $key => $value) {
+            $this->assertArrayHasKey($key, $expected, "Unexpected key '$key' found.");
+            $this->assertSame($expected[$key]['type'], gettype($value), "Type mismatch for key '$key'.");
+
+            if ($expected[$key]['type'] === 'object') {
+                $this->assertInstanceOf($expected[$key]['class'], $value, "Class mismatch for key '$key'.");
+            }
+        }
+    }
+
+    /**
      * @testdox  A value is stored to the Registry
      *
      * @covers   \Joomla\Registry\Registry
