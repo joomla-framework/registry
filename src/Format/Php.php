@@ -56,7 +56,8 @@ class Php implements FormatInterface
         if (isset($params['namespace']) && $params['namespace'] !== '') {
             static::validateNamespace($params['namespace']);
 
-            $str .= 'namespace ' . $params['namespace'] . ";\n\n";
+            // A namespace declaration is always fully qualified and must not start with a backslash
+            $str .= 'namespace ' . \ltrim($params['namespace'], '\\') . ";\n\n";
         }
 
         $str .= "class $class {\n";
@@ -104,7 +105,7 @@ class Php implements FormatInterface
      */
     protected static function validateIdentifier($value, string $label): void
     {
-        if (!\is_string($value) || !\preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/', $value)) {
+        if (!\is_string($value) || !\preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/D', $value)) {
             throw new \InvalidArgumentException(
                 \sprintf(
                     'The %s "%s" is not a valid PHP identifier and cannot be written to a PHP class file.',

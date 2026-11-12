@@ -8,6 +8,8 @@
 namespace Joomla\Registry\Tests\Format;
 
 use Joomla\Registry\Format\Php;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -143,5 +145,107 @@ class PhpTest extends TestCase
 
         // This method is not implemented in the class. The test is to achieve 100% code coverage
         $this->assertInstanceOf(\stdClass::class, $class->stringToObject(''));
+    }
+
+    #[TestDox('A leading backslash is stripped from the namespace so the generated code can be parsed')]
+    public function testALeadingBackslashIsStrippedFromTheNamespace()
+    {
+        $object      = new \stdClass();
+        $object->foo = 'bar';
+
+        $code = (new Php())->objectToString($object, ['class' => 'myClass', 'namespace' => '\\Joomla\\Registry\\Test']);
+
+        $this->assertStringStartsWith("<?php\nnamespace Joomla\\Registry\\Test;\n\nclass myClass {\n", $code);
+        $this->assertGeneratedCodeCanBeParsed($code);
+    }
+
+    #[TestDox('A valid object is converted to code that can be parsed')]
+    public function testAValidObjectIsConvertedToCodeThatCanBeParsed()
+    {
+        $object        = new \stdClass();
+        $object->_foo1 = 'bar\'; echo 1; //';
+        $object->bär   = ['a\'b' => 'c\\'];
+
+        $this->assertGeneratedCodeCanBeParsed(
+            (new Php())->objectToString($object, ['class' => 'Config_1', 'namespace' => 'Vendor\\Package'])
+        );
+    }
+
+    #[TestDox('An invalid property name is rejected')]
+    #[DataProvider('invalidIdentifierProvider')]
+    public function testAnInvalidPropertyNameIsRejected(string $name)
+    {
+        $object          = new \stdClass();
+        $object->{$name} = 1;
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('property name');
+
+        (new Php())->objectToString($object);
+    }
+
+    #[TestDox('A numeric property name is rejected')]
+    public function testANumericPropertyNameIsRejected()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Php())->objectToString((object) ['value']);
+    }
+
+    #[TestDox('An invalid class name is rejected')]
+    #[DataProvider('invalidIdentifierProvider')]
+    public function testAnInvalidClassNameIsRejected(string $name)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('class name');
+
+        (new Php())->objectToString(new \stdClass(), ['class' => $name]);
+    }
+
+    #[TestDox('An invalid namespace is rejected')]
+    #[DataProvider('invalidNamespaceProvider')]
+    public function testAnInvalidNamespaceIsRejected(mixed $namespace)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Php())->objectToString(new \stdClass(), ['namespace' => $namespace]);
+    }
+
+    public static function invalidIdentifierProvider(): \Generator
+    {
+        yield 'code injection' => ['x = 1; } echo chr(80).chr(87).chr(78); class Y { public $z'];
+        yield 'leading digit' => ['1abc'];
+        yield 'space' => ['foo bar'];
+        yield 'dash' => ['foo-bar'];
+        yield 'backslash' => ['Foo\\Bar'];
+        yield 'trailing newline' => ["foo\n"];
+    }
+
+    public static function invalidNamespaceProvider(): \Generator
+    {
+        yield 'code injection' => ['Foo; echo 1; namespace Bar'];
+        yield 'empty segment' => ['Foo\\\\Bar'];
+        yield 'trailing backslash' => ['Foo\\'];
+        yield 'only a backslash' => ['\\'];
+        yield 'leading digit in a segment' => ['Foo\\1Bar'];
+        yield 'not a string' => [['Foo']];
+    }
+
+    /**
+     * Assert that a string is syntactically valid PHP code.
+     *
+     * @param  string  $code  The generated code
+     *
+     * @return  void
+     */
+    private function assertGeneratedCodeCanBeParsed(string $code): void
+    {
+        try {
+            \token_get_all($code, TOKEN_PARSE);
+        } catch (\ParseError $e) {
+            $this->fail('The generated code cannot be parsed: ' . $e->getMessage() . "\n" . $code);
+        }
+
+        $this->addToAssertionCount(1);
     }
 }

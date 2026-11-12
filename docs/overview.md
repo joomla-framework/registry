@@ -59,6 +59,28 @@ $registry = new Registry;
 $registry->loadFile(__DIR__ . '/registry.json');
 ```
 
+#### PHP Class Export
+
+The PHP format writes the registry as the source code of a class with one public property per top-level key. The
+`class` option sets the class name (default `Registry`), `namespace` adds a namespace declaration (a leading backslash
+is removed), and `closingtag => false` omits the closing `?>`.
+
+``` php
+use Joomla\Registry\Registry;
+
+$registry = new Registry(['sitename' => 'My Site', 'debug' => false]);
+
+file_put_contents(
+    __DIR__ . '/configuration.php',
+    $registry->toString('PHP', ['class' => 'JConfig', 'namespace' => 'MyApp\\Config', 'closingtag' => false])
+);
+```
+
+Top-level keys, the class name and every namespace segment must be valid PHP identifiers. Anything else, for example a
+key containing a space or a dash, makes `toString()` throw an `InvalidArgumentException` instead of writing code that
+could not be parsed or that would execute injected statements. Values are always escaped. The PHP format can only
+export: reading such a file back with `loadFile()` or `loadString()` returns an empty registry.
+
 #### XML Structure
 
 Keep in mind that due to XML complexity, a special format must be kept when loading into Registry. By default, the
