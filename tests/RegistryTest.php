@@ -401,6 +401,34 @@ class RegistryTest extends TestCase
         $this->assertSame('testloadobject', $registry->get('foo'), 'The object\'s data should be correctly loaded.');
     }
 
+    public function testNestedDataReplacesAnExistingScalarWhenLoaded()
+    {
+        $registry = new Registry(['a' => 1, 'b' => 'keep']);
+        $registry->loadArray(['a' => ['b' => 2]]);
+
+        $this->assertSame(['a' => ['b' => 2], 'b' => 'keep'], $registry->toArray());
+
+        $registry = new Registry(['a' => 'scalar']);
+        $registry->loadObject((object) ['a' => (object) ['b' => 2]]);
+
+        $this->assertSame(['a' => ['b' => 2]], $registry->toArray());
+
+        $registry = new Registry(['a' => true]);
+        $registry->merge(new Registry(['a' => ['b' => 2]]), true);
+
+        $this->assertSame(['a' => ['b' => 2]], $registry->toArray());
+    }
+
+    public function testNestedDataIsMergedIntoAnExistingArrayWhenLoaded()
+    {
+        $registry = new Registry();
+        $registry->set('a', ['x' => 1]);
+        $registry->loadArray(['a' => ['b' => 2]]);
+
+        $this->assertSame(['a' => ['x' => 1, 'b' => 2]], $registry->toArray());
+        $this->assertSame(2, $registry->get('a.b'));
+    }
+
     /**
      * @testdox  The Registry can load a file
      *

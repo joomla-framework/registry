@@ -140,3 +140,20 @@ if (isset($registry['foo']))
     echo 'Say bar.';
 }
 ```
+
+### Merging data
+
+`loadArray()`, `loadObject()`, the constructor and `merge($source, true)` merge nested data recursively into what is
+already stored. Where the new data has a nested structure for a key that currently holds a scalar, the scalar is
+replaced. Where the key holds an array (for example one stored with `set()`), the new entries are merged into it and it
+becomes an object.
+
+``` php
+use Joomla\Registry\Registry;
+
+$registry = new Registry(['database' => 'mysql', 'cache' => ['handler' => 'file']]);
+$registry->loadArray(['database' => ['driver' => 'mysqli'], 'cache' => ['time' => 15]]);
+
+$registry->toArray();
+// ['database' => ['driver' => 'mysqli'], 'cache' => ['handler' => 'file', 'time' => 15]]
+```

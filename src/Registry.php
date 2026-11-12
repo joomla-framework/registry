@@ -728,6 +728,12 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
             if ($recursive && ((\is_array($v) && ArrayHelper::isAssociative($v)) || \is_object($v))) {
                 if (!isset($parent->$k)) {
                     $parent->$k = new \stdClass();
+                } elseif (\is_array($parent->$k)) {
+                    // Keep the existing entries of an array and merge the new data into them.
+                    $parent->$k = (object) $parent->$k;
+                } elseif (!\is_object($parent->$k)) {
+                    // A scalar cannot hold nested data, so it is replaced like any other value.
+                    $parent->$k = new \stdClass();
                 }
 
                 $this->bindData($parent->$k, $v);
