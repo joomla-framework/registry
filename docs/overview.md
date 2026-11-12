@@ -118,6 +118,10 @@ should be passed in the
 for one of the format
 types provided by this package.
 
+If the class found for the format does not implement `Joomla\Registry\FormatInterface`, `Factory::getFormat()` throws an
+`InvalidArgumentException` instead of instantiating it. The same applies to `loadString()`, `loadFile()` and
+`toString()`, which pass their options on to the factory.
+
 ### Accessing a Registry as an array
 
 The `Registry` class implements [ArrayAccess](https://secure.php.net/manual/en/class.arrayaccess.php) so the properties
