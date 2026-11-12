@@ -328,14 +328,17 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @since   1.0.0
      * @since   2.0.0  The parameter `$options` is now type hinted as `array`. Before 2.0.0, the type was not enforced.
+     * @since   __DEPLOY_VERSION__  Values set before the first load are merged with the loaded data instead of being
+     *                              discarded.
      */
     public function loadString($data, $format = 'JSON', array $options = [])
     {
         // Load a string into the given namespace [or default namespace if not given]
         $obj = Factory::getFormat($format, $options)->stringToObject($data, $options);
 
-        // If the data object has not yet been initialized, direct assign the object
-        if (!$this->initialized) {
+        // If the data object has not yet been initialized and holds no values set with set() or append(), direct
+        // assign the object
+        if (!$this->initialized && \get_object_vars($this->data) === []) {
             $this->data        = $obj;
             $this->initialized = true;
 
