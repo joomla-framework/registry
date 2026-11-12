@@ -30,7 +30,7 @@ class Factory
      * @since   2.0.0  Object caching is no longer supported. `Factory::getFormat()` returns a new `FormatInterface`
      *          instance on each call.
      */
-    public static function getFormat($type, array $options = [])
+    public static function getFormat(string $type, array $options = []): FormatInterface
     {
         // Sanitize format type.
         $type = \strtolower(\preg_replace('/[^A-Z\d_]/i', '', $type));

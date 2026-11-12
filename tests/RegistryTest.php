@@ -270,6 +270,40 @@ class RegistryTest extends TestCase
         $this->assertNull((new Registry())->get(''), 'The default value should be returned for an empty path.');
     }
 
+    public function testGetReturnsAStoredEmptyString()
+    {
+        $a = new Registry(['top' => '', 'nested' => ['key' => ''], 'list' => ['']]);
+
+        $this->assertSame('', $a->get('top', 'default'));
+        $this->assertSame('', $a->get('nested.key', 'default'));
+        $this->assertSame('', $a->get('list.0', 'default'));
+        $this->assertSame('default', $a->get('missing', 'default'));
+    }
+
+    public function testGetReturnsTheDefaultValueForAStoredNull()
+    {
+        $a = new Registry(['top' => null, 'nested' => ['key' => null]]);
+
+        $this->assertSame('default', $a->get('top', 'default'));
+        $this->assertSame('default', $a->get('nested.key', 'default'));
+    }
+
+    public function testAPathWithANullValueExists()
+    {
+        $a = new Registry();
+        $a->set('top', null);
+        $a->set('nested.key', null);
+        $a->set('list', [null]);
+
+        $this->assertTrue($a->exists('top'));
+        $this->assertTrue($a->exists('nested.key'));
+        $this->assertTrue($a->exists('list.0'));
+        $this->assertFalse($a->exists('missing'));
+        $this->assertFalse($a->exists('top.child'), 'A null value has no children.');
+
+        $this->assertFalse(isset($a['top']), 'isset() on the registry keeps the isset() semantics.');
+    }
+
     /**
      * @testdox  The Registry returns the assigned value when a key is set.
      *

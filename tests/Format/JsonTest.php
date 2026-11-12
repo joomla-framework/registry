@@ -63,15 +63,12 @@ class JsonTest extends TestCase
      * @testdox  A string is converted to a data object
      *
      * @covers   \Joomla\Registry\Format\Json
-     * @uses     \Joomla\Registry\Factory
-     * @uses     \Joomla\Registry\Format\Ini
      */
     public function testAStringIsConvertedToADataObject()
     {
         $class = new Json();
 
         $string1 = '{"title":"Joomla Framework","author":"Me","params":{"show_title":1,"show_abstract":0,"show_author":1,"categories":[1,2]}}';
-        $string2 = "[section]\nfoo=bar";
 
         $object1                        = new \stdClass();
         $object1->title                 = 'Joomla Framework';
@@ -82,33 +79,20 @@ class JsonTest extends TestCase
         $object1->params->show_author   = 1;
         $object1->params->categories    = [1, 2];
 
-        $object2               = new \stdClass();
-        $object2->section      = new \stdClass();
-        $object2->section->foo = 'bar';
-
-        $object3      = new \stdClass();
-        $object3->foo = 'bar';
-
         // Test basic JSON string to object.
         $this->assertEquals(
             $class->stringToObject($string1, ['processSections' => false]),
             $object1,
             'The complex JSON string should convert into the appropriate object.'
         );
+    }
 
-        // Test JSON format string without sections.
-        $this->assertEquals(
-            $class->stringToObject($string2, ['processSections' => false]),
-            $object3,
-            'The JSON string should convert into an object without sections.'
-        );
+    public function testAnIniStringCausesAnExceptionToBeThrown()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Error decoding JSON data');
 
-        // Test JSON format string with sections.
-        $this->assertEquals(
-            $class->stringToObject($string2, ['processSections' => true]),
-            $object2,
-            'The JSON string should covert into an object with sections.'
-        );
+        (new Json())->stringToObject("[section]\nfoo=bar", ['processSections' => true]);
     }
 
     /**

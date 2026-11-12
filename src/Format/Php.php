@@ -31,7 +31,7 @@ class Php implements FormatInterface
      * @since   2.0.0  The PHP format respects the data type of each value when generating the PHP source code.
      *                 Before 2.0.0, all data were converted to string notation.
      */
-    public function objectToString($object, array $params = [])
+    public function objectToString(object $object, array $params = []): string
     {
         // A class must be provided
         $class = $params['class'] ?? 'Registry';
@@ -72,7 +72,7 @@ class Php implements FormatInterface
      *
      * @since   1.0.0
      */
-    public function stringToObject(string $data, array $options = [])
+    public function stringToObject(string $data, array $options = []): object
     {
         return new \stdClass();
     }
@@ -86,7 +86,7 @@ class Php implements FormatInterface
      *
      * @since   2.0.0
      */
-    protected function formatValue($value)
+    protected function formatValue(mixed $value): mixed
     {
         switch (\gettype($value)) {
             case 'string':
@@ -119,7 +119,7 @@ class Php implements FormatInterface
      *
      * @since   1.0.0
      */
-    protected function getArrayString($a)
+    protected function getArrayString(array $a): string
     {
         $s = 'array(';
         $i = 0;

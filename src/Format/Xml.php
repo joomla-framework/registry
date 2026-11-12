@@ -30,7 +30,7 @@ class Xml implements FormatInterface
      *
      * @since   1.0.0
      */
-    public function objectToString($object, array $options = [])
+    public function objectToString(object $object, array $options = []): string
     {
         $rootName = $options['name'] ?? 'registry';
         $nodeName = $options['nodeName'] ?? 'node';
@@ -54,7 +54,7 @@ class Xml implements FormatInterface
      *
      * @since   1.0.0
      */
-    public function stringToObject(string $data, array $options = [])
+    public function stringToObject(string $data, array $options = []): object
     {
         $obj = new \stdClass();
 
@@ -77,7 +77,7 @@ class Xml implements FormatInterface
      *
      * @since   1.0.0
      */
-    protected function getValueFromNode($node)
+    protected function getValueFromNode(\SimpleXMLElement $node): mixed
     {
         switch ($node['type']) {
             case 'integer':
@@ -131,7 +131,7 @@ class Xml implements FormatInterface
      *
      * @since   1.0.0
      */
-    protected function getXmlChildren(\SimpleXMLElement $node, $var, $nodeName)
+    protected function getXmlChildren(\SimpleXMLElement $node, mixed $var, string $nodeName): void
     {
         // Iterate over the object members.
         foreach ((array) $var as $k => $v) {
