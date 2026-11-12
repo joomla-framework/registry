@@ -307,12 +307,19 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      *
      * @return  $this
      *
+     * @throws  \RuntimeException  if the file cannot be read
+     *
      * @since   1.0.0
      * @since   2.0.0  The parameter `$options` is now type hinted as `array`. Before 2.0.0, the type was not enforced.
+     * @since   __DEPLOY_VERSION__  Throws a `RuntimeException` if the file cannot be read instead of loading no data.
      */
     public function loadFile($file, $format = 'JSON', array $options = [])
     {
-        $data = \file_get_contents($file);
+        $data = @\file_get_contents($file);
+
+        if ($data === false) {
+            throw new \RuntimeException(\sprintf('The file "%s" does not exist or is not readable.', $file));
+        }
 
         return $this->loadString($data, $format, $options);
     }
