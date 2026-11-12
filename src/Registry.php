@@ -150,16 +150,16 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      */
     public function exists($path)
     {
-        // Return default value if path is empty
-        if (empty($path)) {
+        // Return false if path is empty; '0' is a valid key
+        if ((string) $path === '') {
             return false;
         }
 
-        // Explode the registry path into an array
+        // Explode the registry path into an array and remove empty nodes, as set() does
         if ($this->separator === null || $this->separator === '') {
             $nodes = [$path];
         } else {
-            $nodes = \explode($this->separator, $path);
+            $nodes = $this->explodePath($path);
         }
 
         // Initialize the current node to be the registry root.
@@ -198,19 +198,19 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      */
     public function get($path, $default = null)
     {
-        // Return default value if path is empty
-        if (empty($path)) {
+        // Return default value if path is empty; '0' is a valid key
+        if ((string) $path === '') {
             return $default;
         }
 
-        if ($this->separator === null || $this->separator === '' || !\strpos($path, $this->separator)) {
+        if ($this->separator === null || $this->separator === '' || \strpos($path, $this->separator) === false) {
             return (isset($this->data->$path) && $this->data->$path !== '')
                 ? $this->data->$path
                 : $default;
         }
 
-        // Explode the registry path into an array
-        $nodes = \explode($this->separator, \trim($path));
+        // Explode the registry path into an array and remove empty nodes, as set() does
+        $nodes = $this->explodePath(\trim($path));
 
         // Initialize the current node to be the registry root.
         $node  = $this->data;
@@ -591,7 +591,7 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
     public function remove($path)
     {
         // Cheap optimisation to direct remove the node if there is no separator
-        if ($this->separator === null || $this->separator === '' || !\strpos($path, $this->separator)) {
+        if ($this->separator === null || $this->separator === '' || \strpos($path, $this->separator) === false) {
             $result = (isset($this->data->$path) && $this->data->$path !== '')
                 ? $this->data->$path
                 : null;
@@ -659,6 +659,27 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
         }
 
         return $result;
+    }
+
+    /**
+     * Split a registry path into its nodes, dropping empty nodes from leading, trailing or double separators.
+     *
+     * @param  string  $path  Registry path (e.g. joomla.content.showauthor)
+     *
+     * @return  string[]
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function explodePath(string $path): array
+    {
+        return \array_values(
+            \array_filter(
+                \explode($this->separator, $path),
+                static function (string $node): bool {
+                    return $node !== '';
+                }
+            )
+        );
     }
 
     /**
