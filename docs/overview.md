@@ -48,7 +48,8 @@ file_put_contents(__DIR__ . '/registry.json', $registry->toString());
 #### Import from file
 
 Likewise, a registry can be imported from a file by the `loadFile()` method. The method accepts three parameters; the
-file name (required), a format type (defaulting to `JSON`), and an options array to pass to the formatter.
+file name (required), a format type (defaulting to `JSON`), and an options array to pass to the formatter. If the file
+does not exist or cannot be read, `loadFile()` throws a `RuntimeException` and leaves the registry unchanged.
 
 ``` php
 use Joomla\Registry\Registry;

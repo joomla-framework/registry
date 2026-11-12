@@ -420,6 +420,21 @@ class RegistryTest extends TestCase
         $this->assertSame('bar', $registry->get('foo'), 'The file\'s data should be correctly loaded.');
     }
 
+    public function testLoadingAMissingFileThrowsAnException()
+    {
+        $registry = new Registry(['foo' => 'bar']);
+
+        try {
+            $registry->loadFile(__DIR__ . '/Stubs/does-not-exist.json');
+
+            $this->fail('Loading a missing file should throw a RuntimeException.');
+        } catch (\RuntimeException $e) {
+            $this->assertStringContainsString('does-not-exist.json', $e->getMessage());
+        }
+
+        $this->assertSame(['foo' => 'bar'], $registry->toArray(), 'The data must be unchanged.');
+    }
+
     /**
      * @testdox  The Registry can load a string
      *
