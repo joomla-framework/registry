@@ -28,12 +28,17 @@ class Xml implements FormatInterface
      *
      * @return  string  XML formatted string.
      *
+     * @throws  \InvalidArgumentException  if the root or node name is not a valid XML name
+     *
      * @since   1.0.0
      */
     public function objectToString($object, array $options = [])
     {
         $rootName = $options['name'] ?? 'registry';
         $nodeName = $options['nodeName'] ?? 'node';
+
+        static::validateName($rootName, 'root');
+        static::validateName($nodeName, 'node');
 
         // Create the root node.
         $root = \simplexml_load_string('<' . $rootName . ' />');
@@ -52,14 +57,28 @@ class Xml implements FormatInterface
      *
      * @return  object   Data object.
      *
+     * @throws  \RuntimeException  if the data is not well-formed XML
+     *
      * @since   1.0.0
      */
     public function stringToObject(string $data, array $options = [])
     {
         $obj = new \stdClass();
 
-        // Parse the XML string.
-        $xml = \simplexml_load_string($data);
+        // Parse the XML string, collecting errors instead of emitting warnings and without network access.
+        $useInternalErrors = \libxml_use_internal_errors(true);
+
+        $xml    = \simplexml_load_string($data, \SimpleXMLElement::class, LIBXML_NONET);
+        $errors = \libxml_get_errors();
+
+        \libxml_clear_errors();
+        \libxml_use_internal_errors($useInternalErrors);
+
+        if ($xml === false) {
+            throw new \RuntimeException(
+                \sprintf('Error parsing XML data: %s', $errors ? \trim($errors[0]->message) : 'unknown error')
+            );
+        }
 
         foreach ($xml->children() as $node) {
             $obj->{$node['name']} = $this->getValueFromNode($node);
@@ -136,7 +155,8 @@ class Xml implements FormatInterface
         // Iterate over the object members.
         foreach ((array) $var as $k => $v) {
             if (\is_scalar($v)) {
-                $n = $node->addChild($nodeName, $v);
+                // addChild() treats "&" as the start of an entity reference, so the value must be escaped
+                $n = $node->addChild($nodeName, \htmlspecialchars((string) $v, ENT_XML1 | ENT_SUBSTITUTE));
                 $n->addAttribute('name', $k);
                 $n->addAttribute('type', \gettype($v));
             } else {
@@ -146,6 +166,34 @@ class Xml implements FormatInterface
 
                 $this->getXmlChildren($n, $v, $nodeName);
             }
+        }
+    }
+
+    /**
+     * Ensure a root or node name is a valid XML name before it is used to build the document.
+     *
+     * @param  mixed   $name   The name to check.
+     * @param  string  $label  What the name is used for, used in the exception message.
+     *
+     * @return  void
+     *
+     * @throws  \InvalidArgumentException
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    protected static function validateName(mixed $name, string $label): void
+    {
+        // A letter or underscore, followed by letters, digits, underscores, dots and dashes; colons are not supported
+        $pattern = '/^[A-Za-z_\x{80}-\x{10FFFF}][A-Za-z0-9_.\-\x{80}-\x{10FFFF}]*$/uD';
+
+        if (!\is_string($name) || !\preg_match($pattern, $name)) {
+            throw new \InvalidArgumentException(
+                \sprintf(
+                    'The %s name "%s" is not a valid XML name.',
+                    $label,
+                    \is_scalar($name) ? (string) $name : \gettype($name)
+                )
+            );
         }
     }
 }

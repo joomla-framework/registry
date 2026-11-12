@@ -8,6 +8,8 @@
 namespace Joomla\Registry\Tests\Format;
 
 use Joomla\Registry\Format\Xml;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -130,5 +132,70 @@ class XmlTest extends TestCase
         $output = $class->objectToString($object);
 
         $this->assertEquals($input, $output, 'Input and output data must be equal.');
+    }
+
+    #[TestDox('Values with special characters survive a round trip')]
+    public function testValuesWithSpecialCharactersSurviveARoundTrip()
+    {
+        $class  = new Xml();
+        $object = (object) [
+            'ampersand' => 'x & y <z>',
+            'entity'    => 'already &amp; escaped',
+            'quotes'    => 'He said "it\'s"',
+        ];
+
+        $this->assertEquals($object, $class->stringToObject($class->objectToString($object)));
+    }
+
+    #[TestDox('Malformed XML throws an exception instead of an error')]
+    public function testMalformedXmlThrowsAnException()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Error parsing XML data');
+
+        (new Xml())->stringToObject('<bad');
+    }
+
+    #[TestDox('Parse errors do not leak into the libxml error buffer')]
+    public function testParseErrorsDoNotLeakIntoTheLibxmlErrorBuffer()
+    {
+        $previous = \libxml_use_internal_errors(false);
+
+        try {
+            (new Xml())->stringToObject('<bad');
+        } catch (\RuntimeException $e) {
+            // Expected
+        }
+
+        $this->assertFalse(\libxml_use_internal_errors($previous), 'The libxml error handling setting must be restored.');
+        $this->assertSame([], \libxml_get_errors());
+    }
+
+    #[TestDox('An invalid root or node name is rejected')]
+    #[DataProvider('invalidNameProvider')]
+    public function testAnInvalidRootOrNodeNameIsRejected(string $option, mixed $name)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Xml())->objectToString((object) ['foo' => 'bar'], [$option => $name]);
+    }
+
+    public static function invalidNameProvider(): \Generator
+    {
+        yield 'root name with markup' => ['name', 'registry/><injected'];
+        yield 'root name with a space' => ['name', 'my registry'];
+        yield 'empty root name' => ['name', ''];
+        yield 'node name with markup' => ['nodeName', 'node><injected/'];
+        yield 'node name starting with a digit' => ['nodeName', '1node'];
+        yield 'node name that is not a string' => ['nodeName', ['node']];
+    }
+
+    #[TestDox('Custom root and node names are used')]
+    public function testCustomRootAndNodeNamesAreUsed()
+    {
+        $this->assertSame(
+            "<?xml version=\"1.0\"?>\n<data><value name=\"foo\" type=\"string\">bar</value></data>\n",
+            (new Xml())->objectToString((object) ['foo' => 'bar'], ['name' => 'data', 'nodeName' => 'value'])
+        );
     }
 }
