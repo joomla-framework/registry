@@ -91,6 +91,12 @@ The nodes can be optionally filtered with a "type" attribute. Valid types are:
 </registry>
 ```
 
+Malformed XML makes `loadString()` and `loadFile()` throw a `RuntimeException` with the parser's first error message.
+The document is parsed without network access (`LIBXML_NONET`), and parser errors are not left in libxml's error buffer.
+When exporting, values are escaped, so characters such as `&` and `<` survive a round trip. The root and node names
+must be valid XML names (letters, digits, `_`, `.` and `-`, starting with a letter or `_`); anything else makes `toString()`
+throw an `InvalidArgumentException`.
+
 The names of the XML import nodes can be customised using options. For example:
 
 ``` php
