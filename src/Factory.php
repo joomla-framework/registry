@@ -24,11 +24,12 @@ class Factory
      *
      * @return  FormatInterface  Registry format handler
      *
-     * @throws  \InvalidArgumentException
+     * @throws  \InvalidArgumentException  if the format class cannot be found or does not implement FormatInterface
      *
      * @since   1.5.0
      * @since   2.0.0  Object caching is no longer supported. `Factory::getFormat()` returns a new `FormatInterface`
      *          instance on each call.
+     * @since   __DEPLOY_VERSION__  Throws an `InvalidArgumentException` if the class does not implement `FormatInterface`.
      */
     public static function getFormat($type, array $options = [])
     {
@@ -50,6 +51,13 @@ class Factory
             if (!\class_exists($class)) {
                 throw new \InvalidArgumentException(\sprintf('Unable to load format class for type "%s".', $type), 500);
             }
+        }
+
+        if (!\is_subclass_of($class, FormatInterface::class)) {
+            throw new \InvalidArgumentException(
+                \sprintf('The format class "%s" does not implement "%s".', $class, FormatInterface::class),
+                500
+            );
         }
 
         return new $class();

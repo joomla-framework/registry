@@ -10,6 +10,8 @@ namespace Joomla\Registry\Tests;
 use Joomla\Registry\Factory;
 use Joomla\Registry\Format\Ini;
 use Joomla\Registry\Format\Json;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -66,5 +68,22 @@ class FactoryTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         Factory::getFormat('sql');
+    }
+
+    #[TestDox('An exception is thrown if the requested class is not a format')]
+    #[DataProvider('nonFormatClassProvider')]
+    public function testGetInstanceNotAFormat(string $type, string $namespace)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('does not implement');
+
+        Factory::getFormat($type, ['format_namespace' => $namespace]);
+    }
+
+    public static function nonFormatClassProvider(): \Generator
+    {
+        yield 'Registry' => ['Registry', 'Joomla\\Registry'];
+        yield 'Factory' => ['Factory', 'Joomla\\Registry'];
+        yield 'stdClass' => ['stdClass', ''];
     }
 }
