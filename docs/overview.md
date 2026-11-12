@@ -7,6 +7,10 @@ formats.
 
 The following demonstrates basic usage for storing and retrieving data from the store.
 
+`get()` returns the default value not only for a path that does not exist, but also when the stored value is `null` or
+an empty string `''`. `exists()` follows `isset()`: it returns `false` for a value that is set to `null`, and `true`
+for `''`. Use `exists()` to tell a stored empty string from a missing one. Both may change in 5.0.
+
 ``` php
 use Joomla\Registry\Registry;
 
@@ -28,6 +32,21 @@ A Registry supports import/export in several formats, including:
 - PHP
 - XML
 - YAML (requires [Symfony's Yaml Component](https://symfony.com/doc/current/components/yaml.html))
+
+The JSON format passes the options `bitmask` and `depth` to `json_encode()`. If the data cannot be encoded, for example
+because a string is not valid UTF-8, `toString()` throws a `RuntimeException`; add `JSON_PARTIAL_OUTPUT_ON_ERROR` to
+`bitmask` to write such values as `null` instead.
+
+When reading, the JSON format parses a string that is not valid JSON and does not start with `{` as INI. This fallback
+is deprecated and will be removed in 5.0, where invalid JSON always throws a `RuntimeException`. Load INI data with the
+`INI` format, and set the `iniFallback` option to `false` to get the 5.0 behaviour now:
+
+``` php
+$registry->loadString($data, 'JSON', ['iniFallback' => false]);
+```
+
+The PHP format can only export. Reading with it, as in `loadFile($file, 'PHP')`, always yields an empty registry; this
+is deprecated and will change in 5.0. Include the file and pass an instance of the class to `loadObject()` instead.
 
 #### Export to file
 

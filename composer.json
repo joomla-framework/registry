@@ -7,7 +7,8 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^8.3.0",
-        "joomla/utilities": "^4.0"
+        "joomla/utilities": "^4.0",
+        "symfony/deprecation-contracts": "^2|^3"
     },
     "require-dev": {
         "symfony/yaml": "^7.3",

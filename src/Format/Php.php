@@ -71,9 +71,19 @@ class Php implements FormatInterface
      * @return  object   Data object.
      *
      * @since   1.0.0
+     * @deprecated  5.0  Reading PHP source code is not supported; this method always returns an empty object.
+     *                   Include the file and pass an instance of the class to Registry::loadObject() instead.
      */
     public function stringToObject(string $data, array $options = [])
     {
+        trigger_deprecation(
+            'joomla/registry',
+            '__DEPLOY_VERSION__',
+            '%s() is deprecated and will no longer return an empty object in 5.0. Include the file and pass an'
+            . ' instance of the class to Joomla\Registry\Registry::loadObject() instead.',
+            __METHOD__
+        );
+
         return new \stdClass();
     }
 

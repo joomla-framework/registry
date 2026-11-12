@@ -141,6 +141,8 @@ class PhpTest extends TestCase
     {
         $class = new Php();
 
+        $this->expectUserDeprecationMessageMatches('/Php::stringToObject\(\) is deprecated/');
+
         // This method is not implemented in the class. The test is to achieve 100% code coverage
         $this->assertInstanceOf(\stdClass::class, $class->stringToObject(''));
     }

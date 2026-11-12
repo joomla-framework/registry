@@ -8,6 +8,7 @@
 namespace Joomla\Registry\Tests\Format;
 
 use Joomla\Registry\Format\Json;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -121,6 +122,41 @@ class JsonTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         (new Json())->stringToObject('{key:\'value\'');
+    }
+
+    #[TestDox('Parsing INI data with the JSON format triggers a deprecation')]
+    public function testParsingIniDataWithTheJsonFormatIsDeprecated()
+    {
+        $this->expectUserDeprecationMessageMatches('/Parsing INI data with the JSON format is deprecated/');
+
+        $this->assertEquals((object) ['foo' => 'bar'], (new Json())->stringToObject("foo=bar\n[broken"));
+    }
+
+    #[TestDox('The INI fallback can be disabled')]
+    public function testTheIniFallbackCanBeDisabled()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Error decoding JSON data');
+
+        (new Json())->stringToObject("foo=bar\n[broken", ['iniFallback' => false]);
+    }
+
+    #[TestDox('An object that cannot be encoded causes an Exception to be thrown')]
+    public function testAnObjectThatCannotBeEncodedCausesAnExceptionToBeThrown()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Error encoding JSON data');
+
+        (new Json())->objectToString((object) ['invalid' => "\xB1\x31"]);
+    }
+
+    #[TestDox('Encoding options are passed to json_encode()')]
+    public function testEncodingOptionsArePassedToJsonEncode()
+    {
+        $this->assertSame(
+            '{"invalid":null}',
+            (new Json())->objectToString((object) ['invalid' => "\xB1\x31"], ['bitmask' => JSON_PARTIAL_OUTPUT_ON_ERROR])
+        );
     }
 
     /**
