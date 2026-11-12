@@ -4,10 +4,11 @@
 hold access credentials or anything else that must not sit on disk in clear text.
 
 It is an **optional feature**: nothing in the rest of the package touches it, and the class is only
-usable once `joomla/crypt` is installed.
+usable once `joomla/crypt` is installed. The examples below use the `Crypto` cipher, which also
+needs `defuse/php-encryption`:
 
 ```bash
-composer require joomla/crypt
+composer require joomla/crypt defuse/php-encryption
 ```
 
 > This class was part of the separate `joomla/keychain` package until registry 4.1. See
@@ -16,20 +17,43 @@ composer require joomla/crypt
 ## Creating a keychain
 
 ```php
-use Joomla\Crypt\Crypt;
-use Joomla\Registry\Keychain;
-
-$crypt    = new Crypt();
-$keychain = new Keychain($crypt);
-```
-
-```php
 public function __construct(Crypt $crypt, $data = null)
 ```
 
-The second argument binds initial data, exactly as `Registry` does. See the
-[crypt package](https://github.com/joomla-framework/crypt) for how to configure a `Crypt` with the
-cipher and key you want — the default is not something to ship without thinking about.
+The second argument binds initial data, exactly as `Registry` does. The first is a `Crypt` instance
+configured with a cipher **and a key you keep**: a keychain can only be read back with the key it
+was saved with.
+
+Generate the key once and store it outside the keychain — in an environment variable, a secrets
+manager or a file outside the web root:
+
+```php
+use Joomla\Crypt\Cipher\Crypto;
+
+$key = (new Crypto())->generateKey();
+
+// Store this string somewhere safe; it is the only way to decrypt the keychain.
+echo $key->getPrivate();
+```
+
+Then build the `Crypt` from the stored key every time:
+
+```php
+use Joomla\Crypt\Cipher\Crypto;
+use Joomla\Crypt\Crypt;
+use Joomla\Crypt\Key;
+use Joomla\Registry\Keychain;
+
+$crypt    = new Crypt(new Crypto(), new Key('crypto', getenv('KEYCHAIN_KEY'), ''));
+$keychain = new Keychain($crypt);
+```
+
+Do not use `new Crypt()` without arguments. In joomla/crypt 4.x it falls back to the `Crypto` cipher
+with a freshly generated key that is never stored, so a keychain saved that way cannot be opened
+again by the next request. joomla/crypt 5.0 requires both arguments.
+
+`Crypto` authenticates its ciphertext: a wrong key or a modified file raises
+`Joomla\Crypt\Exception\DecryptionException`. Prefer it over the other ciphers in joomla/crypt.
 
 ## Loading and saving
 
@@ -71,18 +95,20 @@ Five console commands ship with the package. They need
 composer require joomla/console
 ```
 
-Each command takes a configured `Crypt` instance:
+Each command takes a `Crypt` instance configured as shown above:
 
 ```php
 use Joomla\Console\Application;
+use Joomla\Crypt\Cipher\Crypto;
 use Joomla\Crypt\Crypt;
+use Joomla\Crypt\Key;
 use Joomla\Registry\Command\AddEntryCommand;
 use Joomla\Registry\Command\DeleteEntryCommand;
 use Joomla\Registry\Command\EditEntryCommand;
 use Joomla\Registry\Command\ListEntriesCommand;
 use Joomla\Registry\Command\ReadEntryCommand;
 
-$crypt = new Crypt();
+$crypt = new Crypt(new Crypto(), new Key('crypto', getenv('KEYCHAIN_KEY'), ''));
 
 $app = new Application();
 $app->addCommand(new AddEntryCommand($crypt));
@@ -93,16 +119,16 @@ $app->addCommand(new ReadEntryCommand($crypt));
 $app->execute();
 ```
 
-| Command | Purpose |
-|---|---|
-| `keychain:add-entry` | Adds an entry, refusing to overwrite an existing key |
-| `keychain:edit-entry` | Changes an existing entry |
-| `keychain:delete-entry` | Removes an entry |
-| `keychain:list` | Lists every key |
-| `keychain:read-entry` | Prints one value |
+| Command | Arguments | Purpose |
+|---|---|---|
+| `keychain:add-entry` | `<filename> <entry-name> <entry-value>` | Adds an entry, refusing to overwrite an existing key |
+| `keychain:edit-entry` | `<filename> <entry-name> <entry-value>` | Sets an entry's value; also creates the entry if it does not exist |
+| `keychain:delete-entry` | `<filename> <entry-name>` | Removes an entry; a missing key is reported as a note |
+| `keychain:list` | `<filename> [--print-values]` | Lists the top-level keys, with their values if `--print-values` is given |
+| `keychain:read-entry` | `<filename> <entry-name>` | Prints one entry; a missing key is reported as a warning |
 
-Every command takes the path to the keychain file as its first argument. `--help` on each one lists
-the rest.
+The file must already exist (see [below](#things-to-know-before-you-build-on-this)). `--help` on each
+command describes its arguments.
 
 ## Things to know before you build on this
 
@@ -119,10 +145,11 @@ chmod($file, 0600);
 processes saving at once will lose one set of changes. If that matters, write to a temporary file
 and `rename()` it into place.
 
-**Load errors are not reported.** `loadKeychain()` checks that the file exists but not that it
-could be read, and does not check the result of `json_decode()`. With a cipher that does not
-authenticate its ciphertext, a corrupted or tampered file decrypts to noise and yields an empty
-keychain rather than an error — so a missing entry can mean "not set" or "file damaged".
+**Load errors are not always reported.** `loadKeychain()` checks that the file exists but not that
+it could be read, and does not check the result of `json_decode()`. With `Crypto` a damaged file
+fails to decrypt and raises an exception. With a cipher that does not authenticate its ciphertext,
+such as `OpenSSL`, a corrupted or tampered file can decrypt to noise and yield an empty keychain
+rather than an error — so a missing entry can mean "not set" or "file damaged".
 
 ```php
 $keychain->loadKeychain($file);
@@ -138,8 +165,14 @@ data. A stray `json_encode($keychain)` or string interpolation writes every secr
 Treat the object as write-only outside of `get()`.
 
 **Secrets on the command line are visible to other users.** `keychain:add-entry` and
-`keychain:edit-entry` take the value as an argument, and command lines are readable through `ps`
-and land in the shell history. Prefer piping the value in, or set it from PHP.
+`keychain:edit-entry` only accept the value as an argument, and command lines are readable through
+`ps` and land in the shell history. For sensitive values, set them from PHP instead.
+
+**Nested entries break two commands.** A key with a dot, such as `database.password`, is stored as a
+nested value, as everywhere in `Registry`. Once the keychain contains one, `keychain:list
+--print-values` fails with "A cell must be a TableCell, a scalar or an object implementing
+`__toString()`", and so does `keychain:read-entry database`. Reading the full path,
+`keychain:read-entry <file> database.password`, works.
 
 **There is no `keychain:create`.** Every command requires the file to exist already, so the first
 entry cannot be added through the CLI. Create the file from PHP once:

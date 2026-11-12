@@ -192,8 +192,8 @@ therefore produce a partially populated registry rather than an error.
 `loadFile($file, 'PHP')` always yields an empty registry with no indication that nothing was read.
 
 When generating PHP with `toString('PHP')`, note that property names, the `class` option and the
-`namespace` option must be valid PHP identifiers — they are written into the generated source and
-are validated for that reason. Values are escaped.
+`namespace` option must be valid PHP identifiers — they are written into the generated source as
+they are. Never build them from untrusted input. Values are escaped.
 
 **`Format\Xml` does not harden the parser.** `simplexml_load_string()` is called without
 `LIBXML_NONET`, without internal error handling and without a check of the return value. Do not

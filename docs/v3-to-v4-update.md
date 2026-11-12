@@ -1,18 +1,18 @@
 # Updating from v3 to v4
 
 Release 4.0.0 raises the PHP requirement and removes the backwards-compatibility layers that were
-deprecated in 2.0 and 3.0: the `$separator` parameters, the magic property accessors, and the
-untyped `stringToObject()` signature.
+deprecated in 2.0 and 3.0: the `$separator` parameters and the magic accessors that kept the
+`$separator` property public, and the untyped `stringToObject()` signature.
 
 ## At a glance
 
 | | v3 (3.0.1) | v4 (4.0.0) |
 |---|---|---|
 | PHP | `^8.1.0` | `^8.3.0` |
-| `$registry->foo` read/write | deprecated, works | **removed** |
+| `$registry->separator` read/write | deprecated, works | **`Error`** (protected property) |
 | `set()` / `loadArray()` `$separator` argument | deprecated, works | **removed** |
 | `FormatInterface::stringToObject()` | `$data` untyped | `string $data` |
-| `getIterator()` | iterated the raw object | iterates `toArray()` |
+| `getIterator()` | top level of the data, nested values as `stdClass` | 4.0.0 only: `toArray()`; 4.0.1 restored the v3 behaviour |
 
 ## Minimum supported PHP version raised
 
@@ -20,24 +20,34 @@ All Framework packages now require **PHP 8.3** or newer.
 
 ## The magic property accessors were removed
 
-`Registry::__get()` and `__set()` proxied property access onto the internal data and emitted a
-deprecation notice. Both are gone:
+In v3, `Registry::__get()` and `__set()` existed only to keep the old public `$separator` property
+working: `$registry->separator` could be read and written, with a deprecation notice. Both methods
+are gone, so in v4 that access throws:
 
 ```php
-// Removed in 4.0.0
-$registry->database;
-$registry->database = 'mysql';
+// v3: works, with a deprecation notice. v4: Error: Cannot access protected property
+$registry->separator;
+$registry->separator = '/';
 
-// Use the path API
+// v4: pass the separator to the constructor instead
+$registry = new Registry(null, '/');
+```
+
+The magic methods never gave access to the registry's **data**. In both versions,
+`$registry->database` does not read the `database` entry: v3 raised a notice and returned `null`,
+v4 raises PHP's *Undefined property* warning and returns `null`. Writing `$registry->database = …`
+creates a stray object property (deprecated in v3 and by PHP 8.2+) and leaves the data unchanged.
+If you find such code while upgrading, it was already broken; use the path API:
+
+```php
 $registry->get('database');
 $registry->set('database', 'mysql');
 ```
 
-Reading now raises *Undefined property* and evaluates to `null`, so the failure typically surfaces
-later as an error on `null`. To find the call sites:
+To find remaining uses of the separator property:
 
 ```bash
-grep -rnE '\$[a-zA-Z_]+(config|registry|params|state)\->[a-z]' src/
+grep -rn -- '->separator' src/
 ```
 
 ## The per-call `$separator` argument was removed
@@ -76,28 +86,19 @@ Passing `null` now raises a `TypeError` rather than being coerced — worth noti
 `Registry::loadFile()` still hands the result of `file_get_contents()` straight through, and that
 is `false` for an unreadable file.
 
-## `getIterator()` returns the flattened array
+## `getIterator()` in 4.0.0
 
-```php
-// v3
-return new \ArrayIterator($this->data);      // the raw stdClass
-
-// v4
-return new \ArrayIterator($this->toArray()); // nested arrays throughout
-```
-
-Iterating a registry now yields arrays where it previously yielded `stdClass` objects for nested
-levels:
+Release 4.0.0 changed `getIterator()` to iterate `toArray()`, so nested levels came back as arrays
+instead of `stdClass` objects. 4.0.1 reverted this, and from 4.0.1 on iteration behaves as in v3:
 
 ```php
 foreach ($registry as $key => $value) {
-    // v3: $value could be a stdClass
-    // v4: $value is an array
+    // v3 and 4.0.1+: the top-level entries; nested levels are stdClass objects
+    // 4.0.0 only:    nested levels are arrays
 }
 ```
 
-Note that `count($registry)` still counts only the top level, so it does not match
-`iterator_count($registry)`.
+Require at least 4.0.1 rather than 4.0.0 if your code iterates a registry.
 
 ## Dependency changes
 
@@ -106,4 +107,5 @@ Note that `count($registry)` still counts only the top level, so it does not mat
 | `php` | `^8.1.0` | `^8.3.0` |
 | `joomla/utilities` | `^3.0` | `^4.0` |
 
-`symfony/yaml`, `ext-json`, `ext-simplexml` and `joomla/crypt` remain optional, in `suggest`.
+`symfony/yaml`, `ext-json` and `ext-simplexml` remain optional, in `suggest`. Release 4.1 adds
+`joomla/crypt` and `joomla/console` there for the optional [keychain](keychain.md).
