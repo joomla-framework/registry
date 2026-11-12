@@ -105,4 +105,42 @@ class IniTest extends TestCase
 
         $this->assertEquals($input, $output, 'Input and output data must be equal.');
     }
+
+    public function testTheCacheRespectsTheSupportArrayValuesOption()
+    {
+        $class = new Ini();
+        $input = "cachearray[]=1\ncachearray[]=2";
+
+        $this->assertEquals(new \stdClass(), $class->stringToObject($input));
+        $this->assertEquals(
+            (object) ['cachearray' => [1, 2]],
+            $class->stringToObject($input, ['supportArrayValues' => true])
+        );
+    }
+
+    public function testTheCacheRespectsTheParseBooleanWordsOption()
+    {
+        $class = new Ini();
+        $input = 'cacheboolean=yes';
+
+        $this->assertSame('yes', $class->stringToObject($input)->cacheboolean);
+        $this->assertTrue($class->stringToObject($input, ['parseBooleanWords' => true])->cacheboolean);
+    }
+
+    public function testChangesToAParsedObjectDoNotLeakIntoTheCache()
+    {
+        $class   = new Ini();
+        $input   = "[cachesection]\nkey=\"value\"";
+        $options = ['processSections' => true];
+
+        // First call fills the cache, the second one is served from it
+        $first = $class->stringToObject($input, $options);
+        $first->cachesection->key = 'changed';
+
+        $second = $class->stringToObject($input, $options);
+        $this->assertSame('value', $second->cachesection->key);
+
+        $second->cachesection->key = 'changed again';
+        $this->assertSame('value', $class->stringToObject($input, $options)->cachesection->key);
+    }
 }

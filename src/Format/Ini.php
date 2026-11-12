@@ -128,11 +128,15 @@ class Ini implements FormatInterface
     {
         $options = \array_merge(static::$options, $options);
 
-        // Check the memory cache for already processed strings.
-        $hash = \md5($data . ':' . (int) $options['processSections']);
+        // Check the memory cache for already processed strings. Every option changes the result, so all are part of the key.
+        $hash = \md5(
+            $data . ':' . (int) $options['processSections'] . (int) $options['supportArrayValues']
+            . (int) $options['parseBooleanWords']
+        );
 
+        // Return a deep copy, so that changes by the caller do not leak into the cache.
         if (isset(static::$cache[$hash])) {
-            return static::$cache[$hash];
+            return \unserialize(\serialize(static::$cache[$hash]));
         }
 
         // If no lines present just return the object.
@@ -266,8 +270,8 @@ class Ini implements FormatInterface
             $array = false;
         }
 
-        // Cache the string to save cpu cycles -- thus the world :)
-        static::$cache[$hash] = clone $obj;
+        // Cache a deep copy of the result to save cpu cycles -- thus the world :)
+        static::$cache[$hash] = \unserialize(\serialize($obj));
 
         return $obj;
     }
