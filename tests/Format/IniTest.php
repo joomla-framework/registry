@@ -8,6 +8,8 @@
 namespace Joomla\Registry\Tests\Format;
 
 use Joomla\Registry\Format\Ini;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -85,6 +87,37 @@ class IniTest extends TestCase
 
         // Trigger the cache - Doing this only to achieve 100% code coverage. ;-)
         $this->assertEquals($class->stringToObject($string4), $object3);
+    }
+
+    #[TestDox('A string value survives a round trip')]
+    #[DataProvider('specialStringProvider')]
+    public function testAStringValueSurvivesARoundTrip(string $value)
+    {
+        $class  = new Ini();
+        $object = (object) ['value' => $value];
+
+        $this->assertSame($value, $class->stringToObject($class->objectToString($object))->value);
+    }
+
+    public static function specialStringProvider(): \Generator
+    {
+        yield 'Windows path' => ['C:\\new\\temp'];
+        yield 'literal backslash-n' => ['line\\nstill the same line'];
+        yield 'trailing backslash' => ['C:\\'];
+        yield 'double quotes' => ['say "hi"'];
+        yield 'newline' => ["first\nsecond"];
+        yield 'CRLF' => ["first\r\nsecond"];
+        yield 'regex' => ['/^\\d+\\.\\d+$/'];
+        yield 'everything' => ["say \"hi\" \\n path C:\\new\nnext line"];
+    }
+
+    #[TestDox('Backslashes and quotes are escaped when writing')]
+    public function testBackslashesAndQuotesAreEscapedWhenWriting()
+    {
+        $this->assertSame(
+            'path="C:\\\\new \\"dir\\"\\nnext"',
+            (new Ini())->objectToString((object) ['path' => "C:\\new \"dir\"\nnext"])
+        );
     }
 
     /**

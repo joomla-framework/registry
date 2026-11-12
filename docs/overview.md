@@ -23,7 +23,8 @@ $value = $registry->get('foo');
 
 A Registry supports import/export in several formats, including:
 
-- INI
+- INI (string values are written in double quotes with C-style escapes for `\`, `"` and line breaks, and unescaped
+  when read)
 - JSON (requires ext-json. As of PHP 8.0.0, the JSON extension is a core PHP extension, so it is always enabled.
 - PHP
 - XML

@@ -206,9 +206,8 @@ class Ini implements FormatInterface
             $length = \strlen($value);
 
             if ($length && ($value[0] === '"') && ($value[$length - 1] === '"')) {
-                // Strip the quotes and Convert the new line characters.
+                // Strip the quotes and unescape the value, including new line characters.
                 $value = \stripcslashes(\substr($value, 1, $length - 2));
-                $value = \str_replace('\n', "\n", $value);
             } else {
                 // If the value is not quoted, we assume it is not a string.
 
@@ -298,8 +297,8 @@ class Ini implements FormatInterface
                 break;
 
             case 'string':
-                // Sanitize any CRLF characters..
-                $string = '"' . \str_replace(["\r\n", "\n"], '\\n', $value) . '"';
+                // Escape backslashes, quotes and line breaks, so that stripcslashes() restores the value when reading.
+                $string = '"' . \addcslashes($value, "\\\"\n\r") . '"';
 
                 break;
         }
