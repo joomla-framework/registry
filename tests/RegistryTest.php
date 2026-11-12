@@ -314,6 +314,37 @@ class RegistryTest extends TestCase
         $this->assertSame(0, $a->get('goo.bar'), 'The Registry correctly handles when a nested key has a value of 0');
     }
 
+    public function testTheKeyZeroCanBeRead()
+    {
+        $a = new Registry();
+        $a->set('0', 'zero');
+        $a->set('nested.0', 'nested zero');
+
+        $this->assertSame('zero', $a->get('0', 'default'));
+        $this->assertTrue($a->exists('0'));
+        $this->assertSame('nested zero', $a->get('nested.0', 'default'));
+        $this->assertTrue($a->exists('nested.0'));
+        $this->assertSame('default', $a->get('', 'default'), 'An empty path still returns the default.');
+        $this->assertFalse($a->exists(''), 'An empty path still does not exist.');
+    }
+
+    public function testPathsAreNormalisedLikeInSet()
+    {
+        $a = new Registry();
+        $a->set('.a', 5);
+        $a->set('b..c', 6);
+
+        $this->assertSame(['a' => 5, 'b' => ['c' => 6]], $a->toArray());
+
+        $this->assertSame(5, $a->get('.a'), 'A leading separator is ignored as in set().');
+        $this->assertTrue($a->exists('.a'));
+        $this->assertSame(5, $a->get('a.'), 'A trailing separator is ignored as in set().');
+        $this->assertTrue($a->exists('a.'));
+        $this->assertSame(6, $a->get('b..c'), 'A double separator is ignored as in set().');
+        $this->assertTrue($a->exists('b..c'));
+        $this->assertSame(5, $a->remove('.a'));
+    }
+
     /**
      * @testdox  The Registry correctly handles assignments for class instances.
      *
