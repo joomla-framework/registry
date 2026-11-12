@@ -439,6 +439,25 @@ class RegistryTest extends TestCase
         $this->assertSame('testloadini1', $registry->get('foo'), 'The string\'s data should be correctly loaded.');
     }
 
+    public function testValuesSetBeforeTheFirstLoadAreKept()
+    {
+        $registry = new Registry();
+        $registry->set('options', 'kept');
+        $registry->set('nested.value', 'kept');
+        $registry->loadString('{"a":1,"options":"loaded"}');
+
+        $this->assertSame(['options' => 'loaded', 'nested' => ['value' => 'kept'], 'a' => 1], $registry->toArray());
+    }
+
+    public function testTheFirstLoadIntoAnEmptyRegistryUsesTheParsedData()
+    {
+        $registry = new Registry();
+        $registry->loadString('{"a":{"b":1}}');
+        $registry->loadString('{"a":{"c":2}}');
+
+        $this->assertSame(['a' => ['b' => 1, 'c' => 2]], $registry->toArray());
+    }
+
     /**
      * @testdox  Two Registry instances can be merged
      *
