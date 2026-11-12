@@ -32,6 +32,7 @@
         }
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "scripts": {
         "test": "vendor/bin/phpunit",
         "testdox": "vendor/bin/phpunit --testdox",
