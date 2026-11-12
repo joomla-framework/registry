@@ -103,7 +103,7 @@ class Php implements FormatInterface
      *
      * @since   __DEPLOY_VERSION__
      */
-    protected static function validateIdentifier($value, string $label): void
+    protected static function validateIdentifier(mixed $value, string $label): void
     {
         if (!\is_string($value) || !\preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/D', $value)) {
             throw new \InvalidArgumentException(
@@ -127,7 +127,7 @@ class Php implements FormatInterface
      *
      * @since   __DEPLOY_VERSION__
      */
-    protected static function validateNamespace($namespace): void
+    protected static function validateNamespace(mixed $namespace): void
     {
         if (!\is_string($namespace)) {
             throw new \InvalidArgumentException('The namespace must be a string.');
