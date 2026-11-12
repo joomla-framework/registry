@@ -512,6 +512,15 @@ class RegistryTest extends TestCase
         $this->assertNotSame($a, $b, 'Extracting a Registry should always create a new instance.');
     }
 
+    public function testAnExtractedRegistryKeepsTheSeparator()
+    {
+        $a = new Registry(['a' => ['b' => ['c' => 'value']]], '/');
+        $b = $a->extract('a');
+
+        $this->assertSame('value', $b->get('b/c'));
+        $this->assertNull($b->get('b.c'));
+    }
+
     /**
      * @testdox  The array offset is correctly checked
      *

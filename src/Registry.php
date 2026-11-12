@@ -376,12 +376,13 @@ class Registry implements \JsonSerializable, \ArrayAccess, \IteratorAggregate, \
      * @since   1.2.0
      * @since   2.0.0  `Registry:extract()` now always returns a `Registry` object. Before 2.0.0, `null` was returned
      *          if there was no data for the key.
+     * @since   __DEPLOY_VERSION__  The extracted registry uses the same path separator.
      */
     public function extract($path)
     {
         $data = $this->get($path);
 
-        return new Registry($data);
+        return new Registry($data, $this->separator);
     }
 
     /**
