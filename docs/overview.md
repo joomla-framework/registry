@@ -104,6 +104,21 @@ $registry = new Registry(
 $registry->loadString('<data><value name="foo" type="string">bar</value></data>, 'xml');
 ```
 
+#### INI Options
+
+The INI format understands three options, all `false` by default:
+
+* `processSections` — `[section]` lines become nested objects; otherwise they are skipped
+* `supportArrayValues` — `key[]=value` and `key[name]=value` lines become arrays; otherwise they are skipped
+* `parseBooleanWords` — unquoted `yes` and `no` become `true` and `false`
+
+``` php
+$registry->loadString("[database]\nhosts[]=\"db1\"\nhosts[]=\"db2\"", 'INI', ['processSections' => true, 'supportArrayValues' => true]);
+```
+
+Parsed strings are cached for the lifetime of the process, separately for each combination of options. Every call
+returns its own copy, so changing the result does not affect later calls.
+
 #### Custom Formats
 
 To load a custom format you must implement the `Joomla\Registry\FormatInterface`. This can then be loaded through
